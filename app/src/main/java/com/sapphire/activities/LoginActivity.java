@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     final String USER = "USER";
     final String PASS = "PASS";
     private EditText name;
-    private EditText pass; //
+    private EditText pass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
