@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Sapphire</string>
+    <string name="text_loading">Loading</string>
+    <string name="text_please_wait">Please wait...</string>
+    <string name="error_login">Incorrect login</string>
+    <string name="error_pass">Incorrect password</string>
+    <string name="text_again_exit">To exit the application press «back» once again...</string>
+    <string name="text_timeaut">Timeout when request at runtime</string>
+    <string name="text_enter_your_email">Enter your email address and password.</string>
+    <string name="text_phone_email_label">Phone/Email</string>
+    <string name="text_password_label">Password</string>
+    <string name="text_main">Main</string>
+    <string name="text_exit">Logout</string>
+    <string name="text_text1">Text1</string>
+    <string name="text_messages">Notification</string>
+</resources>

@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Sapphire</string>
+    <string name="text_loading">Chargement</string>
+    <string name="text_please_wait">Veuillez patienter...</string>
+    <string name="error_login">Incorrecte de connexion</string>
+    <string name="error_pass">mot de passe Incorrect</string>
+    <string name="text_again_exit">Pour quitter l\'application, appuyez sur «retour» encore une fois...</string>
+    <string name="text_timeaut">Délai d\'attente lors de la demande au moment de l\'exécution</string>
+    <string name="text_enter_your_email">Entrez votre adresse email et votre mot de passe.</string>
+    <string name="text_phone_email_label">Téléphone/e-Mail</string>
+    <string name="text_password_label">Mot de passe</string>
+    <string name="text_main">Principal</string>
+    <string name="text_exit">Déconnexion</string>
+    <string name="text_text1">Texte1</string>
+    <string name="text_messages">Notification</string>
+</resources>

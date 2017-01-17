@@ -1,0 +1,100 @@
+package com.sapphire.activities;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.Toast;
+import com.sapphire.Sapphire;
+import com.sapphire.R;
+import com.sapphire.logic.UserInfo;
+
+public class MainActivity extends AppCompatActivity {
+    private static long back_pressed;
+    private UserInfo userInfo;
+    SharedPreferences sPref;
+    SharedPreferences.Editor ed;
+    public final static String PARAM_TASK = "task";
+    public final static String BROADCAST_ACTION = "com.sapphire.activities.MainActivity";
+    BroadcastReceiver br;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        userInfo = UserInfo.getUserInfo();
+
+        sPref = getSharedPreferences("GlobalPreferences", MODE_PRIVATE);
+        ed = sPref.edit();
+
+        setContentView(R.layout.activity_main);
+
+        View menu = findViewById(R.id.menu);
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+                drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
+
+        // создаем BroadcastReceiver
+        br = new BroadcastReceiver() {
+            // действия при получении сообщений
+            public void onReceive(Context context, Intent intent) {
+                final String putreqwest = intent.getStringExtra(PARAM_TASK);
+
+                if (putreqwest.equals("updateleftmenu")) {
+                    try {
+                        Fragment fragment = new MenuFragment();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
+                    } catch (Exception e) {}
+                }
+            }
+        };
+        // создаем фильтр для BroadcastReceiver
+        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+        // регистрируем (включаем) BroadcastReceiver
+        registerReceiver(br, intFilt);
+
+        //new UpdateAction(MainActivity.this).execute();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        try {
+            Fragment fragment = new MenuFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
+        } catch (Exception e) {}
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (back_pressed + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+
+            Sapphire.exit(this);
+        } else
+            Toast.makeText(getBaseContext(), R.string.text_again_exit,
+                    Toast.LENGTH_SHORT).show();
+        back_pressed = System.currentTimeMillis();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(br);
+    }
+}
