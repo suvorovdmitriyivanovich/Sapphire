@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.sapphire.R;
+import com.sapphire.Sapphire;
+import com.sapphire.db.DBHelper;
 import com.sapphire.logic.UserInfo;
 import java.io.File;
 import java.util.ArrayList;
@@ -146,8 +148,7 @@ public class MenuFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        //int countmessages = DBHelper.getInstance(Sapphire.getInstance()).getMessages(0,-1).size();
-        int countmessages = 10;
+        int countmessages = DBHelper.getInstance(Sapphire.getInstance()).getMessages(0,-1).size();
         if (countmessages != 0) {
             View round_message = rootView.findViewById(R.id.round_message);
             round_message.setVisibility(View.VISIBLE);

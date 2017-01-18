@@ -15,7 +15,12 @@ import android.view.View;
 import android.widget.Toast;
 import com.sapphire.Sapphire;
 import com.sapphire.R;
+import com.sapphire.db.DBHelper;
+import com.sapphire.logic.Message;
 import com.sapphire.logic.UserInfo;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private static long back_pressed;
@@ -67,6 +72,15 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(br, intFilt);
 
         //new UpdateAction(MainActivity.this).execute();
+
+        String addDateString = "";
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        addDateString = format.format(date);
+
+        Message message = new Message();
+        message.setMessage("Вход в приложение " + addDateString);
+        DBHelper.getInstance(Sapphire.getInstance()).addMessage(message);
     }
 
     @Override

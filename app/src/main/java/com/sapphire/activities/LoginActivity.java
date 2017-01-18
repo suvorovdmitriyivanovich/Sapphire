@@ -16,9 +16,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.sapphire.Sapphire;
 import com.sapphire.R;
+import com.sapphire.api.AutorizationAction;
 import com.sapphire.logic.UserInfo;
 
-public class LoginActivity extends AppCompatActivity {
+import org.json.JSONObject;
+
+public class LoginActivity extends AppCompatActivity implements AutorizationAction.RequestAutorization {
     private static long back_pressed;
     private UserInfo userInfo;
     ProgressDialog pd;
@@ -76,18 +79,7 @@ public class LoginActivity extends AppCompatActivity {
                     ed.putString(USER, userInfo.getLogin());
                     ed.putString(PASS, pass.getText().toString());
                     ed.apply();
-                    //new AutorizationAction(LoginActivity.this, login, password, getUuid()).execute();
-
-                    new Handler().postDelayed(new Runnable(){
-                        @Override
-                        public void run() {
-                            pd.hide();
-
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    }, 2000);
+                    new AutorizationAction(LoginActivity.this, name.getText().toString(), pass.getText().toString()).execute();
                 }
             }
         });
@@ -156,6 +148,54 @@ public class LoginActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onRequestAutorization(final String result) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String rez = "";
+                String username = "";
+                String userid = "";
+
+                JSONObject jsonObject;
+                try {
+                    jsonObject = new JSONObject(result);
+                    if (jsonObject.getString("status").equals("1")) {
+                        JSONObject jsonObjectData = jsonObject.getJSONObject("data");
+                        username = jsonObjectData.getString("name");
+                        userid = jsonObjectData.getString("id");
+                        //userInfo.setUserid(5);
+                        rez = "OK";
+                    } else {
+                        String error = jsonObject.getString("error");
+                        if (error.equals("Not found")) {
+                            rez = Sapphire.getInstance().getResources().getString(R.string.text_not_user);
+                        } else if (error.equals("Incorrect password")) {
+                            rez = Sapphire.getInstance().getResources().getString(R.string.text_incorrect_password);
+                        } else {
+                            rez = error;
+                        }
+                    }
+                } catch (Exception e) {
+                    rez = result;
+                }
+
+                pd.hide();
+                //ed.putString(PASS, "");
+                //ed.apply();
+                //pass.setText("");
+
+                Toast.makeText(getApplicationContext(),
+                        rez,
+                        Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     public void hideSoftKeyboard() {

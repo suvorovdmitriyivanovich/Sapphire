@@ -7,10 +7,13 @@
     <string name="text_again_exit">Pour quitter l\'application, appuyez sur «retour» encore une fois...</string>
     <string name="text_timeaut">Délai d\'attente lors de la demande au moment de l\'exécution</string>
     <string name="text_enter_your_email">Entrez votre adresse email et votre mot de passe.</string>
-    <string name="text_phone_email_label">Téléphone/e-Mail</string>
+    <string name="text_email_label">Téléphone/E-mail</string>
     <string name="text_password_label">Mot de passe</string>
     <string name="text_main">Principal</string>
     <string name="text_exit">Déconnexion</string>
     <string name="text_text1">Texte1</string>
     <string name="text_messages">Notification</string>
+    <string name="text_need_internet">Pas de connexion internet</string>
+    <string name="text_not_user">L\'utilisateur n\'a pas été trouvé</string>
+    <string name="text_incorrect_password">Mot de passe incorrect</string>
 </resources>
