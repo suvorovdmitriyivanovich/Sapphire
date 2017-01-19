@@ -40,15 +40,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/text_error"
+            android:textColor="@color/red"
+            android:layout_marginLeft="2dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/text_organization"
-            android:id="@+id/text_organization" />
+            android:id="@+id/text_organization"
+            android:layout_marginTop="20dp" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
             android:id="@+id/organization"
-            android:hint="@string/text_organization_no" />
+            android:hint="@string/text_organization" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -72,7 +82,7 @@
             android:layout_height="wrap_content"
             android:inputType="text"
             android:id="@+id/name"
-            android:hint="@string/text_name_no" />
+            android:hint="@string/text_name" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -95,8 +105,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/password"
-            android:hint="@string/text_password_no"
-            android:inputType="textPassword" />
+            android:hint="@string/text_password"
+            android:inputType="textPassword"
+            android:maxLength="20" />
 
         <TextView
             android:layout_width="wrap_content"

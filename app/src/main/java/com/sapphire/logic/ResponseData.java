@@ -19,7 +19,6 @@ public class ResponseData {
     private Long timestampResponse = 0l;
     private String httpStatusCode = "";
     private String httpStatusMessage = "";
-    private String errorMessage;
 
     public ResponseData() {
 

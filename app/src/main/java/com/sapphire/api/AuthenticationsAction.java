@@ -1,7 +1,6 @@
 package com.sapphire.api;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import com.sapphire.Sapphire;
 import com.sapphire.R;
@@ -9,6 +8,7 @@ import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.File;
@@ -53,9 +53,30 @@ public class AuthenticationsAction extends AsyncTask{
             e.printStackTrace();
         }
 
-        String result = NetRequests.getNetRequests().SendRequestCommon(urlstring,json.toString(),0,false);
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,json.toString(),0,false));
 
-        ResponseData responseData = new ResponseData(result);
+        String result = "";
+
+        if (responseData.getSuccess()) {
+            result = "OK";
+        } else {
+            JSONArray jsonArray = responseData.getErrorMessages();
+            if (jsonArray.length() == 0) {
+                result = responseData.getHttpStatusMessage();
+            } else {
+                for (int y=0; y < jsonArray.length(); y++) {
+                    try {
+                        JSONObject jsonObject = jsonArray.getJSONObject(y);
+                        if (!result.equals("")) {
+                            result = result + ". ";
+                        }
+                        result = jsonObject.getString("Name");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
 
         return result;
     }

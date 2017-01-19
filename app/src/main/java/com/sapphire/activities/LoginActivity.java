@@ -10,12 +10,12 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.Sapphire;
 import com.sapphire.R;
 import com.sapphire.api.AuthenticationsAction;
 import com.sapphire.logic.UserInfo;
-import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity implements AuthenticationsAction.RequestAuthentications {
     private static long back_pressed;
@@ -31,7 +31,11 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationsA
     private EditText pass;
     private View text_organization_error;
     private View text_name_error;
-    private View text_pass_error;
+    private TextView text_pass_error;
+    private View text_organization;
+    private View text_name;
+    private View text_pass;
+    private TextView text_error;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +51,11 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationsA
         pass = (EditText) findViewById(R.id.password);
         text_organization_error = findViewById(R.id.text_organization_error);
         text_name_error = findViewById(R.id.text_name_error);
-        text_pass_error = findViewById(R.id.text_password_error);
+        text_pass_error = (TextView) findViewById(R.id.text_password_error);
+        text_organization = findViewById(R.id.text_organization);
+        text_name = findViewById(R.id.text_name);
+        text_pass = findViewById(R.id.text_password);
+        text_error = (TextView) findViewById(R.id.text_error);
 
         TextWatcher inputTextWatcher = new TextWatch();
         organization.addTextChangedListener(inputTextWatcher);
@@ -81,11 +89,13 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationsA
 
                 if (organization.getText().toString().equals("")
                     || name.getText().toString().equals("")
-                    || pass.getText().toString().equals("")) {
+                    || pass.getText().toString().equals("")
+                    || pass.getText().length() < 6) {
                     allOk = false;
                 }
 
                 if (allOk) {
+                    text_error.setVisibility(View.GONE);
                     pd.show();
 
                     ed.putString(ORGANIZATION, organization.getText().toString());
@@ -106,7 +116,7 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationsA
             }
         });
 
-        updateErrors();
+        updateViews();
     }
 
     private class TextWatch implements TextWatcher {
@@ -115,7 +125,7 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationsA
         }
 
         public void afterTextChanged(Editable s) {
-            updateErrors();
+            updateViews();
         }
 
         public void beforeTextChanged(CharSequence s, int start, int count, int after){}
@@ -123,21 +133,35 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationsA
         public void onTextChanged(CharSequence s, int start, int before, int count) {}
     }
 
-    private void updateErrors() {
+    private void updateViews() {
         if (organization.getText().toString().equals("")) {
             text_organization_error.setVisibility(View.VISIBLE);
+            text_organization.setVisibility(View.GONE);
         } else {
             text_organization_error.setVisibility(View.GONE);
+            text_organization.setVisibility(View.VISIBLE);
         }
         if (name.getText().toString().equals("")) {
             text_name_error.setVisibility(View.VISIBLE);
+            text_name.setVisibility(View.GONE);
         } else {
             text_name_error.setVisibility(View.GONE);
+            text_name.setVisibility(View.VISIBLE);
         }
-        if (pass.getText().toString().equals("")) {
+        if (pass.getText().toString().equals("") || pass.getText().length() < 6) {
             text_pass_error.setVisibility(View.VISIBLE);
         } else {
             text_pass_error.setVisibility(View.GONE);
+        }
+        if (pass.getText().toString().equals("")) {
+            text_pass.setVisibility(View.GONE);
+        } else {
+            text_pass.setVisibility(View.VISIBLE);
+        }
+        if (!pass.getText().toString().equals("") && pass.getText().length() < 6) {
+            text_pass_error.setText(getResources().getString(R.string.text_password_error_lenght));
+        } else {
+            text_pass_error.setText(getResources().getString(R.string.text_password_error));
         }
     }
 
@@ -146,45 +170,19 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationsA
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                String rez = "";
-                String username = "";
-                String userid = "";
-
-                JSONObject jsonObject;
-                try {
-                    jsonObject = new JSONObject(result);
-                    if (jsonObject.getString("status").equals("1")) {
-                        JSONObject jsonObjectData = jsonObject.getJSONObject("data");
-                        username = jsonObjectData.getString("name");
-                        userid = jsonObjectData.getString("id");
-                        //userInfo.setUserid(5);
-                        rez = "OK";
-                    } else {
-                        String error = jsonObject.getString("error");
-                        if (error.equals("Not found")) {
-                            rez = Sapphire.getInstance().getResources().getString(R.string.text_not_user);
-                        } else if (error.equals("Incorrect password")) {
-                            rez = Sapphire.getInstance().getResources().getString(R.string.text_incorrect_password);
-                        } else {
-                            rez = error;
-                        }
-                    }
-                } catch (Exception e) {
-                    rez = result;
-                }
-
                 pd.hide();
                 //ed.putString(PASS, "");
                 //ed.apply();
                 //pass.setText("");
 
-                Toast.makeText(getApplicationContext(),
-                        rez,
-                        Toast.LENGTH_LONG).show();
-
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                if (!result.equals("OK")) {
+                    text_error.setText(result);
+                    text_error.setVisibility(View.VISIBLE);
+                } else {
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
     }
