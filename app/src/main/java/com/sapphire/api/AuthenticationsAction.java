@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import com.sapphire.Sapphire;
 import com.sapphire.R;
 import com.sapphire.logic.Environment;
+import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
 
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class AuthenticationsAction extends AsyncTask{
 
@@ -60,20 +62,15 @@ public class AuthenticationsAction extends AsyncTask{
         if (responseData.getSuccess()) {
             result = "OK";
         } else {
-            JSONArray jsonArray = responseData.getErrorMessages();
-            if (jsonArray.length() == 0) {
+            ArrayList<ErrorMessageData> errorMessageDatas = responseData.getErrorMessages();
+            if (errorMessageDatas.size() == 0) {
                 result = responseData.getHttpStatusMessage();
             } else {
-                for (int y=0; y < jsonArray.length(); y++) {
-                    try {
-                        JSONObject jsonObject = jsonArray.getJSONObject(y);
-                        if (!result.equals("")) {
-                            result = result + ". ";
-                        }
-                        result = jsonObject.getString("Name");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                for (int y=0; y < errorMessageDatas.size(); y++) {
+                    if (!result.equals("")) {
+                        result = result + ". ";
                     }
+                    result = errorMessageDatas.get(y).getName();
                 }
             }
         }

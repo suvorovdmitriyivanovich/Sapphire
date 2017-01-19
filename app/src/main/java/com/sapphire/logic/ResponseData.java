@@ -1,9 +1,10 @@
 package com.sapphire.logic;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ResponseData {
@@ -13,12 +14,16 @@ public class ResponseData {
     private String ipAddress = "";
     private String userAgentId = "";
     private String httpVerb = "";
-    private JSONArray errorMessages;
+    private ArrayList<ErrorMessageData> errorMessages;
     private String responseId = "";
     private boolean success = false;
     private Long timestampResponse = 0l;
     private String httpStatusCode = "";
     private String httpStatusMessage = "";
+    private ArrayList<AccountData> data;
+    private int dataCount = 0;
+    private int totalDataCount = 0;
+    private boolean hasData = false;
 
     public ResponseData() {
 
@@ -47,7 +52,6 @@ public class ResponseData {
             if (!jsonObjectRequest.isNull("httpVerb")) {
                 setHttpVerb(jsonObjectRequest.getString("httpVerb"));
             }
-
             JSONObject jsonObjectResponse = jsonObject.getJSONObject("response");
             if (!jsonObjectResponse.isNull("errorMessages")) {
                 setErrorMessages(jsonObjectResponse.getJSONArray("errorMessages"));
@@ -66,6 +70,18 @@ public class ResponseData {
             }
             if (!jsonObjectResponse.isNull("httpStatusMessage")) {
                 setHttpStatusMessage(jsonObjectResponse.getString("httpStatusMessage"));
+            }
+            if (!jsonObjectResponse.isNull("data")) {
+                setData(jsonObjectResponse.getJSONArray("data"));
+            }
+            if (!jsonObjectResponse.isNull("dataCount")) {
+                setDataCount(jsonObjectResponse.getInt("dataCount"));
+            }
+            if (!jsonObjectResponse.isNull("totalDataCount")) {
+                setTotalDataCount(jsonObjectResponse.getInt("totalDataCount"));
+            }
+            if (!jsonObjectResponse.isNull("hasData")) {
+                setHasData(jsonObjectResponse.getBoolean("hasData"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,7 +110,7 @@ public class ResponseData {
 
     public void setTimestampRequest(String timestampRequest) {
         Long timestampRequestLong = 0l;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         try {
             Date newdate = format.parse(timestampRequest);
             timestampRequestLong = newdate.getTime();
@@ -128,12 +144,20 @@ public class ResponseData {
         this.httpVerb = httpVerb;
     }
 
-    public JSONArray getErrorMessages() {
+    public ArrayList<ErrorMessageData> getErrorMessages() {
         return errorMessages;
     }
 
     public void setErrorMessages(JSONArray errorMessages) {
-        this.errorMessages = errorMessages;
+        ArrayList<ErrorMessageData> errorMessageDatas = new ArrayList<ErrorMessageData>();
+        for (int y=0; y < errorMessages.length(); y++) {
+            try {
+                errorMessageDatas.add(new ErrorMessageData(errorMessages.getJSONObject(y)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        this.errorMessages = errorMessageDatas;
     }
 
     public String getResponseId() {
@@ -157,7 +181,15 @@ public class ResponseData {
     }
 
     public void setTimestampResponse(String timestampResponse) {
-        this.timestampResponse = 0l;
+        Long timestampResponseLong = 0l;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        try {
+            Date newdate = format.parse(timestampResponse);
+            timestampResponseLong = newdate.getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.timestampResponse = timestampResponseLong;
     }
 
     public String getHttpStatusCode() {
@@ -174,5 +206,45 @@ public class ResponseData {
 
     public void setHttpStatusMessage(String httpStatusMessage) {
         this.httpStatusMessage = httpStatusMessage;
+    }
+
+    public int getDataCount() {
+        return dataCount;
+    }
+
+    public void setDataCount(int dataCount) {
+        this.dataCount = dataCount;
+    }
+
+    public int getTotalDataCount() {
+        return totalDataCount;
+    }
+
+    public void setTotalDataCount(int totalDataCount) {
+        this.totalDataCount = totalDataCount;
+    }
+
+    public boolean getHasData() {
+        return hasData;
+    }
+
+    public void setHasData(boolean hasData) {
+        this.hasData = hasData;
+    }
+
+    public ArrayList<AccountData> getData() {
+        return data;
+    }
+
+    public void setData(JSONArray data) {
+        ArrayList<AccountData> accountDatas = new ArrayList<AccountData>();
+        for (int y=0; y < data.length(); y++) {
+            try {
+                accountDatas.add(new AccountData(data.getJSONObject(y)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        this.data = accountDatas;
     }
 }

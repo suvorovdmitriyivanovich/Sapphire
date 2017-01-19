@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.sapphire.Sapphire;
 import com.sapphire.R;
 import com.sapphire.db.DBHelper;
-import com.sapphire.logic.Message;
+import com.sapphire.logic.MessageData;
 import com.sapphire.logic.UserInfo;
 
 import java.text.SimpleDateFormat;
@@ -78,9 +78,9 @@ public class MainActivity extends AppCompatActivity {
         Date date = new Date();
         addDateString = format.format(date);
 
-        Message message = new Message();
-        message.setMessage("Вход в приложение " + addDateString);
-        DBHelper.getInstance(Sapphire.getInstance()).addMessage(message);
+        MessageData messageData = new MessageData();
+        messageData.setMessage("Вход в приложение " + addDateString);
+        DBHelper.getInstance(Sapphire.getInstance()).addMessage(messageData);
     }
 
     @Override

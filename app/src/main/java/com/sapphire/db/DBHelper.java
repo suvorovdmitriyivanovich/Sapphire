@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.MainActivity;
-import com.sapphire.logic.Message;
+import com.sapphire.logic.MessageData;
 
 import java.util.ArrayList;
 
@@ -72,7 +72,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public boolean needUpdate() {
-        ArrayList<Message> mMessage = getMessages(-1,1);
+        ArrayList<MessageData> mMessage = getMessages(-1,1);
         if (mMessage.size() > 0) {
             return true;
         }
@@ -80,8 +80,8 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public ArrayList<Message> getMessages(int isread, int upload) {
-        ArrayList<Message> mMessages = new ArrayList<Message>();
+    public ArrayList<MessageData> getMessages(int isread, int upload) {
+        ArrayList<MessageData> mMessages = new ArrayList<MessageData>();
 
         String select = null;
         String[] selectarg = null;
@@ -106,20 +106,20 @@ public class DBHelper extends SQLiteOpenHelper {
             int uploadColIndex = c.getColumnIndex("upload");
 
             do {
-                Message message = new Message();
+                MessageData messageData = new MessageData();
                 if (idColIndex != -1){
-                    message.setId(c.getInt(idColIndex));
+                    messageData.setId(c.getInt(idColIndex));
                 }
                 if (messageColIndex != -1) {
-                    message.setMessage(c.getString(messageColIndex));
+                    messageData.setMessage(c.getString(messageColIndex));
                 }
                 if (isreadColIndex != -1) {
-                    message.setIsRead(c.getInt(isreadColIndex));
+                    messageData.setIsRead(c.getInt(isreadColIndex));
                 }
                 if (uploadColIndex != -1) {
-                    message.setUpload(c.getInt(uploadColIndex));
+                    messageData.setUpload(c.getInt(uploadColIndex));
                 }
-                mMessages.add(message);
+                mMessages.add(messageData);
             } while (c.moveToNext());
         }
         c.close();
@@ -163,10 +163,10 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public boolean addMessage(Message message) {
+    public boolean addMessage(MessageData messageData) {
         ContentValues cv = new ContentValues();
-        cv.put("message", message.getMessage());
-        cv.put("isread", message.getIsRead());
+        cv.put("message", messageData.getMessage());
+        cv.put("isread", messageData.getIsRead());
         cv.put("upload", 0);
 
         SQLiteDatabase db = getWriteDatabase();

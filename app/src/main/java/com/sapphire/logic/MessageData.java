@@ -3,17 +3,17 @@ package com.sapphire.logic;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Message {
+public class MessageData {
     private int id = -1;
     private String message = "";
     private boolean isRead = false;
     private boolean upload = false;
 
-    public Message() {
+    public MessageData() {
 
     }
 
-    public Message(JSONObject jsonObject) {
+    public MessageData(JSONObject jsonObject) {
         try {
             if (!jsonObject.isNull("message")) {
                 setMessage(jsonObject.getString("message"));
