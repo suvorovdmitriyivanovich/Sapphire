@@ -1,36 +1,37 @@
 package com.sapphire.activities;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.sapphire.Sapphire;
 import com.sapphire.R;
-import com.sapphire.api.AutorizationAction;
+import com.sapphire.api.AuthenticationsAction;
 import com.sapphire.logic.UserInfo;
-
 import org.json.JSONObject;
 
-public class LoginActivity extends AppCompatActivity implements AutorizationAction.RequestAutorization {
+public class LoginActivity extends AppCompatActivity implements AuthenticationsAction.RequestAuthentications {
     private static long back_pressed;
     private UserInfo userInfo;
     ProgressDialog pd;
     SharedPreferences sPref;
     SharedPreferences.Editor ed;
+    final String ORGANIZATION = "ORGANIZATION";
     final String USER = "USER";
     final String PASS = "PASS";
+    private EditText organization;
     private EditText name;
     private EditText pass;
+    private View text_organization_error;
+    private View text_name_error;
+    private View text_pass_error;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +42,19 @@ public class LoginActivity extends AppCompatActivity implements AutorizationActi
         sPref = getSharedPreferences("GlobalPreferences", MODE_PRIVATE);
         ed = sPref.edit();
 
-        name = (EditText) findViewById(R.id.Name);
-        pass = (EditText) findViewById(R.id.Password);
+        organization = (EditText) findViewById(R.id.organization);
+        name = (EditText) findViewById(R.id.name);
+        pass = (EditText) findViewById(R.id.password);
+        text_organization_error = findViewById(R.id.text_organization_error);
+        text_name_error = findViewById(R.id.text_name_error);
+        text_pass_error = findViewById(R.id.text_password_error);
 
+        TextWatcher inputTextWatcher = new TextWatch();
+        organization.addTextChangedListener(inputTextWatcher);
+        name.addTextChangedListener(inputTextWatcher);
+        pass.addTextChangedListener(inputTextWatcher);
+
+        organization.setText(sPref.getString(ORGANIZATION, ""));
         name.setText(sPref.getString(USER, ""));
         pass.setText(sPref.getString(PASS, ""));
 
@@ -56,30 +67,33 @@ public class LoginActivity extends AppCompatActivity implements AutorizationActi
         pd.setCancelable(false);
         pd.setCanceledOnTouchOutside(false);
 
-        View button_group = findViewById(R.id.button_group);
-        button_group.setOnClickListener(new View.OnClickListener() {
+        View button_signin = findViewById(R.id.button_signin);
+        button_signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean allOk = true;
 
-                userInfo.setLogin(name.getText().toString());
+                //userInfo.setLogin(name.getText().toString());
+                //if (!userInfo.isLoginValid()) {
+                //    name.setError(getResources().getString(R.string.error_login));
+                //    allOk = false;
+                //}
 
-                if (!userInfo.isLoginValid()) {
-                    name.setError(getResources().getString(R.string.error_login));
-                    allOk = false;
-                }
-
-                if (pass.getText().toString().equals("")) {
-                    pass.setError(getResources().getString(R.string.error_pass));
+                if (organization.getText().toString().equals("")
+                    || name.getText().toString().equals("")
+                    || pass.getText().toString().equals("")) {
                     allOk = false;
                 }
 
                 if (allOk) {
                     pd.show();
-                    ed.putString(USER, userInfo.getLogin());
+
+                    ed.putString(ORGANIZATION, organization.getText().toString());
+                    ed.putString(USER, name.getText().toString());
                     ed.putString(PASS, pass.getText().toString());
                     ed.apply();
-                    new AutorizationAction(LoginActivity.this, name.getText().toString(), pass.getText().toString()).execute();
+
+                    new AuthenticationsAction(LoginActivity.this, organization.getText().toString(), name.getText().toString(), pass.getText().toString()).execute();
                 }
             }
         });
@@ -92,66 +106,43 @@ public class LoginActivity extends AppCompatActivity implements AutorizationActi
             }
         });
 
+        updateErrors();
+    }
+
+    private class TextWatch implements TextWatcher {
+        public TextWatch(){
+            super();
+        }
+
+        public void afterTextChanged(Editable s) {
+            updateErrors();
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
+    }
+
+    private void updateErrors() {
+        if (organization.getText().toString().equals("")) {
+            text_organization_error.setVisibility(View.VISIBLE);
+        } else {
+            text_organization_error.setVisibility(View.GONE);
+        }
         if (name.getText().toString().equals("")) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                    checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
-                            != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, 100);
-            } else {
-                PhoneAccessGranted();
-            }
+            text_name_error.setVisibility(View.VISIBLE);
+        } else {
+            text_name_error.setVisibility(View.GONE);
+        }
+        if (pass.getText().toString().equals("")) {
+            text_pass_error.setVisibility(View.VISIBLE);
+        } else {
+            text_pass_error.setVisibility(View.GONE);
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == 100) {
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                PhoneAccessGranted();
-            } else {
-                //Toast.makeText(this, getResources().getString(R.string.text_error_contacts), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void PhoneAccessGranted() {
-        try {
-            TelephonyManager telephonyManager = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
-            String numsim = telephonyManager.getLine1Number();
-            numsim = numsim.replace("+", "");
-
-            String country = "";
-            try {
-                country = telephonyManager.getSimCountryIso();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if (numsim.length() == 10 || numsim.length() == 11) {
-                if (numsim.length() == 10) {
-                    if (country.equals("ua")) {
-                        numsim = "38" + numsim;
-                    } else if (country.equals("ru")) {
-                        numsim = "7" + numsim;
-                    } else if (country.equals("en")) {
-                        numsim = "1" + numsim;
-                    }
-                } else {
-                    if (country.equals("ua")) {
-                        numsim = "3" + numsim;
-                    }
-                }
-            }
-
-            name.setText(numsim);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onRequestAutorization(final String result) {
+    public void onRequestAuthentications(final String result) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

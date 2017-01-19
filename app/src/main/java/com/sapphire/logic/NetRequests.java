@@ -7,6 +7,7 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -22,7 +23,7 @@ public class NetRequests {
     }
     //---------------------------------------------------------
 
-    public String SendRequestCommon(String request, int timout, boolean returnerror) {
+    public String SendRequestCommon(String request, String json, int timout, boolean returnerror) {
         String rez = "";
 
         if (timout == 0) {
@@ -32,18 +33,36 @@ public class NetRequests {
         try {
             URL url = new URL(request);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            conn.setRequestProperty("charset","utf-8");
+            conn.setDoOutput(true);
+            conn.setUseCaches(false);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
             //conn.setRequestProperty("Authorization", "app-token=nbJyew52");
             //conn.setRequestProperty("app-token","nbJyew52");
             //conn.setRequestProperty("login","suvdima");
             //conn.setRequestProperty("password","123");
             conn.setConnectTimeout(timout);
+            conn.connect();
+            OutputStream os = conn.getOutputStream();
+            os.write(json.getBytes("UTF-8"));
+            System.out.println(conn.getResponseMessage());
+            os.flush();
+            os.close();
             int responseCode = conn.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) { //success
                 //BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "iso-8859-1"), 8);
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"), 8);
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                rez = response.toString();
+            } else {
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream(), "utf-8"), 8);
                 String inputLine;
                 StringBuffer response = new StringBuffer();
 

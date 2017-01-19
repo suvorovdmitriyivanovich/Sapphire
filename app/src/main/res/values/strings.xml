@@ -8,12 +8,21 @@
     <string name="text_timeaut">Timeout when request at runtime</string>
     <string name="text_enter_your_email">Enter your email address and password.</string>
     <string name="text_email_label">Phone/E-mail</string>
-    <string name="text_password_label">Password</string>
     <string name="text_main">Main</string>
     <string name="text_exit">Logout</string>
     <string name="text_text1">Text1</string>
     <string name="text_messages">Notification</string>
     <string name="text_need_internet">No internet connection</string>
     <string name="text_not_user">The user is not found</string>
-    <string name="text_incorrect_password">Invalid password</string>
+    <string name="text_organization">Organization *</string>
+    <string name="text_organization_no">Organization</string>
+    <string name="text_organization_error">Organization is required</string>
+    <string name="text_name">Account name *</string>
+    <string name="text_name_no">Account name</string>
+    <string name="text_name_error">Account name is required</string>
+    <string name="text_password">Password *</string>
+    <string name="text_password_no">Password</string>
+    <string name="text_password_error">Password is required</string>
+    <string name="text_signin">SIGN IN</string>
+    <string name="text_problems_signin">PROBLEMS WITH SIGN IN?</string>
 </resources>
