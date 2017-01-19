@@ -46,9 +46,9 @@ public class AuthenticationsAction extends AsyncTask{
 
         JSONObject json = new JSONObject();
         try {
-            json.put("organization", organization);
-            json.put("name", login);
-            json.put("password", password);
+            json.put("OrganizationName", organization);
+            json.put("AccountName", login);
+            json.put("Password", password);
         } catch (JSONException e) {
             e.printStackTrace();
         }
