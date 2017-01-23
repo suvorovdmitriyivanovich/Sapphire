@@ -10,6 +10,7 @@ import android.os.Build;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.MainActivity;
 import com.sapphire.logic.MessageData;
+import com.sapphire.logic.NavigationMenuData;
 
 import java.util.ArrayList;
 
@@ -62,6 +63,17 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "isread integer,"
                 + "upload integer"
                 + ");");
+
+        db.execSQL("create table navigationmenus ("
+                + "id integer primary key autoincrement,"
+                + "menuid text,"
+                + "name text,"
+                + "ordernum text,"
+                + "parentid text,"
+                + "translationid text,"
+                + "urlroute text,"
+                + "cssclass text"
+                + ");");
     }
 
     @Override
@@ -69,6 +81,126 @@ public class DBHelper extends SQLiteOpenHelper {
         if (oldVersion < 2) {
 
         }
+    }
+
+    public void deleteNavigationMenus() {
+        SQLiteDatabase db = getWriteDatabase();
+        db.beginTransaction();
+        try {
+            db.delete("navigationmenus", null, null);
+            db.setTransactionSuccessful();
+        }finally {
+            db.endTransaction();
+        }
+    }
+
+    public void addNavigationMenus(ArrayList<NavigationMenuData> navigationMenuDatas) {
+        if (navigationMenuDatas.size() == 0) {
+            return;
+        }
+
+        ContentValues cv;
+
+        SQLiteDatabase db = getWriteDatabase();
+        db.beginTransaction();
+        try {
+            for (int y=0; y < navigationMenuDatas.size(); y++) {
+                NavigationMenuData navigationMenuData = navigationMenuDatas.get(y);
+                cv = new ContentValues();
+
+                cv.put("menuid", navigationMenuData.getMenuId());
+                cv.put("name", navigationMenuData.getName());
+                cv.put("ordernum", navigationMenuData.getOrder());
+                cv.put("parentid", navigationMenuData.getParentId());
+                cv.put("translationid", navigationMenuData.getTranslationId());
+                cv.put("urlroute", navigationMenuData.getTranslationId());
+                cv.put("cssclass", navigationMenuData.getCssClass());
+
+                db.insert("navigationmenus", null, cv);
+
+                ArrayList<NavigationMenuData> subMenus = navigationMenuData.getSubMenus();
+                if (subMenus != null && subMenus.size() > 0) {
+                    for (int s=0; s < subMenus.size(); s++) {
+                        cv = new ContentValues();
+
+                        cv.put("menuid", subMenus.get(s).getMenuId());
+                        cv.put("name", subMenus.get(s).getName());
+                        cv.put("ordernum", subMenus.get(s).getOrder());
+                        cv.put("parentid", subMenus.get(s).getParentId());
+                        cv.put("translationid", subMenus.get(s).getTranslationId());
+                        cv.put("urlroute", subMenus.get(s).getTranslationId());
+                        cv.put("cssclass", subMenus.get(s).getCssClass());
+
+                        db.insert("navigationmenus", null, cv);
+                    }
+                }
+            }
+            db.setTransactionSuccessful();
+        }finally {
+            db.endTransaction();
+        }
+
+        sendBrodcastLeftmenu();
+    }
+
+    public ArrayList<NavigationMenuData> getNavigationMenus() {
+        ArrayList<NavigationMenuData> mNavigationMenuData = new ArrayList<NavigationMenuData>();
+
+        String select = null;
+        String[] selectarg = null;
+        //select = "isread" + EQUALS + " and upload" + EQUALS;
+        //selectarg = new String[]{String.valueOf(isread),String.valueOf(upload)};
+
+        Cursor c = getReadDatabase().query("navigationmenus", null, select, selectarg, null, null, null);
+
+        if (c.moveToFirst()) {
+            int menuidColIndex = c.getColumnIndex("menuid");
+            int nameColIndex = c.getColumnIndex("name");
+            int ordernumColIndex = c.getColumnIndex("ordernum");
+            int parentidColIndex = c.getColumnIndex("parentid");
+            int translationidColIndex = c.getColumnIndex("translationid");
+            int urlrouteColIndex = c.getColumnIndex("urlroute");
+            int cssclassColIndex = c.getColumnIndex("cssclass");
+
+            do {
+                NavigationMenuData navigationMenuData = new NavigationMenuData();
+                if (menuidColIndex != -1) {
+                    navigationMenuData.setMenuId(c.getString(menuidColIndex));
+                }
+                if (nameColIndex != -1) {
+                    navigationMenuData.setName(c.getString(nameColIndex));
+                }
+                if (ordernumColIndex != -1) {
+                    navigationMenuData.setOrder(c.getString(ordernumColIndex));
+                }
+                if (parentidColIndex != -1) {
+                    navigationMenuData.setParentId(c.getString(parentidColIndex));
+                }
+                if (translationidColIndex != -1) {
+                    navigationMenuData.setTranslationId(c.getString(translationidColIndex));
+                }
+                if (urlrouteColIndex != -1) {
+                    navigationMenuData.setUrlRoute(c.getString(urlrouteColIndex));
+                }
+                if (cssclassColIndex != -1) {
+                    navigationMenuData.setCssClass(c.getString(cssclassColIndex));
+                }
+                //submenu
+                if (!navigationMenuData.getParentId().equals("")) {
+                    for (int y=0; y < mNavigationMenuData.size(); y++) {
+                        if (mNavigationMenuData.get(y).getMenuId().equals(navigationMenuData.getParentId())) {
+                            mNavigationMenuData.get(y).getSubMenus().add(navigationMenuData);
+                            break;
+                        }
+                    }
+                } else {
+                    mNavigationMenuData.add(navigationMenuData);
+                }
+            } while (c.moveToNext());
+        }
+        c.close();
+
+        return mNavigationMenuData;
     }
 
     public boolean needUpdate() {

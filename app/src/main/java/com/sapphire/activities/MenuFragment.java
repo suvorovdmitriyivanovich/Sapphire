@@ -2,27 +2,26 @@ package com.sapphire.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.ExpandableListView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
+import com.sapphire.adapters.MenuAdapter;
 import com.sapphire.db.DBHelper;
-import com.sapphire.logic.UserInfo;
-import java.io.File;
+import com.sapphire.logic.NavigationMenuData;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class MenuFragment extends Fragment {
-    private UserInfo userInfo;
+public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickListener {
     private View rootView;
+    private DrawerLayout drawerLayout;
+    private ArrayList<NavigationMenuData> navigationMenuDatas;
+    private MenuAdapter adapter;
 
     public MenuFragment(){}
 
@@ -32,48 +31,20 @@ public class MenuFragment extends Fragment {
         rootView = inflater.inflate(R.layout.left_menu, container, false);
         super.onCreateView(inflater, container, savedInstanceState);
 
-        final DrawerLayout drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawerLayout);
+        drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawerLayout);
 
-        userInfo = UserInfo.getUserInfo();
-        TextView name = (TextView) rootView.findViewById(R.id.name);
+        navigationMenuDatas = DBHelper.getInstance(Sapphire.getInstance()).getNavigationMenus();
+        final ExpandableListView menulist = (ExpandableListView) rootView.findViewById(R.id.menulist);
 
-        String username = userInfo.getUserName();
-        if (username.equals("")) {
-            SharedPreferences sPref = getActivity().getSharedPreferences("GlobalPreferences", getActivity().MODE_PRIVATE);
-            username = sPref.getString("USER", "");
-            username = "Суворов Дмитрий";
-            userInfo.setUserName(username);
-        }
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width = dm.widthPixels-(dm.widthPixels/100*15);
+        //int width = dm.widthPixels;
 
-        ImageView ico = (ImageView) rootView.findViewById(R.id.ico);
-        File f = new File(getActivity().getApplicationContext().getFilesDir().getAbsolutePath() + "/user.png");
-        if (f.exists()) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), options);
-            ico.setImageBitmap(bitmap);
-        } else {
-            ico.setImageResource(R.drawable.user);
-        }
+        menulist.setIndicatorBounds((width - GetPixelFromDips(60)), (width - GetPixelFromDips(30)));
 
-        ArrayList<HashMap<String, Object>> mNameColor = new ArrayList<>();
-        //mNameColor = pullTasks.GetNameColor(username);
-        //if (mNameColor.size() == 1) {
-            //name.setText(mNameColor.get(0).get("name").toString());
-            name.setText(userInfo.getUserName());
-            String color = "blue";
-            try {
-                color = mNameColor.get(0).get("color").toString();
-            } catch (Exception er) {
-                er.printStackTrace();
-            }
-
-            View round_circle = rootView.findViewById(R.id.round_circle);
-
-            if(color.equals("blue")) {
-                round_circle.setBackgroundResource(R.drawable.shape_list_ico_blue);
-            }
-        //}
+        adapter = new MenuAdapter(this, navigationMenuDatas);
+        menulist.setAdapter(adapter);
 
         View settings = rootView.findViewById(R.id.settings);
         settings.setOnClickListener(new View.OnClickListener() {
@@ -83,21 +54,8 @@ public class MenuFragment extends Fragment {
                 if (getActivity().getClass() != MainActivity.class) {
                     getActivity().finish();
                 }
-                //Intent intent = new Intent(getActivity(), SettingsActivity.class);
-                //startActivity(intent);
-            }
-        });
-
-        View header_root = rootView.findViewById(R.id.header_root);
-        header_root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.closeDrawers();
-                if (getActivity().getClass() != MainActivity.class) {
-                    getActivity().finish();
-                }
-                //Intent intent = new Intent(getActivity(), SettingsActivity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(getActivity(), PdfActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -119,28 +77,6 @@ public class MenuFragment extends Fragment {
             }
         });
 
-        View main_root = rootView.findViewById(R.id.main_root);
-        main_root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.closeDrawers();
-                if (getActivity().getClass() != MainActivity.class) {
-                    getActivity().finish();
-                }
-            }
-        });
-
-        View messages_root = rootView.findViewById(R.id.messages_root);
-        messages_root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.closeDrawers();
-                if (getActivity().getClass() != MainActivity.class) {
-                    getActivity().finish();
-                }
-            }
-        });
-
         return rootView;
     }
 
@@ -148,6 +84,7 @@ public class MenuFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        /*
         int countmessages = DBHelper.getInstance(Sapphire.getInstance()).getMessages(0,-1).size();
         if (countmessages != 0) {
             View round_message = rootView.findViewById(R.id.round_message);
@@ -160,5 +97,53 @@ public class MenuFragment extends Fragment {
                 count_messages.setText(String.valueOf(countmessages));
             }
         }
+        */
+    }
+
+    // Метод установки размера списка по высоте относительно экрана, нужен для правильного отображения списков
+    public void justifyListViewHeightBasedOnChildren(ExpandableListView listView) {
+        //MenuAdapter adapter = (MenuAdapter) listView.getAdapter();
+
+        if (adapter == null) {
+            return;
+        }
+        int totalHeight = 0;
+        for (int i = 0; i < adapter.getGroupCount(); i++) {
+            View listItem = adapter.getGroupView(i, false, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+            for (int y = 0; y < adapter.getChildrenCount(i); y++) {
+                View childItem = adapter.getChildView(i, y, false, null, listView);
+                childItem.measure(0, 0);
+                totalHeight += childItem.getMeasuredHeight();
+            }
+        }
+
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+
+        ViewGroup.LayoutParams par = listView.getLayoutParams();
+        //par.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1));
+        par.height = totalHeight;
+
+        listView.setLayoutParams(par);
+        listView.requestLayout();
+    }
+
+    public int GetPixelFromDips(float pixels) {
+        // Get the screen's density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (pixels * scale + 0.5f);
+    }
+
+    @Override
+    public void onRootClick(int groupPosition, int childPosition) {
+        drawerLayout.closeDrawers();
+        if (getActivity().getClass() != MainActivity.class) {
+            getActivity().finish();
+        }
+        //Intent intent = new Intent(getActivity(), SettingsActivity.class);
+        //startActivity(intent);
     }
 }

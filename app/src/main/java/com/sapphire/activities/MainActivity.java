@@ -78,9 +78,11 @@ public class MainActivity extends AppCompatActivity {
         Date date = new Date();
         addDateString = format.format(date);
 
+        /*
         MessageData messageData = new MessageData();
         messageData.setMessage("Вход в приложение " + addDateString);
         DBHelper.getInstance(Sapphire.getInstance()).addMessage(messageData);
+        */
     }
 
     @Override

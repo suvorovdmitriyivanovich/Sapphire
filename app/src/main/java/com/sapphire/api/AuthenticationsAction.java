@@ -1,11 +1,16 @@
 package com.sapphire.api;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import com.sapphire.Sapphire;
 import com.sapphire.R;
+import com.sapphire.db.DBHelper;
+import com.sapphire.logic.AccountData;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.ErrorMessageData;
+import com.sapphire.logic.MessageData;
+import com.sapphire.logic.NavigationMenuData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
 
@@ -55,15 +60,33 @@ public class AuthenticationsAction extends AsyncTask{
             e.printStackTrace();
         }
 
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,json.toString(),0,false));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,json.toString(),0,true));
 
         String result = "";
 
+        SharedPreferences sPref = mContext.getSharedPreferences("GlobalPreferences", mContext.MODE_PRIVATE);
+        SharedPreferences.Editor ed = sPref.edit();
+
         if (responseData.getSuccess()) {
+            ed.putBoolean("INSUCCESS", true);
+            ed.apply();
+
+            ArrayList<AccountData> accountDatas = responseData.getData();
+            if (accountDatas.size() == 1) {
+                ArrayList<NavigationMenuData> navigationMenuDatas = accountDatas.get(0).getNavigationMenus();
+                if (navigationMenuDatas.size() > 0) {
+                    DBHelper.getInstance(Sapphire.getInstance()).deleteNavigationMenus();
+                    DBHelper.getInstance(Sapphire.getInstance()).addNavigationMenus(navigationMenuDatas);
+                }
+            }
+
             result = "OK";
         } else {
+            ed.putBoolean("INSUCCESS", false);
+            ed.apply();
+
             ArrayList<ErrorMessageData> errorMessageDatas = responseData.getErrorMessages();
-            if (errorMessageDatas.size() == 0) {
+            if (errorMessageDatas == null || errorMessageDatas.size() == 0) {
                 result = responseData.getHttpStatusMessage();
             } else {
                 for (int y=0; y < errorMessageDatas.size(); y++) {

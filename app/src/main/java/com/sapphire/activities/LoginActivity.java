@@ -175,13 +175,14 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationsA
                 //ed.apply();
                 //pass.setText("");
 
-                if (!result.equals("OK")) {
-                    text_error.setText(result);
-                    text_error.setVisibility(View.VISIBLE);
-                } else {
+                if (result.equals("OK") ||
+                        (result.equals(getResources().getString(R.string.text_need_internet))) && sPref.getBoolean("INSUCCESS", false)) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
+                } else {
+                    text_error.setText(result);
+                    text_error.setVisibility(View.VISIBLE);
                 }
             }
         });

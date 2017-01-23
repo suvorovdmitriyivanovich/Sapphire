@@ -15,7 +15,7 @@ public class NavigationMenuData {
     private String order = "";
     private String urlRoute = "";
     private String cssClass = "";
-    private ArrayList<NavigationMenuData> subMenus;
+    private ArrayList<NavigationMenuData> subMenus = new ArrayList<NavigationMenuData>();
 
     public NavigationMenuData() {
 

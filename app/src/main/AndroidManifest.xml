@@ -31,8 +31,11 @@
 
         <activity android:name=".activities.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            android:hardwareAccelerated="false"/>
+            android:windowSoftInputMode="stateHidden"/>
+
+        <activity android:name=".activities.PdfActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
     </application>
 
 </manifest>
