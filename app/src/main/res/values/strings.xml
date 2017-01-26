@@ -23,4 +23,7 @@
     <string name="text_password_error_lenght">Your password be between 6 and 20 characters long</string>
     <string name="text_signin">SIGN IN</string>
     <string name="text_problems_signin">PROBLEMS WITH SIGN IN?</string>
+    <string name="text_policies">My Policies &#38; Handbooks</string>
+    <string name="text_acknowledge">ACKNOWLEDGE</string>
+    <string name="unknown_error">Unknown error</string>
 </resources>

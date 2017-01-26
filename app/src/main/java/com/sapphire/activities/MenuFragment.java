@@ -54,8 +54,8 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
                 if (getActivity().getClass() != MainActivity.class) {
                     getActivity().finish();
                 }
-                Intent intent = new Intent(getActivity(), PdfActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(getActivity(), PdfActivity.class);
+                //startActivity(intent);
             }
         });
 
@@ -142,6 +142,10 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
         drawerLayout.closeDrawers();
         if (getActivity().getClass() != MainActivity.class) {
             getActivity().finish();
+        }
+        if (navigationMenuDatas.get(groupPosition).getSubMenus().get(childPosition).getUrlRoute().equals("/me/my-policies-and-handbooks")) {
+            Intent intent = new Intent(getActivity(), PoliciesActivity.class);
+            startActivity(intent);
         }
         //Intent intent = new Intent(getActivity(), SettingsActivity.class);
         //startActivity(intent);

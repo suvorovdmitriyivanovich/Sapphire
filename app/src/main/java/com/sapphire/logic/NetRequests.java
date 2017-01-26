@@ -23,7 +23,7 @@ public class NetRequests {
     }
     //---------------------------------------------------------
 
-    public String SendRequestCommon(String request, String json, int timout, boolean returnerror) {
+    public String SendRequestCommon(String request, String json, int timout, boolean returnerror, String method, String authToken) {
         String rez = "";
 
         if (timout == 0) {
@@ -33,23 +33,30 @@ public class NetRequests {
         try {
             URL url = new URL(request);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setUseCaches(false);
-            conn.setRequestMethod("POST");
+            if (method.equals("POST")) {
+                conn.setDoOutput(true);
+                conn.setUseCaches(false);
+            }
+            conn.setRequestMethod(method);
             conn.setRequestProperty("Content-Type", "application/json");
+            if (!authToken.equals("")) {
+                conn.setRequestProperty("x-yauth", authToken);
+            }
             //conn.setRequestProperty("Authorization", "app-token=nbJyew52");
             //conn.setRequestProperty("app-token","nbJyew52");
             //conn.setRequestProperty("login","suvdima");
             //conn.setRequestProperty("password","123");
             conn.setConnectTimeout(timout);
             conn.connect();
-            OutputStream os = conn.getOutputStream();
-            os.write(json.getBytes("UTF-8"));
-            System.out.println(conn.getResponseMessage());
-            os.flush();
-            os.close();
+            if (method.equals("POST")) {
+                OutputStream os = conn.getOutputStream();
+                os.write(json.getBytes("UTF-8"));
+                System.out.println(conn.getResponseMessage());
+                os.flush();
+                os.close();
+            }
             int responseCode = conn.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) { //success
+             if (responseCode == HttpURLConnection.HTTP_OK) { //success
                 //BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "iso-8859-1"), 8);
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"), 8);
                 String inputLine;

@@ -113,7 +113,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 cv.put("ordernum", navigationMenuData.getOrder());
                 cv.put("parentid", navigationMenuData.getParentId());
                 cv.put("translationid", navigationMenuData.getTranslationId());
-                cv.put("urlroute", navigationMenuData.getTranslationId());
+                cv.put("urlroute", navigationMenuData.getUrlRoute());
                 cv.put("cssclass", navigationMenuData.getCssClass());
 
                 db.insert("navigationmenus", null, cv);
@@ -128,7 +128,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         cv.put("ordernum", subMenus.get(s).getOrder());
                         cv.put("parentid", subMenus.get(s).getParentId());
                         cv.put("translationid", subMenus.get(s).getTranslationId());
-                        cv.put("urlroute", subMenus.get(s).getTranslationId());
+                        cv.put("urlroute", subMenus.get(s).getUrlRoute());
                         cv.put("cssclass", subMenus.get(s).getCssClass());
 
                         db.insert("navigationmenus", null, cv);

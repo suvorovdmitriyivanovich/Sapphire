@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/text_main"
+                android:text="@string/text_policies"
                 android:id="@+id/text_header"
                 android:textColor="#ffffff"
                 android:layout_centerVertical="true"
@@ -46,6 +46,19 @@
                 android:layout_marginRight="56dp" />
 
         </RelativeLayout>
+
+        <ExpandableListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/policieslist"
+            android:headerDividersEnabled="true"
+            android:drawSelectorOnTop="true"
+            android:choiceMode="multipleChoice"
+            android:footerDividersEnabled="true"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:childDivider="@null"
+            android:layout_below="@+id/top_group" />
 
     </RelativeLayout>
 

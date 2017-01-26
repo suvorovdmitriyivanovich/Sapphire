@@ -1,5 +1,8 @@
 package com.sapphire.logic;
 
+import com.sapphire.R;
+import com.sapphire.Sapphire;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +23,7 @@ public class ResponseData {
     private Long timestampResponse = 0l;
     private String httpStatusCode = "";
     private String httpStatusMessage = "";
-    private ArrayList<AccountData> data;
+    private JSONArray data;
     private int dataCount = 0;
     private int totalDataCount = 0;
     private boolean hasData = false;
@@ -33,55 +36,63 @@ public class ResponseData {
         JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(data);
-            JSONObject jsonObjectRequest = jsonObject.getJSONObject("request");
-            if (!jsonObjectRequest.isNull("requestId")) {
-                setRequestId(jsonObjectRequest.getString("requestId"));
+            if (!jsonObject.isNull("request")) {
+                JSONObject jsonObjectRequest = jsonObject.getJSONObject("request");
+                if (!jsonObjectRequest.isNull("requestId")) {
+                    setRequestId(jsonObjectRequest.getString("requestId"));
+                }
+                if (!jsonObjectRequest.isNull("url")) {
+                    setUrl(jsonObjectRequest.getString("url"));
+                }
+                if (!jsonObjectRequest.isNull("timestamp")) {
+                    setTimestampRequest(jsonObjectRequest.getString("timestamp"));
+                }
+                if (!jsonObjectRequest.isNull("ipAddress")) {
+                    setIpAddress(jsonObjectRequest.getString("ipAddress"));
+                }
+                if (!jsonObjectRequest.isNull("userAgentId")) {
+                    setUserAgentId(jsonObjectRequest.getString("userAgentId"));
+                }
+                if (!jsonObjectRequest.isNull("httpVerb")) {
+                    setHttpVerb(jsonObjectRequest.getString("httpVerb"));
+                }
             }
-            if (!jsonObjectRequest.isNull("url")) {
-                setUrl(jsonObjectRequest.getString("url"));
-            }
-            if (!jsonObjectRequest.isNull("timestamp")) {
-                setTimestampRequest(jsonObjectRequest.getString("timestamp"));
-            }
-            if (!jsonObjectRequest.isNull("ipAddress")) {
-                setIpAddress(jsonObjectRequest.getString("ipAddress"));
-            }
-            if (!jsonObjectRequest.isNull("userAgentId")) {
-                setUserAgentId(jsonObjectRequest.getString("userAgentId"));
-            }
-            if (!jsonObjectRequest.isNull("httpVerb")) {
-                setHttpVerb(jsonObjectRequest.getString("httpVerb"));
-            }
-            JSONObject jsonObjectResponse = jsonObject.getJSONObject("response");
-            if (!jsonObjectResponse.isNull("errorMessages")) {
-                setErrorMessages(jsonObjectResponse.getJSONArray("errorMessages"));
-            }
-            if (!jsonObjectResponse.isNull("responseId")) {
-                setResponseId(jsonObjectResponse.getString("responseId"));
-            }
-            if (!jsonObjectResponse.isNull("success")) {
-                setSuccess(jsonObjectResponse.getBoolean("success"));
-            }
-            if (!jsonObjectResponse.isNull("timestamp")) {
-                setTimestampResponse(jsonObjectResponse.getString("timestamp"));
-            }
-            if (!jsonObjectResponse.isNull("httpStatusCode")) {
-                setHttpStatusCode(jsonObjectResponse.getString("httpStatusCode"));
-            }
-            if (!jsonObjectResponse.isNull("httpStatusMessage")) {
-                setHttpStatusMessage(jsonObjectResponse.getString("httpStatusMessage"));
-            }
-            if (!jsonObjectResponse.isNull("data")) {
-                setData(jsonObjectResponse.getJSONArray("data"));
-            }
-            if (!jsonObjectResponse.isNull("dataCount")) {
-                setDataCount(jsonObjectResponse.getInt("dataCount"));
-            }
-            if (!jsonObjectResponse.isNull("totalDataCount")) {
-                setTotalDataCount(jsonObjectResponse.getInt("totalDataCount"));
-            }
-            if (!jsonObjectResponse.isNull("hasData")) {
-                setHasData(jsonObjectResponse.getBoolean("hasData"));
+            if (!jsonObject.isNull("response")) {
+                JSONObject jsonObjectResponse = jsonObject.getJSONObject("response");
+                if (!jsonObjectResponse.isNull("errorMessages")) {
+                    setErrorMessages(jsonObjectResponse.getJSONArray("errorMessages"));
+                }
+                if (!jsonObjectResponse.isNull("responseId")) {
+                    setResponseId(jsonObjectResponse.getString("responseId"));
+                }
+                if (!jsonObjectResponse.isNull("success")) {
+                    setSuccess(jsonObjectResponse.getBoolean("success"));
+                }
+                if (!jsonObjectResponse.isNull("timestamp")) {
+                    setTimestampResponse(jsonObjectResponse.getString("timestamp"));
+                }
+                if (!jsonObjectResponse.isNull("httpStatusCode")) {
+                    setHttpStatusCode(jsonObjectResponse.getString("httpStatusCode"));
+                }
+                if (!jsonObjectResponse.isNull("httpStatusMessage")) {
+                    setHttpStatusMessage(jsonObjectResponse.getString("httpStatusMessage"));
+                }
+                if (!jsonObjectResponse.isNull("data")) {
+                    setData(jsonObjectResponse.getJSONArray("data"));
+                }
+                if (!jsonObjectResponse.isNull("dataCount")) {
+                    setDataCount(jsonObjectResponse.getInt("dataCount"));
+                }
+                if (!jsonObjectResponse.isNull("totalDataCount")) {
+                    setTotalDataCount(jsonObjectResponse.getInt("totalDataCount"));
+                }
+                if (!jsonObjectResponse.isNull("hasData")) {
+                    setHasData(jsonObjectResponse.getBoolean("hasData"));
+                }
+            } else if (!jsonObject.isNull("Message")) {
+                setHttpStatusMessage(jsonObject.getString("Message"));
+            } else {
+                setHttpStatusMessage(Sapphire.getInstance().getResources().getString(R.string.unknown_error));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -232,19 +243,11 @@ public class ResponseData {
         this.hasData = hasData;
     }
 
-    public ArrayList<AccountData> getData() {
+    public JSONArray getData() {
         return data;
     }
 
     public void setData(JSONArray data) {
-        ArrayList<AccountData> accountDatas = new ArrayList<AccountData>();
-        for (int y=0; y < data.length(); y++) {
-            try {
-                accountDatas.add(new AccountData(data.getJSONObject(y)));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        this.data = accountDatas;
+        this.data = data;
     }
 }

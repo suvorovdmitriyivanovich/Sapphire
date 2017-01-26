@@ -48,8 +48,7 @@ public class AuthenticationsAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER
-                + "/v1/Security/Authentications";
+        String urlstring = Environment.SERVER + Environment.SecurityAuthenticationsURL;
 
         JSONObject json = new JSONObject();
         try {
@@ -60,7 +59,7 @@ public class AuthenticationsAction extends AsyncTask{
             e.printStackTrace();
         }
 
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,json.toString(),0,true));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,json.toString(),0,true,"POST",""));
 
         String result = "";
 
@@ -71,13 +70,24 @@ public class AuthenticationsAction extends AsyncTask{
             ed.putBoolean("INSUCCESS", true);
             ed.apply();
 
-            ArrayList<AccountData> accountDatas = responseData.getData();
+            JSONArray data = responseData.getData();
+            ArrayList<AccountData> accountDatas = new ArrayList<AccountData>();
+            for (int y=0; y < data.length(); y++) {
+                try {
+                    accountDatas.add(new AccountData(data.getJSONObject(y)));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
             if (accountDatas.size() == 1) {
                 ArrayList<NavigationMenuData> navigationMenuDatas = accountDatas.get(0).getNavigationMenus();
                 if (navigationMenuDatas.size() > 0) {
                     DBHelper.getInstance(Sapphire.getInstance()).deleteNavigationMenus();
                     DBHelper.getInstance(Sapphire.getInstance()).addNavigationMenus(navigationMenuDatas);
                 }
+                ed.putString("AUTHTOKEN", accountDatas.get(0).getAuthToken());
+                ed.apply();
             }
 
             result = "OK";
