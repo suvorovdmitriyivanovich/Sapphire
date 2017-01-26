@@ -26,4 +26,6 @@
     <string name="text_policies">My Policies &#38; Handbooks</string>
     <string name="text_acknowledge">ACKNOWLEDGE</string>
     <string name="unknown_error">Unknown error</string>
+    <string name="text_courses">My Training Courses</string>
+    <string name="text_duration">Duration:</string>
 </resources>
