@@ -72,7 +72,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "parentid text,"
                 + "translationid text,"
                 + "urlroute text,"
-                + "cssclass text"
+                + "cssclass text,"
+                + "unicodeicon text"
                 + ");");
     }
 
@@ -115,6 +116,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 cv.put("translationid", navigationMenuData.getTranslationId());
                 cv.put("urlroute", navigationMenuData.getUrlRoute());
                 cv.put("cssclass", navigationMenuData.getCssClass());
+                cv.put("unicodeicon", navigationMenuData.getUnicodeIcon());
 
                 db.insert("navigationmenus", null, cv);
 
@@ -130,6 +132,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         cv.put("translationid", subMenus.get(s).getTranslationId());
                         cv.put("urlroute", subMenus.get(s).getUrlRoute());
                         cv.put("cssclass", subMenus.get(s).getCssClass());
+                        cv.put("unicodeicon", subMenus.get(s).getUnicodeIcon());
 
                         db.insert("navigationmenus", null, cv);
                     }
@@ -161,6 +164,7 @@ public class DBHelper extends SQLiteOpenHelper {
             int translationidColIndex = c.getColumnIndex("translationid");
             int urlrouteColIndex = c.getColumnIndex("urlroute");
             int cssclassColIndex = c.getColumnIndex("cssclass");
+            int unicodeiconColIndex = c.getColumnIndex("unicodeicon");
 
             do {
                 NavigationMenuData navigationMenuData = new NavigationMenuData();
@@ -184,6 +188,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 }
                 if (cssclassColIndex != -1) {
                     navigationMenuData.setCssClass(c.getString(cssclassColIndex));
+                }
+                if (unicodeiconColIndex != -1) {
+                    navigationMenuData.setUnicodeIcon(c.getString(unicodeiconColIndex));
                 }
                 //submenu
                 if (!navigationMenuData.getParentId().equals("")) {

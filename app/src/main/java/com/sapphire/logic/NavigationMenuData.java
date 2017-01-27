@@ -15,6 +15,7 @@ public class NavigationMenuData {
     private String order = "";
     private String urlRoute = "";
     private String cssClass = "";
+    private String unicodeIcon = "";
     private ArrayList<NavigationMenuData> subMenus = new ArrayList<NavigationMenuData>();
 
     public NavigationMenuData() {
@@ -49,6 +50,9 @@ public class NavigationMenuData {
             }
             if (!data.isNull("CssClass")) {
                 setCssClass(data.getString("CssClass"));
+            }
+            if (!data.isNull("UnicodeIcon")) {
+                setUnicodeIcon(data.getString("UnicodeIcon"));
             }
             if (!data.isNull("SubMenus")) {
                 setSubMenus(data.getJSONArray("SubMenus"));
@@ -128,6 +132,14 @@ public class NavigationMenuData {
 
     public void setCssClass(String cssClass) {
         this.cssClass = cssClass;
+    }
+
+    public String getUnicodeIcon() {
+        return unicodeIcon;
+    }
+
+    public void setUnicodeIcon(String unicodeIcon) {
+        this.unicodeIcon = unicodeIcon;
     }
 
     public ArrayList<NavigationMenuData> getSubMenus() {

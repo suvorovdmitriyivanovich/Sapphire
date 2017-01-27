@@ -97,18 +97,19 @@ public class MenuAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.child_view, null);
         }
 
+        NavigationMenuData navigationMenuData = mGroups.get(groupPosition).getSubMenus().get(childPosition);
+
         TextView name = (TextView) convertView.findViewById(R.id.text_name);
-        name.setText(mGroups.get(groupPosition).getSubMenus().get(childPosition).getName());
+        name.setText(navigationMenuData.getName());
 
         TextView ico = (TextView) convertView.findViewById(R.id.ico);
-        if (mGroups.get(groupPosition).getSubMenus().get(childPosition).getCssClass().equals("")) {
+        if (navigationMenuData.getUnicodeIcon().equals("")) {
             ico.setVisibility(View.GONE);
         } else {
             ico.setVisibility(View.VISIBLE);
+            ico.setTypeface(typeFace);
+            ico.setText(Html.fromHtml("&#"+Integer.parseInt(navigationMenuData.getUnicodeIcon(), 16)+";"));
         }
-
-        ico.setTypeface(typeFace);
-        ico.setText(Html.fromHtml("&#62157;"));
 
         View root = convertView.findViewById(R.id.root);
         root.setOnClickListener(new View.OnClickListener() {

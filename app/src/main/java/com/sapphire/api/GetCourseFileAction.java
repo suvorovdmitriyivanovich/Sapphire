@@ -3,7 +3,6 @@ package com.sapphire.api;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.CoursesData;
@@ -11,10 +10,8 @@ import com.sapphire.logic.Environment;
 import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
-
 import org.json.JSONArray;
 import org.json.JSONException;
-
 import java.util.ArrayList;
 
 public class GetCourseFileAction extends AsyncTask{
