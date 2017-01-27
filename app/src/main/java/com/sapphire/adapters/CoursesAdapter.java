@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
+import com.sapphire.logic.CourseData;
 import com.sapphire.logic.CoursesData;
 import java.util.ArrayList;
 
@@ -23,6 +24,10 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
 
     public interface OnOpenClickListener{
         void onOpenClick(int groupPosition, int childPosition);
+    }
+
+    public interface OnListClickListener{
+        void onListClick(int groupPosition, int childPosition);
     }
 
     private ArrayList<CoursesData> mGroups;
@@ -101,11 +106,20 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.child_courses_view, null);
         }
 
-        TextView name = (TextView) convertView.findViewById(R.id.text_name);
-        name.setText(mGroups.get(groupPosition).getSubCourses().get(childPosition).getName());
+        CoursesData coursesData = mGroups.get(groupPosition).getSubCourses().get(childPosition);
 
-        CheckBox acknowledged = (CheckBox) convertView.findViewById(R.id.acknowledged);
-        acknowledged.setChecked(mGroups.get(groupPosition).getSubCourses().get(childPosition).getIsAcknowledged());
+        TextView name = (TextView) convertView.findViewById(R.id.text_name);
+        name.setText(coursesData.getName());
+
+        String textCourse = Sapphire.getInstance().getResources().getString(R.string.text_duration);
+        textCourse = textCourse + ": " + coursesData.getDuration();
+        textCourse = textCourse + ", " + Sapphire.getInstance().getResources().getString(R.string.text_quiz_score);
+        textCourse = textCourse + ": " + coursesData.getQuizScore();
+        textCourse = textCourse + ", " + Sapphire.getInstance().getResources().getString(R.string.text_quiz_completed_on);
+        textCourse = textCourse + ": " + coursesData.getQuizDateCompletedString();
+
+        TextView course = (TextView) convertView.findViewById(R.id.text_course);
+        course.setText(textCourse);
 
         View root = convertView.findViewById(R.id.root);
         root.setOnClickListener(new View.OnClickListener() {
@@ -123,8 +137,21 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
             }
         });
 
+        Button list = (Button) convertView.findViewById(R.id.list);
+        list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((OnListClickListener)mContext).onListClick(groupPosition, childPosition);
+            }
+        });
+
+        list.setEnabled(coursesData.getQuizEnabled());
+
         open.setTypeface(typeFace);
-        open.setText(Html.fromHtml("&#61485;"));
+        open.setText(Html.fromHtml("&#61515;"));
+
+        list.setTypeface(typeFace);
+        list.setText(Html.fromHtml("&#61498;"));
 
         return convertView;
     }

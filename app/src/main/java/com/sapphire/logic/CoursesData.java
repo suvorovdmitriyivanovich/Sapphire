@@ -3,24 +3,32 @@ package com.sapphire.logic;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class CoursesData {
+    private String courseFileId = "";
     private String name = "";
-    private boolean isAcknowledged = false;
     private String description = "";
-    private String parentId = "";
-    private SettingData settings;
+    private String duration;
     private boolean isDisabled = false;
-    private boolean isActive = false;
+    private CourseData course;
+    private String quizId = "";
     private Long dateModified = 0l;
-    private DurationData duration;
-    private Long dateCreated = 0l;
-    private String id = "";
-    private String fileId = "";
+    private String courseFileData = "";
+    private boolean isFile = false;
+    private String parentId = "";
+    private boolean quizEnabled = false;
+    private boolean coursePassed = false;
+    private Long dateCoursePassed = 0l;
+    private boolean isCourseStarted = false;
+    private Long dateCourseStarted = 0l;
+    private String quizScore = "";
+    private int quizStatus = 0;
+    private Long quizDateCompleted = 0l;
+    private String idQuizCompleted = "";
+    private String passingScore = "";
     private ArrayList<CoursesData> subCourses = new ArrayList<CoursesData>();
 
     public CoursesData() {
@@ -29,41 +37,68 @@ public class CoursesData {
 
     public CoursesData(JSONObject data) {
         try {
+            if (!data.isNull("CourseFileId")) {
+                setCourseFileId(data.getString("CourseFileId"));
+            }
             if (!data.isNull("Name")) {
                 setName(data.getString("Name"));
-            }
-            if (!data.isNull("IsAcknowledged")) {
-                setIsAcknowledged(data.getBoolean("IsAcknowledged"));
             }
             if (!data.isNull("Description")) {
                 setDescription(data.getString("Description"));
             }
-            if (!data.isNull("ParentId")) {
-                setParentId(data.getString("ParentId"));
-            }
-            if (!data.isNull("Settings")) {
-                setSettings(data.getJSONObject("Settings"));
+            if (!data.isNull("Duration")) {
+                setDuration(data.getString("Duration"));
             }
             if (!data.isNull("IsDisabled")) {
                 setIsDisabled(data.getBoolean("IsDisabled"));
             }
-            if (!data.isNull("IsActive")) {
-                setIsActive(data.getBoolean("IsActive"));
+            if (!data.isNull("Course")) {
+                setCourse(data.getJSONObject("Course"));
+            }
+            if (!data.isNull("QuizId")) {
+                setQuizId(data.getString("QuizId"));
             }
             if (!data.isNull("DateModified")) {
                 setDateModified(data.getString("DateModified"));
             }
-            if (!data.isNull("Duration")) {
-                setDuration(data.getJSONObject("Duration"));
+            if (!data.isNull("CourseFileData")) {
+                setCourseFileData(data.getString("CourseFileData"));
             }
-            if (!data.isNull("DateCreated")) {
-                setDateCreated(data.getString("DateCreated"));
+            if (!data.isNull("IsFile")) {
+                setIsFile(data.getBoolean("IsFile"));
             }
-            if (!data.isNull("Id")) {
-                setId(data.getString("Id"));
+            if (!data.isNull("ParentId")) {
+                setParentId(data.getString("ParentId"));
             }
-            if (!data.isNull("FileId")) {
-                setFileId(data.getString("FileId"));
+            if (!data.isNull("QuizEnabled")) {
+                setQuizEnabled(data.getBoolean("QuizEnabled"));
+            }
+            if (!data.isNull("CoursePassed")) {
+                setCoursePassed(data.getBoolean("CoursePassed"));
+            }
+            if (!data.isNull("DateCoursePassed")) {
+                setDateCoursePassed(data.getString("DateCoursePassed"));
+            }
+            if (!data.isNull("IsCourseStarted")) {
+                setIsCourseStarted(data.getBoolean("IsCourseStarted"));
+            }
+            if (!data.isNull("DateCourseStarted")) {
+                setDateCourseStarted(data.getString("DateCourseStarted"));
+            }
+            if (!data.isNull("QuizScore")) {
+                setQuizScore(data.getString("QuizScore"));
+            }
+            if (!data.isNull("QuizStatus")) {
+                setQuizStatus(data.getInt("QuizStatus"));
+            }
+            if (!data.isNull("QuizDateCompleted")) {
+                setQuizDateCompleted(data.getString("QuizDateCompleted"));
+            }
+            if (!data.isNull("IdQuizCompleted")) {
+                setIdQuizCompleted(data.getString("IdQuizCompleted"));
+            }
+            if (!data.isNull("PassingScore")) {
+                setPassingScore(data.getString("PassingScore"));
             }
             if (!data.isNull("SubCourses")) {
                 setSubCourses(data.getJSONArray("SubCourses"));
@@ -71,6 +106,14 @@ public class CoursesData {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getCourseFileId() {
+        return courseFileId;
+    }
+
+    public void setCourseFileId(String courseFileId) {
+        this.courseFileId = courseFileId;
     }
 
     public String getName() {
@@ -81,36 +124,12 @@ public class CoursesData {
         this.name = name;
     }
 
-    public boolean getIsAcknowledged() {
-        return isAcknowledged;
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 
-    public void setIsAcknowledged(boolean isAcknowledged) {
-        this.isAcknowledged = isAcknowledged;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
-
-    public void setSettings(JSONObject settings) {
-        this.settings = new SettingData(settings);
-    }
-
-    public SettingData getSettings() {
-        return settings;
+    public String getDuration() {
+        return duration;
     }
 
     public boolean getIsDisabled() {
@@ -121,12 +140,20 @@ public class CoursesData {
         this.isDisabled = isDisabled;
     }
 
-    public boolean getIsActive() {
-        return isActive;
+    public void setCourse(JSONObject course) {
+        this.course = new CourseData(course);
     }
 
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
+    public CourseData getCourse() {
+        return course;
+    }
+
+    public void setQuizId(String quizId) {
+        this.quizId = quizId;
+    }
+
+    public String getQuizId() {
+        return quizId;
     }
 
     public Long getDateModified() {
@@ -145,6 +172,153 @@ public class CoursesData {
         this.dateModified = dateModifiedLong;
     }
 
+    public void setCourseFileData(String courseFileData) {
+        this.courseFileData = courseFileData;
+    }
+
+    public String getCourseFileData() {
+        return courseFileData;
+    }
+
+    public boolean getIsFile() {
+        return isFile;
+    }
+
+    public void setIsFile(boolean isFile) {
+        this.isFile = isFile;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
+    public boolean getQuizEnabled() {
+        return quizEnabled;
+    }
+
+    public void setQuizEnabled(boolean quizEnabled) {
+        this.quizEnabled = quizEnabled;
+    }
+
+    public boolean getCoursePassed() {
+        return coursePassed;
+    }
+
+    public void setCoursePassed(boolean coursePassed) {
+        this.coursePassed = coursePassed;
+    }
+
+    public Long getDateCoursePassed() {
+        return dateCoursePassed;
+    }
+
+    public void setDateCoursePassed(String dateCoursePassed) {
+        Long dateCoursePassedLong = 0l;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        try {
+            Date newdate = format.parse(dateCoursePassed);
+            dateCoursePassedLong = newdate.getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.dateCoursePassed = dateCoursePassedLong;
+    }
+
+    public boolean getIsCourseStarted() {
+        return isCourseStarted;
+    }
+
+    public void setIsCourseStarted(boolean isCourseStarted) {
+        this.isCourseStarted = isCourseStarted;
+    }
+
+    public Long getDateCourseStarted() {
+        return dateCourseStarted;
+    }
+
+    public void setDateCourseStarted(String dateCourseStarted) {
+        Long dateCourseStartedLong = 0l;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        try {
+            Date newdate = format.parse(dateCourseStarted);
+            dateCourseStartedLong = newdate.getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.dateCourseStarted = dateCourseStartedLong;
+    }
+
+    public String getQuizScore() {
+        return quizScore;
+    }
+
+    public void setQuizScore(String quizScore) {
+        this.quizScore = quizScore;
+    }
+
+    public int getQuizStatus() {
+        return quizStatus;
+    }
+
+    public void setQuizStatus(int quizStatus) {
+        this.quizStatus = quizStatus;
+    }
+
+    public Long getQuizDateCompleted() {
+        return quizDateCompleted;
+    }
+
+    public String getQuizDateCompletedString() {
+        String quizDateCompletedString = "";
+        if (quizDateCompleted != 0l) {
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+            Date date = new Date();
+            date.setTime(quizDateCompleted);
+            quizDateCompletedString = format.format(date);
+        }
+        return quizDateCompletedString;
+    }
+
+    public void setQuizDateCompleted(String quizDateCompleted) {
+        Long quizDateCompletedLong = 0l;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        try {
+            Date newdate = format.parse(quizDateCompleted);
+            quizDateCompletedLong = newdate.getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.quizDateCompleted = quizDateCompletedLong;
+    }
+
+    public String getIdQuizCompleted() {
+        return idQuizCompleted;
+    }
+
+    public void setIdQuizCompleted(String idQuizCompleted) {
+        this.idQuizCompleted = idQuizCompleted;
+    }
+
+    public String getPassingScore() {
+        return passingScore;
+    }
+
+    public void setPassingScore(String passingScore) {
+        this.passingScore = passingScore;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public ArrayList<CoursesData> getSubCourses() {
         return subCourses;
     }
@@ -159,45 +333,5 @@ public class CoursesData {
             }
         }
         this.subCourses = coursesDatas;
-    }
-
-    public void setDuration(JSONObject duration) {
-        this.duration = new DurationData(duration);
-    }
-
-    public DurationData getDuration() {
-        return duration;
-    }
-
-    public Long getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(String dateCreated) {
-        Long dateCreatedLong = 0l;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        try {
-            Date newdate = format.parse(dateCreated);
-            dateCreatedLong = newdate.getTime();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        this.dateCreated = dateCreatedLong;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getFileId() {
-        return fileId;
-    }
-
-    public void setFileId(String fileId) {
-        this.fileId = fileId;
     }
 }

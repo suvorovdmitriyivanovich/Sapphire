@@ -27,5 +27,8 @@
     <string name="text_acknowledge">ACKNOWLEDGE</string>
     <string name="unknown_error">Unknown error</string>
     <string name="text_courses">My Training Courses</string>
-    <string name="text_duration">Duration:</string>
+    <string name="text_duration">Duration</string>
+    <string name="text_quiz_score">Quiz Score</string>
+    <string name="text_course_completed_on">Course Completed On</string>
+    <string name="text_quiz_completed_on">Quiz Completed On</string>
 </resources>

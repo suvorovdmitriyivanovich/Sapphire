@@ -8,25 +8,27 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sapphire.R;
-import com.sapphire.api.PolicyLogAction;
+import com.sapphire.api.GetCourseFileAction;
+import com.sapphire.logic.CoursesData;
 import com.sapphire.logic.Environment;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class CoursActivity extends AppCompatActivity implements PolicyLogAction.RequestPolicyLog {
+public class CourseActivity extends AppCompatActivity implements GetCourseFileAction.RequestCourses,
+                                                                 GetCourseFileAction.RequestCoursesData{
     WebView webView;
     private Long count = 0l;
     private TextView time;
     private boolean needbreak = false;
     private View button_acknowledged;
-    private String fileId;
+    private String courseId;
     private String id;
     ProgressDialog pd;
     private boolean needClose = false;
@@ -41,9 +43,10 @@ public class CoursActivity extends AppCompatActivity implements PolicyLogAction.
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pd.show();
-                needClose = true;
-                new PolicyLogAction(CoursActivity.this, id, Environment.PolicyStatusAcknowledged).execute();
+                //pd.show();
+                //needClose = true;
+                //new PolicyLogAction(CoursActivity.this, id, Environment.PolicyStatusAcknowledged).execute();
+                finish();
             }
         });
 
@@ -54,7 +57,16 @@ public class CoursActivity extends AppCompatActivity implements PolicyLogAction.
         pd.setCancelable(false);
         pd.setCanceledOnTouchOutside(false);
 
+        TextView text_header = (TextView) findViewById(R.id.text_header);
+
+        Intent intent = getIntent();
+        text_header.setText(intent.getStringExtra("name"));
+
+        courseId = intent.getStringExtra("courseId");
+
         pd.show();
+        //new GetCourseFileAction(CourseActivity.this, courseId).execute();
+
         webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);
         //webView.loadUrl("https://google.com");
@@ -62,19 +74,15 @@ public class CoursActivity extends AppCompatActivity implements PolicyLogAction.
         //webView.loadUrl("http://www.xeroxscanners.com/downloads/Manuals/XMS/PDF_Converter_Pro_Quick_Reference_Guide.RU.pdf");
         //webView.setWebViewClient(new HelloWebViewClient());
 
-        TextView text_header = (TextView) findViewById(R.id.text_header);
-
-        Intent intent = getIntent();
-        text_header.setText(intent.getStringExtra("name"));
-        count = Long.valueOf(intent.getIntExtra("duration", 0));
+        //count = Long.valueOf(intent.getIntExtra("duration", 0));
         count = 0l;
-        fileId = intent.getStringExtra("fileId");
-        id = intent.getStringExtra("id");
+        //id = intent.getStringExtra("id");
 
-        String urlstring = Environment.SERVER + Environment.DocumentManagementFilesDownloadURL + fileId;
-        webView.loadUrl(Environment.GoogleURLReadPDF+urlstring);
+        String urlstring = Environment.SERVERFull + Environment.CourseFileGetURL + "/" + courseId;
+        webView.loadUrl(urlstring);
         //webView.setWebViewClient(new HelloWebViewClient());
 
+        /*
         if (intent.getBooleanExtra("acknowledged", false)) {
             View bottom_group = findViewById(R.id.bottom_group);
             ViewGroup.LayoutParams par_bottom_group = bottom_group.getLayoutParams();
@@ -87,7 +95,7 @@ public class CoursActivity extends AppCompatActivity implements PolicyLogAction.
                 @Override
                 public void onClick(View v) {
                     pd.show();
-                    new PolicyLogAction(CoursActivity.this, id, Environment.PolicyStatusStarted).execute();
+                    //new PolicyLogAction(CoursActivity.this, id, Environment.PolicyStatusStarted).execute();
                 }
             });
 
@@ -100,6 +108,7 @@ public class CoursActivity extends AppCompatActivity implements PolicyLogAction.
                 new CountTask().execute();
             }
         }
+        */
 
         //int i = Integer.parseInt(hex,16);
 
@@ -108,19 +117,17 @@ public class CoursActivity extends AppCompatActivity implements PolicyLogAction.
             public void run() {
                 pd.hide();
             }
-        }, 10000);
+        }, 20000);
     }
 
     @Override
-    public void onRequestPolicyLog(String result) {
-        pd.hide();
-        if (!result.equals("OK")) {
-            Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
-        }
-        if (needClose) {
-            finish();
-        }
+    public void onRequestCourses(String result) {
+
+    }
+
+    @Override
+    public void onRequestCoursesData(ArrayList<CoursesData> coursesDatas) {
+
     }
 
     private class CountTask extends AsyncTask<String, Void, String> {

@@ -3,18 +3,21 @@ package com.sapphire.api;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+
 import com.sapphire.R;
 import com.sapphire.Sapphire;
+import com.sapphire.logic.CoursesData;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.logic.CoursesData;
 import com.sapphire.logic.ResponseData;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+
 import java.util.ArrayList;
 
-public class CoursesAction extends AsyncTask{
+public class GetCourseFileAction extends AsyncTask{
 
     public interface RequestCourses {
         public void onRequestCourses(String result);
@@ -26,9 +29,11 @@ public class CoursesAction extends AsyncTask{
 
     private Context mContext;
     private ArrayList<CoursesData> coursesDatas;
+    private String courseId = "";
 
-    public CoursesAction(Context context) {
+    public GetCourseFileAction(Context context, String courseId) {
         this.mContext = context;
+        this.courseId = courseId;
     }
 
     @Override
@@ -36,7 +41,7 @@ public class CoursesAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.CoursesCurrentURL;
+        String urlstring = Environment.SERVERFull + Environment.CourseFileGetURL + "/" + courseId;
 
         SharedPreferences sPref = mContext.getSharedPreferences("GlobalPreferences", mContext.MODE_PRIVATE);
 

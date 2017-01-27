@@ -11,14 +11,21 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/text_name"
         android:textColor="#333333"
-        android:layout_alignTop="@+id/open" />
+        android:layout_toLeftOf="@+id/open"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/text_course"
-        android:layout_alignBottom="@+id/open" />
+        android:layout_below="@+id/text_name"
+        android:layout_toLeftOf="@+id/open"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginRight="10dp" />
 
     <Button
         android:layout_width="45dp"

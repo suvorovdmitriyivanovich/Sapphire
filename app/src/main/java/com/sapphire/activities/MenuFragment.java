@@ -146,6 +146,9 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
         if (navigationMenuDatas.get(groupPosition).getSubMenus().get(childPosition).getUrlRoute().equals("/me/my-policies-and-handbooks")) {
             Intent intent = new Intent(getActivity(), PoliciesActivity.class);
             startActivity(intent);
+        } else if (navigationMenuDatas.get(groupPosition).getSubMenus().get(childPosition).getUrlRoute().equals("/me/my-training-courses")) {
+            Intent intent = new Intent(getActivity(), CoursesActivity.class);
+            startActivity(intent);
         }
         //Intent intent = new Intent(getActivity(), SettingsActivity.class);
         //startActivity(intent);

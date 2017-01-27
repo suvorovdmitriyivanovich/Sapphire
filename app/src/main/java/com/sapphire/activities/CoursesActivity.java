@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 public class CoursesActivity extends AppCompatActivity implements CoursesAdapter.OnRootClickListener,
                                                                   CoursesAdapter.OnOpenClickListener,
+                                                                  CoursesAdapter.OnListClickListener,
                                                                   CoursesAction.RequestCourses,
                                                                   CoursesAction.RequestCoursesData {
     public final static String PARAM_TASK = "task";
@@ -93,14 +94,21 @@ public class CoursesActivity extends AppCompatActivity implements CoursesAdapter
 
     @Override
     public void onOpenClick(int groupPosition, int childPosition) {
-        Intent intent = new Intent(CoursesActivity.this, CoursActivity.class);
+        Intent intent = new Intent(CoursesActivity.this, CourseActivity.class);
         CoursesData coursesData = coursesDatas.get(groupPosition).getSubCourses().get(childPosition);
-        intent.putExtra("acknowledged", coursesData.getIsAcknowledged());
         intent.putExtra("name", coursesData.getName());
-        intent.putExtra("fileId", coursesData.getFileId());
+        intent.putExtra("courseId", coursesData.getCourseFileId());
+        /*
+        intent.putExtra("acknowledged", coursesData.getIsAcknowledged());
         intent.putExtra("duration", (coursesData.getDuration().getHours() * 60 * 60) + (coursesData.getDuration().getMinutes() * 60) + coursesData.getDuration().getSeconds());
         intent.putExtra("id", coursesData.getId());
+        */
         startActivity(intent);
+    }
+
+    @Override
+    public void onListClick(int groupPosition, int childPosition) {
+
     }
 
     @Override
