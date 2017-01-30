@@ -14,10 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sapphire.R;
+import com.sapphire.Sapphire;
 import com.sapphire.api.GetCourseFileAction;
 import com.sapphire.logic.CoursesData;
 import com.sapphire.logic.Environment;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -65,21 +67,17 @@ public class CourseActivity extends AppCompatActivity implements GetCourseFileAc
         courseId = intent.getStringExtra("courseId");
 
         pd.show();
-        //new GetCourseFileAction(CourseActivity.this, courseId).execute();
+        new GetCourseFileAction(CourseActivity.this, courseId).execute();
 
         webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);
-        //webView.loadUrl("https://google.com");
-        //webView.loadUrl("https://docs.google.com/viewer?url=http://www.xeroxscanners.com/downloads/Manuals/XMS/PDF_Converter_Pro_Quick_Reference_Guide.RU.pdf");
-        //webView.loadUrl("http://www.xeroxscanners.com/downloads/Manuals/XMS/PDF_Converter_Pro_Quick_Reference_Guide.RU.pdf");
-        //webView.setWebViewClient(new HelloWebViewClient());
 
         //count = Long.valueOf(intent.getIntExtra("duration", 0));
         count = 0l;
         //id = intent.getStringExtra("id");
 
-        String urlstring = Environment.SERVERFull + Environment.CourseFileGetURL + "/" + courseId;
-        webView.loadUrl(urlstring);
+        //File f = new File(android.os.Environment.getExternalStorageDirectory() + "/Download/index.html");
+        //webView.loadUrl("file://"+f.getAbsolutePath());
         //webView.setWebViewClient(new HelloWebViewClient());
 
         /*
@@ -112,22 +110,36 @@ public class CourseActivity extends AppCompatActivity implements GetCourseFileAc
 
         //int i = Integer.parseInt(hex,16);
 
+        /*
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 pd.hide();
             }
-        }, 20000);
+        }, 5000);
+        */
     }
 
     @Override
     public void onRequestCourses(String result) {
-
+        pd.hide();
+        if (!result.equals("OK")) {
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void onRequestCoursesData(ArrayList<CoursesData> coursesDatas) {
+        File sdPath = new File(Sapphire.getInstance().getFilesDir() + "/temp/temp.html");
+        //File f = new File(android.os.Environment.getExternalStorageDirectory() + "/Download/temp.html");
+        //webView.loadUrl("file://"+sdPath.getAbsolutePath());
 
+        //File f = new File(android.os.Environment.getExternalStorageDirectory() + "/Download/index.html");
+        //webView.loadUrl("file://"+f.getAbsolutePath());
+        webView.loadUrl("http://portal.dealerpilothr.com/api/CourseFile/Get/d10fdc39-182e-cb17-b3b1-8b967cffca91");
+
+        pd.hide();
     }
 
     private class CountTask extends AsyncTask<String, Void, String> {

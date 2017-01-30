@@ -10,8 +10,12 @@ import com.sapphire.logic.Environment;
 import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
+import com.sapphire.utils.Files;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.io.File;
 import java.util.ArrayList;
 
 public class GetCourseFileAction extends AsyncTask{
@@ -42,53 +46,25 @@ public class GetCourseFileAction extends AsyncTask{
 
         SharedPreferences sPref = mContext.getSharedPreferences("GlobalPreferences", mContext.MODE_PRIVATE);
 
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET",sPref.getString("AUTHTOKEN","")));
+        String result = NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET",sPref.getString("AUTHTOKEN",""));
 
-        String result = "";
+        if (result.indexOf("<!DOCTYPE html><html><head>") == 0) {
+            File sdPath = new File(Sapphire.getInstance().getFilesDir() + "/temp");
+            if (!sdPath.exists()) {
+                // создаем каталог
+                sdPath.mkdirs();
+            }
+            sdPath = new File(Sapphire.getInstance().getFilesDir() + "/temp/temp.html");
+            if (sdPath.exists()) {
+                sdPath.delete();
+            }
 
-        if (responseData.getSuccess()) {
-            JSONArray data = responseData.getData();
-            coursesDatas = new ArrayList<CoursesData>();
-            for (int y=0; y < data.length(); y++) {
-                try {
-                    if (!data.getJSONObject(y).isNull("ParentId")) {
-                        continue;
-                    }
-                    coursesDatas.add(new CoursesData(data.getJSONObject(y)));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            for (int y=0; y < data.length(); y++) {
-                try {
-                    if (data.getJSONObject(y).isNull("ParentId")) {
-                        continue;
-                    }
-                    CoursesData coursesData = new CoursesData(data.getJSONObject(y));
-                    for (int z=0; z < coursesDatas.size(); z++) {
-                        if (coursesDatas.get(z).getCourseFileId().equals(coursesData.getParentId())) {
-                            coursesDatas.get(z).getSubCourses().add(coursesData);
-                            break;
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
+            //File f = new File(android.os.Environment.getExternalStorageDirectory() + "/Download/temp.html");
+
+            Files.writeToFile(result, sdPath);
+            //Files.writeToFile(result, f);
 
             result = "OK";
-        } else {
-            ArrayList<ErrorMessageData> errorMessageDatas = responseData.getErrorMessages();
-            if (errorMessageDatas == null || errorMessageDatas.size() == 0) {
-                result = responseData.getHttpStatusMessage();
-            } else {
-                for (int y=0; y < errorMessageDatas.size(); y++) {
-                    if (!result.equals("")) {
-                        result = result + ". ";
-                    }
-                    result = errorMessageDatas.get(y).getName();
-                }
-            }
         }
 
         return result;

@@ -1,4 +1,4 @@
-package com.litnet.utils;
+package com.sapphire.utils;
 
 import java.io.File;
 import java.io.FileInputStream;

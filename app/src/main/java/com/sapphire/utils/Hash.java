@@ -1,4 +1,4 @@
-package com.litnet.utils;
+package com.sapphire.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
