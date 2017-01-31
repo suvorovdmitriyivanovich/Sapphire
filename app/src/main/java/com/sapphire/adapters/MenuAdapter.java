@@ -108,7 +108,11 @@ public class MenuAdapter extends BaseExpandableListAdapter {
         } else {
             ico.setVisibility(View.VISIBLE);
             ico.setTypeface(typeFace);
-            ico.setText(Html.fromHtml("&#"+Integer.parseInt(navigationMenuData.getUnicodeIcon(), 16)+";"));
+            try {
+                ico.setText(Html.fromHtml("&#"+Integer.parseInt(navigationMenuData.getUnicodeIcon(), 16)+";"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         View root = convertView.findViewById(R.id.root);
