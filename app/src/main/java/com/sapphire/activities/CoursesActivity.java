@@ -108,7 +108,16 @@ public class CoursesActivity extends AppCompatActivity implements CoursesAdapter
 
     @Override
     public void onListClick(int groupPosition, int childPosition) {
-
+        Intent intent = new Intent(CoursesActivity.this, QuizActivity.class);
+        CoursesData coursesData = coursesDatas.get(groupPosition).getSubCourses().get(childPosition);
+        intent.putExtra("name", coursesData.getName());
+        intent.putExtra("quizeId", coursesData.getQuizId());
+        /*
+        intent.putExtra("acknowledged", coursesData.getIsAcknowledged());
+        intent.putExtra("duration", (coursesData.getDuration().getHours() * 60 * 60) + (coursesData.getDuration().getMinutes() * 60) + coursesData.getDuration().getSeconds());
+        intent.putExtra("id", coursesData.getId());
+        */
+        startActivity(intent);
     }
 
     @Override

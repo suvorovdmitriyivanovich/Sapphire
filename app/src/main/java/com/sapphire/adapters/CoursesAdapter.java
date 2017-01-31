@@ -145,7 +145,7 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        list.setEnabled(coursesData.getQuizEnabled());
+        //list.setEnabled(coursesData.getQuizEnabled());
 
         open.setTypeface(typeFace);
         open.setText(Html.fromHtml("&#61515;"));

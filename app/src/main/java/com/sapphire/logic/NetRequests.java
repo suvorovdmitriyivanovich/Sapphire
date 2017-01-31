@@ -56,7 +56,7 @@ public class NetRequests {
                 os.close();
             }
             int responseCode = conn.getResponseCode();
-             if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            if (responseCode == HttpURLConnection.HTTP_OK) { //success
                 //BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "iso-8859-1"), 8);
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"), 8);
                 String inputLine;
