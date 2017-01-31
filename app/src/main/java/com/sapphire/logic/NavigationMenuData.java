@@ -139,7 +139,7 @@ public class NavigationMenuData {
     }
 
     public void setUnicodeIcon(String unicodeIcon) {
-        this.unicodeIcon = unicodeIcon;
+        this.unicodeIcon = unicodeIcon.trim();
     }
 
     public ArrayList<NavigationMenuData> getSubMenus() {

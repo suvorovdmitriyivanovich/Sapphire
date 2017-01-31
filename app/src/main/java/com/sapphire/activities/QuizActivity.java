@@ -128,7 +128,7 @@ public class QuizActivity extends AppCompatActivity implements GetQuizAction.Req
     }
 
     @Override
-    public void onRequestQuizData(ArrayList<QuizData> quizDatas) {
+    public void onRequestQuizData(QuizData quizData) {
         File sdPath = new File(Sapphire.getInstance().getFilesDir() + "/temp/temp.html");
         //File f = new File(android.os.Environment.getExternalStorageDirectory() + "/Download/temp.html");
         //webView.loadUrl("file://"+sdPath.getAbsolutePath());

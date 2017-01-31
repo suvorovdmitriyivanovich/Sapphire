@@ -27,11 +27,11 @@ public class GetQuizAction extends AsyncTask{
     }
 
     public interface RequestQuizData {
-        public void onRequestQuizData(ArrayList<QuizData> quizDatas);
+        public void onRequestQuizData(QuizData quizData);
     }
 
     private Context mContext;
-    private ArrayList<QuizData> quizesDatas;
+    private QuizData quizData;
     private String quizeId = "";
 
     public GetQuizAction(Context context, String quizeId) {
@@ -54,6 +54,14 @@ public class GetQuizAction extends AsyncTask{
 
         if (responseData.getSuccess()) {
             JSONArray data = responseData.getData();
+            if (data.length() == 1) {
+                try {
+                    quizData = new QuizData(data.getJSONObject(0));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            /*
             quizesDatas = new ArrayList<QuizData>();
             for (int y=0; y < data.length(); y++) {
                 try {
@@ -65,6 +73,7 @@ public class GetQuizAction extends AsyncTask{
                     e.printStackTrace();
                 }
             }
+            */
             for (int y=0; y < data.length(); y++) {
                 try {
                     if (data.getJSONObject(y).isNull("ParentId")) {
@@ -107,7 +116,7 @@ public class GetQuizAction extends AsyncTask{
         String resultData = (String) o;
         if(mContext!=null) {
             if (resultData.equals("OK")) {
-                ((RequestQuizData) mContext).onRequestQuizData(quizesDatas);
+                ((RequestQuizData) mContext).onRequestQuizData(quizData);
             } else {
                 ((RequestQuiz) mContext).onRequestQuiz(resultData);
             }
