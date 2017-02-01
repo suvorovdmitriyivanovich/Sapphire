@@ -2,36 +2,32 @@ package com.sapphire.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
 import android.view.View;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
-import com.sapphire.Sapphire;
+import com.sapphire.adapters.AnswersAdapter;
 import com.sapphire.api.GetQuizAction;
-import com.sapphire.logic.CoursesData;
+import com.sapphire.logic.QuestionData;
 import com.sapphire.logic.QuizData;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
-public class QuizActivity extends AppCompatActivity implements GetQuizAction.RequestQuiz,
-                                                                 GetQuizAction.RequestQuizData{
-    WebView webView;
-    private Long count = 0l;
-    private TextView time;
-    private boolean needbreak = false;
-    private View button_acknowledged;
+public class QuizActivity extends AppCompatActivity implements AnswersAdapter.OnRootClickListener,
+                                                               GetQuizAction.RequestQuiz,
+                                                               GetQuizAction.RequestQuizData{
     private String quizeId;
-    private String id;
     ProgressDialog pd;
-    private boolean needClose = false;
+    private QuizData quizData;
+    private int currentQuestion = 0;
+    private TextView questionName;
+    private ListView answerlist;
+    private AnswersAdapter adapter;
+    private TextView text_header;
+    private Button button_previous;
+    private Button button_next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,65 +53,44 @@ public class QuizActivity extends AppCompatActivity implements GetQuizAction.Req
         pd.setCancelable(false);
         pd.setCanceledOnTouchOutside(false);
 
-        TextView text_header = (TextView) findViewById(R.id.text_header);
+        text_header = (TextView) findViewById(R.id.text_header);
+        questionName = (TextView) findViewById(R.id.questionName);
 
         Intent intent = getIntent();
         text_header.setText(intent.getStringExtra("name"));
 
         quizeId = intent.getStringExtra("quizeId");
 
+        answerlist = (ListView) findViewById(R.id.answerlist);
+        adapter = new AnswersAdapter(this);
+        answerlist.setAdapter(adapter);
+
+        button_previous = (Button) findViewById(R.id.button_previous);
+        button_previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentQuestion = currentQuestion - 1;
+                UpdateQuiz();
+            }
+        });
+
+        button_next = (Button) findViewById(R.id.button_next);
+        button_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentQuestion == -2) {
+                    finish();
+                } else if (quizData.getQuestions().size()-1 == currentQuestion) {
+                    currentQuestion = -2;
+                } else {
+                    currentQuestion = currentQuestion + 1;
+                }
+                UpdateQuiz();
+            }
+        });
+
         pd.show();
         new GetQuizAction(QuizActivity.this, quizeId).execute();
-
-        webView = (WebView) findViewById(R.id.webview);
-        webView.getSettings().setJavaScriptEnabled(true);
-
-        //count = Long.valueOf(intent.getIntExtra("duration", 0));
-        count = 0l;
-        //id = intent.getStringExtra("id");
-
-        //File f = new File(android.os.Environment.getExternalStorageDirectory() + "/Download/index.html");
-        //webView.loadUrl("file://"+f.getAbsolutePath());
-        //webView.setWebViewClient(new HelloWebViewClient());
-
-        /*
-        if (intent.getBooleanExtra("acknowledged", false)) {
-            View bottom_group = findViewById(R.id.bottom_group);
-            ViewGroup.LayoutParams par_bottom_group = bottom_group.getLayoutParams();
-            par_bottom_group.height = 0;
-            bottom_group.setLayoutParams(par_bottom_group);
-            bottom_group.requestLayout();
-        } else {
-            button_acknowledged = findViewById(R.id.button_acknowledged);
-            button_acknowledged.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    pd.show();
-                    //new PolicyLogAction(CoursActivity.this, id, Environment.PolicyStatusStarted).execute();
-                }
-            });
-
-            time = (TextView) findViewById(R.id.time);
-            if (count <= 0) {
-                time.setVisibility(View.GONE);
-                button_acknowledged.setEnabled(true);
-            } else {
-                time.setText(getTime(count));
-                new CountTask().execute();
-            }
-        }
-        */
-
-        //int i = Integer.parseInt(hex,16);
-
-        /*
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pd.hide();
-            }
-        }, 5000);
-        */
     }
 
     @Override
@@ -127,127 +102,83 @@ public class QuizActivity extends AppCompatActivity implements GetQuizAction.Req
         }
     }
 
+    public void UpdateQuiz() {
+        if (quizData == null || quizData.getQuestions().size() <= currentQuestion) {
+            return;
+        }
+        text_header.setText(quizData.getName());
+        if (currentQuestion == -1) {
+            questionName.setText(getResources().getString(R.string.text_quiz_will_take) + " 30 " + getResources().getString(R.string.text_to_complete));
+        } else if (currentQuestion == -2) {
+            questionName.setText(getResources().getString(R.string.text_your_quiz_score) + " 36" + "!");
+        } else {
+            QuestionData questionData = quizData.getQuestions().get(currentQuestion);
+            questionName.setText(questionData.getName());
+            adapter.setListArray(questionData.getAnswers());
+        }
+
+        UpdateButtons();
+    }
+
+    public void UpdateButtons() {
+        if (quizData == null || quizData.getQuestions().size() <= currentQuestion) {
+            return;
+        }
+        if (currentQuestion == -1) {
+            button_next.setText(getResources().getString(R.string.text_start));
+        } else if (currentQuestion == -2) {
+            button_next.setText(getResources().getString(R.string.text_back_courses));
+            answerlist.setVisibility(View.GONE);
+        } else if (quizData.getQuestions().size()-1 == currentQuestion) {
+            button_next.setText(getResources().getString(R.string.text_finish));
+        } else {
+            button_next.setText(getResources().getString(R.string.text_next));
+        }
+        if (currentQuestion <= 0) {
+            button_previous.setVisibility(View.GONE);
+        } else {
+            button_previous.setVisibility(View.VISIBLE);
+        }
+
+        boolean isChecked = false;
+        if (currentQuestion >= 0) {
+            QuestionData questionData = quizData.getQuestions().get(currentQuestion);
+            for (int i = 0; i < questionData.getAnswers().size(); i++) {
+                if (questionData.getAnswers().get(i).getChecked()) {
+                    isChecked = true;
+                    break;
+                }
+            }
+        } else {
+            isChecked = true;
+        }
+
+        button_next.setEnabled(isChecked);
+    }
+
     @Override
     public void onRequestQuizData(QuizData quizData) {
-        File sdPath = new File(Sapphire.getInstance().getFilesDir() + "/temp/temp.html");
-        //File f = new File(android.os.Environment.getExternalStorageDirectory() + "/Download/temp.html");
-        //webView.loadUrl("file://"+sdPath.getAbsolutePath());
+        this.quizData = quizData;
 
-        //File f = new File(android.os.Environment.getExternalStorageDirectory() + "/Download/index.html");
-        //webView.loadUrl("file://"+f.getAbsolutePath());
-        webView.loadUrl("http://portal.dealerpilothr.com/api/CourseFile/Get/d10fdc39-182e-cb17-b3b1-8b967cffca91");
+        currentQuestion = -1;
+        UpdateQuiz();
 
         pd.hide();
     }
 
-    private class CountTask extends AsyncTask<String, Void, String> {
-        public CountTask() {
-            super();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            if (needbreak) {
-                return null;
-            }
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(String rezult) {
-            callBackFromTsk(rezult);
-        }
-    }
-
-    public void callBackFromTsk(String rezult) {
-        if (needbreak) {
-            return;
-        }
-
-        count = count - 1;
-        time.setText(getTime(count));
-
-        if (count > 0) {
-            new CountTask().execute();
-        } else {
-            time.setVisibility(View.GONE);
-            button_acknowledged.setEnabled(true);
-        }
-    }
-
-    private String getTime(Long seconds) {
-        Long minutes = seconds / 60;
-        Long hours = minutes / 60;
-        Long minutest = minutes - (hours * 60);
-        Long secondst = seconds - (minutes * 60);
-
-        String rez = "";
-        if (hours > 9) {
-            rez = ">9";
-        } else {
-            rez = String.valueOf(hours);
-        }
-        rez = rez + ":";
-        if (String.valueOf(minutest).length() == 1) {
-            rez = rez + "0" + String.valueOf(minutest);
-        } else {
-            rez = rez + String.valueOf(minutest);
-        }
-        rez = rez + ":";
-        if (String.valueOf(secondst).length() == 1) {
-            rez = rez + "0" + String.valueOf(secondst);
-        } else {
-            rez = rez + String.valueOf(secondst);
-        }
-
-        return rez;
-    }
-
-    private class HelloWebViewClient extends WebViewClient {
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
-            //String googleDocs = "https://docs.google.com/viewer?url=http://www.xeroxscanners.com/downloads/Manuals/XMS/PDF_Converter_Pro_Quick_Reference_Guide.RU.pdf";
-            //webView.loadUrl(googleDocs + url);
-
-            //String googleDocs = "https://docs.google.com/viewer?url=http://www.xeroxscanners.com/downloads/Manuals/XMS/PDF_Converter_Pro_Quick_Reference_Guide.RU.pdf";
-            //view.loadUrl(googleDocs);
-            //webView.loadUrl(googleDocs);
-            view.loadUrl(url);
-
-            if (url.endsWith(".pdf")
-                    || url.equals("https://www.google.com.ua/webhp?output=search&tbm=isch&tbo=u")) {
-                //String googleDocs = "https://docs.google.com/viewer?url=";
-                //String googleDocs = "https://docs.google.com/viewer?url=http://www.xeroxscanners.com/downloads/Manuals/XMS/PDF_Converter_Pro_Quick_Reference_Guide.RU.pdf";
-                //webView.loadUrl(googleDocs);
-                //webView.loadUrl(googleDocs + url);
-            } else {
-                // Load all other urls normally.
-                //view.loadUrl(url);
-            }
-
-            //pd.hide();
-            return true;
-        }
+    @Override
+    public void onRootClick(int position) {
+        UpdateButtons();
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
-            webView.goBack();
-            return true;
+    public void onBackPressed() {
+        if (currentQuestion > 0) {
+            currentQuestion = currentQuestion - 1;
+            UpdateQuiz();
+        } else {
+            finish();
         }
-        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -257,7 +188,6 @@ public class QuizActivity extends AppCompatActivity implements GetQuizAction.Req
 
     @Override
     public void onDestroy() {
-        needbreak = true;
         super.onDestroy();
     }
 }

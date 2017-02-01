@@ -12,7 +12,7 @@ public class OrganizationStructureData {
     private String name = "";
     private boolean isPosition = false;
     private boolean isLinked = false;
-    private ArrayList<AppSecuritiesData> accountOrganizationStructureAppSecurities;
+    private ArrayList<AppSecuritiesData> accountOrganizationStructureAppSecurities = new ArrayList<AppSecuritiesData>();
 
     public OrganizationStructureData() {
 

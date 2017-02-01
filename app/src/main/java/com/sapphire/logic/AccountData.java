@@ -12,9 +12,9 @@ public class AccountData {
     private String accountName = "";
     private String authToken = "";
     private String languageCode = "";
-    private OrganizationData currentOrganization;
-    private ArrayList<OrganizationData> organizations;
-    private ArrayList<NavigationMenuData> navigationMenus;
+    private OrganizationData currentOrganization = new OrganizationData();
+    private ArrayList<OrganizationData> organizations = new ArrayList<OrganizationData>();
+    private ArrayList<NavigationMenuData> navigationMenus = new ArrayList<NavigationMenuData>();
     private boolean isPasswordRetrieval = false;
     private Long dateCreated = 0l;
     private Long dateUpdated = 0l;

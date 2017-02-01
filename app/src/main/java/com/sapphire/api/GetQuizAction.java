@@ -61,37 +61,6 @@ public class GetQuizAction extends AsyncTask{
                     e.printStackTrace();
                 }
             }
-            /*
-            quizesDatas = new ArrayList<QuizData>();
-            for (int y=0; y < data.length(); y++) {
-                try {
-                    if (!data.getJSONObject(y).isNull("ParentId")) {
-                        continue;
-                    }
-                    quizesDatas.add(new QuizData(data.getJSONObject(y)));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            */
-            for (int y=0; y < data.length(); y++) {
-                try {
-                    if (data.getJSONObject(y).isNull("ParentId")) {
-                        continue;
-                    }
-                    QuizData quizDatas = new QuizData(data.getJSONObject(y));
-                    /*
-                    for (int z=0; z < policiesDatas.size(); z++) {
-                        if (quizesDatas.get(z).getId().equals(policiesData.getParentId())) {
-                            quizesDatas.get(z).getSubPolicies().add(policiesData);
-                            break;
-                        }
-                    }
-                    */
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
 
             result = "OK";
         } else {

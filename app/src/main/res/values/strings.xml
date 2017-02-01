@@ -31,4 +31,12 @@
     <string name="text_quiz_score">Quiz Score</string>
     <string name="text_course_completed_on">Course Completed On</string>
     <string name="text_quiz_completed_on">Quiz Completed On</string>
+    <string name="text_next">Next</string>
+    <string name="text_finish">Finish</string>
+    <string name="text_previous">Previous</string>
+    <string name="text_back_courses">Back to courses</string>
+    <string name="text_your_quiz_score">Your quiz score is</string>
+    <string name="text_start">Start</string>
+    <string name="text_quiz_will_take">Quiz will take approximately to</string>
+    <string name="text_to_complete">min to complete!</string>
 </resources>

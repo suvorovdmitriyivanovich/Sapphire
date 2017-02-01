@@ -129,6 +129,17 @@ public class CoursesActivity extends AppCompatActivity implements CoursesAdapter
     public void onRequestCoursesData(ArrayList<CoursesData> coursesDatas) {
         this.coursesDatas = coursesDatas;
         adapter.setData(coursesDatas);
+
+        //if (current == 1) {
+            for (int i = 0; i < coursesDatas.size(); i++) {
+                courseslist.expandGroup(i);
+            }
+        //} else {
+        //    for (int i = 0; i < coursesDatas.size(); i++) {
+        //        courseslist.collapseGroup(i);
+        //    }
+        //}
+
         pd.hide();
     }
 

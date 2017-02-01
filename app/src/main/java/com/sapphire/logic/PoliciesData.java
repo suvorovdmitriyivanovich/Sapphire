@@ -12,11 +12,11 @@ public class PoliciesData {
     private boolean isAcknowledged = false;
     private String description = "";
     private String parentId = "";
-    private SettingData settings;
+    private SettingData settings = new SettingData();
     private boolean isDisabled = false;
     private boolean isActive = false;
     private Long dateModified = 0l;
-    private DurationData duration;
+    private DurationData duration = new DurationData();
     private Long dateCreated = 0l;
     private String id = "";
     private String fileId = "";

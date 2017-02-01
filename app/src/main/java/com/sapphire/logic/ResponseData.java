@@ -17,13 +17,13 @@ public class ResponseData {
     private String ipAddress = "";
     private String userAgentId = "";
     private String httpVerb = "";
-    private ArrayList<ErrorMessageData> errorMessages;
+    private ArrayList<ErrorMessageData> errorMessages = new ArrayList<ErrorMessageData>();
     private String responseId = "";
     private boolean success = false;
     private Long timestampResponse = 0l;
     private String httpStatusCode = "";
     private String httpStatusMessage = "";
-    private JSONArray data;
+    private JSONArray data = new JSONArray();
     private int dataCount = 0;
     private int totalDataCount = 0;
     private boolean hasData = false;

@@ -146,6 +146,17 @@ public class PoliciesActivity extends AppCompatActivity implements PoliciesAdapt
     public void onRequestPoliciesData(ArrayList<PoliciesData> policiesDatas) {
         this.policiesDatas = policiesDatas;
         adapter.setData(policiesDatas);
+
+        //if (current == 1) {
+        for (int i = 0; i < policiesDatas.size(); i++) {
+            policieslist.expandGroup(i);
+        }
+        //} else {
+        //    for (int i = 0; i < policiesDatas.size(); i++) {
+        //        policieslist.collapseGroup(i);
+        //    }
+        //}
+
         pd.hide();
     }
 

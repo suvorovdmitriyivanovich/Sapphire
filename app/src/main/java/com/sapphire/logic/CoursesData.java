@@ -13,7 +13,7 @@ public class CoursesData {
     private String description = "";
     private String duration;
     private boolean isDisabled = false;
-    private CourseData course;
+    private CourseData course = new CourseData();
     private String quizId = "";
     private Long dateModified = 0l;
     private String courseFileData = "";

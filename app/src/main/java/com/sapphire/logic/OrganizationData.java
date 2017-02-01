@@ -12,9 +12,9 @@ public class OrganizationData {
     private String name = "";
     private String domain = "";
     private String accountOrganizationRoles = "";
-    private ArrayList<OrganizationStructureData> accountCurrentOrganizationStructures;
-    private ArrayList<AppSecuritiesData> accountOrganizationAppSecurities;
-    private ArrayList<AppSecuritiesData> accountOrganizationGlobalAppSecurities;
+    private ArrayList<OrganizationStructureData> accountCurrentOrganizationStructures = new ArrayList<OrganizationStructureData>();
+    private ArrayList<AppSecuritiesData> accountOrganizationAppSecurities = new ArrayList<AppSecuritiesData>();
+    private ArrayList<AppSecuritiesData> accountOrganizationGlobalAppSecurities = new ArrayList<AppSecuritiesData>();
 
     public OrganizationData() {
 

@@ -82,7 +82,7 @@ public class AuthenticationsAction extends AsyncTask{
 
             if (accountDatas.size() == 1) {
                 ArrayList<NavigationMenuData> navigationMenuDatas = accountDatas.get(0).getNavigationMenus();
-                if (navigationMenuDatas.size() > 0) {
+                if (navigationMenuDatas != null && navigationMenuDatas.size() > 0) {
                     DBHelper.getInstance(Sapphire.getInstance()).deleteNavigationMenus();
                     DBHelper.getInstance(Sapphire.getInstance()).addNavigationMenus(navigationMenuDatas);
                 }

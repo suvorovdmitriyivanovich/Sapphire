@@ -42,14 +42,44 @@
 
     </RelativeLayout>
 
-    <WebView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/questionGroup"
         android:layout_below="@+id/top_group"
-        android:id="@+id/webview"
-        android:layout_above="@+id/bottom_group">
+        android:layout_above="@+id/bottom_group"
+        android:layout_margin="20dp">
 
-    </WebView>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/center_group">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/questionName"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:textStyle="bold" />
+
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/answerlist"
+                android:layout_below="@+id/questionName"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:divider="@null"
+                android:dividerHeight="0dp"/>
+
+        </RelativeLayout>
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -64,26 +94,31 @@
             android:id="@+id/border"
             android:background="#ccc" />
 
-        <TextView
+        <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/time"
+            android:layout_height="40dp"
+            android:text="@string/text_previous"
+            android:id="@+id/button_previous"
             android:layout_centerVertical="true"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/button_selector"
+            android:visibility="gone"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp" />
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/text_acknowledge"
-            android:id="@+id/button_acknowledged"
+            android:layout_height="40dp"
+            android:text="@string/text_next"
+            android:id="@+id/button_next"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:enabled="false"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="8dp"
+            android:background="@drawable/button_selector"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp" />
     </RelativeLayout>
 
 </RelativeLayout>
