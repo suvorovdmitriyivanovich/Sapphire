@@ -15,29 +15,29 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.ExpandableListView;
 import com.sapphire.R;
-import com.sapphire.adapters.CoursesAdapter;
-import com.sapphire.api.CoursesAction;
-import com.sapphire.logic.CoursesData;
+import com.sapphire.adapters.TemplatesAdapter;
+import com.sapphire.api.TemplatesAction;
+import com.sapphire.logic.TemplateData;
+
 import java.util.ArrayList;
 
-public class CoursesActivity extends AppCompatActivity implements CoursesAdapter.OnRootClickListener,
-                                                                  CoursesAdapter.OnOpenClickListener,
-                                                                  CoursesAdapter.OnListClickListener,
-                                                                  CoursesAction.RequestCourses,
-                                                                  CoursesAction.RequestCoursesData {
+public class TemplatesActivity extends AppCompatActivity implements TemplatesAdapter.OnRootClickListener,
+                                                                    TemplatesAdapter.OnOpenClickListener,
+                                                                    TemplatesAction.RequestTemplates,
+                                                                    TemplatesAction.RequestTemplatesData {
     public final static String PARAM_TASK = "task";
-    public final static String BROADCAST_ACTION = "com.sapphire.activities.CoursesActivity";
+    public final static String BROADCAST_ACTION = "com.sapphire.activities.TemplatesActivity";
     BroadcastReceiver br;
-    private ArrayList<CoursesData> coursesDatas;
-    private CoursesAdapter adapter;
+    private ArrayList<TemplateData> templatesDatas;
+    private TemplatesAdapter adapter;
     ProgressDialog pd;
-    private ExpandableListView courseslist;
+    private ExpandableListView templateslist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_courses);
+        setContentView(R.layout.activity_templates);
 
         View menu = findViewById(R.id.menu);
         menu.setOnClickListener(new View.OnClickListener() {
@@ -75,15 +75,15 @@ public class CoursesActivity extends AppCompatActivity implements CoursesAdapter
         pd.setCancelable(false);
         pd.setCanceledOnTouchOutside(false);
 
-        courseslist = (ExpandableListView) findViewById(R.id.courseslist);
+        templateslist = (ExpandableListView) findViewById(R.id.templateslist);
 
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;
-        courseslist.setIndicatorBounds((width - GetPixelFromDips(50)), (width - GetPixelFromDips(20)));
+        templateslist.setIndicatorBounds((width - GetPixelFromDips(50)), (width - GetPixelFromDips(20)));
 
-        adapter = new CoursesAdapter(this);
-        courseslist.setAdapter(adapter);
+        adapter = new TemplatesAdapter(this);
+        templateslist.setAdapter(adapter);
     }
 
     @Override
@@ -94,45 +94,30 @@ public class CoursesActivity extends AppCompatActivity implements CoursesAdapter
 
     @Override
     public void onOpenClick(int groupPosition, int childPosition) {
-        Intent intent = new Intent(CoursesActivity.this, CourseActivity.class);
-        CoursesData coursesData = coursesDatas.get(groupPosition).getSubCourses().get(childPosition);
-        intent.putExtra("name", coursesData.getName());
-        intent.putExtra("courseId", coursesData.getCourseFileId());
-        /*
-        intent.putExtra("acknowledged", coursesData.getIsAcknowledged());
-        intent.putExtra("duration", (coursesData.getDuration().getHours() * 60 * 60) + (coursesData.getDuration().getMinutes() * 60) + coursesData.getDuration().getSeconds());
-        intent.putExtra("id", coursesData.getId());
-        */
+        Intent intent = new Intent(TemplatesActivity.this, TemplateActivity.class);
+        TemplateData templateData = templatesDatas.get(groupPosition).getSubTemplates().get(childPosition);
+        intent.putExtra("name", templateData.getName());
+        intent.putExtra("workplaceInspectionTemplateId", templateData.getWorkplaceInspectionTemplateId());
         startActivity(intent);
     }
 
     @Override
-    public void onListClick(int groupPosition, int childPosition) {
-        Intent intent = new Intent(CoursesActivity.this, QuizActivity.class);
-        CoursesData coursesData = coursesDatas.get(groupPosition).getSubCourses().get(childPosition);
-        intent.putExtra("name", coursesData.getName());
-        intent.putExtra("quizeId", coursesData.getQuizId());
-        intent.putExtra("duration", coursesData.getDuration());
-        startActivity(intent);
-    }
-
-    @Override
-    public void onRequestCourses(String result) {
+    public void onRequestTemplates(String result) {
         pd.hide();
     }
 
     @Override
-    public void onRequestCoursesData(ArrayList<CoursesData> coursesDatas) {
-        this.coursesDatas = coursesDatas;
-        adapter.setData(coursesDatas);
+    public void onRequestTemplatesData(ArrayList<TemplateData> templatesDatas) {
+        this.templatesDatas = templatesDatas;
+        adapter.setData(templatesDatas);
 
         //if (current == 1) {
-            for (int i = 0; i < coursesDatas.size(); i++) {
-                courseslist.expandGroup(i);
+            for (int i = 0; i < templatesDatas.size(); i++) {
+                templateslist.expandGroup(i);
             }
         //} else {
-        //    for (int i = 0; i < coursesDatas.size(); i++) {
-        //        courseslist.collapseGroup(i);
+        //    for (int i = 0; i < templatesDatas.size(); i++) {
+        //        templateslist.collapseGroup(i);
         //    }
         //}
 
@@ -157,7 +142,7 @@ public class CoursesActivity extends AppCompatActivity implements CoursesAdapter
         } catch (Exception e) {}
 
         pd.show();
-        new CoursesAction(CoursesActivity.this).execute();
+        new TemplatesAction(TemplatesActivity.this).execute();
     }
 
     @Override

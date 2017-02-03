@@ -38,5 +38,9 @@
     <string name="text_your_quiz_score">Your quiz score is</string>
     <string name="text_start">Start</string>
     <string name="text_quiz_will_take">Quiz will take approximately to</string>
-    <string name="text_to_complete">min to complete!</string>
+    <string name="text_to_complete">to complete!</string>
+    <string name="hours">hour</string>
+    <string name="minutes">min</string>
+    <string name="seconds">sec</string>
+    <string name="text_templates">Inspection Templates</string>
 </resources>

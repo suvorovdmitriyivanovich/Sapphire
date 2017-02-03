@@ -149,6 +149,9 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
         } else if (navigationMenuDatas.get(groupPosition).getSubMenus().get(childPosition).getUrlRoute().equals("/me/my-training-courses")) {
             Intent intent = new Intent(getActivity(), CoursesActivity.class);
             startActivity(intent);
+        } else if (navigationMenuDatas.get(groupPosition).getSubMenus().get(childPosition).getUrlRoute().equals("/health-and-safety/workplace-inspections-reports")) {
+            Intent intent = new Intent(getActivity(), TemplatesActivity.class);
+            startActivity(intent);
         }
         //Intent intent = new Intent(getActivity(), SettingsActivity.class);
         //startActivity(intent);

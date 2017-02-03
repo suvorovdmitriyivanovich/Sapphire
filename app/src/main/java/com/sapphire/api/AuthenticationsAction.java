@@ -87,6 +87,7 @@ public class AuthenticationsAction extends AsyncTask{
                     DBHelper.getInstance(Sapphire.getInstance()).addNavigationMenus(navigationMenuDatas);
                 }
                 ed.putString("AUTHTOKEN", accountDatas.get(0).getAuthToken());
+                ed.putString("ACCOUNTID", accountDatas.get(0).getAccountId());
                 ed.apply();
             }
 

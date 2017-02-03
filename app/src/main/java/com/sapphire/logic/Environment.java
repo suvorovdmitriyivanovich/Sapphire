@@ -12,7 +12,10 @@ public class Environment {
     public static final String CourseFileGetURL = "/api/CourseFile/Get";
     public static final String QuizzesURL = "/v1/Quizzes";
     public static final String QuizzesLogURL = "/v1/Quizzes/Log";
+    public static final String WorkplaceInspectionTemplatesURL = "/v1/HealthAndSafety/WorkplaceInspectionTemplates";
+    public static final String WorkplaceInspectionTemplateItemsURL = "/v1/HealthAndSafety/WorkplaceInspectionTemplateItems";
     public static final String KEY = "passkey";
     public static final String PolicyStatusStarted = "1586dc39-979b-3991-c822-a4bcb14d1345";
     public static final String PolicyStatusAcknowledged  = "1586dc39-979b-ab1c-838f-1917fce340de";
+    public static final String AccountQuizStatusStarted  = "af29dc39-68b9-d431-2653-724eb8a104e8";
 }

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/drawerLayout">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/rootLayout">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorAccent"
+            android:id="@+id/top_group">
+
+            <RelativeLayout
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:id="@+id/menu"
+                android:background="@drawable/top_button">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/ok_icon"
+                    android:src="@drawable/menu_icon"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/text_templates"
+                android:id="@+id/text_header"
+                android:textColor="#ffffff"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="56dp"
+                android:layout_marginRight="56dp" />
+
+        </RelativeLayout>
+
+        <ExpandableListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/templateslist"
+            android:headerDividersEnabled="true"
+            android:drawSelectorOnTop="true"
+            android:choiceMode="multipleChoice"
+            android:footerDividersEnabled="true"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:childDivider="@null"
+            android:layout_below="@+id/top_group" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/nav_left"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="left">
+
+        <!-- Content of your left drawer -->
+
+    </FrameLayout>
+</android.support.v4.widget.DrawerLayout>

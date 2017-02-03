@@ -25,14 +25,14 @@ public class QuizzesLogAction extends AsyncTask{
     }
 
     private Context mContext;
-    private String policyId;
-    private String policyStatusId;
+    private String quizeId;
+    private String accountQuizStatusId;
     private ArrayList<PoliciesData> policiesDatas;
 
-    public QuizzesLogAction(Context context, String policyId, String policyStatusId) {
+    public QuizzesLogAction(Context context, String quizeId, String accountQuizStatusId) {
         this.mContext = context;
-        this.policyId = policyId;
-        this.policyStatusId = policyStatusId;
+        this.quizeId = quizeId;
+        this.accountQuizStatusId = accountQuizStatusId;
     }
 
     @Override
@@ -42,17 +42,18 @@ public class QuizzesLogAction extends AsyncTask{
         }
         String urlstring = Environment.SERVER + Environment.QuizzesLogURL;
 
+        SharedPreferences sPref = mContext.getSharedPreferences("GlobalPreferences", mContext.MODE_PRIVATE);
+
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("PolicyId", policyId);
-            jsonObject.put("PolicyStatusId", policyStatusId);
+            jsonObject.put("QuizeId", quizeId);
+            jsonObject.put("AccountQuizStatusId", accountQuizStatusId);
+            jsonObject.put("AccountId", sPref.getString("ACCOUNTID",""));
             jsonArray.put(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        SharedPreferences sPref = mContext.getSharedPreferences("GlobalPreferences", mContext.MODE_PRIVATE);
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonArray.toString(),0,true,"POST",sPref.getString("AUTHTOKEN","")));
 

@@ -12,13 +12,20 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.adapters.AnswersAdapter;
 import com.sapphire.api.GetQuizAction;
+import com.sapphire.api.PostQuizzesAction;
+import com.sapphire.api.QuizzesLogAction;
+import com.sapphire.logic.Environment;
 import com.sapphire.logic.QuestionData;
 import com.sapphire.logic.QuizData;
+import com.sapphire.logic.QuizScoreData;
 
 public class QuizActivity extends AppCompatActivity implements AnswersAdapter.OnRootClickListener,
                                                                GetQuizAction.RequestQuiz,
-                                                               GetQuizAction.RequestQuizData{
-    private String quizeId;
+                                                               GetQuizAction.RequestQuizData,
+                                                               PostQuizzesAction.RequestPostQuizzes,
+                                                               PostQuizzesAction.RequestPostQuizzesData,
+                                                               QuizzesLogAction.RequestQuizzesLog{
+    private String quizeId = "";
     ProgressDialog pd;
     private QuizData quizData;
     private int currentQuestion = 0;
@@ -28,6 +35,8 @@ public class QuizActivity extends AppCompatActivity implements AnswersAdapter.On
     private TextView text_header;
     private Button button_previous;
     private Button button_next;
+    private String duration = "";
+    private String quizScore = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +69,43 @@ public class QuizActivity extends AppCompatActivity implements AnswersAdapter.On
         text_header.setText(intent.getStringExtra("name"));
 
         quizeId = intent.getStringExtra("quizeId");
+        duration = intent.getStringExtra("duration");
+
+        int hours = 0;
+        int minutes = 0;
+        int seconds = 0;
+        try {
+            hours = Integer.parseInt(duration.substring(0, 2));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            minutes = Integer.parseInt(duration.substring(3, 5));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            seconds = Integer.parseInt(duration.substring(6, 8));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        duration = "";
+        if (hours > 0) {
+            duration = hours + " " + getResources().getString(R.string.hours);
+        }
+        if (minutes > 0) {
+            if (!duration.equals("")) {
+                duration = duration + " ";
+            }
+            duration = minutes + " " + getResources().getString(R.string.minutes);
+        }
+        if (seconds > 0) {
+            if (!duration.equals("")) {
+                duration = duration + " ";
+            }
+            duration = seconds + " " + getResources().getString(R.string.seconds);
+        }
 
         answerlist = (ListView) findViewById(R.id.answerlist);
         adapter = new AnswersAdapter(this);
@@ -81,11 +127,15 @@ public class QuizActivity extends AppCompatActivity implements AnswersAdapter.On
                 if (currentQuestion == -2) {
                     finish();
                 } else if (quizData.getQuestions().size()-1 == currentQuestion) {
-                    currentQuestion = -2;
+                    pd.show();
+                    new PostQuizzesAction(QuizActivity.this, quizeId, quizData).execute();
+                } else if (currentQuestion == -1) {
+                    pd.show();
+                    new QuizzesLogAction(QuizActivity.this, quizeId, Environment.AccountQuizStatusStarted).execute();
                 } else {
                     currentQuestion = currentQuestion + 1;
+                    UpdateQuiz();
                 }
-                UpdateQuiz();
             }
         });
 
@@ -108,9 +158,9 @@ public class QuizActivity extends AppCompatActivity implements AnswersAdapter.On
         }
         text_header.setText(quizData.getName());
         if (currentQuestion == -1) {
-            questionName.setText(getResources().getString(R.string.text_quiz_will_take) + " 30 " + getResources().getString(R.string.text_to_complete));
+            questionName.setText(getResources().getString(R.string.text_quiz_will_take) + " " + duration + " " + getResources().getString(R.string.text_to_complete));
         } else if (currentQuestion == -2) {
-            questionName.setText(getResources().getString(R.string.text_your_quiz_score) + " 36" + "!");
+            questionName.setText(getResources().getString(R.string.text_your_quiz_score) + " " + quizScore + "!");
         } else {
             QuestionData questionData = quizData.getQuestions().get(currentQuestion);
             questionName.setText(questionData.getName());
@@ -159,6 +209,7 @@ public class QuizActivity extends AppCompatActivity implements AnswersAdapter.On
     @Override
     public void onRequestQuizData(QuizData quizData) {
         this.quizData = quizData;
+        quizScore = "";
 
         currentQuestion = -1;
         UpdateQuiz();
@@ -169,6 +220,36 @@ public class QuizActivity extends AppCompatActivity implements AnswersAdapter.On
     @Override
     public void onRootClick(int position) {
         UpdateButtons();
+    }
+
+    @Override
+    public void onRequestPostQuizzes(String result) {
+        pd.hide();
+        Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRequestPostQuizzesData(QuizScoreData quizScoreData) {
+        quizScore = quizScoreData.getScore();
+        currentQuestion = -2;
+        UpdateQuiz();
+
+        pd.hide();
+    }
+
+    @Override
+    public void onRequestQuizzesLog(String result) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            currentQuestion = currentQuestion + 1;
+            UpdateQuiz();
+
+            pd.hide();
+        }
     }
 
     @Override
