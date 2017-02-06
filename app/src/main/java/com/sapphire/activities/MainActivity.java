@@ -9,20 +9,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.Sapphire;
 import com.sapphire.R;
-import com.sapphire.db.DBHelper;
-import com.sapphire.logic.MessageData;
 import com.sapphire.logic.UserInfo;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private static long back_pressed;
     private UserInfo userInfo;
     SharedPreferences sPref;
@@ -30,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     public final static String PARAM_TASK = "task";
     public final static String BROADCAST_ACTION = "com.sapphire.activities.MainActivity";
     BroadcastReceiver br;
+    private ViewGroup rootLayout;
+    private TextView text_header;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +42,24 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        rootLayout = (ViewGroup) findViewById(R.id.rootLayout);
+        text_header = (TextView) findViewById(R.id.text_header);
+
         View menu = findViewById(R.id.menu);
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
                 drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
+
+        View exit = findViewById(R.id.exit);
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+                drawerLayout.openDrawer(Gravity.RIGHT);
             }
         });
 
@@ -93,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
             Fragment fragment = new MenuFragment();
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
+
+            Fragment fragmentRight = new RightFragment();
+            fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
         } catch (Exception e) {}
     }
 

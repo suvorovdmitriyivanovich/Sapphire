@@ -20,7 +20,7 @@ import com.sapphire.api.PoliciesAction;
 import com.sapphire.logic.PoliciesData;
 import java.util.ArrayList;
 
-public class PoliciesActivity extends AppCompatActivity implements PoliciesAdapter.OnRootClickListener,
+public class PoliciesActivity extends BaseActivity implements PoliciesAdapter.OnRootClickListener,
                                                                    PoliciesAdapter.OnOpenClickListener,
                                                                    PoliciesAction.RequestPolicies,
                                                                    PoliciesAction.RequestPoliciesData {
@@ -44,6 +44,15 @@ public class PoliciesActivity extends AppCompatActivity implements PoliciesAdapt
             public void onClick(View v) {
                 DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
                 drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
+
+        View exit = findViewById(R.id.exit);
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+                drawerLayout.openDrawer(Gravity.RIGHT);
             }
         });
 
@@ -175,6 +184,9 @@ public class PoliciesActivity extends AppCompatActivity implements PoliciesAdapt
             Fragment fragment = new MenuFragment();
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
+
+            Fragment fragmentRight = new RightFragment();
+            fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
         } catch (Exception e) {}
 
         pd.show();

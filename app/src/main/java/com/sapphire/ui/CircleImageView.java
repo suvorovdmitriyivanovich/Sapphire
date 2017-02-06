@@ -1,4 +1,4 @@
-package com.litnet.ui;
+package com.sapphire.ui;
 
 import android.content.Context;
 import android.graphics.Canvas;

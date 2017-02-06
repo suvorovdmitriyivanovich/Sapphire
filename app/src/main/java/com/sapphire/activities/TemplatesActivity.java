@@ -14,6 +14,8 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
+
 import com.sapphire.R;
 import com.sapphire.adapters.TemplatesAdapter;
 import com.sapphire.api.TemplatesAction;
@@ -21,7 +23,7 @@ import com.sapphire.logic.TemplateData;
 
 import java.util.ArrayList;
 
-public class TemplatesActivity extends AppCompatActivity implements TemplatesAdapter.OnRootClickListener,
+public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.OnRootClickListener,
                                                                     TemplatesAdapter.OnOpenClickListener,
                                                                     TemplatesAction.RequestTemplates,
                                                                     TemplatesAction.RequestTemplatesData {
@@ -45,6 +47,15 @@ public class TemplatesActivity extends AppCompatActivity implements TemplatesAda
             public void onClick(View v) {
                 DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
                 drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
+
+        View exit = findViewById(R.id.exit);
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+                drawerLayout.openDrawer(Gravity.RIGHT);
             }
         });
 
@@ -104,6 +115,10 @@ public class TemplatesActivity extends AppCompatActivity implements TemplatesAda
     @Override
     public void onRequestTemplates(String result) {
         pd.hide();
+        if (!result.equals("OK")) {
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -139,6 +154,9 @@ public class TemplatesActivity extends AppCompatActivity implements TemplatesAda
             Fragment fragment = new MenuFragment();
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
+
+            Fragment fragmentRight = new RightFragment();
+            fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
         } catch (Exception e) {}
 
         pd.show();

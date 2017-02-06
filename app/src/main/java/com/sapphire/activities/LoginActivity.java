@@ -17,7 +17,7 @@ import com.sapphire.R;
 import com.sapphire.api.AuthenticationsAction;
 import com.sapphire.logic.UserInfo;
 
-public class LoginActivity extends AppCompatActivity implements AuthenticationsAction.RequestAuthentications {
+public class LoginActivity extends BaseActivity implements AuthenticationsAction.RequestAuthentications {
     private static long back_pressed;
     private UserInfo userInfo;
     ProgressDialog pd;
@@ -174,6 +174,11 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationsA
                 //ed.putString(PASS, "");
                 //ed.apply();
                 //pass.setText("");
+
+                //TODO временно
+                Intent intent2 = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent2);
+                finish();
 
                 if (result.equals("OK") ||
                         (result.equals(getResources().getString(R.string.text_need_internet))) && sPref.getBoolean("INSUCCESS", false)) {

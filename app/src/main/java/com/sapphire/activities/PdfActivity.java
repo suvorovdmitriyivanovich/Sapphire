@@ -18,7 +18,7 @@ import com.sapphire.api.PolicyLogAction;
 import com.sapphire.logic.Environment;
 import java.util.concurrent.TimeUnit;
 
-public class PdfActivity extends AppCompatActivity implements PolicyLogAction.RequestPolicyLog {
+public class PdfActivity extends BaseActivity implements PolicyLogAction.RequestPolicyLog {
     WebView webView;
     private Long count = 0l;
     private TextView time;

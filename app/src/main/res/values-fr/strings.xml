@@ -16,4 +16,7 @@
     <string name="text_need_internet">Pas de connexion internet</string>
     <string name="text_not_user">L\'utilisateur n\'a pas été trouvé</string>
     <string name="text_incorrect_password">Mot de passe incorrect</string>
+    <string name="text_language">Linguistique</string>
+    <string name="english">Anglais</string>
+    <string name="french">Français</string>
 </resources>

@@ -46,37 +46,6 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
         adapter = new MenuAdapter(this, navigationMenuDatas);
         menulist.setAdapter(adapter);
 
-        View settings = rootView.findViewById(R.id.settings);
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.closeDrawers();
-                if (getActivity().getClass() != MainActivity.class) {
-                    getActivity().finish();
-                }
-                //Intent intent = new Intent(getActivity(), PdfActivity.class);
-                //startActivity(intent);
-            }
-        });
-
-        View log_out = rootView.findViewById(R.id.log_out);
-        log_out.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.closeDrawers();
-
-                SharedPreferences sPref = getActivity().getSharedPreferences("GlobalPreferences", getActivity().MODE_PRIVATE);
-                SharedPreferences.Editor ed = sPref.edit();
-
-                ed.putBoolean("USEREXIT", true);
-                ed.apply();
-
-                getActivity().finish();
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
-            }
-        });
-
         return rootView;
     }
 

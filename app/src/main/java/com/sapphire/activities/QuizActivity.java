@@ -19,7 +19,7 @@ import com.sapphire.logic.QuestionData;
 import com.sapphire.logic.QuizData;
 import com.sapphire.logic.QuizScoreData;
 
-public class QuizActivity extends AppCompatActivity implements AnswersAdapter.OnRootClickListener,
+public class QuizActivity extends BaseActivity implements AnswersAdapter.OnRootClickListener,
                                                                GetQuizAction.RequestQuiz,
                                                                GetQuizAction.RequestQuizData,
                                                                PostQuizzesAction.RequestPostQuizzes,

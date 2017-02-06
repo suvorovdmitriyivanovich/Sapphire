@@ -35,61 +35,6 @@
         android:divider="@null"
         android:dividerHeight="0dp"
         android:childDivider="@null"
-        android:layout_below="@+id/header_root"
-        android:layout_above="@+id/bottom_root" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:id="@+id/bottom_root"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="@color/white">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:id="@+id/border"
-            android:background="#ccc" />
-
-        <RelativeLayout
-            android:layout_width="55dp"
-            android:layout_height="match_parent"
-            android:id="@+id/settings"
-            android:background="@drawable/button_bottom"
-            android:layout_below="@+id/border">
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:id="@+id/image_settings"
-                android:src="@drawable/ico_settings"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/log_out"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/button_bottom"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:layout_below="@+id/border">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/text_exit"
-                android:id="@+id/text_log_out"
-                android:textColor="#3c68a2"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
-        </RelativeLayout>
-    </RelativeLayout>
+        android:layout_below="@+id/header_root" />
 
 </RelativeLayout>

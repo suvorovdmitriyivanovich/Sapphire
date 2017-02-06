@@ -23,7 +23,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class CourseActivity extends AppCompatActivity implements GetCourseFileAction.RequestCourses,
+public class CourseActivity extends BaseActivity implements GetCourseFileAction.RequestCourses,
                                                                  GetCourseFileAction.RequestCoursesData{
     WebView webView;
     private Long count = 0l;

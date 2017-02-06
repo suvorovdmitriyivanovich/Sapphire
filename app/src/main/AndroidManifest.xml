@@ -33,11 +33,13 @@
 
         <activity android:name=".activities.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden"
+            android:hardwareAccelerated="false"/>
 
         <activity android:name=".activities.PoliciesActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden"
+            android:hardwareAccelerated="false"/>
 
         <activity android:name=".activities.PdfActivity"
             android:screenOrientation="portrait"
@@ -45,7 +47,8 @@
 
         <activity android:name=".activities.CoursesActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden"
+            android:hardwareAccelerated="false"/>
 
         <activity android:name=".activities.CourseActivity"
             android:screenOrientation="portrait"
@@ -57,7 +60,8 @@
 
         <activity android:name=".activities.TemplatesActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden"
+            android:hardwareAccelerated="false"/>
 
         <activity android:name=".activities.TemplateActivity"
             android:screenOrientation="portrait"

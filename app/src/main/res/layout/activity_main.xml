@@ -45,6 +45,23 @@
                 android:layout_marginLeft="56dp"
                 android:layout_marginRight="56dp" />
 
+            <RelativeLayout
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:id="@+id/exit"
+                android:background="@drawable/top_button"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:id="@+id/close_icon"
+                    android:src="@drawable/right_icon"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
+
         </RelativeLayout>
 
     </RelativeLayout>
@@ -55,7 +72,13 @@
         android:layout_height="match_parent"
         android:layout_gravity="left">
 
-        <!-- Content of your left drawer -->
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/nav_right"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="right">
 
     </FrameLayout>
 </android.support.v4.widget.DrawerLayout>

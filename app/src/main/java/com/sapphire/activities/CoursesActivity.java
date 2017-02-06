@@ -20,7 +20,7 @@ import com.sapphire.api.CoursesAction;
 import com.sapphire.logic.CoursesData;
 import java.util.ArrayList;
 
-public class CoursesActivity extends AppCompatActivity implements CoursesAdapter.OnRootClickListener,
+public class CoursesActivity extends BaseActivity implements CoursesAdapter.OnRootClickListener,
                                                                   CoursesAdapter.OnOpenClickListener,
                                                                   CoursesAdapter.OnListClickListener,
                                                                   CoursesAction.RequestCourses,
@@ -45,6 +45,15 @@ public class CoursesActivity extends AppCompatActivity implements CoursesAdapter
             public void onClick(View v) {
                 DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
                 drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
+
+        View exit = findViewById(R.id.exit);
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+                drawerLayout.openDrawer(Gravity.RIGHT);
             }
         });
 
@@ -154,6 +163,9 @@ public class CoursesActivity extends AppCompatActivity implements CoursesAdapter
             Fragment fragment = new MenuFragment();
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
+
+            Fragment fragmentRight = new RightFragment();
+            fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
         } catch (Exception e) {}
 
         pd.show();

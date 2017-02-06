@@ -9,7 +9,7 @@
     <string name="text_enter_your_email">Enter your email address and password.</string>
     <string name="text_email_label">Phone/E-mail</string>
     <string name="text_main">Main</string>
-    <string name="text_exit">Logout</string>
+    <string name="text_exit">Sing out</string>
     <string name="text_text1">Text1</string>
     <string name="text_messages">Notification</string>
     <string name="text_need_internet">No internet connection</string>
@@ -43,4 +43,7 @@
     <string name="minutes">min</string>
     <string name="seconds">sec</string>
     <string name="text_templates">Inspection Templates</string>
+    <string name="text_language">Language</string>
+    <string name="english">English</string>
+    <string name="french">French</string>
 </resources>

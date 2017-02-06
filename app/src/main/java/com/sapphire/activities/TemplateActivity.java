@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class TemplateActivity extends AppCompatActivity implements GetTemplateAction.RequestTemplate,
+public class TemplateActivity extends BaseActivity implements GetTemplateAction.RequestTemplate,
                                                                  GetTemplateAction.RequestTemplateData{
     WebView webView;
     private Long count = 0l;
