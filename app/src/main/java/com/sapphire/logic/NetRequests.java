@@ -33,7 +33,7 @@ public class NetRequests {
         try {
             URL url = new URL(request);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            if (method.equals("POST")) {
+            if (method.equals("POST") || method.equals("PUT")) {
                 conn.setDoOutput(true);
                 conn.setUseCaches(false);
             }
@@ -48,7 +48,7 @@ public class NetRequests {
             //conn.setRequestProperty("password","123");
             conn.setConnectTimeout(timout);
             conn.connect();
-            if (method.equals("POST")) {
+            if (method.equals("POST") || method.equals("PUT")) {
                 OutputStream os = conn.getOutputStream();
                 os.write(json.getBytes("UTF-8"));
                 System.out.println(conn.getResponseMessage());

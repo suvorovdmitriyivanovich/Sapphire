@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 
 import com.sapphire.R;
 import com.sapphire.adapters.TemplatesAdapter;
+import com.sapphire.api.TemplateDeleteAction;
 import com.sapphire.api.TemplatesAction;
 import com.sapphire.logic.TemplateData;
 
@@ -25,8 +25,10 @@ import java.util.ArrayList;
 
 public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.OnRootClickListener,
                                                                     TemplatesAdapter.OnOpenClickListener,
+                                                                    TemplatesAdapter.OnDeleteClickListener,
                                                                     TemplatesAction.RequestTemplates,
-                                                                    TemplatesAction.RequestTemplatesData {
+                                                                    TemplatesAction.RequestTemplatesData,
+                                                                    TemplateDeleteAction.RequestTemplateDelete{
     public final static String PARAM_TASK = "task";
     public final static String BROADCAST_ACTION = "com.sapphire.activities.TemplatesActivity";
     BroadcastReceiver br;
@@ -50,12 +52,21 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
             }
         });
 
-        View exit = findViewById(R.id.exit);
+        View exit = findViewById(R.id.delete);
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
                 drawerLayout.openDrawer(Gravity.RIGHT);
+            }
+        });
+
+        View add = findViewById(R.id.add);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TemplatesActivity.this, TemplateActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -108,8 +119,16 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
         Intent intent = new Intent(TemplatesActivity.this, TemplateActivity.class);
         TemplateData templateData = templatesDatas.get(groupPosition).getSubTemplates().get(childPosition);
         intent.putExtra("name", templateData.getName());
+        intent.putExtra("description", templateData.getDescription());
         intent.putExtra("workplaceInspectionTemplateId", templateData.getWorkplaceInspectionTemplateId());
         startActivity(intent);
+    }
+
+    @Override
+    public void onDeleteClick(int groupPosition, int childPosition) {
+        pd.show();
+
+        new TemplateDeleteAction(TemplatesActivity.this, templatesDatas.get(groupPosition).getSubTemplates().get(childPosition).getWorkplaceInspectionTemplateId()).execute();
     }
 
     @Override
@@ -118,6 +137,17 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRequestTemplateDelete(String result) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            new TemplatesAction(TemplatesActivity.this).execute();
         }
     }
 

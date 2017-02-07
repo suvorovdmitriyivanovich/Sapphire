@@ -122,22 +122,27 @@
 
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="@string/text_signin"
         android:id="@+id/button_signin"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/button_selector_grey"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp" />
 
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="@string/text_problems_signin"
         android:id="@+id/button_problems"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        style="?android:attr/buttonBarButtonStyle"/>
+        android:background="@drawable/button_selector_transparent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" />
 
 </RelativeLayout>

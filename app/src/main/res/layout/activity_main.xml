@@ -48,14 +48,14 @@
             <RelativeLayout
                 android:layout_width="56dp"
                 android:layout_height="match_parent"
-                android:id="@+id/exit"
+                android:id="@+id/delete"
                 android:background="@drawable/top_button"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:id="@+id/close_icon"
                     android:src="@drawable/right_icon"
                     android:layout_centerVertical="true"

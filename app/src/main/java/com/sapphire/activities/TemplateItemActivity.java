@@ -12,33 +12,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Toast;
 import com.sapphire.R;
-import com.sapphire.adapters.ItemsAdapter;
-import com.sapphire.api.GetTemplateAction;
-import com.sapphire.api.TemplateAddAction;
-import com.sapphire.api.TemplateItemDeleteAction;
-import com.sapphire.logic.TemplateItemData;
-import java.util.ArrayList;
+import com.sapphire.api.TemplateItemAddAction;
 
-public class TemplateActivity extends BaseActivity implements GetTemplateAction.RequestTemplate,
-                                                              GetTemplateAction.RequestTemplateData,
-                                                              ItemsAdapter.OnRootClickListener,
-                                                              ItemsAdapter.OnOpenClickListener,
-                                                              ItemsAdapter.OnDeleteClickListener,
-                                                              TemplateItemDeleteAction.RequestTemplateItemDelete,
-                                                              TemplateAddAction.RequestTemplateAdd{
+public class TemplateItemActivity extends BaseActivity implements TemplateItemAddAction.RequestTemplateItemAdd{
+    private String workplaceInspectionTemplateItemId = "";
     private String workplaceInspectionTemplateId = "";
     ProgressDialog pd;
-    private ArrayList<TemplateItemData> templateItemDatas;
-    private ListView itemlist;
-    private ItemsAdapter adapter;
     private EditText name;
     private EditText description;
     private View text_name_error;
     private View text_name;
-    private boolean pressAdd = false;
     private String nameOld = "";
     private String descriptionOld = "";
     private Dialog dialog_confirm;
@@ -49,7 +34,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_template);
+        setContentView(R.layout.activity_template_item);
 
         View back = findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +74,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
             @Override
             public void onClick(View v) {
                 dialog_confirm.dismiss();
-                updateTemplate(false);
+                saveChanged();
             }
         });
 
@@ -105,24 +90,11 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
         button_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (workplaceInspectionTemplateId.equals("") || !nameOld.equals(name.getText().toString())
+                if (workplaceInspectionTemplateItemId.equals("") || !nameOld.equals(name.getText().toString())
                         || !descriptionOld.equals(description.getText().toString())) {
-                    updateTemplate(false);
+                    saveChanged();
                 } else {
                     finish();
-                }
-            }
-        });
-
-        View add = findViewById(R.id.add);
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!nameOld.equals(name.getText().toString())
-                        || !descriptionOld.equals(description.getText().toString())) {
-                    updateTemplate(true);
-                } else {
-                    addItem();
                 }
             }
         });
@@ -136,25 +108,22 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
         });
 
         Intent intent = getIntent();
-        workplaceInspectionTemplateId = intent.getStringExtra("workplaceInspectionTemplateId");
-        if (workplaceInspectionTemplateId == null) {
-            workplaceInspectionTemplateId = "";
+        workplaceInspectionTemplateItemId = intent.getStringExtra("workplaceInspectionTemplateItemId");
+        if (workplaceInspectionTemplateItemId == null) {
+            workplaceInspectionTemplateItemId = "";
         }
-        if (!workplaceInspectionTemplateId.equals("")) {
+        if (!workplaceInspectionTemplateItemId.equals("")) {
             nameOld = intent.getStringExtra("name");
             descriptionOld = intent.getStringExtra("description");
+            workplaceInspectionTemplateId = intent.getStringExtra("workplaceInspectionTemplateId");
             name.setText(nameOld);
             description.setText(descriptionOld);
         }
 
-        itemlist = (ListView) findViewById(R.id.itemlist);
-        adapter = new ItemsAdapter(this);
-        itemlist.setAdapter(adapter);
-
         updateViews();
     }
 
-    private void updateTemplate(boolean add) {
+    private void saveChanged() {
         hideSoftKeyboard();
         boolean allOk = true;
 
@@ -165,8 +134,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
         if (allOk) {
             pd.show();
 
-            pressAdd = add;
-            new TemplateAddAction(TemplateActivity.this, workplaceInspectionTemplateId, name.getText().toString(), description.getText().toString()).execute();
+            new TemplateItemAddAction(TemplateItemActivity.this, workplaceInspectionTemplateItemId, workplaceInspectionTemplateId, name.getText().toString(), description.getText().toString()).execute();
         }
     }
 
@@ -203,101 +171,32 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
 
     private void exit() {
         if (!nameOld.equals(name.getText().toString())
-                || !descriptionOld.equals(description.getText().toString())) {
+            || !descriptionOld.equals(description.getText().toString())) {
             dialog_confirm.show();
         } else {
             finish();
         }
     }
 
-    private void addItem() {
-        hideSoftKeyboard();
-        Intent intent = new Intent(TemplateActivity.this, TemplateItemActivity.class);
-        startActivity(intent);
-    }
-
     @Override
-    public void onRequestTemplate(String result) {
+    public void onRequestTemplateItemAdd(String result) {
         pd.hide();
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onRequestTemplateData(ArrayList<TemplateItemData> templatesItemDatas) {
-        this.templateItemDatas = templatesItemDatas;
-        adapter.setListArray(templatesItemDatas);
-        pd.hide();
-    }
-
-    @Override
-    public void onRootClick(int position) {
-        hideSoftKeyboard();
-    }
-
-    @Override
-    public void onDeleteClick(int position) {
-        hideSoftKeyboard();
-        pd.show();
-
-        new TemplateItemDeleteAction(TemplateActivity.this, templateItemDatas.get(position).getWorkplaceInspectionTemplateItemId()).execute();
-    }
-
-    @Override
-    public void onOpenClick(int position) {
-        hideSoftKeyboard();
-        Intent intent = new Intent(TemplateActivity.this, TemplateItemActivity.class);
-        TemplateItemData templateItemData = templateItemDatas.get(position);
-        intent.putExtra("name", templateItemData.getName());
-        intent.putExtra("description", templateItemData.getDescription());
-        intent.putExtra("workplaceInspectionTemplateItemId", templateItemData.getWorkplaceInspectionTemplateItemId());
-        intent.putExtra("workplaceInspectionTemplateId", templateItemData.getWorkplaceInspectionTemplateId());
-        startActivity(intent);
-    }
-
-    @Override
-    public void onRequestTemplateItemDelete(String result) {
-        if (!result.equals("OK")) {
-            pd.hide();
-            Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            new GetTemplateAction(TemplateActivity.this, workplaceInspectionTemplateId).execute();
-        }
-    }
-
-    @Override
-    public void onRequestTemplateAdd(String result) {
-        pd.hide();
-        if (!result.equals("OK")) {
-            pressAdd = false;
-            Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
-        } else if (pressAdd) {
-            pressAdd = false;
-            nameOld = name.getText().toString();
-            descriptionOld = description.getText().toString();
-            addItem();
         } else {
             finish();
         }
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (!workplaceInspectionTemplateId.equals("")) {
-            pd.show();
-            new GetTemplateAction(TemplateActivity.this, workplaceInspectionTemplateId).execute();
-        }
+    public void onBackPressed() {
+        exit();
     }
 
     @Override
-    public void onBackPressed() {
-        exit();
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override

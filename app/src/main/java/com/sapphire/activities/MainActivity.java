@@ -54,7 +54,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        View exit = findViewById(R.id.exit);
+        View exit = findViewById(R.id.delete);
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

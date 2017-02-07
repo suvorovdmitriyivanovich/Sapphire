@@ -24,8 +24,8 @@ public class TemplatesAdapter extends BaseExpandableListAdapter {
         void onOpenClick(int groupPosition, int childPosition);
     }
 
-    public interface OnExitClickListener{
-        void onExitClick(int groupPosition, int childPosition);
+    public interface OnDeleteClickListener{
+        void onDeleteClick(int groupPosition, int childPosition);
     }
 
     private ArrayList<TemplateData> mGroups;
@@ -131,19 +131,19 @@ public class TemplatesAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        Button exit = (Button) convertView.findViewById(R.id.exit);
-        exit.setOnClickListener(new View.OnClickListener() {
+        Button delete = (Button) convertView.findViewById(R.id.delete);
+        delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((OnExitClickListener)mContext).onExitClick(groupPosition, childPosition);
+                ((OnDeleteClickListener)mContext).onDeleteClick(groupPosition, childPosition);
             }
         });
 
         open.setTypeface(typeFace);
         open.setText(Html.fromHtml("&#61504;"));
 
-        exit.setTypeface(typeFace);
-        exit.setText(Html.fromHtml("&#61944;"));
+        delete.setTypeface(typeFace);
+        delete.setText(Html.fromHtml("&#61944;"));
 
         return convertView;
     }

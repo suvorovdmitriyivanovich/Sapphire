@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -48,7 +47,7 @@ public class CoursesActivity extends BaseActivity implements CoursesAdapter.OnRo
             }
         });
 
-        View exit = findViewById(R.id.exit);
+        View exit = findViewById(R.id.delete);
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

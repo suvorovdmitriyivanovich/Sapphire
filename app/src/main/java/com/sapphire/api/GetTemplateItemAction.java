@@ -3,37 +3,37 @@ package com.sapphire.api;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.ErrorMessageData;
-import com.sapphire.logic.ResponseData;
-import com.sapphire.logic.TemplateData;
 import com.sapphire.logic.Environment;
+import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
+import com.sapphire.logic.ResponseData;
 import com.sapphire.logic.TemplateItemData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
+
 import java.util.ArrayList;
 
-public class GetTemplateAction extends AsyncTask{
+public class GetTemplateItemAction extends AsyncTask{
 
-    public interface RequestTemplate {
-        public void onRequestTemplate(String result);
+    public interface RequestTemplateItem {
+        public void onRequestTemplateItem(String result);
     }
 
-    public interface RequestTemplateData {
-        public void onRequestTemplateData(ArrayList<TemplateItemData> templateItemDatas);
+    public interface RequestTemplateItemData {
+        public void onRequestTemplateItemData(ArrayList<TemplateItemData> templateItemDatas);
     }
 
     private Context mContext;
     private ArrayList<TemplateItemData> templateItemDatas;
-    private String templateId = "";
+    private String templateItemId = "";
 
-    public GetTemplateAction(Context context, String templateId) {
+    public GetTemplateItemAction(Context context, String templateItemId) {
         this.mContext = context;
-        this.templateId = templateId;
+        this.templateItemId = templateItemId;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class GetTemplateAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.WorkplaceInspectionTemplateItemsURL + "?$filter=WorkplaceInspectionTemplateId%20eq%20guid'"+templateId+"'";;
+        String urlstring = Environment.SERVER + Environment.WorkplaceInspectionTemplateItemsURL + "?$filter=WorkplaceInspectionTemplateItemId%20eq%20guid'"+templateItemId+"'";;
 
         SharedPreferences sPref = mContext.getSharedPreferences("GlobalPreferences", mContext.MODE_PRIVATE);
 
@@ -85,9 +85,9 @@ public class GetTemplateAction extends AsyncTask{
         String resultData = (String) o;
         if(mContext!=null) {
             if (resultData.equals("OK")) {
-                ((RequestTemplateData) mContext).onRequestTemplateData(templateItemDatas);
+                ((RequestTemplateItemData) mContext).onRequestTemplateItemData(templateItemDatas);
             } else {
-                ((RequestTemplate) mContext).onRequestTemplate(resultData);
+                ((RequestTemplateItem) mContext).onRequestTemplateItem(resultData);
             }
         }
     }

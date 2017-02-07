@@ -3,7 +3,6 @@ package com.sapphire.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -174,11 +173,6 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
                 //ed.putString(PASS, "");
                 //ed.apply();
                 //pass.setText("");
-
-                //TODO временно
-                Intent intent2 = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent2);
-                finish();
 
                 if (result.equals("OK") ||
                         (result.equals(getResources().getString(R.string.text_need_internet))) && sPref.getBoolean("INSUCCESS", false)) {

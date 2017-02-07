@@ -9,11 +9,9 @@ import com.sapphire.db.DBHelper;
 import com.sapphire.logic.AccountData;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.ErrorMessageData;
-import com.sapphire.logic.MessageData;
 import com.sapphire.logic.NavigationMenuData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

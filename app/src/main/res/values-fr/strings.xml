@@ -11,7 +11,6 @@
     <string name="text_password_label">Mot de passe</string>
     <string name="text_main">Principal</string>
     <string name="text_exit">Déconnexion</string>
-    <string name="text_text1">Texte1</string>
     <string name="text_messages">Notification</string>
     <string name="text_need_internet">Pas de connexion internet</string>
     <string name="text_not_user">L\'utilisateur n\'a pas été trouvé</string>

@@ -10,7 +10,6 @@
     <string name="text_email_label">Phone/E-mail</string>
     <string name="text_main">Main</string>
     <string name="text_exit">Sing out</string>
-    <string name="text_text1">Text1</string>
     <string name="text_messages">Notification</string>
     <string name="text_need_internet">No internet connection</string>
     <string name="text_not_user">The user is not found</string>
@@ -46,4 +45,13 @@
     <string name="text_language">Language</string>
     <string name="english">English</string>
     <string name="french">French</string>
+    <string name="name">Name</string>
+    <string name="name_error">Name is required</string>
+    <string name="text_description">Description</string>
+    <string name="text_template">Inspection Template</string>
+    <string name="text_items">Items</string>
+    <string name="text_template_item">Template Item</string>
+    <string name="text_save_change">Save changes?</string>
+    <string name="text_no_save">Not save</string>
+    <string name="text_yes_save">Save</string>
 </resources>
