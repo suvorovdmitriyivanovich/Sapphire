@@ -54,4 +54,9 @@
     <string name="text_save_change">Save changes?</string>
     <string name="text_no_save">Not save</string>
     <string name="text_yes_save">Save</string>
+    <string name="text_photo">Take photo</string>
+    <string name="text_mobile">Select from gallery</string>
+    <string name="text_delete_photo">Delete photo</string>
+    <string name="text_cancel">Cancel</string>
+    <string name="text_error_camera">You didn\'t grant access of App to the camera or your device does not support camera</string>
 </resources>

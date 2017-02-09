@@ -82,7 +82,7 @@ public class NetRequests {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            if (!returnerror) {
+            if (returnerror) {
                 rez = e.getMessage();
                 if (rez == null) {
                     rez = "";

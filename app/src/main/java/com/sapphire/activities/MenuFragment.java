@@ -121,6 +121,9 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
         } else if (navigationMenuDatas.get(groupPosition).getSubMenus().get(childPosition).getUrlRoute().equals("/health-and-safety/workplace-inspections-reports")) {
             Intent intent = new Intent(getActivity(), TemplatesActivity.class);
             startActivity(intent);
+        } else {
+            Intent intent = new Intent(getActivity(), PhotoActivity.class);
+            startActivity(intent);
         }
         //Intent intent = new Intent(getActivity(), SettingsActivity.class);
         //startActivity(intent);
