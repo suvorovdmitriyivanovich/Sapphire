@@ -8,7 +8,7 @@ public class Environment {
     public static final String SecurityAuthenticationsURL = "/v1/Security/Authentications";
     public static final String PoliciesCurrentURL = "/v1/Policies/Current";
     public static final String PoliciesLogURL = "/v1/Policy/Log";
-    public static final String CoursesCurrentURL = "/v1/Courses/Files/GetCurrent";
+    public static final String CoursesCurrentURL = "/v1/CoursesFiles/GetCurrent";
     public static final String CourseFileGetURL = "/api/CourseFile/Get";
     public static final String QuizzesURL = "/v1/Quizzes";
     public static final String QuizzesLogURL = "/v1/Quizzes/Log";
