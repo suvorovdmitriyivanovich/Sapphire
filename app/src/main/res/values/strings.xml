@@ -59,4 +59,5 @@
     <string name="text_delete_photo">Delete photo</string>
     <string name="text_cancel">Cancel</string>
     <string name="text_error_camera">You didn\'t grant access of App to the camera or your device does not support camera</string>
+    <string name="text_calendar">H&#38;S Calendar</string>
 </resources>

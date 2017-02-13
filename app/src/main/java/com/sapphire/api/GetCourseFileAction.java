@@ -42,10 +42,12 @@ public class GetCourseFileAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVERFull + Environment.CourseFileGetURL + "/" + courseId;
+
+        //String urlstring = Environment.SERVERFull + Environment.CourseFileGetURL + "?Id=" + courseId;
+        //String urlstring = Environment.SERVER + "/v1/CoursesFiles" + "?$filter=CourseFileId%20eq%20guid'"+courseId+"'";
+        String urlstring = Environment.SERVER + "/v1/DocumentManagement/Files/DownloadZip" + "?fileId="+courseId;
 
         SharedPreferences sPref = mContext.getSharedPreferences("GlobalPreferences", mContext.MODE_PRIVATE);
-
         String result = NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET",sPref.getString("AUTHTOKEN",""));
 
         if (result.indexOf("<!DOCTYPE html><html><head>") == 0) {
