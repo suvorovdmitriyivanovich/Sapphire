@@ -13,6 +13,7 @@ import com.sapphire.logic.QuestionData;
 import com.sapphire.logic.QuizData;
 import com.sapphire.logic.QuizScoreData;
 import com.sapphire.logic.ResponseData;
+import com.sapphire.logic.UserInfo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -75,9 +76,7 @@ public class PostQuizzesAction extends AsyncTask{
             e.printStackTrace();
         }
 
-        SharedPreferences sPref = mContext.getSharedPreferences("GlobalPreferences", mContext.MODE_PRIVATE);
-
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonObject.toString(),0,true,"POST",sPref.getString("AUTHTOKEN","")));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonObject.toString(),0,true,"POST", UserInfo.getUserInfo().getAuthToken()));
 
         String result = "";
 

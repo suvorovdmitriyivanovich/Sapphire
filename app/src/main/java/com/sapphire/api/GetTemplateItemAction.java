@@ -11,6 +11,7 @@ import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
 import com.sapphire.logic.TemplateItemData;
+import com.sapphire.logic.UserInfo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,9 +44,7 @@ public class GetTemplateItemAction extends AsyncTask{
         }
         String urlstring = Environment.SERVER + Environment.WorkplaceInspectionTemplateItemsURL + "?$filter=WorkplaceInspectionTemplateItemId%20eq%20guid'"+templateItemId+"'";;
 
-        SharedPreferences sPref = mContext.getSharedPreferences("GlobalPreferences", mContext.MODE_PRIVATE);
-
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET",sPref.getString("AUTHTOKEN","")));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthToken()));
 
         String result = "";
 

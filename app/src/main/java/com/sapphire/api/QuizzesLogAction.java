@@ -11,6 +11,7 @@ import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.PoliciesData;
 import com.sapphire.logic.ResponseData;
+import com.sapphire.logic.UserInfo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,20 +43,20 @@ public class QuizzesLogAction extends AsyncTask{
         }
         String urlstring = Environment.SERVER + Environment.QuizzesLogURL;
 
-        SharedPreferences sPref = mContext.getSharedPreferences("GlobalPreferences", mContext.MODE_PRIVATE);
+        UserInfo userInfo = UserInfo.getUserInfo();
 
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("QuizeId", quizeId);
             jsonObject.put("AccountQuizStatusId", accountQuizStatusId);
-            jsonObject.put("AccountId", sPref.getString("ACCOUNTID",""));
+            jsonObject.put("AccountId", userInfo.getAccountId());
             jsonArray.put(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonArray.toString(),0,true,"POST",sPref.getString("AUTHTOKEN","")));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonArray.toString(),0,true,"POST", userInfo.getAuthToken()));
 
         String result = "";
 

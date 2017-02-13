@@ -112,17 +112,21 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
         if (getActivity().getClass() != MainActivity.class) {
             getActivity().finish();
         }
-        if (navigationMenuDatas.get(groupPosition).getSubMenus().get(childPosition).getUrlRoute().equals("/me/my-policies-and-handbooks")) {
+        String urlRoute = navigationMenuDatas.get(groupPosition).getSubMenus().get(childPosition).getUrlRoute();
+        if (urlRoute.equals("/me/my-policies-and-handbooks")) {
             Intent intent = new Intent(getActivity(), PoliciesActivity.class);
             startActivity(intent);
-        } else if (navigationMenuDatas.get(groupPosition).getSubMenus().get(childPosition).getUrlRoute().equals("/me/my-training-courses")) {
+        } else if (urlRoute.equals("/me/my-training-courses")) {
             Intent intent = new Intent(getActivity(), CoursesActivity.class);
             startActivity(intent);
-        } else if (navigationMenuDatas.get(groupPosition).getSubMenus().get(childPosition).getUrlRoute().equals("/health-and-safety/workplace-inspections-reports")) {
+        } else if (urlRoute.equals("/health-and-safety/workplace-inspections-reports")) {
             Intent intent = new Intent(getActivity(), TemplatesActivity.class);
             startActivity(intent);
-        } else if (navigationMenuDatas.get(groupPosition).getSubMenus().get(childPosition).getUrlRoute().equals("/health-and-safety/event-calendar")) {
+        } else if (urlRoute.equals("/me/my-calendar")) {
             Intent intent = new Intent(getActivity(), EventCalendarActivity.class);
+            startActivity(intent);
+        } else if (urlRoute.equals("/me/my-hr-details")) {
+            Intent intent = new Intent(getActivity(), ProfileActivity.class);
             startActivity(intent);
         } else {
             Intent intent = new Intent(getActivity(), PhotoActivity.class);

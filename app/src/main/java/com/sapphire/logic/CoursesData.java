@@ -29,6 +29,7 @@ public class CoursesData {
     private Long quizDateCompleted = 0l;
     private String idQuizCompleted = "";
     private String passingScore = "";
+    private boolean quizPassed = false;
     private ArrayList<CoursesData> subCourses = new ArrayList<CoursesData>();
 
     public CoursesData() {
@@ -99,6 +100,9 @@ public class CoursesData {
             }
             if (!data.isNull("PassingScore")) {
                 setPassingScore(data.getString("PassingScore"));
+            }
+            if (!data.isNull("QuizPassed")) {
+                setQuizPassed(data.getBoolean("QuizPassed"));
             }
             if (!data.isNull("SubCourses")) {
                 setSubCourses(data.getJSONArray("SubCourses"));
@@ -317,6 +321,14 @@ public class CoursesData {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean getQuizPassed() {
+        return quizPassed;
+    }
+
+    public void setQuizPassed(boolean quizPassed) {
+        this.quizPassed = quizPassed;
     }
 
     public ArrayList<CoursesData> getSubCourses() {

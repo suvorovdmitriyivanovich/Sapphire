@@ -15,6 +15,7 @@ public class AccountData {
     private OrganizationData currentOrganization = new OrganizationData();
     private ArrayList<OrganizationData> organizations = new ArrayList<OrganizationData>();
     private ArrayList<NavigationMenuData> navigationMenus = new ArrayList<NavigationMenuData>();
+    private ProfileData currentProfile = new ProfileData();
     private boolean isPasswordRetrieval = false;
     private Long dateCreated = 0l;
     private Long dateUpdated = 0l;
@@ -54,6 +55,9 @@ public class AccountData {
             }
             if (!data.isNull("DateUpdated")) {
                 setDateUpdated(data.getString("DateUpdated"));
+            }
+            if (!data.isNull("CurrentProfile")) {
+                setCurrentProfile(data.getJSONObject("CurrentProfile"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -124,7 +128,9 @@ public class AccountData {
         ArrayList<NavigationMenuData> navigationMenuDatas = new ArrayList<NavigationMenuData>();
         for (int y=0; y < navigationMenus.length(); y++) {
             try {
-                navigationMenuDatas.add(new NavigationMenuData(navigationMenus.getJSONObject(y)));
+                if (!navigationMenus.getJSONObject(y).isNull("IsAndroid") && navigationMenus.getJSONObject(y).getBoolean("IsAndroid")) {
+                    navigationMenuDatas.add(new NavigationMenuData(navigationMenus.getJSONObject(y)));
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -170,5 +176,13 @@ public class AccountData {
             e.printStackTrace();
         }
         this.dateUpdated = dateUpdatedLong;
+    }
+
+    public ProfileData getCurrentProfile() {
+        return currentProfile;
+    }
+
+    public void setCurrentProfile(JSONObject currentProfile) {
+        this.currentProfile = new ProfileData(currentProfile);
     }
 }

@@ -28,8 +28,8 @@
     <string name="text_courses">My Training Courses</string>
     <string name="text_duration">Duration</string>
     <string name="text_quiz_score">Quiz Score</string>
-    <string name="text_course_completed_on">Course Completed On</string>
-    <string name="text_quiz_completed_on">Quiz Completed On</string>
+    <string name="text_course_completed">Course Completed</string>
+    <string name="text_quiz_completed">Quiz Completed</string>
     <string name="text_next">Next</string>
     <string name="text_finish">Finish</string>
     <string name="text_previous">Previous</string>
@@ -59,5 +59,6 @@
     <string name="text_delete_photo">Delete photo</string>
     <string name="text_cancel">Cancel</string>
     <string name="text_error_camera">You didn\'t grant access of App to the camera or your device does not support camera</string>
-    <string name="text_calendar">H&#38;S Calendar</string>
+    <string name="text_calendar">My Calendar</string>
+    <string name="text_my_hr_details">My Hr Details</string>
 </resources>

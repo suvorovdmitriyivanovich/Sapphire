@@ -5,39 +5,32 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.CoursesData;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.logic.PoliciesData;
-import com.sapphire.logic.QuizData;
+import com.sapphire.logic.ProfileData;
 import com.sapphire.logic.ResponseData;
 import com.sapphire.logic.UserInfo;
-import com.sapphire.utils.Files;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import java.io.File;
 import java.util.ArrayList;
 
-public class GetQuizAction extends AsyncTask{
+public class GetProfilesAction extends AsyncTask{
 
-    public interface RequestQuiz {
-        public void onRequestQuiz(String result);
+    public interface RequestProfiles {
+        public void onRequestProfiles(String result);
     }
 
-    public interface RequestQuizData {
-        public void onRequestQuizData(QuizData quizData);
+    public interface RequestProfilesData {
+        public void onRequestProfilesData(ProfileData profileData);
     }
 
     private Context mContext;
-    private QuizData quizData;
-    private String quizeId = "";
+    private ProfileData profileData;
 
-    public GetQuizAction(Context context, String quizeId) {
+    public GetProfilesAction(Context context) {
         this.mContext = context;
-        this.quizeId = quizeId;
     }
 
     @Override
@@ -45,9 +38,12 @@ public class GetQuizAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.QuizzesURL + "?$filter=QuizId%20eq%20guid'"+quizeId+"'";
 
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthToken()));
+        UserInfo userInfo = UserInfo.getUserInfo();
+
+        String urlstring = Environment.SERVER + Environment.ProfilesURL + "?$filter=ProfileId%20eq%20guid'"+userInfo.getProfileId()+"'";
+
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", userInfo.getAuthToken()));
 
         String result = "";
 
@@ -55,7 +51,7 @@ public class GetQuizAction extends AsyncTask{
             JSONArray data = responseData.getData();
             if (data.length() == 1) {
                 try {
-                    quizData = new QuizData(data.getJSONObject(0));
+                    profileData = new ProfileData(data.getJSONObject(0));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -84,9 +80,9 @@ public class GetQuizAction extends AsyncTask{
         String resultData = (String) o;
         if(mContext!=null) {
             if (resultData.equals("OK")) {
-                ((RequestQuizData) mContext).onRequestQuizData(quizData);
+                ((RequestProfilesData) mContext).onRequestProfilesData(profileData);
             } else {
-                ((RequestQuiz) mContext).onRequestQuiz(resultData);
+                ((RequestProfiles) mContext).onRequestProfiles(resultData);
             }
         }
     }

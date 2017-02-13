@@ -12,6 +12,8 @@ import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NavigationMenuData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
+import com.sapphire.logic.UserInfo;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -84,9 +86,13 @@ public class AuthenticationsAction extends AsyncTask{
                     DBHelper.getInstance(Sapphire.getInstance()).deleteNavigationMenus();
                     DBHelper.getInstance(Sapphire.getInstance()).addNavigationMenus(navigationMenuDatas);
                 }
-                ed.putString("AUTHTOKEN", accountDatas.get(0).getAuthToken());
-                ed.putString("ACCOUNTID", accountDatas.get(0).getAccountId());
-                ed.apply();
+                UserInfo userInfo = UserInfo.getUserInfo();
+                userInfo.setAuthToken(accountDatas.get(0).getAuthToken());
+                userInfo.setAccountId(accountDatas.get(0).getAuthToken());
+                userInfo.setProfileId(accountDatas.get(0).getCurrentProfile().getProfileId());
+                //ed.putString("AUTHTOKEN", accountDatas.get(0).getAuthToken());
+                //ed.putString("ACCOUNTID", accountDatas.get(0).getAccountId());
+                //ed.apply();
             }
 
             result = "OK";

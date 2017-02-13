@@ -96,6 +96,7 @@ public class ResponseData {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            setHttpStatusMessage(data);
         }
     }
 

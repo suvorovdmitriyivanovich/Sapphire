@@ -9,6 +9,8 @@ import com.sapphire.logic.Environment;
 import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
+import com.sapphire.logic.UserInfo;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,9 +62,7 @@ public class TemplateItemAddAction extends AsyncTask{
             method = "PUT";
         }
 
-        SharedPreferences sPref = mContext.getSharedPreferences("GlobalPreferences", mContext.MODE_PRIVATE);
-
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonArray.toString(),0,true,method,sPref.getString("AUTHTOKEN","")));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonArray.toString(),0,true,method, UserInfo.getUserInfo().getAuthToken()));
 
         String result = "";
 

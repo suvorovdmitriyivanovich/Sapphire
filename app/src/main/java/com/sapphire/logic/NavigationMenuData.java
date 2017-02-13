@@ -17,6 +17,7 @@ public class NavigationMenuData {
     private String cssClass = "";
     private String unicodeIcon = "";
     private ArrayList<NavigationMenuData> subMenus = new ArrayList<NavigationMenuData>();
+    private boolean isAndroid = false;
 
     public NavigationMenuData() {
 
@@ -56,6 +57,9 @@ public class NavigationMenuData {
             }
             if (!data.isNull("SubMenus")) {
                 setSubMenus(data.getJSONArray("SubMenus"));
+            }
+            if (!data.isNull("IsAndroid")) {
+                setIsAndroid(data.getBoolean("IsAndroid"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -150,11 +154,21 @@ public class NavigationMenuData {
         ArrayList<NavigationMenuData> navigationMenuDatas = new ArrayList<NavigationMenuData>();
         for (int y=0; y < subMenus.length(); y++) {
             try {
-                navigationMenuDatas.add(new NavigationMenuData(subMenus.getJSONObject(y)));
+                if (!subMenus.getJSONObject(y).isNull("IsAndroid") && subMenus.getJSONObject(y).getBoolean("IsAndroid")) {
+                    navigationMenuDatas.add(new NavigationMenuData(subMenus.getJSONObject(y)));
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         this.subMenus = navigationMenuDatas;
+    }
+
+    public boolean getIsAndroid() {
+        return isAndroid;
+    }
+
+    public void setIsAndroid(boolean isAndroid) {
+        this.isAndroid = isAndroid;
     }
 }

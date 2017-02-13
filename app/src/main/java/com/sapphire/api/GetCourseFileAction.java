@@ -1,21 +1,13 @@
 package com.sapphire.api;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.CoursesData;
 import com.sapphire.logic.Environment;
-import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.logic.ResponseData;
-import com.sapphire.utils.Files;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.io.File;
+import com.sapphire.logic.UserInfo;
 import java.util.ArrayList;
 
 public class GetCourseFileAction extends AsyncTask{
@@ -43,13 +35,43 @@ public class GetCourseFileAction extends AsyncTask{
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
 
-        //String urlstring = Environment.SERVERFull + Environment.CourseFileGetURL + "?Id=" + courseId;
+        String urlstring = Environment.SERVERFull + Environment.CourseFileURL + "?Id=" + courseId + "&AuthToken=" + UserInfo.getUserInfo().getAuthToken();
         //String urlstring = Environment.SERVER + "/v1/CoursesFiles" + "?$filter=CourseFileId%20eq%20guid'"+courseId+"'";
-        String urlstring = Environment.SERVER + "/v1/DocumentManagement/Files/DownloadZip" + "?fileId="+courseId;
+        //String urlstring = Environment.SERVER + "/v1/DocumentManagement/Files/DownloadZip" + "?fileId="+courseId;
 
-        SharedPreferences sPref = mContext.getSharedPreferences("GlobalPreferences", mContext.MODE_PRIVATE);
-        String result = NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET",sPref.getString("AUTHTOKEN",""));
+        String result = NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET",UserInfo.getUserInfo().getAuthToken());
 
+        /*
+        String result = "";
+
+        if (responseData.getSuccess()) {
+            JSONArray data = responseData.getData();
+            ArrayList<AccountData> accountDatas = new ArrayList<AccountData>();
+            for (int y=0; y < data.length(); y++) {
+                try {
+                    accountDatas.add(new AccountData(data.getJSONObject(y)));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            result = "OK";
+        } else {
+            ArrayList<ErrorMessageData> errorMessageDatas = responseData.getErrorMessages();
+            if (errorMessageDatas == null || errorMessageDatas.size() == 0) {
+                result = responseData.getHttpStatusMessage();
+            } else {
+                for (int y=0; y < errorMessageDatas.size(); y++) {
+                    if (!result.equals("")) {
+                        result = result + ". ";
+                    }
+                    result = errorMessageDatas.get(y).getName();
+                }
+            }
+        }
+        */
+
+        /*
         if (result.indexOf("<!DOCTYPE html><html><head>") == 0) {
             File sdPath = new File(Sapphire.getInstance().getFilesDir() + "/temp");
             if (!sdPath.exists()) {
@@ -68,6 +90,7 @@ public class GetCourseFileAction extends AsyncTask{
 
             result = "OK";
         }
+        */
 
         return result;
     }
@@ -76,11 +99,11 @@ public class GetCourseFileAction extends AsyncTask{
     protected void onPostExecute(Object o) {
         String resultData = (String) o;
         if(mContext!=null) {
-            if (resultData.equals("OK")) {
-                ((RequestCoursesData) mContext).onRequestCoursesData(coursesDatas);
-            } else {
+            //if (resultData.equals("OK")) {
+            //    ((RequestCoursesData) mContext).onRequestCoursesData(coursesDatas);
+            //} else {
                 ((RequestCourses) mContext).onRequestCourses(resultData);
-            }
+            //}
         }
     }
 }

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.api.GetCourseFileAction;
+import com.sapphire.api.GetProfilesAction;
 import com.sapphire.logic.CoursesData;
 import com.sapphire.logic.Environment;
 
@@ -26,14 +27,8 @@ import java.util.concurrent.TimeUnit;
 public class CourseActivity extends BaseActivity implements GetCourseFileAction.RequestCourses,
                                                                  GetCourseFileAction.RequestCoursesData{
     WebView webView;
-    private Long count = 0l;
-    private TextView time;
-    private boolean needbreak = false;
-    private View button_acknowledged;
     private String courseId;
-    private String id;
     ProgressDialog pd;
-    private boolean needClose = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +66,7 @@ public class CourseActivity extends BaseActivity implements GetCourseFileAction.
 
         webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);
-
-        //count = Long.valueOf(intent.getIntExtra("duration", 0));
-        count = 0l;
-        //id = intent.getStringExtra("id");
+        //webView.loadUrl();
 
         //File f = new File(android.os.Environment.getExternalStorageDirectory() + "/Download/index.html");
         //webView.loadUrl("file://"+f.getAbsolutePath());
@@ -122,97 +114,39 @@ public class CourseActivity extends BaseActivity implements GetCourseFileAction.
 
     @Override
     public void onRequestCourses(String result) {
-        pd.hide();
-        if (!result.equals("OK")) {
+        if (result.indexOf("index.html") == -1) {
+            pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        result = result.replaceAll("\"","");
+        result = result.replaceAll("\\\\","/");
+        result = result.replaceAll("//","/");
+        result = result.replaceAll(" ","%20");
+
+        webView.loadUrl(Environment.SERVERFull + result);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                pd.hide();
+            }
+        }, 10000);
     }
 
     @Override
     public void onRequestCoursesData(ArrayList<CoursesData> coursesDatas) {
-        File sdPath = new File(Sapphire.getInstance().getFilesDir() + "/temp/temp.html");
+        //File sdPath = new File(Sapphire.getInstance().getFilesDir() + "/temp/temp.html");
         //File f = new File(android.os.Environment.getExternalStorageDirectory() + "/Download/temp.html");
         //webView.loadUrl("file://"+sdPath.getAbsolutePath());
 
         //File f = new File(android.os.Environment.getExternalStorageDirectory() + "/Download/index.html");
         //webView.loadUrl("file://"+f.getAbsolutePath());
-        webView.loadUrl("http://portal.dealerpilothr.com/api/CourseFile/Get/d10fdc39-182e-cb17-b3b1-8b967cffca91");
-
-        pd.hide();
-    }
-
-    private class CountTask extends AsyncTask<String, Void, String> {
-        public CountTask() {
-            super();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            if (needbreak) {
-                return null;
-            }
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(String rezult) {
-            callBackFromTsk(rezult);
-        }
-    }
-
-    public void callBackFromTsk(String rezult) {
-        if (needbreak) {
-            return;
-        }
-
-        count = count - 1;
-        time.setText(getTime(count));
-
-        if (count > 0) {
-            new CountTask().execute();
-        } else {
-            time.setVisibility(View.GONE);
-            button_acknowledged.setEnabled(true);
-        }
-    }
-
-    private String getTime(Long seconds) {
-        Long minutes = seconds / 60;
-        Long hours = minutes / 60;
-        Long minutest = minutes - (hours * 60);
-        Long secondst = seconds - (minutes * 60);
-
-        String rez = "";
-        if (hours > 9) {
-            rez = ">9";
-        } else {
-            rez = String.valueOf(hours);
-        }
-        rez = rez + ":";
-        if (String.valueOf(minutest).length() == 1) {
-            rez = rez + "0" + String.valueOf(minutest);
-        } else {
-            rez = rez + String.valueOf(minutest);
-        }
-        rez = rez + ":";
-        if (String.valueOf(secondst).length() == 1) {
-            rez = rez + "0" + String.valueOf(secondst);
-        } else {
-            rez = rez + String.valueOf(secondst);
-        }
-
-        return rez;
+        //webView.loadUrl("http://portal.dealerpilothr.com/api/CourseFile/Get/d10fdc39-182e-cb17-b3b1-8b967cffca91");
+        //
+        //pd.hide();
     }
 
     private class HelloWebViewClient extends WebViewClient {
@@ -259,7 +193,6 @@ public class CourseActivity extends BaseActivity implements GetCourseFileAction.
 
     @Override
     public void onDestroy() {
-        needbreak = true;
         super.onDestroy();
     }
 }

@@ -111,15 +111,32 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
         TextView name = (TextView) convertView.findViewById(R.id.text_name);
         name.setText(coursesData.getName());
 
-        String textCourse = Sapphire.getInstance().getResources().getString(R.string.text_duration);
-        textCourse = textCourse + ": " + coursesData.getDuration();
-        textCourse = textCourse + ", " + Sapphire.getInstance().getResources().getString(R.string.text_quiz_score);
-        textCourse = textCourse + ": " + coursesData.getQuizScore();
-        textCourse = textCourse + ", " + Sapphire.getInstance().getResources().getString(R.string.text_quiz_completed_on);
-        textCourse = textCourse + ": " + coursesData.getQuizDateCompletedString();
+        String textCourse = "";
+        if (!coursesData.getQuizScore().equals("")) {
+            textCourse = Sapphire.getInstance().getResources().getString(R.string.text_quiz_score);
+            textCourse = textCourse + ": " + coursesData.getQuizScore();
+        }
+        if (!textCourse.equals("")) {
+            textCourse = textCourse + "<br>";
+        }
+        textCourse = textCourse + Sapphire.getInstance().getResources().getString(R.string.text_course_completed);
+        textCourse = textCourse + ": ";
+        if (coursesData.getCoursePassed()) {
+            textCourse = textCourse + "<big><font color=#009900>&#61452;</font></big> ";
+        } else {
+            textCourse = textCourse + "<big><font color=#cc3300>&#61453;</font></big>";
+        }
+        textCourse = textCourse + "<br>" + Sapphire.getInstance().getResources().getString(R.string.text_quiz_completed);
+        textCourse = textCourse + ": ";
+        if (coursesData.getQuizPassed()) {
+            textCourse = textCourse + "<big><font color=#009900>&#61452;</font></big> ";
+        } else {
+            textCourse = textCourse + "<big><font color=#cc3300>&#61453;</font></big>";
+        }
 
         TextView course = (TextView) convertView.findViewById(R.id.text_course);
-        course.setText(textCourse);
+        course.setTypeface(typeFace);
+        course.setText(Html.fromHtml(textCourse));
 
         View root = convertView.findViewById(R.id.root);
         root.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +162,7 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        //list.setEnabled(coursesData.getQuizEnabled());
+        list.setEnabled(coursesData.getQuizEnabled());
 
         open.setTypeface(typeFace);
         open.setText(Html.fromHtml("&#61515;"));

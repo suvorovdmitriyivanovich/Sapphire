@@ -10,6 +10,8 @@ import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.PoliciesData;
 import com.sapphire.logic.ResponseData;
+import com.sapphire.logic.UserInfo;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,9 +52,7 @@ public class PolicyLogAction extends AsyncTask{
             e.printStackTrace();
         }
 
-        SharedPreferences sPref = mContext.getSharedPreferences("GlobalPreferences", mContext.MODE_PRIVATE);
-
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonArray.toString(),0,true,"POST",sPref.getString("AUTHTOKEN","")));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonArray.toString(),0,true,"POST", UserInfo.getUserInfo().getAuthToken()));
 
         String result = "";
 

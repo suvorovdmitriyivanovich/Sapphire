@@ -20,8 +20,10 @@
             android:id="@+id/text_header"
             android:textColor="#ffffff"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="56dp" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="56dp"
+            android:layout_marginRight="56dp"
+            android:text="@string/text_my_hr_details" />
 
         <RelativeLayout
             android:layout_width="56dp"
@@ -42,13 +44,42 @@
 
     </RelativeLayout>
 
-    <WebView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/questionGroup"
         android:layout_below="@+id/top_group"
-        android:id="@+id/webview"
-        android:layout_alignParentBottom="true">
+        android:layout_margin="20dp">
 
-    </WebView>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/center_group">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/questionName"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:textStyle="bold" />
+
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/adresslist"
+                android:layout_below="@+id/questionName"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:divider="@null"
+                android:dividerHeight="0dp"/>
+
+        </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

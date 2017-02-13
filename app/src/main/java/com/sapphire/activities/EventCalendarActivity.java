@@ -17,6 +17,7 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.api.GetCourseFileAction;
 import com.sapphire.logic.CoursesData;
+import com.sapphire.logic.UserInfo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -61,10 +62,10 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
         webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);
 
-        SharedPreferences sPref = getSharedPreferences("GlobalPreferences", MODE_PRIVATE);
-
         Map<String, String> extraHeaders = new HashMap<String, String>();
-        extraHeaders.put("x-yauth",sPref.getString("AUTHTOKEN",""));
+        //SharedPreferences sPref = getSharedPreferences("GlobalPreferences", MODE_PRIVATE);
+        //extraHeaders.put("x-yauth", sPref.getString("AUTHTOKEN",""));
+        extraHeaders.put("x-yauth", UserInfo.getUserInfo().getAuthToken());
         webView.loadUrl("http://portal.dealerpilothr.com/health-and-safety/event-calendar",extraHeaders);
 
         new Handler().postDelayed(new Runnable() {

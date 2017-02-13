@@ -9,6 +9,8 @@ import com.sapphire.logic.Environment;
 import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
+import com.sapphire.logic.UserInfo;
+
 import java.util.ArrayList;
 
 public class TemplateDeleteAction extends AsyncTask{
@@ -32,9 +34,7 @@ public class TemplateDeleteAction extends AsyncTask{
         }
         String urlstring = Environment.SERVER + Environment.WorkplaceInspectionTemplatesURL + "?model%5B%5D="+workplaceInspectionTemplateId;
 
-        SharedPreferences sPref = mContext.getSharedPreferences("GlobalPreferences", mContext.MODE_PRIVATE);
-
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"DELETE",sPref.getString("AUTHTOKEN","")));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"DELETE", UserInfo.getUserInfo().getAuthToken()));
 
         String result = "";
 
