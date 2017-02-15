@@ -88,7 +88,7 @@ public class AuthenticationsAction extends AsyncTask{
                 }
                 UserInfo userInfo = UserInfo.getUserInfo();
                 userInfo.setAuthToken(accountDatas.get(0).getAuthToken());
-                userInfo.setAccountId(accountDatas.get(0).getAuthToken());
+                userInfo.setAccountId(accountDatas.get(0).getAccountId());
                 userInfo.setProfileId(accountDatas.get(0).getCurrentProfile().getProfileId());
                 //ed.putString("AUTHTOKEN", accountDatas.get(0).getAuthToken());
                 //ed.putString("ACCOUNTID", accountDatas.get(0).getAccountId());

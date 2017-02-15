@@ -119,14 +119,14 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
         if (!textCourse.equals("")) {
             textCourse = textCourse + "<br>";
         }
-        textCourse = textCourse + Sapphire.getInstance().getResources().getString(R.string.text_course_completed);
+        textCourse = textCourse + Sapphire.getInstance().getResources().getString(R.string.text_course);
         textCourse = textCourse + ": ";
         if (coursesData.getCoursePassed()) {
             textCourse = textCourse + "<big><font color=#009900>&#61452;</font></big> ";
         } else {
             textCourse = textCourse + "<big><font color=#cc3300>&#61453;</font></big>";
         }
-        textCourse = textCourse + "<br>" + Sapphire.getInstance().getResources().getString(R.string.text_quiz_completed);
+        textCourse = textCourse + "<br>" + Sapphire.getInstance().getResources().getString(R.string.text_quiz);
         textCourse = textCourse + ": ";
         if (coursesData.getQuizPassed()) {
             textCourse = textCourse + "<big><font color=#009900>&#61452;</font></big> ";

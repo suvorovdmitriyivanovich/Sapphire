@@ -19,4 +19,8 @@ public class Environment {
     public static final String PolicyStatusAcknowledged  = "1586dc39-979b-ab1c-838f-1917fce340de";
     public static final String AccountQuizStatusStarted  = "af29dc39-68b9-d431-2653-724eb8a104e8";
     public static final String ProfilesURL = "/v1/Profiles";
+    public static final String AccountCourseFileStatus  = "c9c8db39-2b01-0997-33a6-699e5ed75383";
+    public static final String AccountCourseFileStatusFinish  = "c9c8db39-2b01-b87e-3632-1589834c115e";
+    public static final String CourseLogURL = "/v1/Courses/Files/Logs";
+    public static final String ContactsURL = "/v1/Contacts";
 }

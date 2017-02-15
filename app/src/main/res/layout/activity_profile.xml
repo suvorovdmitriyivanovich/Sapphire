@@ -13,6 +13,21 @@
         android:background="@color/colorAccent"
         android:id="@+id/top_group">
 
+        <RelativeLayout
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+            android:id="@+id/back"
+            android:background="@drawable/top_button">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/back_icon"
+                android:src="@drawable/back_icon"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,7 +43,7 @@
         <RelativeLayout
             android:layout_width="56dp"
             android:layout_height="match_parent"
-            android:id="@+id/close"
+            android:id="@+id/add"
             android:background="@drawable/top_button"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true">
@@ -36,50 +51,230 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:id="@+id/close_icon"
-                android:src="@drawable/close_icon"
+                android:id="@+id/add_icon"
+                android:src="@drawable/add_icon"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true" />
         </RelativeLayout>
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/questionGroup"
-        android:layout_below="@+id/top_group"
-        android:layout_margin="20dp">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/top_group" >
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:id="@+id/center_group">
+            android:id="@+id/scroll_group">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/questionName"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:textStyle="bold" />
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/text_personal"
+                android:id="@+id/text_personal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp" />
 
-            <ListView
-                android:layout_width="wrap_content"
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:id="@+id/border"
+                android:background="@color/light_light_green"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/adresslist"
-                android:layout_below="@+id/questionName"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
                 android:divider="@null"
-                android:dividerHeight="0dp"/>
+                android:dividerHeight="0dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:nestedScrollingEnabled="false" />
 
-        </RelativeLayout>
-    </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/contact_group"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/login_input"
+                android:padding="10dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/text_contact"
+                    android:id="@+id/text_contact"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/contact"
+                    android:layout_below="@+id/text_contact"
+                    android:layout_alignLeft="@+id/text_contact"
+                    android:layout_alignStart="@+id/text_contact"
+                    android:layout_marginTop="10dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/additional_group"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/login_input"
+                android:padding="10dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/text_additional"
+                    android:id="@+id/text_additional"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/additional"
+                    android:layout_below="@+id/text_additional"
+                    android:layout_alignLeft="@+id/text_additional"
+                    android:layout_alignStart="@+id/text_additional"
+                    android:layout_marginTop="10dp" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/text_work"
+                android:id="@+id/text_work"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:id="@+id/border2"
+                android:background="@color/light_light_green"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/employee_group"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/login_input"
+                android:padding="10dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/text_employee"
+                    android:id="@+id/text_employee"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/employee"
+                    android:layout_below="@+id/text_employee"
+                    android:layout_alignLeft="@+id/text_employee"
+                    android:layout_alignStart="@+id/text_employee"
+                    android:layout_marginTop="10dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/payroll_group"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/login_input"
+                android:padding="10dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/text_payroll"
+                    android:id="@+id/text_payroll"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/payroll"
+                    android:layout_below="@+id/text_payroll"
+                    android:layout_alignLeft="@+id/text_payroll"
+                    android:layout_alignStart="@+id/text_payroll"
+                    android:layout_marginTop="10dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/work_additional_group"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/login_input"
+                android:padding="10dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/text_additional"
+                    android:id="@+id/text_work_additional"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/work_additional"
+                    android:layout_below="@+id/text_work_additional"
+                    android:layout_alignLeft="@+id/text_work_additional"
+                    android:layout_alignStart="@+id/text_work_additional"
+                    android:layout_marginTop="10dp" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

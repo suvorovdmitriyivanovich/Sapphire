@@ -2,6 +2,7 @@ package com.sapphire.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -55,6 +56,7 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
         pd.show();
         webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new MyWebViewClient());
         //webView.loadUrl("https://google.com");
         //webView.loadUrl("https://docs.google.com/viewer?url=http://www.xeroxscanners.com/downloads/Manuals/XMS/PDF_Converter_Pro_Quick_Reference_Guide.RU.pdf");
         //webView.loadUrl("http://www.xeroxscanners.com/downloads/Manuals/XMS/PDF_Converter_Pro_Quick_Reference_Guide.RU.pdf");
@@ -107,6 +109,25 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
                 pd.hide();
             }
         }, 10000);
+    }
+
+    private class MyWebViewClient extends WebViewClient {
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            pd.hide();
+        }
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.sapphire.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -61,6 +62,7 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
         pd.show();
         webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new MyWebViewClient());
 
         Map<String, String> extraHeaders = new HashMap<String, String>();
         //SharedPreferences sPref = getSharedPreferences("GlobalPreferences", MODE_PRIVATE);
@@ -74,6 +76,25 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
                 pd.hide();
             }
         }, 15000);
+    }
+
+    private class MyWebViewClient extends WebViewClient {
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            pd.hide();
+        }
     }
 
     @Override

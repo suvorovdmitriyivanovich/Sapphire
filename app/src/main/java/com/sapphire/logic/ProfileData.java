@@ -8,14 +8,14 @@ import java.util.Date;
 
 public class ProfileData {
     private String profileId = "";
-    private String birthday = "";
+    private Long birthday = 0l;
     private String driverLicenseNumber = "";
-    private String driverLicenseNumberExpire = "";
+    private Long driverLicenseNumberExpire = 0l;
     private String techLicenseNumber = "";
-    private String techLicenseNumberExpire = "";
+    private Long techLicenseNumberExpire = 0l;
     private String workPermitNumber = "";
     private String vSRNumber = "";
-    private String vSRNumberExpire = "";
+    private Long vSRNumberExpire = 0l;
     private String sINNumber = "";
     private Long hireDate = 0l;
     private Long probationEndDate = 0l;
@@ -120,11 +120,30 @@ public class ProfileData {
     }
 
     public void setBirthday(String birthday) {
-        this.birthday = birthday;
+        Long dateLong = 0l;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        try {
+            Date newdate = format.parse(birthday);
+            dateLong = newdate.getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.birthday = dateLong;
     }
 
-    public String getBirthday() {
+    public Long getBirthday() {
         return birthday;
+    }
+
+    public String getBirthdayString() {
+        String dateString = "";
+        if (birthday != 0l) {
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = new Date();
+            date.setTime(birthday);
+            dateString = format.format(date);
+        }
+        return dateString;
     }
 
     public void setDriverLicenseNumber(String driverLicenseNumber) {
@@ -136,11 +155,30 @@ public class ProfileData {
     }
 
     public void setDriverLicenseNumberExpire(String driverLicenseNumberExpire) {
-        this.driverLicenseNumberExpire = driverLicenseNumberExpire;
+        Long dateLong = 0l;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        try {
+            Date newdate = format.parse(driverLicenseNumberExpire);
+            dateLong = newdate.getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.driverLicenseNumberExpire = dateLong;
     }
 
-    public String getDriverLicenseNumberExpire() {
+    public Long getDriverLicenseNumberExpire() {
         return driverLicenseNumberExpire;
+    }
+
+    public String getDriverLicenseNumberExpireString() {
+        String dateString = "";
+        if (driverLicenseNumberExpire != 0l) {
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = new Date();
+            date.setTime(driverLicenseNumberExpire);
+            dateString = format.format(date);
+        }
+        return dateString;
     }
 
     public void setTechLicenseNumber(String techLicenseNumber) {
@@ -152,11 +190,30 @@ public class ProfileData {
     }
 
     public void setTechLicenseNumberExpire(String techLicenseNumberExpire) {
-        this.techLicenseNumberExpire = techLicenseNumberExpire;
+        Long dateLong = 0l;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        try {
+            Date newdate = format.parse(techLicenseNumberExpire);
+            dateLong = newdate.getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.techLicenseNumberExpire = dateLong;
     }
 
-    public String getTechLicenseNumberExpire() {
+    public Long getTechLicenseNumberExpire() {
         return techLicenseNumberExpire;
+    }
+
+    public String getTechLicenseNumberExpireString() {
+        String dateString = "";
+        if (techLicenseNumberExpire != 0l) {
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = new Date();
+            date.setTime(techLicenseNumberExpire);
+            dateString = format.format(date);
+        }
+        return dateString;
     }
 
     public void setWorkPermitNumber(String workPermitNumber) {
@@ -176,11 +233,30 @@ public class ProfileData {
     }
 
     public void setVSRNumberExpire(String vSRNumberExpire) {
-        this.vSRNumberExpire = vSRNumberExpire;
+        Long dateLong = 0l;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        try {
+            Date newdate = format.parse(vSRNumberExpire);
+            dateLong = newdate.getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.vSRNumberExpire = dateLong;
     }
 
-    public String getVSRNumberExpire() {
+    public Long getVSRNumberExpire() {
         return vSRNumberExpire;
+    }
+
+    public String getVSRNumberExpireString() {
+        String dateString = "";
+        if (vSRNumberExpire != 0l) {
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = new Date();
+            date.setTime(vSRNumberExpire);
+            dateString = format.format(date);
+        }
+        return dateString;
     }
 
     public void setSINNumber(String sINNumber) {
@@ -207,6 +283,17 @@ public class ProfileData {
         return hireDate;
     }
 
+    public String getHireDateString() {
+        String dateString = "";
+        if (hireDate != 0l) {
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = new Date();
+            date.setTime(hireDate);
+            dateString = format.format(date);
+        }
+        return dateString;
+    }
+
     public void setProbationEndDate(String probationEndDate) {
         Long dateLong = 0l;
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -223,6 +310,17 @@ public class ProfileData {
         return probationEndDate;
     }
 
+    public String getProbationEndDateString() {
+        String dateString = "";
+        if (probationEndDate != 0l) {
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = new Date();
+            date.setTime(probationEndDate);
+            dateString = format.format(date);
+        }
+        return dateString;
+    }
+
     public void setTerminationDate(String terminationDate) {
         Long dateLong = 0l;
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -237,6 +335,17 @@ public class ProfileData {
 
     public Long getTerminationDate() {
         return terminationDate;
+    }
+
+    public String getTerminationDateString() {
+        String dateString = "";
+        if (terminationDate != 0l) {
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = new Date();
+            date.setTime(terminationDate);
+            dateString = format.format(date);
+        }
+        return dateString;
     }
 
     public void setHireType(String hireType) {

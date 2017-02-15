@@ -4,39 +4,68 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class AdressData {
-    private String answerId = "";
+    private String contactId = "";
     private String name = "";
-    private String description = "";
-    private CategoryData category = new CategoryData();
-    private boolean checked = false;
+    private String relationship = "";
+    private String phone1 = "";
+    private String phone2 = "";
+    private String email1 = "";
+    private String email2 = "";
+    private boolean isPrimary = false;
+    private String address = "";
+    private ContactTypeData contactType = new ContactTypeData();
+    private String note = "";
 
     public AdressData() {
 
     }
 
-    public AdressData(JSONObject data, CategoryData category) {
-        this.category = category;
+    public AdressData(JSONObject data) {
         try {
-            if (!data.isNull("AnswerId")) {
-                setAnswerId(data.getString("AnswerId"));
+            if (!data.isNull("ContactId")) {
+                setContactId(data.getString("ContactId"));
             }
             if (!data.isNull("Name")) {
                 setName(data.getString("Name"));
             }
-            if (!data.isNull("Description")) {
-                setDescription(data.getString("Description"));
+            if (!data.isNull("Relationship")) {
+                setRelationship(data.getString("Relationship"));
+            }
+            if (!data.isNull("Phone1")) {
+                setPhone1(data.getString("Phone1"));
+            }
+            if (!data.isNull("Phone2")) {
+                setPhone2(data.getString("Phone2"));
+            }
+            if (!data.isNull("Email1")) {
+                setEmail1(data.getString("Email1"));
+            }
+            if (!data.isNull("Email2")) {
+                setEmail2(data.getString("Email2"));
+            }
+            if (!data.isNull("IsPrimary")) {
+                setIsPrimary(data.getBoolean("IsPrimary"));
+            }
+            if (!data.isNull("Address")) {
+                setAddress(data.getString("Address"));
+            }
+            if (!data.isNull("ContactType")) {
+                setContactType(data.getJSONObject("ContactType"));
+            }
+            if (!data.isNull("Note")) {
+                setNote(data.getString("Note"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public void setAnswerId(String answerId) {
-        this.answerId = answerId;
+    public void setContactId(String contactId) {
+        this.contactId = contactId;
     }
 
-    public String getAnswerId() {
-        return answerId;
+    public String getContactId() {
+        return contactId;
     }
 
     public String getName() {
@@ -47,27 +76,75 @@ public class AdressData {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public void setRelationship(String relationship) {
+        this.relationship = relationship;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public String getRelationship() {
+        return relationship;
     }
 
-    public CategoryData getCategory() {
-        return category;
+    public void setPhone1(String phone1) {
+        this.phone1 = phone1;
     }
 
-    public void setCategory(JSONObject category) {
-        this.category = new CategoryData(category);
+    public String getPhone1() {
+        return phone1;
     }
 
-    public boolean getChecked() {
-        return checked;
+    public void setPhone2(String phone2) {
+        this.phone2 = phone2;
     }
 
-    public void setChecked(boolean checked) {
-        this.checked = checked;
+    public String getPhone2() {
+        return phone2;
+    }
+
+    public void setEmail1(String email1) {
+        this.email1 = email1;
+    }
+
+    public String getEmail1() {
+        return email1;
+    }
+
+    public void setEmail2(String email2) {
+        this.email2 = email2;
+    }
+
+    public String getEmail2() {
+        return email2;
+    }
+
+    public boolean getIsPrimary() {
+        return isPrimary;
+    }
+
+    public void setIsPrimary(boolean isPrimary) {
+        this.isPrimary = isPrimary;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setContactType(JSONObject contactType) {
+        this.contactType = new ContactTypeData(contactType);
+    }
+
+    public ContactTypeData getContactType() {
+        return contactType;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public String getNote() {
+        return note;
     }
 }
