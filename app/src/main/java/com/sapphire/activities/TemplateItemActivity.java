@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.api.TemplateItemAddAction;
@@ -27,6 +28,7 @@ public class TemplateItemActivity extends BaseActivity implements TemplateItemAd
     private String nameOld = "";
     private String descriptionOld = "";
     private Dialog dialog_confirm;
+    private TextView tittle_message;
     private Button button_cancel_save;
     private Button button_send_save;
 
@@ -53,11 +55,11 @@ public class TemplateItemActivity extends BaseActivity implements TemplateItemAd
         pd.setCanceledOnTouchOutside(false);
 
         AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
-        adb_save.setTitle(getResources().getString(R.string.text_save_change));
         adb_save.setCancelable(true);
         LinearLayout view_save = (LinearLayout) getLayoutInflater()
                 .inflate(R.layout.dialog_save, null);
         adb_save.setView(view_save);
+        tittle_message = (TextView) view_save.findViewById(R.id.tittle);
         button_cancel_save = (Button) view_save.findViewById(R.id.button_cancel);
         button_send_save = (Button) view_save.findViewById(R.id.button_send);
         dialog_confirm = adb_save.create();
@@ -112,10 +114,13 @@ public class TemplateItemActivity extends BaseActivity implements TemplateItemAd
         if (workplaceInspectionTemplateItemId == null) {
             workplaceInspectionTemplateItemId = "";
         }
+        workplaceInspectionTemplateId = intent.getStringExtra("workplaceInspectionTemplateId");
+        if (workplaceInspectionTemplateId == null) {
+            workplaceInspectionTemplateId = "";
+        }
         if (!workplaceInspectionTemplateItemId.equals("")) {
             nameOld = intent.getStringExtra("name");
             descriptionOld = intent.getStringExtra("description");
-            workplaceInspectionTemplateId = intent.getStringExtra("workplaceInspectionTemplateId");
             name.setText(nameOld);
             description.setText(descriptionOld);
         }
@@ -172,6 +177,7 @@ public class TemplateItemActivity extends BaseActivity implements TemplateItemAd
     private void exit() {
         if (!nameOld.equals(name.getText().toString())
             || !descriptionOld.equals(description.getText().toString())) {
+            tittle_message.setText(getResources().getString(R.string.text_save_change));
             dialog_confirm.show();
         } else {
             finish();

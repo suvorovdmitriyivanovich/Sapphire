@@ -12,6 +12,7 @@ import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NavigationMenuData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
+import com.sapphire.logic.TemplateData;
 import com.sapphire.logic.UserInfo;
 
 import org.json.JSONArray;
@@ -31,10 +32,15 @@ public class TemplateAddAction extends AsyncTask{
         public void onRequestTemplateAdd(String result);
     }
 
+    public interface RequestTemplateAddData {
+        public void onRequestTemplateAddData(TemplateData templateData);
+    }
+
     private Context mContext;
     private String workplaceInspectionTemplateId;
     private String name;
     private String description;
+    private TemplateData templateData = new TemplateData();
 
     public TemplateAddAction(Context context, String workplaceInspectionTemplateId, String name, String description) {
         this.mContext = context;
@@ -73,7 +79,16 @@ public class TemplateAddAction extends AsyncTask{
         String result = "";
 
         if (responseData.getSuccess() && responseData.getDataCount() == 1) {
-            result = "OK";
+            try {
+                templateData = new TemplateData(responseData.getData().getJSONObject(0));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (templateData.getWorkplaceInspectionTemplateId().equals("")) {
+                result = Sapphire.getInstance().getResources().getString(R.string.unknown_error);
+            } else {
+                result = "OK";
+            }
         } else {
             ArrayList<ErrorMessageData> errorMessageDatas = responseData.getErrorMessages();
             if (errorMessageDatas == null || errorMessageDatas.size() == 0) {
@@ -95,7 +110,11 @@ public class TemplateAddAction extends AsyncTask{
     protected void onPostExecute(Object o) {
         String resultData = (String) o;
         if(mContext!=null) {
-            ((RequestTemplateAdd) mContext).onRequestTemplateAdd(resultData);
+            if (resultData.equals("OK")) {
+                ((RequestTemplateAddData) mContext).onRequestTemplateAddData(templateData);
+            } else {
+                ((RequestTemplateAdd) mContext).onRequestTemplateAdd(resultData);
+            }
         }
     }
 }

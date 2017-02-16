@@ -12,7 +12,7 @@ import com.sapphire.R;
 import com.sapphire.adapters.AdressAdapter;
 import com.sapphire.api.GetContactsAction;
 import com.sapphire.api.GetProfilesAction;
-import com.sapphire.logic.AdressData;
+import com.sapphire.logic.ContactData;
 import com.sapphire.logic.ProfileData;
 import java.util.ArrayList;
 
@@ -89,7 +89,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
 
     @Override
     public void onRequestProfilesData(ProfileData profileData) {
-        contact.setText(profileData.getContact());
+        contact.setText(profileData.getContact().getAddress());
 
         String additionalStr = "";
         additionalStr = additionalStr + getResources().getString(R.string.text_birthday) + ": " + profileData.getBirthdayString();
@@ -130,7 +130,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     }
 
     @Override
-    public void onRequestContactsData(ArrayList<AdressData> adressDatas) {
+    public void onRequestContactsData(ArrayList<ContactData> adressDatas) {
         adapter.setData(adressDatas);
 
         pd.hide();

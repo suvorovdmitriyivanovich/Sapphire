@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.AdressData;
+import com.sapphire.logic.ContactData;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
@@ -21,11 +21,11 @@ public class GetContactsAction extends AsyncTask{
     }
 
     public interface RequestContactsData {
-        public void onRequestContactsData(ArrayList<AdressData> adressDatas);
+        public void onRequestContactsData(ArrayList<ContactData> adressDatas);
     }
 
     private Context mContext;
-    private ArrayList<AdressData> adressDatas = new ArrayList<AdressData>();
+    private ArrayList<ContactData> adressDatas = new ArrayList<ContactData>();
 
     public GetContactsAction(Context context) {
         this.mContext = context;
@@ -49,7 +49,7 @@ public class GetContactsAction extends AsyncTask{
             JSONArray data = responseData.getData();
             for (int y=0; y < data.length(); y++) {
                 try {
-                    adressDatas.add(new AdressData(data.getJSONObject(y)));
+                    adressDatas.add(new ContactData(data.getJSONObject(y)));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -23,7 +23,7 @@ public class ProfileData {
     private String hireType = "";
     private String customField1 = "";
     private String customField2 = "";
-    private String contact = "";
+    private ContactData contact = new ContactData();
     private String payrollInformation = "";
     private String accountId = "";
     private String organizationId = "";
@@ -86,7 +86,7 @@ public class ProfileData {
                 setCustomField2(data.getString("CustomField2"));
             }
             if (!data.isNull("Contact")) {
-                setContact(data.getString("Contact"));
+                setContact(data.getJSONObject("Contact"));
             }
             if (!data.isNull("PayrollInformation")) {
                 setPayrollInformation(data.getString("PayrollInformation"));
@@ -372,11 +372,11 @@ public class ProfileData {
         return customField2;
     }
 
-    public void setContact(String contact) {
-        this.contact = contact;
+    public void setContact(JSONObject contact) {
+        this.contact = new ContactData(contact);
     }
 
-    public String getContact() {
+    public ContactData getContact() {
         return contact;
     }
 

@@ -2,6 +2,7 @@ package com.sapphire.activities;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -13,12 +14,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.adapters.ItemsAdapter;
 import com.sapphire.api.GetTemplateAction;
 import com.sapphire.api.TemplateAddAction;
 import com.sapphire.api.TemplateItemDeleteAction;
+import com.sapphire.logic.TemplateData;
 import com.sapphire.logic.TemplateItemData;
 import java.util.ArrayList;
 
@@ -28,7 +31,8 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
                                                               ItemsAdapter.OnOpenClickListener,
                                                               ItemsAdapter.OnDeleteClickListener,
                                                               TemplateItemDeleteAction.RequestTemplateItemDelete,
-                                                              TemplateAddAction.RequestTemplateAdd{
+                                                              TemplateAddAction.RequestTemplateAdd,
+                                                              TemplateAddAction.RequestTemplateAddData{
     private String workplaceInspectionTemplateId = "";
     ProgressDialog pd;
     private ArrayList<TemplateItemData> templateItemDatas;
@@ -42,8 +46,11 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     private String nameOld = "";
     private String descriptionOld = "";
     private Dialog dialog_confirm;
+    private TextView tittle_message;
     private Button button_cancel_save;
     private Button button_send_save;
+    private boolean deleteItem = false;
+    private int currentPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,20 +75,35 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
         pd.setCanceledOnTouchOutside(false);
 
         AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
-        adb_save.setTitle(getResources().getString(R.string.text_save_change));
         adb_save.setCancelable(true);
         LinearLayout view_save = (LinearLayout) getLayoutInflater()
                 .inflate(R.layout.dialog_save, null);
         adb_save.setView(view_save);
+        tittle_message = (TextView) view_save.findViewById(R.id.tittle);
         button_cancel_save = (Button) view_save.findViewById(R.id.button_cancel);
         button_send_save = (Button) view_save.findViewById(R.id.button_send);
         dialog_confirm = adb_save.create();
+        dialog_confirm.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                deleteItem = false;
+            }
+        });
+        dialog_confirm.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                deleteItem = false;
+            }
+        });
 
         button_cancel_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog_confirm.dismiss();
-                finish();
+                if (!deleteItem) {
+                    finish();
+                }
+                deleteItem = false;
             }
         });
 
@@ -89,7 +111,14 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
             @Override
             public void onClick(View v) {
                 dialog_confirm.dismiss();
-                updateTemplate(false);
+                if (deleteItem) {
+                    deleteItem = false;
+                    pd.show();
+
+                    new TemplateItemDeleteAction(TemplateActivity.this, templateItemDatas.get(currentPosition).getWorkplaceInspectionTemplateItemId()).execute();
+                } else {
+                    updateTemplate(false);
+                }
             }
         });
 
@@ -118,6 +147,9 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (name.getText().toString().equals("")) {
+                    return;
+                }
                 if (!nameOld.equals(name.getText().toString())
                         || !descriptionOld.equals(description.getText().toString())) {
                     updateTemplate(true);
@@ -204,6 +236,9 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     private void exit() {
         if (!nameOld.equals(name.getText().toString())
                 || !descriptionOld.equals(description.getText().toString())) {
+            tittle_message.setText(getResources().getString(R.string.text_save_change));
+            button_cancel_save.setText(getResources().getString(R.string.text_no_save));
+            button_send_save.setText(getResources().getString(R.string.text_yes_save));
             dialog_confirm.show();
         } else {
             finish();
@@ -213,6 +248,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     private void addItem() {
         hideSoftKeyboard();
         Intent intent = new Intent(TemplateActivity.this, TemplateItemActivity.class);
+        intent.putExtra("workplaceInspectionTemplateId", workplaceInspectionTemplateId);
         startActivity(intent);
     }
 
@@ -240,9 +276,14 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     @Override
     public void onDeleteClick(int position) {
         hideSoftKeyboard();
-        pd.show();
 
-        new TemplateItemDeleteAction(TemplateActivity.this, templateItemDatas.get(position).getWorkplaceInspectionTemplateItemId()).execute();
+        currentPosition = position;
+        deleteItem = true;
+
+        tittle_message.setText(getResources().getString(R.string.text_confirm_delete));
+        button_cancel_save.setText(getResources().getString(R.string.text_cancel));
+        button_send_save.setText(getResources().getString(R.string.text_delete));
+        dialog_confirm.show();
     }
 
     @Override
@@ -259,6 +300,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
 
     @Override
     public void onRequestTemplateItemDelete(String result) {
+        dialog_confirm.dismiss();
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,
@@ -269,20 +311,26 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     }
 
     @Override
-    public void onRequestTemplateAdd(String result) {
+    public void onRequestTemplateAddData(TemplateData templateData) {
         pd.hide();
-        if (!result.equals("OK")) {
-            pressAdd = false;
-            Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
-        } else if (pressAdd) {
+        if (pressAdd) {
             pressAdd = false;
             nameOld = name.getText().toString();
             descriptionOld = description.getText().toString();
+            workplaceInspectionTemplateId = templateData.getWorkplaceInspectionTemplateId();
             addItem();
         } else {
             finish();
         }
+    }
+
+    @Override
+    public void onRequestTemplateAdd(String result) {
+        pd.hide();
+
+        pressAdd = false;
+        Toast.makeText(getBaseContext(), result,
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override

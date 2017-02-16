@@ -1,7 +1,6 @@
 package com.sapphire.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -11,7 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.AdressData;
+import com.sapphire.logic.ContactData;
 import java.util.ArrayList;
 
 public class AdressAdapter extends RecyclerView.Adapter<AdressAdapter.ViewHolder> {
@@ -40,16 +39,14 @@ public class AdressAdapter extends RecyclerView.Adapter<AdressAdapter.ViewHolder
     }
 
     private Context mContext;
-    private ArrayList<AdressData> listData;
-    private Typeface typeFace;
+    private ArrayList<ContactData> listData;
 
     public AdressAdapter(Context mContext) {
         this.mContext = mContext;
-        this.listData = new ArrayList<AdressData>();
-        typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
+        this.listData = new ArrayList<ContactData>();
     }
 
-    public void setData(ArrayList<AdressData> list) {
+    public void setData(ArrayList<ContactData> list) {
         listData.clear();
         listData.addAll(list);
         notifyDataSetChanged();
@@ -71,14 +68,7 @@ public class AdressAdapter extends RecyclerView.Adapter<AdressAdapter.ViewHolder
             }
         });
 
-        viewHolder.open.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((OnOpenClickListener)mContext).onOpenClick(viewHolder.getAdapterPosition());
-            }
-        });
-
-        AdressData data = (AdressData) listData.get(position);
+        ContactData data = (ContactData) listData.get(position);
 
         String name = "";
         if (data.getIsPrimary()) {
@@ -127,9 +117,6 @@ public class AdressAdapter extends RecyclerView.Adapter<AdressAdapter.ViewHolder
 
         viewHolder.text_name.setText(name);
         viewHolder.text_detail.setText(Html.fromHtml(detail));
-
-        viewHolder.open.setTypeface(typeFace);
-        viewHolder.open.setText(Html.fromHtml("&#61504;"));
     }
 
     @Override
@@ -140,7 +127,7 @@ public class AdressAdapter extends RecyclerView.Adapter<AdressAdapter.ViewHolder
             return 0;
     }
 
-    public AdressData getAdress(int position) {
+    public ContactData getAdress(int position) {
         return listData.get(position);
     }
 }

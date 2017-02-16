@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -26,6 +28,10 @@ public class CourseActivity extends BaseActivity implements GetCourseFileAction.
     WebView webView;
     private String courseId;
     ProgressDialog pd;
+    private boolean sendStart = false;
+    private View bottom_group;
+    private ViewGroup.LayoutParams par_bottom_group;
+    private boolean sendFinish = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +58,18 @@ public class CourseActivity extends BaseActivity implements GetCourseFileAction.
         pd.setCanceledOnTouchOutside(false);
 
         TextView text_header = (TextView) findViewById(R.id.text_header);
+        bottom_group = findViewById(R.id.bottom_group);
+        par_bottom_group = bottom_group.getLayoutParams();
+
+        View button_next = findViewById(R.id.button_next);
+        button_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendFinish = true;
+                pd.show();
+                new CourseLogAction(CourseActivity.this, courseId, Environment.AccountCourseFileStatusFinish).execute();
+            }
+        });
 
         Intent intent = getIntent();
         text_header.setText(intent.getStringExtra("name"));
@@ -63,6 +81,7 @@ public class CourseActivity extends BaseActivity implements GetCourseFileAction.
 
         webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.addJavascriptInterface(new MyJavaScriptInterface(), "INTERFACE");
         webView.setWebViewClient(new MyWebViewClient());
         webView.setWebChromeClient(new MyWebChromeClient());
         //webView.loadUrl();
@@ -114,11 +133,51 @@ public class CourseActivity extends BaseActivity implements GetCourseFileAction.
     @Override
     public void onRequestCourseLog(String result) {
         if (!result.equals("OK")) {
+            sendStart = false;
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_SHORT).show();
         } else {
             pd.hide();
+            if (sendFinish) {
+                finish();
+            }
+        }
+    }
+
+    public int GetPixelFromDips(float pixels) {
+        // Get the screen's density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (pixels * scale + 0.5f);
+    }
+
+    private class MyJavaScriptInterface {
+        @SuppressWarnings("unused")
+        @JavascriptInterface
+        public void processContent(final String aContent) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (aContent.indexOf("**") != -1) {
+                        par_bottom_group.height = GetPixelFromDips(56);
+                    } else {
+                        par_bottom_group.height = 0;
+                    }
+                    bottom_group.setLayoutParams(par_bottom_group);
+                    bottom_group.requestLayout();
+                }
+            });
+            if (aContent.indexOf("Lesson 1 of ") != -1 && !sendStart) {
+                sendStart = true;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        pd.show();
+                    }
+                });
+                new CourseLogAction(CourseActivity.this, courseId, Environment.AccountCourseFileStatus).execute();
+            }
         }
     }
 
@@ -137,7 +196,10 @@ public class CourseActivity extends BaseActivity implements GetCourseFileAction.
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
+            view.loadUrl("javascript:window.INTERFACE.processContent(document.getElementsByTagName('body')[0].innerText);");
+            //view.loadUrl("javascript:window.INTERFACE.processContent(document.getElementsByClassName('overview__button'));");
             pd.hide();
+            /*
             int lastIndex = url.lastIndexOf("/");
             int lastIndex2 = url.lastIndexOf("?");
             if (lastIndex != -1 && lastIndex2 != -1) {
@@ -150,6 +212,7 @@ public class CourseActivity extends BaseActivity implements GetCourseFileAction.
                     new CourseLogAction(CourseActivity.this, courseId, Environment.AccountCourseFileStatus).execute();
                 }
             }
+            */
         }
     }
 

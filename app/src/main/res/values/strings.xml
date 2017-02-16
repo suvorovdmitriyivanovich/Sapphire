@@ -86,4 +86,6 @@
     <string name="text_adress">Adress</string>
     <string name="text_phone">Phone</string>
     <string name="text_email">Email</string>
+    <string name="text_confirm_delete">Are you sure you want to delete?</string>
+    <string name="text_delete">Delete</string>
 </resources>

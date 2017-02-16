@@ -3,7 +3,7 @@ package com.sapphire.logic;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AdressData {
+public class ContactData {
     private String contactId = "";
     private String name = "";
     private String relationship = "";
@@ -16,11 +16,11 @@ public class AdressData {
     private ContactTypeData contactType = new ContactTypeData();
     private String note = "";
 
-    public AdressData() {
+    public ContactData() {
 
     }
 
-    public AdressData(JSONObject data) {
+    public ContactData(JSONObject data) {
         try {
             if (!data.isNull("ContactId")) {
                 setContactId(data.getString("ContactId"));

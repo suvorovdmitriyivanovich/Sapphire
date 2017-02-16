@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -24,20 +23,19 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.adapters.TemplatesAdapter;
 import com.sapphire.api.TemplateDeleteAction;
-import com.sapphire.api.TemplateItemDeleteAction;
 import com.sapphire.api.TemplatesAction;
 import com.sapphire.logic.TemplateData;
 
 import java.util.ArrayList;
 
-public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.OnRootClickListener,
+public class WorkplaceInspectionsActivity extends BaseActivity implements TemplatesAdapter.OnRootClickListener,
                                                                     TemplatesAdapter.OnOpenClickListener,
                                                                     TemplatesAdapter.OnDeleteClickListener,
                                                                     TemplatesAction.RequestTemplates,
                                                                     TemplatesAction.RequestTemplatesData,
                                                                     TemplateDeleteAction.RequestTemplateDelete{
     public final static String PARAM_TASK = "task";
-    public final static String BROADCAST_ACTION = "com.sapphire.activities.TemplatesActivity";
+    public final static String BROADCAST_ACTION = "com.sapphire.activities.WorkplaceInspectionsActivity";
     BroadcastReceiver br;
     private ArrayList<TemplateData> templatesDatas;
     private TemplatesAdapter adapter;
@@ -80,7 +78,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
 
                 pd.show();
 
-                new TemplateDeleteAction(TemplatesActivity.this, templatesDatas.get(currentGroupPosition).getSubTemplates().get(currentChildPosition).getWorkplaceInspectionTemplateId()).execute();
+                new TemplateDeleteAction(WorkplaceInspectionsActivity.this, templatesDatas.get(currentGroupPosition).getSubTemplates().get(currentChildPosition).getWorkplaceInspectionTemplateId()).execute();
             }
         });
 
@@ -106,7 +104,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TemplatesActivity.this, TemplateActivity.class);
+                Intent intent = new Intent(WorkplaceInspectionsActivity.this, TemplateActivity.class);
                 startActivity(intent);
             }
         });
@@ -157,7 +155,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
 
     @Override
     public void onOpenClick(int groupPosition, int childPosition) {
-        Intent intent = new Intent(TemplatesActivity.this, TemplateActivity.class);
+        Intent intent = new Intent(WorkplaceInspectionsActivity.this, TemplateActivity.class);
         TemplateData templateData = templatesDatas.get(groupPosition).getSubTemplates().get(childPosition);
         intent.putExtra("name", templateData.getName());
         intent.putExtra("description", templateData.getDescription());
@@ -192,7 +190,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_SHORT).show();
         } else {
-            new TemplatesAction(TemplatesActivity.this).execute();
+            new TemplatesAction(WorkplaceInspectionsActivity.this).execute();
         }
     }
 
@@ -235,7 +233,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
         } catch (Exception e) {}
 
         pd.show();
-        new TemplatesAction(TemplatesActivity.this).execute();
+        new TemplatesAction(WorkplaceInspectionsActivity.this).execute();
     }
 
     @Override
