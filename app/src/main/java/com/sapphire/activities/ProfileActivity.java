@@ -48,14 +48,6 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             }
         });
 
-        View add = findViewById(R.id.add);
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
         pd = new ProgressDialog(this);
         pd.setTitle(getResources().getString(R.string.text_loading));
         pd.setMessage(getResources().getString(R.string.text_please_wait));

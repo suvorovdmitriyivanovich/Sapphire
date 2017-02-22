@@ -1,6 +1,9 @@
 package com.sapphire.logic;
 
 public class Environment {
+    public static final String ID = "id";
+    public static final String EDIT = "edit";
+
     public static final String SERVER = "http://apiv1.dealerpilothr.com";
     public static final String SERVERFull = "http://portal.dealerpilothr.com";
     public static final String GoogleURLReadPDF = "https://docs.google.com/viewer?url=";
@@ -23,4 +26,7 @@ public class Environment {
     public static final String AccountCourseFileStatusFinish  = "c9c8db39-2b01-b87e-3632-1589834c115e";
     public static final String CourseLogURL = "/v1/Courses/Files/Logs";
     public static final String ContactsURL = "/v1/Contacts";
+    public static final String WorkplaceInspectionsURL = "/v1/HealthAndSafety/WorkplaceInspections/Current";
+    //public static final String OrganizationStructureURL = "/v1/Security/Organizations/CurrentOrganizationStructures";
+    public static final String OrganizationStructureURL = "/v1/Security/Organizations/OrganizationStructures";
 }

@@ -11,6 +11,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -19,40 +21,37 @@ import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.sapphire.R;
-import com.sapphire.adapters.TemplatesAdapter;
-import com.sapphire.api.TemplateDeleteAction;
-import com.sapphire.api.TemplatesAction;
-import com.sapphire.logic.TemplateData;
-
+import com.sapphire.adapters.WorkplaceInspectionsAdapter;
+//import com.sapphire.api.WorkplaceInspectionsDeleteAction;
+import com.sapphire.api.WorkplaceInspectionsAction;
+import com.sapphire.logic.WorkplaceInspectionData;
 import java.util.ArrayList;
 
-public class WorkplaceInspectionsActivity extends BaseActivity implements TemplatesAdapter.OnRootClickListener,
-                                                                    TemplatesAdapter.OnOpenClickListener,
-                                                                    TemplatesAdapter.OnDeleteClickListener,
-                                                                    TemplatesAction.RequestTemplates,
-                                                                    TemplatesAction.RequestTemplatesData,
-                                                                    TemplateDeleteAction.RequestTemplateDelete{
+public class WorkplaceInspectionsActivity extends BaseActivity implements WorkplaceInspectionsAdapter.OnRootClickListener,
+                                                                          WorkplaceInspectionsAdapter.OnOpenClickListener,
+                                                                          WorkplaceInspectionsAdapter.OnDeleteClickListener,
+                                                                          WorkplaceInspectionsAction.RequestWorkplaceInspections,
+                                                                          WorkplaceInspectionsAction.RequestWorkplaceInspectionsData{
+                                                                          //WorkplaceInspectionsDeleteAction.RequestWorkplaceInspectionsDelete{
     public final static String PARAM_TASK = "task";
     public final static String BROADCAST_ACTION = "com.sapphire.activities.WorkplaceInspectionsActivity";
     BroadcastReceiver br;
-    private ArrayList<TemplateData> templatesDatas;
-    private TemplatesAdapter adapter;
+    private ArrayList<WorkplaceInspectionData> workplaceInspectionDatas;
+    private WorkplaceInspectionsAdapter adapter;
     ProgressDialog pd;
-    private ExpandableListView templateslist;
+    private RecyclerView workplaceinspectionslist;
     private Dialog dialog_confirm;
     private TextView tittle_message;
     private Button button_cancel_save;
     private Button button_send_save;
-    private int currentGroupPosition = 0;
-    private int currentChildPosition = 0;
+    private int currentPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_templates);
+        setContentView(R.layout.activity_workplace_inspections);
 
         AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
         adb_save.setCancelable(true);
@@ -78,7 +77,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Templa
 
                 pd.show();
 
-                new TemplateDeleteAction(WorkplaceInspectionsActivity.this, templatesDatas.get(currentGroupPosition).getSubTemplates().get(currentChildPosition).getWorkplaceInspectionTemplateId()).execute();
+                //new TemplateDeleteAction(WorkplaceInspectionsActivity.this, inspectionDatas.get(currentGroupPosition).getSubTemplates().get(currentChildPosition).getWorkplaceInspectionTemplateId()).execute();
             }
         });
 
@@ -136,37 +135,34 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Templa
         pd.setCancelable(false);
         pd.setCanceledOnTouchOutside(false);
 
-        templateslist = (ExpandableListView) findViewById(R.id.templateslist);
+        workplaceinspectionslist = (RecyclerView) findViewById(R.id.workplaceinspectionslist);
+        workplaceinspectionslist.setNestedScrollingEnabled(false);
+        workplaceinspectionslist.setLayoutManager(new LinearLayoutManager(WorkplaceInspectionsActivity.this));
 
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int width = dm.widthPixels;
-        templateslist.setIndicatorBounds((width - GetPixelFromDips(50)), (width - GetPixelFromDips(20)));
-
-        adapter = new TemplatesAdapter(this);
-        templateslist.setAdapter(adapter);
+        adapter = new WorkplaceInspectionsAdapter(this);
+        workplaceinspectionslist.setAdapter(adapter);
     }
 
     @Override
-    public void onRootClick(int groupPosition, int childPosition) {
+    public void onRootClick(int position) {
         //Intent intent = new Intent(PoliciesActivity.this, PdfActivity.class);
         //startActivity(intent);
     }
 
     @Override
-    public void onOpenClick(int groupPosition, int childPosition) {
-        Intent intent = new Intent(WorkplaceInspectionsActivity.this, TemplateActivity.class);
-        TemplateData templateData = templatesDatas.get(groupPosition).getSubTemplates().get(childPosition);
+    public void onOpenClick(int position) {
+        Intent intent = new Intent(WorkplaceInspectionsActivity.this, WorkplaceInspectionActivity.class);
+        WorkplaceInspectionData templateData = workplaceInspectionDatas.get(position);
         intent.putExtra("name", templateData.getName());
         intent.putExtra("description", templateData.getDescription());
-        intent.putExtra("workplaceInspectionTemplateId", templateData.getWorkplaceInspectionTemplateId());
+        intent.putExtra("date", templateData.getDate());
+        intent.putExtra("workplaceInspectionId", templateData.getWorkplaceInspectionId());
         startActivity(intent);
     }
 
     @Override
-    public void onDeleteClick(int groupPosition, int childPosition) {
-        currentGroupPosition = groupPosition;
-        currentChildPosition = childPosition;
+    public void onDeleteClick(int position) {
+        currentPosition = position;
 
         tittle_message.setText(getResources().getString(R.string.text_confirm_delete));
         button_cancel_save.setText(getResources().getString(R.string.text_cancel));
@@ -175,48 +171,31 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Templa
     }
 
     @Override
-    public void onRequestTemplates(String result) {
+    public void onRequestWorkplaceInspections(String result) {
         pd.hide();
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
         }
     }
 
-    @Override
+    //@Override
     public void onRequestTemplateDelete(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_SHORT).show();
         } else {
-            new TemplatesAction(WorkplaceInspectionsActivity.this).execute();
+            new WorkplaceInspectionsAction(WorkplaceInspectionsActivity.this).execute();
         }
     }
 
     @Override
-    public void onRequestTemplatesData(ArrayList<TemplateData> templatesDatas) {
-        this.templatesDatas = templatesDatas;
-        adapter.setData(templatesDatas);
-
-        //if (current == 1) {
-            for (int i = 0; i < templatesDatas.size(); i++) {
-                templateslist.expandGroup(i);
-            }
-        //} else {
-        //    for (int i = 0; i < templatesDatas.size(); i++) {
-        //        templateslist.collapseGroup(i);
-        //    }
-        //}
+    public void onRequestWorkplaceInspectionsData(ArrayList<WorkplaceInspectionData> workplaceInspectionDatas) {
+        this.workplaceInspectionDatas = workplaceInspectionDatas;
+        adapter.setData(workplaceInspectionDatas);
 
         pd.hide();
-    }
-
-    public int GetPixelFromDips(float pixels) {
-        // Get the screen's density scale
-        final float scale = getResources().getDisplayMetrics().density;
-        // Convert the dps to pixels, based on density scale
-        return (int) (pixels * scale + 0.5f);
     }
 
     @Override
@@ -233,7 +212,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Templa
         } catch (Exception e) {}
 
         pd.show();
-        new TemplatesAction(WorkplaceInspectionsActivity.this).execute();
+        new WorkplaceInspectionsAction(WorkplaceInspectionsActivity.this).execute();
     }
 
     @Override

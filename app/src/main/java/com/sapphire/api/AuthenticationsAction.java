@@ -90,6 +90,7 @@ public class AuthenticationsAction extends AsyncTask{
                 userInfo.setAuthToken(accountDatas.get(0).getAuthToken());
                 userInfo.setAccountId(accountDatas.get(0).getAccountId());
                 userInfo.setProfileId(accountDatas.get(0).getCurrentProfile().getProfileId());
+                userInfo.setOrganizations(accountDatas.get(0).getOrganizations());
                 //ed.putString("AUTHTOKEN", accountDatas.get(0).getAuthToken());
                 //ed.putString("ACCOUNTID", accountDatas.get(0).getAccountId());
                 //ed.apply();

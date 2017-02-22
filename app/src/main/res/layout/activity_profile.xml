@@ -40,23 +40,6 @@
             android:layout_marginRight="56dp"
             android:text="@string/text_my_hr_details" />
 
-        <RelativeLayout
-            android:layout_width="56dp"
-            android:layout_height="match_parent"
-            android:id="@+id/add"
-            android:background="@drawable/top_button"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:id="@+id/add_icon"
-                android:src="@drawable/add_icon"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
-        </RelativeLayout>
-
     </RelativeLayout>
 
     <ScrollView

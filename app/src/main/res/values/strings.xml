@@ -88,4 +88,9 @@
     <string name="text_email">Email</string>
     <string name="text_confirm_delete">Are you sure you want to delete?</string>
     <string name="text_delete">Delete</string>
+    <string name="text_workplace_inspections">Workplace Inspections</string>
+    <string name="text_organization_structure">Organization Structure</string>
+    <string name="text_is_current">Is Current</string>
+    <string name="text_is_position">Is Position</string>
+    <string name="text_workplace_inspection">Workplace Inspection</string>
 </resources>

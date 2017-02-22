@@ -1,7 +1,6 @@
 package com.sapphire.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -12,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
+import com.sapphire.activities.organizationStructure.OrganizationStructureActivity;
 import com.sapphire.adapters.MenuAdapter;
 import com.sapphire.db.DBHelper;
 import com.sapphire.logic.NavigationMenuData;
@@ -130,6 +130,9 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
             startActivity(intent);
         } else if (urlRoute.equals("/health-and-safety/workplace-inspections-reports")) {
             Intent intent = new Intent(getActivity(), WorkplaceInspectionsActivity.class);
+            startActivity(intent);
+        } else if (urlRoute.equals("/health-and-safety/members")) {
+            Intent intent = new Intent(getActivity(), OrganizationStructureActivity.class);
             startActivity(intent);
         } else {
             Intent intent = new Intent(getActivity(), PhotoActivity.class);

@@ -11,7 +11,22 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="@color/colorAccent"
-        android:id="@+id/top_group">
+        android:id="@+id/top_group">`
+
+        <RelativeLayout
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+            android:id="@+id/close"
+            android:background="@drawable/top_button">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/close_icon"
+                android:src="@drawable/back_icon"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -20,25 +35,9 @@
             android:id="@+id/text_header"
             android:textColor="#ffffff"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="56dp"
             android:layout_marginRight="56dp" />
-
-        <RelativeLayout
-            android:layout_width="56dp"
-            android:layout_height="match_parent"
-            android:id="@+id/close"
-            android:background="@drawable/top_button"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:id="@+id/close_icon"
-                android:src="@drawable/close_icon"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
-        </RelativeLayout>
 
     </RelativeLayout>
 

@@ -7,27 +7,27 @@ import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.logic.ProfileData;
 import com.sapphire.logic.ResponseData;
+import com.sapphire.logic.WorkplaceInspectionData;
 import com.sapphire.logic.UserInfo;
 import org.json.JSONArray;
 import org.json.JSONException;
 import java.util.ArrayList;
 
-public class GetProfilesAction extends AsyncTask{
+public class WorkplaceInspectionsAction extends AsyncTask{
 
-    public interface RequestProfiles {
-        public void onRequestProfiles(String result);
+    public interface RequestWorkplaceInspections {
+        public void onRequestWorkplaceInspections(String result);
     }
 
-    public interface RequestProfilesData {
-        public void onRequestProfilesData(ProfileData profileData);
+    public interface RequestWorkplaceInspectionsData {
+        public void onRequestWorkplaceInspectionsData(ArrayList<WorkplaceInspectionData> workplaceInspectionDatas);
     }
 
     private Context mContext;
-    private ProfileData profileData;
+    private ArrayList<WorkplaceInspectionData> workplaceInspectionDatas;
 
-    public GetProfilesAction(Context context) {
+    public WorkplaceInspectionsAction(Context context) {
         this.mContext = context;
     }
 
@@ -36,20 +36,18 @@ public class GetProfilesAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
+        String urlstring = Environment.SERVER + Environment.WorkplaceInspectionsURL;
 
-        UserInfo userInfo = UserInfo.getUserInfo();
-
-        String urlstring = Environment.SERVER + Environment.ProfilesURL + "?$filter=ProfileId%20eq%20guid'"+userInfo.getProfileId()+"'";
-
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", userInfo.getAuthToken()));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthToken()));
 
         String result = "";
 
         if (responseData.getSuccess()) {
             JSONArray data = responseData.getData();
-            if (data.length() == 1) {
+            workplaceInspectionDatas = new ArrayList<WorkplaceInspectionData>();
+            for (int y=0; y < data.length(); y++) {
                 try {
-                    profileData = new ProfileData(data.getJSONObject(0));
+                    workplaceInspectionDatas.add(new WorkplaceInspectionData(data.getJSONObject(y)));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -78,9 +76,9 @@ public class GetProfilesAction extends AsyncTask{
         String resultData = (String) o;
         if(mContext!=null) {
             if (resultData.equals("OK")) {
-                ((RequestProfilesData) mContext).onRequestProfilesData(profileData);
+                ((RequestWorkplaceInspectionsData) mContext).onRequestWorkplaceInspectionsData(workplaceInspectionDatas);
             } else {
-                ((RequestProfiles) mContext).onRequestProfiles(resultData);
+                ((RequestWorkplaceInspections) mContext).onRequestWorkplaceInspections(resultData);
             }
         }
     }
