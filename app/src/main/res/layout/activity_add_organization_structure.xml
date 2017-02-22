@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rootLayout">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/colorAccent"
+        android:id="@+id/top_group">
+
+        <RelativeLayout
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+            android:id="@+id/back"
+            android:background="@drawable/top_button">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/back_icon"
+                android:src="@drawable/back_icon"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/text_header"
+            android:textColor="#ffffff"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="56dp"
+            android:layout_marginRight="56dp" />
+
+        <RelativeLayout
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+            android:id="@+id/ok"
+            android:background="@drawable/top_button"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/ok_icon"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ok_icon" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_below="@+id/top_group"
+        android:text="@string/name"
+        android:id="@+id/text_name"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_name"
+        android:inputType="text"
+        android:id="@+id/name"
+        android:hint="@string/name"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_below="@+id/name"
+        android:text="@string/name_error"
+        android:id="@+id/text_name_error"
+        android:layout_marginLeft="12dp"
+        android:textColor="@color/red"
+        android:layout_marginRight="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_below="@+id/text_name_error"
+        android:text="@string/text_description"
+        android:id="@+id/text_description"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_description"
+        android:inputType="text"
+        android:id="@+id/description"
+        android:hint="@string/text_description"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
+
+    <CheckBox
+        android:text="@string/text_is_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/position"
+        android:layout_below="@+id/description"
+        android:layout_alignLeft="@+id/description"
+        android:layout_alignStart="@+id/description"
+        android:layout_alignRight="@+id/description"
+        android:layout_alignEnd="@+id/description" />
+
+    <CheckBox
+        android:text="@string/text_is_current"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/current"
+        android:layout_below="@+id/position"
+        android:layout_alignLeft="@+id/position"
+        android:layout_alignStart="@+id/position"
+        android:layout_alignRight="@+id/position"
+        android:layout_alignEnd="@+id/position" />
+
+</RelativeLayout>
