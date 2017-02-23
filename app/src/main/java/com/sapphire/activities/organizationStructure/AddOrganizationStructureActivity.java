@@ -29,10 +29,6 @@ public class AddOrganizationStructureActivity extends BaseActivity {
 
         setContentView(R.layout.activity_add_organization_structure);
 
-        init();
-    }
-
-    private void init() {
         Intent intent = getIntent();
         String id = intent.getStringExtra(Environment.ID);
         boolean edit = intent.getBooleanExtra(Environment.EDIT, false);
@@ -89,7 +85,6 @@ public class AddOrganizationStructureActivity extends BaseActivity {
                 onBackPressed();
             }
         });
-
     }
 
     private void saveItem() {

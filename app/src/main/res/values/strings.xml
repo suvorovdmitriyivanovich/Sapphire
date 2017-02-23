@@ -93,4 +93,12 @@
     <string name="text_is_current">Is Current</string>
     <string name="text_is_position">Is Position</string>
     <string name="text_workplace_inspection">Workplace Inspection</string>
+    <string name="text_date">Date</string>
+    <string name="date_error">Date is required</string>
+    <string name="template">Template</string>
+    <string name="text_show_inspection">Show Inspection on Employee Board</string>
+    <string name="text_workplace_inspection_item">Workplace Inspection Item</string>
+    <string name="text_status">Status</string>
+    <string name="text_priority">Priority</string>
+    <string name="text_severity">Severity</string>
 </resources>

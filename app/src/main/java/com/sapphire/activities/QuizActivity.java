@@ -147,7 +147,7 @@ public class QuizActivity extends BaseActivity implements AnswersAdapter.OnRootC
         pd.hide();
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -225,7 +225,7 @@ public class QuizActivity extends BaseActivity implements AnswersAdapter.OnRootC
     public void onRequestPostQuizzes(String result) {
         pd.hide();
         Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -242,7 +242,7 @@ public class QuizActivity extends BaseActivity implements AnswersAdapter.OnRootC
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
         } else {
             currentQuestion = currentQuestion + 1;
             UpdateQuiz();

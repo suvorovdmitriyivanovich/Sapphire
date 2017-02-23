@@ -7,7 +7,6 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import com.sapphire.R;
@@ -40,7 +39,7 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
         ViewHolder(View itemView) {
             super(itemView);
             text_name = (TextView) itemView.findViewById(R.id.text_name);
-            text_date = (TextView) itemView.findViewById(R.id.text_course);
+            text_date = (TextView) itemView.findViewById(R.id.text_description);
             open = (Button) itemView.findViewById(R.id.open);
             delete = (Button) itemView.findViewById(R.id.delete);
             border = itemView.findViewById(R.id.border);
@@ -60,7 +59,7 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.child_templates_view, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view_full, parent, false);
         return new WorkplaceInspectionsAdapter.ViewHolder(view);
     }
 

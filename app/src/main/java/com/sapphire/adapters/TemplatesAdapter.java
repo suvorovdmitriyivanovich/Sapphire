@@ -2,11 +2,11 @@ package com.sapphire.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import com.sapphire.R;
@@ -14,148 +14,117 @@ import com.sapphire.Sapphire;
 import com.sapphire.logic.TemplateData;
 import java.util.ArrayList;
 
-public class TemplatesAdapter extends BaseExpandableListAdapter {
+public class TemplatesAdapter extends RecyclerView.Adapter<TemplatesAdapter.ViewHolder> {
 
     public interface OnRootClickListener{
-        void onRootClick(int groupPosition, int childPosition);
+        void onRootClick(int position);
     }
 
     public interface OnOpenClickListener{
-        void onOpenClick(int groupPosition, int childPosition);
+        void onOpenClick(int position);
     }
 
     public interface OnDeleteClickListener{
-        void onDeleteClick(int groupPosition, int childPosition);
+        void onDeleteClick(int position);
     }
 
-    private ArrayList<TemplateData> mGroups;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView text_name;
+        TextView text_description;
+        Button open;
+        Button delete;
+        View border;
+        View item;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+            text_name = (TextView) itemView.findViewById(R.id.text_name);
+            text_description = (TextView) itemView.findViewById(R.id.text_description);
+            open = (Button) itemView.findViewById(R.id.open);
+            delete = (Button) itemView.findViewById(R.id.delete);
+            border = itemView.findViewById(R.id.border);
+            item = itemView;
+        }
+    }
+
+    private ArrayList<TemplateData> listData;
     private Context mContext;
     private Typeface typeFace;
 
     public TemplatesAdapter(Context context) {
         mContext = context;
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
-        mGroups = new ArrayList<TemplateData>();
+        listData = new ArrayList<TemplateData>();
     }
 
     @Override
-    public int getGroupCount() {
-        return mGroups.size();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view, parent, false);
+        return new TemplatesAdapter.ViewHolder(view);
     }
 
     @Override
-    public int getChildrenCount(int groupPosition) {
-        return mGroups.get(groupPosition).getSubTemplates().size();
-    }
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
-    @Override
-    public Object getGroup(int groupPosition) {
-        return mGroups.get(groupPosition);
-    }
+        TemplateData data = listData.get(position);
 
-    @Override
-    public Object getChild(int groupPosition, int childPosition) {
-        return mGroups.get(groupPosition).getSubTemplates().get(childPosition);
-    }
+        holder.border.setVisibility(View.VISIBLE);
 
-    @Override
-    public long getGroupId(int groupPosition) {
-        return groupPosition;
-    }
+        holder.text_name.setText(data.getName());
+        holder.text_description.setText(data.getDescription());
 
-    @Override
-    public long getChildId(int groupPosition, int childPosition) {
-        return childPosition;
-    }
-
-    @Override
-    public boolean hasStableIds() {
-        return true;
-    }
-
-    @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
-                             ViewGroup parent) {
-
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.group_view, null);
-        }
-
-        if (isExpanded){
-            //Изменяем что-нибудь, если текущая Group раскрыта
-        }
-        else{
-            //Изменяем что-нибудь, если текущая Group скрыта
-        }
-
-        TextView name = (TextView) convertView.findViewById(R.id.text_name);
-        name.setText(mGroups.get(groupPosition).getName());
-
-        return convertView;
-
-    }
-
-    @Override
-    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild,
-                             View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.child_templates_view, null);
-        }
-
-        TemplateData templateData = mGroups.get(groupPosition).getSubTemplates().get(childPosition);
-
-        TextView name = (TextView) convertView.findViewById(R.id.text_name);
-        name.setText(templateData.getName());
-
-        String textCourse = Sapphire.getInstance().getResources().getString(R.string.text_duration);
-        textCourse = textCourse + ": " + templateData.getDescription();
-
-        TextView course = (TextView) convertView.findViewById(R.id.text_course);
-        course.setText(textCourse);
-
-        View root = convertView.findViewById(R.id.root);
-        root.setOnClickListener(new View.OnClickListener() {
+        holder.open.setTypeface(typeFace);
+        holder.open.setText(Html.fromHtml("&#61504;"));
+        holder.open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((OnRootClickListener)mContext).onRootClick(groupPosition, childPosition);
+                if (mContext instanceof OnOpenClickListener) {
+                    ((OnOpenClickListener) mContext).onOpenClick(holder.getAdapterPosition());
+                }
+                else {
+                    //TODO generate error dialog
+                }
             }
         });
 
-        Button open = (Button) convertView.findViewById(R.id.open);
-        open.setOnClickListener(new View.OnClickListener() {
+        holder.delete.setTypeface(typeFace);
+        holder.delete.setText(Html.fromHtml("&#61944;"));
+        holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((OnOpenClickListener)mContext).onOpenClick(groupPosition, childPosition);
+                if (mContext instanceof OnDeleteClickListener) {
+                    ((OnDeleteClickListener) mContext).onDeleteClick(holder.getAdapterPosition());
+                }
+                else {
+                    //TODO generate error dialog
+                }
             }
         });
 
-        Button delete = (Button) convertView.findViewById(R.id.delete);
-        delete.setOnClickListener(new View.OnClickListener() {
+        holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                ((OnDeleteClickListener)mContext).onDeleteClick(groupPosition, childPosition);
+            public void onClick(View view) {
+                if (mContext instanceof OnRootClickListener) {
+                    ((OnRootClickListener) mContext).onRootClick(holder.getAdapterPosition());
+                }
+                else {
+                    //TODO generate error dialog
+                }
             }
         });
-
-        open.setTypeface(typeFace);
-        open.setText(Html.fromHtml("&#61504;"));
-
-        delete.setTypeface(typeFace);
-        delete.setText(Html.fromHtml("&#61944;"));
-
-        return convertView;
     }
 
     @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
+    public int getItemCount() {
+        if(listData != null)
+            return listData.size();
+        else
+            return 0;
     }
 
     public void setData(ArrayList<TemplateData> groups) {
-        mGroups.clear();
-        mGroups.addAll(groups);
+        listData.clear();
+        listData.addAll(groups);
         notifyDataSetChanged();
     }
 }

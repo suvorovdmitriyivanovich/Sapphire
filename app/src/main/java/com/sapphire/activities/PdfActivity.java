@@ -135,7 +135,7 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
         pd.hide();
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
         }
         if (needClose) {
             finish();

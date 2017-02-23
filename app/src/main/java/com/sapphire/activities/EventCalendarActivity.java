@@ -102,7 +102,7 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
         pd.hide();
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
         }
     }
 

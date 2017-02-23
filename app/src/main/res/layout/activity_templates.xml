@@ -82,17 +82,11 @@
 
         </RelativeLayout>
 
-        <ExpandableListView
+        <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/templateslist"
-            android:headerDividersEnabled="true"
-            android:drawSelectorOnTop="true"
-            android:choiceMode="multipleChoice"
-            android:footerDividersEnabled="true"
-            android:divider="@null"
-            android:dividerHeight="0dp"
-            android:childDivider="@null"
+            android:scrollbars="vertical"
             android:layout_below="@+id/top_group" />
 
     </RelativeLayout>

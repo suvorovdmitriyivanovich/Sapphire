@@ -3,30 +3,30 @@ package com.sapphire.logic;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class TemplateItemData {
-    private String workplaceInspectionTemplateItemId = "";
-    private String workplaceInspectionTemplateId = "";
+public class WorkplaceInspectionItemData {
+    private String workplaceInspectionItemId = "";
+    private String workplaceInspectionId = "";
     private String name = "";
     private String description = "";
     private ItemStatusData status = new ItemStatusData();
     private ItemPriorityData priority = new ItemPriorityData();
     private int severity = 0;
 
-    public TemplateItemData() {
+    public WorkplaceInspectionItemData() {
 
     }
 
-    public TemplateItemData(String name) {
+    public WorkplaceInspectionItemData(String name) {
         setName(name);
     }
 
-    public TemplateItemData(JSONObject data) {
+    public WorkplaceInspectionItemData(JSONObject data) {
         try {
-            if (!data.isNull("WorkplaceInspectionTemplateItemId")) {
-                setWorkplaceInspectionTemplateItemId(data.getString("WorkplaceInspectionTemplateItemId"));
+            if (!data.isNull("WorkplaceInspectionItemId")) {
+                setWorkplaceInspectionItemId(data.getString("WorkplaceInspectionItemId"));
             }
-            if (!data.isNull("WorkplaceInspectionTemplateId")) {
-                setWorkplaceInspectionTemplateId(data.getString("WorkplaceInspectionTemplateId"));
+            if (!data.isNull("WorkplaceInspectionId")) {
+                setWorkplaceInspectionId(data.getString("WorkplaceInspectionId"));
             }
             if (!data.isNull("Name")) {
                 setName(data.getString("Name"));
@@ -34,34 +34,34 @@ public class TemplateItemData {
             if (!data.isNull("Description")) {
                 setDescription(data.getString("Description"));
             }
+            if (!data.isNull("Severity")) {
+                setSeverity(data.getInt("Severity"));
+            }
             if (!data.isNull("Status")) {
                 setStatus(data.getJSONObject("Status"));
             }
             if (!data.isNull("Priority")) {
                 setPriority(data.getJSONObject("Priority"));
             }
-            if (!data.isNull("Severity")) {
-                setSeverity(data.getInt("Severity"));
-            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public String getWorkplaceInspectionTemplateItemId() {
-        return workplaceInspectionTemplateItemId;
+    public String getWorkplaceInspectionItemId() {
+        return workplaceInspectionItemId;
     }
 
-    public void setWorkplaceInspectionTemplateItemId(String workplaceInspectionTemplateItemId) {
-        this.workplaceInspectionTemplateItemId = workplaceInspectionTemplateItemId;
+    public void setWorkplaceInspectionItemId(String workplaceInspectionItemId) {
+        this.workplaceInspectionItemId = workplaceInspectionItemId;
     }
 
-    public String getWorkplaceInspectionTemplateId() {
-        return workplaceInspectionTemplateId;
+    public String getWorkplaceInspectionId() {
+        return workplaceInspectionId;
     }
 
-    public void setWorkplaceInspectionTemplateId(String workplaceInspectionTemplateId) {
-        this.workplaceInspectionTemplateId = workplaceInspectionTemplateId;
+    public void setWorkplaceInspectionId(String workplaceInspectionId) {
+        this.workplaceInspectionId = workplaceInspectionId;
     }
 
     public String getName() {
@@ -88,6 +88,10 @@ public class TemplateItemData {
         this.status = new ItemStatusData(status);
     }
 
+    public void setStatus(ItemStatusData status) {
+        this.status = status;
+    }
+
     public ItemPriorityData getPriority() {
         return priority;
     }
@@ -96,11 +100,22 @@ public class TemplateItemData {
         this.priority = new ItemPriorityData(priority);
     }
 
+    public void setPriority(ItemPriorityData priority) {
+        this.priority = priority;
+    }
+
     public int getSeverity() {
         return severity;
     }
 
     public void setSeverity(int severity) {
         this.severity = severity;
+    }
+
+    public void setSeverity(String severity) {
+        this.severity = 0;
+        if (severity != null && !severity.equals("")) {
+            this.severity = Integer.parseInt(severity);
+        }
     }
 }

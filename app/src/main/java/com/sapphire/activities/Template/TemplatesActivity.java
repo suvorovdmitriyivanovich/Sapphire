@@ -1,4 +1,4 @@
-package com.sapphire.activities;
+package com.sapphire.activities.template;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -21,26 +21,31 @@ import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.sapphire.R;
-import com.sapphire.adapters.WorkplaceInspectionsAdapter;
-//import com.sapphire.api.WorkplaceInspectionsDeleteAction;
-import com.sapphire.api.WorkplaceInspectionsAction;
-import com.sapphire.logic.WorkplaceInspectionData;
+import com.sapphire.activities.BaseActivity;
+import com.sapphire.activities.MenuFragment;
+import com.sapphire.activities.RightFragment;
+import com.sapphire.adapters.TemplatesAdapter;
+import com.sapphire.api.TemplateDeleteAction;
+import com.sapphire.api.TemplatesAction;
+import com.sapphire.logic.TemplateData;
+
 import java.util.ArrayList;
 
-public class WorkplaceInspectionsActivity extends BaseActivity implements WorkplaceInspectionsAdapter.OnRootClickListener,
-                                                                          WorkplaceInspectionsAdapter.OnOpenClickListener,
-                                                                          WorkplaceInspectionsAdapter.OnDeleteClickListener,
-                                                                          WorkplaceInspectionsAction.RequestWorkplaceInspections,
-                                                                          WorkplaceInspectionsAction.RequestWorkplaceInspectionsData{
-                                                                          //WorkplaceInspectionsDeleteAction.RequestWorkplaceInspectionsDelete{
+public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.OnRootClickListener,
+                                                                    TemplatesAdapter.OnOpenClickListener,
+                                                                    TemplatesAdapter.OnDeleteClickListener,
+                                                                    TemplatesAction.RequestTemplates,
+                                                                    TemplatesAction.RequestTemplatesData,
+                                                                    TemplateDeleteAction.RequestTemplateDelete{
     public final static String PARAM_TASK = "task";
-    public final static String BROADCAST_ACTION = "com.sapphire.activities.WorkplaceInspectionsActivity";
+    public final static String BROADCAST_ACTION = "com.sapphire.activities.template.TemplatesActivity";
     BroadcastReceiver br;
-    private ArrayList<WorkplaceInspectionData> workplaceInspectionDatas;
-    private WorkplaceInspectionsAdapter adapter;
+    private ArrayList<TemplateData> templatesDatas;
+    private TemplatesAdapter adapter;
     ProgressDialog pd;
-    private RecyclerView workplaceinspectionslist;
+    private RecyclerView templateslist;
     private Dialog dialog_confirm;
     private TextView tittle_message;
     private Button button_cancel_save;
@@ -51,7 +56,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_workplace_inspections);
+        setContentView(R.layout.activity_templates);
 
         AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
         adb_save.setCancelable(true);
@@ -77,7 +82,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
 
                 pd.show();
 
-                //new TemplateDeleteAction(WorkplaceInspectionsActivity.this, inspectionDatas.get(currentGroupPosition).getSubTemplates().get(currentChildPosition).getWorkplaceInspectionTemplateId()).execute();
+                new TemplateDeleteAction(TemplatesActivity.this, templatesDatas.get(currentPosition).getWorkplaceInspectionTemplateId()).execute();
             }
         });
 
@@ -103,7 +108,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(WorkplaceInspectionsActivity.this, TemplateActivity.class);
+                Intent intent = new Intent(TemplatesActivity.this, TemplateActivity.class);
                 startActivity(intent);
             }
         });
@@ -135,12 +140,12 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         pd.setCancelable(false);
         pd.setCanceledOnTouchOutside(false);
 
-        workplaceinspectionslist = (RecyclerView) findViewById(R.id.workplaceinspectionslist);
-        workplaceinspectionslist.setNestedScrollingEnabled(false);
-        workplaceinspectionslist.setLayoutManager(new LinearLayoutManager(WorkplaceInspectionsActivity.this));
+        templateslist = (RecyclerView) findViewById(R.id.templateslist);
+        templateslist.setNestedScrollingEnabled(false);
+        templateslist.setLayoutManager(new LinearLayoutManager(TemplatesActivity.this));
 
-        adapter = new WorkplaceInspectionsAdapter(this);
-        workplaceinspectionslist.setAdapter(adapter);
+        adapter = new TemplatesAdapter(this);
+        templateslist.setAdapter(adapter);
     }
 
     @Override
@@ -151,12 +156,11 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
 
     @Override
     public void onOpenClick(int position) {
-        Intent intent = new Intent(WorkplaceInspectionsActivity.this, WorkplaceInspectionActivity.class);
-        WorkplaceInspectionData templateData = workplaceInspectionDatas.get(position);
+        Intent intent = new Intent(TemplatesActivity.this, TemplateActivity.class);
+        TemplateData templateData = templatesDatas.get(position);
         intent.putExtra("name", templateData.getName());
         intent.putExtra("description", templateData.getDescription());
-        intent.putExtra("date", templateData.getDate());
-        intent.putExtra("workplaceInspectionId", templateData.getWorkplaceInspectionId());
+        intent.putExtra("workplaceInspectionTemplateId", templateData.getWorkplaceInspectionTemplateId());
         startActivity(intent);
     }
 
@@ -171,7 +175,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
     }
 
     @Override
-    public void onRequestWorkplaceInspections(String result) {
+    public void onRequestTemplates(String result) {
         pd.hide();
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
@@ -179,23 +183,30 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         }
     }
 
-    //@Override
+    @Override
     public void onRequestTemplateDelete(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
         } else {
-            new WorkplaceInspectionsAction(WorkplaceInspectionsActivity.this).execute();
+            new TemplatesAction(TemplatesActivity.this).execute();
         }
     }
 
     @Override
-    public void onRequestWorkplaceInspectionsData(ArrayList<WorkplaceInspectionData> workplaceInspectionDatas) {
-        this.workplaceInspectionDatas = workplaceInspectionDatas;
-        adapter.setData(workplaceInspectionDatas);
+    public void onRequestTemplatesData(ArrayList<TemplateData> templatesDatas) {
+        this.templatesDatas = templatesDatas;
+        adapter.setData(templatesDatas);
 
         pd.hide();
+    }
+
+    public int GetPixelFromDips(float pixels) {
+        // Get the screen's density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (pixels * scale + 0.5f);
     }
 
     @Override
@@ -212,7 +223,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         } catch (Exception e) {}
 
         pd.show();
-        new WorkplaceInspectionsAction(WorkplaceInspectionsActivity.this).execute();
+        new TemplatesAction(TemplatesActivity.this).execute();
     }
 
     @Override

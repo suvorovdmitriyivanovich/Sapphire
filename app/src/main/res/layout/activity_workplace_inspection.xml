@@ -78,77 +78,193 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_below="@+id/top_group"
-        android:text="@string/name"
-        android:id="@+id/text_name"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp" />
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/top_group" >
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_name"
-        android:inputType="text"
-        android:id="@+id/name"
-        android:hint="@string/name"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scroll_group">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_below="@+id/name"
-        android:text="@string/name_error"
-        android:id="@+id/text_name_error"
-        android:layout_marginLeft="12dp"
-        android:textColor="@color/red"
-        android:layout_marginRight="10dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_below="@+id/top_group"
+                android:text="@string/name"
+                android:id="@+id/text_name"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_below="@+id/text_name_error"
-        android:text="@string/text_description"
-        android:id="@+id/text_description"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_name"
+                android:inputType="text"
+                android:id="@+id/name"
+                android:hint="@string/name"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_description"
-        android:inputType="text"
-        android:id="@+id/description"
-        android:hint="@string/text_description"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_below="@+id/name"
+                android:text="@string/name_error"
+                android:id="@+id/text_name_error"
+                android:layout_marginLeft="12dp"
+                android:textColor="@color/red"
+                android:layout_marginRight="10dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_below="@+id/description"
-        android:text="@string/text_items"
-        android:id="@+id/text_items"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_below="@+id/text_name_error"
+                android:text="@string/text_date"
+                android:id="@+id/text_date"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp" />
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/itemlist"
-        android:layout_centerHorizontal="true"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:layout_below="@+id/text_items"
-        android:layout_marginTop="5dp" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/date_group"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_below="@+id/text_date">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/image_date_group"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginRight="2dp"
+                    android:id="@+id/date"
+                    android:focusable="false" />
+
+                <RelativeLayout
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/image_date_group"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/dialog_button">
+
+                    <ImageView
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:id="@+id/image_date"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/date"/>
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/date_error"
+                android:id="@+id/text_date_error"
+                android:layout_marginLeft="12dp"
+                android:textColor="@color/red"
+                android:layout_marginRight="10dp"
+                android:layout_below="@+id/date_group" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_below="@+id/text_date_error"
+                android:text="@string/template"
+                android:id="@+id/text_template"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_template"
+                android:inputType="text"
+                android:id="@+id/template"
+                android:hint="@string/template"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:drawableRight="@drawable/icon_dropdown"
+                android:focusable="false"/>
+
+            <Spinner
+                style="@style/spinner_eee"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:id="@+id/spinnerTemplate"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_below="@+id/template"
+                android:layout_alignLeft="@+id/template"
+                android:layout_alignStart="@+id/template"
+                android:layout_alignRight="@+id/template"
+                android:layout_alignEnd="@+id/template" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_show_inspection"
+                android:id="@+id/posted"
+                android:layout_below="@+id/template"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_below="@+id/posted"
+                android:text="@string/text_description"
+                android:id="@+id/text_description"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_description"
+                android:inputType="text"
+                android:id="@+id/description"
+                android:hint="@string/text_description"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_below="@+id/description"
+                android:text="@string/text_items"
+                android:id="@+id/text_items"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black" />
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/itemlist"
+                android:scrollbars="vertical"
+                android:layout_below="@+id/text_items"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

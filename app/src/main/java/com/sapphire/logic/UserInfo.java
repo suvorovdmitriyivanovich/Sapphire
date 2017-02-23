@@ -8,6 +8,9 @@ public class UserInfo {
     private String profileId = "";
     private ArrayList<OrganizationData> organizations = new ArrayList<OrganizationData>();
     private ArrayList<OrganizationStructureData> organizationStructureDatas = new ArrayList<OrganizationStructureData>();
+    private ArrayList<TemplateData> templateDatas = new ArrayList<TemplateData>();
+    private ArrayList<ItemPriorityData> itemPriorityDatas = new ArrayList<ItemPriorityData>();
+    private ArrayList<ItemStatusData> itemStatusDatas = new ArrayList<ItemStatusData>();
 
     //---------------------Singleton---------------------------
     private static UserInfo userInfo;
@@ -84,5 +87,35 @@ public class UserInfo {
     public void setOrganizationStructureDatas(ArrayList<OrganizationStructureData> organizationStructureDatas) {
         this.organizationStructureDatas.clear();
         this.organizationStructureDatas.addAll(organizationStructureDatas);
+    }
+
+    public ArrayList<TemplateData> getTemplateDatas() {
+        return templateDatas;
+    }
+
+    public void setTemplateDatas(ArrayList<TemplateData> templateDatas) {
+        this.templateDatas.clear();
+        this.templateDatas.add(new TemplateData());
+        this.templateDatas.addAll(templateDatas);
+    }
+
+    public ArrayList<ItemPriorityData> getItemPriorityDatas() {
+        return itemPriorityDatas;
+    }
+
+    public void setItemPriorityDatas(ArrayList<ItemPriorityData> itemPriorityDatas) {
+        this.itemPriorityDatas.clear();
+        this.itemPriorityDatas.add(new ItemPriorityData());
+        this.itemPriorityDatas.addAll(itemPriorityDatas);
+    }
+
+    public ArrayList<ItemStatusData> getItemStatusDatas() {
+        return itemStatusDatas;
+    }
+
+    public void setItemStatusDatas(ArrayList<ItemStatusData> itemStatusDatas) {
+        this.itemStatusDatas.clear();
+        this.itemStatusDatas.add(new ItemStatusData());
+        this.itemStatusDatas.addAll(itemStatusDatas);
     }
 }

@@ -11,10 +11,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.TemplateItemData;
+import com.sapphire.logic.WorkplaceInspectionItemData;
 import java.util.ArrayList;
 
-public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> {
+public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<WorkplaceInspectionItemsAdapter.ViewHolder> {
 
     public interface OnRootClickListener{
         void onRootClick(int position);
@@ -47,26 +47,26 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         }
     }
 
-    private ArrayList<TemplateItemData> listData;
+    private ArrayList<WorkplaceInspectionItemData> listData;
     private Context context;
     private Typeface typeFace;
 
-    public ItemsAdapter(Context context) {
+    public WorkplaceInspectionItemsAdapter(Context context) {
         this.context = context;
-        listData = new ArrayList<TemplateItemData>();
+        listData = new ArrayList<WorkplaceInspectionItemData>();
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view, parent, false);
-        return new ItemsAdapter.ViewHolder(view);
+        return new WorkplaceInspectionItemsAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        TemplateItemData data = listData.get(position);
+        WorkplaceInspectionItemData data = listData.get(position);
 
         holder.border.setVisibility(View.VISIBLE);
 
@@ -122,7 +122,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             return 0;
     }
 
-    public void setListArray(ArrayList<TemplateItemData> list){
+    public void setListArray(ArrayList<WorkplaceInspectionItemData> list){
         listData.clear();
         listData.addAll(list);
         notifyDataSetChanged();

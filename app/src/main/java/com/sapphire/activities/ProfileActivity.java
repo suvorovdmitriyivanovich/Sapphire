@@ -75,7 +75,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         pd.hide();
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -117,7 +117,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         pd.hide();
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
         }
     }
 

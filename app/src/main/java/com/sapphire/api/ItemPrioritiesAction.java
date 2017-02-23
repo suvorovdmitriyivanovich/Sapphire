@@ -2,32 +2,36 @@ package com.sapphire.api;
 
 import android.content.Context;
 import android.os.AsyncTask;
+
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.ErrorMessageData;
+import com.sapphire.logic.ItemPriorityData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
-import com.sapphire.logic.WorkplaceInspectionData;
+import com.sapphire.logic.TemplateData;
 import com.sapphire.logic.UserInfo;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+
 import java.util.ArrayList;
 
-public class WorkplaceInspectionsAction extends AsyncTask{
+public class ItemPrioritiesAction extends AsyncTask{
 
-    public interface RequestWorkplaceInspections {
-        public void onRequestWorkplaceInspections(String result);
+    public interface RequestItemPriorities {
+        public void onRequestItemPriorities(String result);
     }
 
-    public interface RequestWorkplaceInspectionsData {
-        public void onRequestWorkplaceInspectionsData(ArrayList<WorkplaceInspectionData> workplaceInspectionDatas);
+    public interface RequestItemPrioritiesData {
+        public void onRequestItemPrioritiesData(ArrayList<ItemPriorityData> itemPriorityDatas);
     }
 
     private Context mContext;
-    private ArrayList<WorkplaceInspectionData> workplaceInspectionDatas;
+    private ArrayList<ItemPriorityData> itemPriorityDatas;
 
-    public WorkplaceInspectionsAction(Context context) {
+    public ItemPrioritiesAction(Context context) {
         this.mContext = context;
     }
 
@@ -36,7 +40,7 @@ public class WorkplaceInspectionsAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.WorkplaceInspectionsCurrentURL;
+        String urlstring = Environment.SERVER + Environment.WorkplaceInspectionsItemPrioritiesURL;
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthToken()));
 
@@ -44,10 +48,10 @@ public class WorkplaceInspectionsAction extends AsyncTask{
 
         if (responseData.getSuccess()) {
             JSONArray data = responseData.getData();
-            workplaceInspectionDatas = new ArrayList<WorkplaceInspectionData>();
+            itemPriorityDatas = new ArrayList<ItemPriorityData>();
             for (int y=0; y < data.length(); y++) {
                 try {
-                    workplaceInspectionDatas.add(new WorkplaceInspectionData(data.getJSONObject(y)));
+                    itemPriorityDatas.add(new ItemPriorityData(data.getJSONObject(y)));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -76,9 +80,9 @@ public class WorkplaceInspectionsAction extends AsyncTask{
         String resultData = (String) o;
         if(mContext!=null) {
             if (resultData.equals("OK")) {
-                ((RequestWorkplaceInspectionsData) mContext).onRequestWorkplaceInspectionsData(workplaceInspectionDatas);
+                ((RequestItemPrioritiesData) mContext).onRequestItemPrioritiesData(itemPriorityDatas);
             } else {
-                ((RequestWorkplaceInspections) mContext).onRequestWorkplaceInspections(resultData);
+                ((RequestItemPriorities) mContext).onRequestItemPriorities(resultData);
             }
         }
     }

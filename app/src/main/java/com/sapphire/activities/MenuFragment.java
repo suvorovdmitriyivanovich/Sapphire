@@ -12,6 +12,8 @@ import android.widget.ExpandableListView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.organizationStructure.OrganizationStructureActivity;
+import com.sapphire.activities.template.TemplatesActivity;
+import com.sapphire.activities.workplaceInspection.WorkplaceInspectionsActivity;
 import com.sapphire.adapters.MenuAdapter;
 import com.sapphire.db.DBHelper;
 import com.sapphire.logic.NavigationMenuData;
@@ -41,7 +43,11 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
         int width = dm.widthPixels-(dm.widthPixels/100*15);
         //int width = dm.widthPixels;
 
-        menulist.setIndicatorBounds((width - GetPixelFromDips(60)), (width - GetPixelFromDips(30)));
+        try {
+            menulist.setIndicatorBounds((width - GetPixelFromDips(60)), (width - GetPixelFromDips(30)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         adapter = new MenuAdapter(this, navigationMenuDatas);
         menulist.setAdapter(adapter);

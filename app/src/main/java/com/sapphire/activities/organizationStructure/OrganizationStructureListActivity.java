@@ -15,7 +15,9 @@ import com.sapphire.logic.OrganizationStructureData;
 import com.sapphire.logic.UserInfo;
 
 public class OrganizationStructureListActivity extends BaseActivity implements OrganizationStructureListAdapter.OnRootClickListener,
-        OrganizationStructureListAdapter.OnAddClickListener, OrganizationStructureListAdapter.OnEditClickListener, OrganizationStructureListAdapter.OnDeleteClickListener {
+                                                                               OrganizationStructureListAdapter.OnAddClickListener,
+                                                                               OrganizationStructureListAdapter.OnEditClickListener,
+                                                                               OrganizationStructureListAdapter.OnDeleteClickListener {
 
     private OrganizationStructureData organizationStructureData;
     private OrganizationStructureListAdapter adapter;
@@ -26,10 +28,6 @@ public class OrganizationStructureListActivity extends BaseActivity implements O
 
         setContentView(R.layout.activity_organization_structure_list);
 
-        init();
-    }
-
-    private void init() {
         Intent intent = getIntent();
         String id = intent.getStringExtra(Environment.ID);
         if(id != null && !id.isEmpty()) {

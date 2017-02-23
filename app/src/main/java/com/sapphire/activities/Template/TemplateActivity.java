@@ -1,4 +1,4 @@
-package com.sapphire.activities;
+package com.sapphire.activities.template;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
+import com.sapphire.activities.BaseActivity;
 import com.sapphire.adapters.ItemsAdapter;
 import com.sapphire.api.GetTemplateAction;
 import com.sapphire.api.TemplateAddAction;
@@ -36,7 +39,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     private String workplaceInspectionTemplateId = "";
     ProgressDialog pd;
     private ArrayList<TemplateItemData> templateItemDatas;
-    private ListView itemlist;
+    private RecyclerView itemlist;
     private ItemsAdapter adapter;
     private EditText name;
     private EditText description;
@@ -179,7 +182,10 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
             description.setText(descriptionOld);
         }
 
-        itemlist = (ListView) findViewById(R.id.itemlist);
+        itemlist = (RecyclerView) findViewById(R.id.itemlist);
+        itemlist.setNestedScrollingEnabled(false);
+        itemlist.setLayoutManager(new LinearLayoutManager(TemplateActivity.this));
+
         adapter = new ItemsAdapter(this);
         itemlist.setAdapter(adapter);
 
@@ -257,7 +263,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
         pd.hide();
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -304,7 +310,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
         } else {
             new GetTemplateAction(TemplateActivity.this, workplaceInspectionTemplateId).execute();
         }
@@ -330,7 +336,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
 
         pressAdd = false;
         Toast.makeText(getBaseContext(), result,
-                Toast.LENGTH_SHORT).show();
+                Toast.LENGTH_LONG).show();
     }
 
     @Override

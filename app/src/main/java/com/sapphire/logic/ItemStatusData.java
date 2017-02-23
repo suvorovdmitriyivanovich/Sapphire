@@ -3,19 +3,23 @@ package com.sapphire.logic;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class TemplateItemPriorityData {
-    private String workplaceInspectionItemPriorityId = "";
+public class ItemStatusData {
+    private String workplaceInspectionItemStatusId = "";
     private String name = "";
     private String description = "";
 
-    public TemplateItemPriorityData() {
+    public ItemStatusData() {
 
     }
 
-    public TemplateItemPriorityData(JSONObject data) {
+    public ItemStatusData(String workplaceInspectionItemStatusId) {
+        this.workplaceInspectionItemStatusId = workplaceInspectionItemStatusId;
+    }
+
+    public ItemStatusData(JSONObject data) {
         try {
-            if (!data.isNull("WorkplaceInspectionItemPriorityId")) {
-                setWorkplaceInspectionItemPriorityId(data.getString("WorkplaceInspectionItemPriorityId"));
+            if (!data.isNull("WorkplaceInspectionItemStatusId")) {
+                setWorkplaceInspectionItemStatusId(data.getString("WorkplaceInspectionItemStatusId"));
             }
             if (!data.isNull("Name")) {
                 setName(data.getString("Name"));
@@ -28,12 +32,12 @@ public class TemplateItemPriorityData {
         }
     }
 
-    public String getWorkplaceInspectionItemPriorityId() {
-        return workplaceInspectionItemPriorityId;
+    public String getWorkplaceInspectionItemStatusId() {
+        return workplaceInspectionItemStatusId;
     }
 
-    public void setWorkplaceInspectionItemPriorityId(String workplaceInspectionItemPriorityId) {
-        this.workplaceInspectionItemPriorityId = workplaceInspectionItemPriorityId;
+    public void setWorkplaceInspectionItemStatusId(String workplaceInspectionItemStatusId) {
+        this.workplaceInspectionItemStatusId = workplaceInspectionItemStatusId;
     }
 
     public String getName() {

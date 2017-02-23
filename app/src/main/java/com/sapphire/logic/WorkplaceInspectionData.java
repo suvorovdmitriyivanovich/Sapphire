@@ -92,8 +92,13 @@ public class WorkplaceInspectionData {
         Long dateLong = 0l;
         //SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date newdate = format.parse(date);
+            //dateLong = newdate.getTime();
+
+            String datet = formatDate.format(newdate);
+            newdate = formatDate.parse(datet);
             dateLong = newdate.getTime();
         } catch (Exception e) {
             e.printStackTrace();

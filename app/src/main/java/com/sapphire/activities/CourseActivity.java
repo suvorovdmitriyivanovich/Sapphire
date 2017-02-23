@@ -136,7 +136,7 @@ public class CourseActivity extends BaseActivity implements GetCourseFileAction.
             sendStart = false;
             pd.hide();
             Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
         } else {
             pd.hide();
             if (sendFinish) {
@@ -228,7 +228,7 @@ public class CourseActivity extends BaseActivity implements GetCourseFileAction.
         if (result.indexOf("index.html") == -1) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
             return;
         }
 

@@ -47,11 +47,9 @@ public class TemplatesAction extends AsyncTask{
         if (responseData.getSuccess()) {
             JSONArray data = responseData.getData();
             templatesDatas = new ArrayList<TemplateData>();
-            templatesDatas.add(new TemplateData("Workplace Inspection Templates"));
             for (int y=0; y < data.length(); y++) {
                 try {
-                    TemplateData templateData = new TemplateData(data.getJSONObject(y));
-                    templatesDatas.get(0).getSubTemplates().add(templateData);
+                    templatesDatas.add(new TemplateData(data.getJSONObject(y)));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

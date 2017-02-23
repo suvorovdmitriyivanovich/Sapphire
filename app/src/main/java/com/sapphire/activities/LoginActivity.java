@@ -212,7 +212,7 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
             Sapphire.exit(this);
         } else
             Toast.makeText(getBaseContext(), R.string.text_again_exit,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
         back_pressed = System.currentTimeMillis();
     }
 

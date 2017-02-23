@@ -2,33 +2,39 @@ package com.sapphire.api;
 
 import android.content.Context;
 import android.os.AsyncTask;
+
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
-import com.sapphire.logic.WorkplaceInspectionData;
+import com.sapphire.logic.TemplateItemData;
 import com.sapphire.logic.UserInfo;
+import com.sapphire.logic.WorkplaceInspectionItemData;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+
 import java.util.ArrayList;
 
-public class WorkplaceInspectionsAction extends AsyncTask{
+public class GetWorkplaceInspectionAction extends AsyncTask{
 
-    public interface RequestWorkplaceInspections {
-        public void onRequestWorkplaceInspections(String result);
+    public interface RequestWorkplaceInspection {
+        public void onRequestWorkplaceInspection(String result);
     }
 
-    public interface RequestWorkplaceInspectionsData {
-        public void onRequestWorkplaceInspectionsData(ArrayList<WorkplaceInspectionData> workplaceInspectionDatas);
+    public interface RequestWorkplaceInspectionData {
+        public void onRequestWorkplaceInspectionData(ArrayList<WorkplaceInspectionItemData> workplaceInspectionItemDatas);
     }
 
     private Context mContext;
-    private ArrayList<WorkplaceInspectionData> workplaceInspectionDatas;
+    private ArrayList<WorkplaceInspectionItemData> workplaceInspectionItemDatas;
+    private String workplaceInspectionId = "";
 
-    public WorkplaceInspectionsAction(Context context) {
+    public GetWorkplaceInspectionAction(Context context, String workplaceInspectionId) {
         this.mContext = context;
+        this.workplaceInspectionId = workplaceInspectionId;
     }
 
     @Override
@@ -36,7 +42,7 @@ public class WorkplaceInspectionsAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.WorkplaceInspectionsCurrentURL;
+        String urlstring = Environment.SERVER + Environment.WorkplaceInspectionItemsURL + "?$filter=WorkplaceInspectionId%20eq%20guid'"+workplaceInspectionId+"'";;
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthToken()));
 
@@ -44,10 +50,10 @@ public class WorkplaceInspectionsAction extends AsyncTask{
 
         if (responseData.getSuccess()) {
             JSONArray data = responseData.getData();
-            workplaceInspectionDatas = new ArrayList<WorkplaceInspectionData>();
+            workplaceInspectionItemDatas = new ArrayList<WorkplaceInspectionItemData>();
             for (int y=0; y < data.length(); y++) {
                 try {
-                    workplaceInspectionDatas.add(new WorkplaceInspectionData(data.getJSONObject(y)));
+                    workplaceInspectionItemDatas.add(new WorkplaceInspectionItemData(data.getJSONObject(y)));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -68,6 +74,7 @@ public class WorkplaceInspectionsAction extends AsyncTask{
             }
         }
 
+
         return result;
     }
 
@@ -76,9 +83,9 @@ public class WorkplaceInspectionsAction extends AsyncTask{
         String resultData = (String) o;
         if(mContext!=null) {
             if (resultData.equals("OK")) {
-                ((RequestWorkplaceInspectionsData) mContext).onRequestWorkplaceInspectionsData(workplaceInspectionDatas);
+                ((RequestWorkplaceInspectionData) mContext).onRequestWorkplaceInspectionData(workplaceInspectionItemDatas);
             } else {
-                ((RequestWorkplaceInspections) mContext).onRequestWorkplaceInspections(resultData);
+                ((RequestWorkplaceInspection) mContext).onRequestWorkplaceInspection(resultData);
             }
         }
     }

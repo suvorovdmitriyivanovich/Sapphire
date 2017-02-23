@@ -1,4 +1,4 @@
-package com.sapphire.activities;
+package com.sapphire.activities.template;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
+import com.sapphire.activities.BaseActivity;
 import com.sapphire.api.TemplateItemAddAction;
 
 public class TemplateItemActivity extends BaseActivity implements TemplateItemAddAction.RequestTemplateItemAdd{
@@ -189,7 +190,7 @@ public class TemplateItemActivity extends BaseActivity implements TemplateItemAd
         pd.hide();
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
         } else {
             finish();
         }
