@@ -140,9 +140,6 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
         } else if (urlRoute.equals("/health-and-safety/members")) {
             Intent intent = new Intent(getActivity(), OrganizationStructureActivity.class);
             startActivity(intent);
-        } else {
-            Intent intent = new Intent(getActivity(), PhotoActivity.class);
-            startActivity(intent);
         }
         //Intent intent = new Intent(getActivity(), SettingsActivity.class);
         //startActivity(intent);

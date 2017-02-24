@@ -34,4 +34,6 @@ public class Environment {
     public static final String WorkplaceInspectionsItemStatusesURL = "/v1/HealthAndSafety/WorkplaceInspections/ItemStatuses";
     public static final String InvestigationsURL = "/v1/HealthAndSafety/Investigations";
     public static final String DocumentManagementFilesURL = "/v1/DocumentManagement/Files";
+    public static final String DocumentManagementFilesUploadURL = "/v1/DocumentManagement/Files/OrganizationSystemFolder";
+    public static final String WorkplaceInspectionsFilesURL = "/v1/HealthAndSafety/WorkplaceInspections/Files";
 }

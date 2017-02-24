@@ -19,8 +19,8 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:id="@+id/image_photo"
                 android:src="@drawable/camera"
                 android:layout_centerVertical="true"
@@ -75,7 +75,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@drawable/btn_datetime"
-        android:id="@+id/delete_group"
+        android:id="@+id/file_group"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp">
@@ -85,20 +85,20 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:id="@+id/image_delete"
-                android:src="@drawable/trash"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:id="@+id/image_file"
                 android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/file" />
         </RelativeLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/text_delete_photo"
-            android:id="@+id/text_delete"
+            android:text="@string/text_file"
+            android:id="@+id/text_file"
             android:layout_centerVertical="true"
             android:layout_marginLeft="65dp" />
 

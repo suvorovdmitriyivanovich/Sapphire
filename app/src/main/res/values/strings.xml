@@ -102,4 +102,11 @@
     <string name="text_priority">Priority</string>
     <string name="text_severity">Severity</string>
     <string name="text_files">Files</string>
+    <string name="text_access_denied">Access denied</string>
+    <string name="text_open_file">File download complete. Open this file?</string>
+    <string name="text_no">No</string>
+    <string name="text_open">Open</string>
+    <string name="text_error_open">You have no apps to open this file</string>
+    <string name="text_file">Select file from storage</string>
+    <string name="text_no_file">File is not exist</string>
 </resources>

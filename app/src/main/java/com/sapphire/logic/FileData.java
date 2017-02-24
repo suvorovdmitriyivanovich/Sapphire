@@ -10,6 +10,8 @@ public class FileData {
     private int size = 0;
     private String parentId = "";
     private FileTypeData fileType = new FileTypeData();
+    private boolean isFolder = false;
+    private SettingData settings = new SettingData();
 
     public FileData() {
 
@@ -38,6 +40,12 @@ public class FileData {
             }
             if (!data.isNull("FileType")) {
                 setFileType(data.getJSONObject("FileType"));
+            }
+            if (!data.isNull("IsFolder")) {
+                setIsFolder(data.getBoolean("IsFolder"));
+            }
+            if (!data.isNull("Settings")) {
+                setSettings(data.getJSONObject("Settings"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -98,5 +106,21 @@ public class FileData {
 
     public void setFileType(JSONObject fileType) {
         this.fileType = new FileTypeData(fileType);
+    }
+
+    public boolean getIsFolder() {
+        return isFolder;
+    }
+
+    public void setIsFolder(boolean isFolder) {
+        this.isFolder = isFolder;
+    }
+
+    public SettingData getSettings() {
+        return settings;
+    }
+
+    public void setSettings(JSONObject settings) {
+        this.settings = new SettingData(settings);
     }
 }

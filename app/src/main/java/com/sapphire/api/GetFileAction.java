@@ -23,11 +23,14 @@ public class GetFileAction extends AsyncTask{
     private Context mContext;
     private String id = "";
     private String filename = "";
+    private String folder = "";
+    private String file = "";
 
-    public GetFileAction(Context context, String id, String filename) {
+    public GetFileAction(Context context, String id, String filename, String folder) {
         this.mContext = context;
         this.id = id;
         this.filename = filename;
+        this.folder = folder;
     }
 
     @Override
@@ -38,22 +41,14 @@ public class GetFileAction extends AsyncTask{
 
         String urlstring = Environment.SERVER + Environment.DocumentManagementFilesDownloadURL + id;
 
-        String saveDir = android.os.Environment.getExternalStorageDirectory() + "/sapphire";
-
-        // добавляем свой каталог к пути
-        File sdPath = new File(saveDir);
-        if (!sdPath.exists()) {
-            // создаем каталог
-            sdPath.mkdirs();
-        }
+        String result = "";
 
         try {
-            downloadFile(urlstring,saveDir,UserInfo.getUserInfo().getAuthToken());
+            result = downloadFile(urlstring,folder,UserInfo.getUserInfo().getAuthToken());
         } catch (IOException e) {
             e.printStackTrace();
+            result = e.getMessage();
         }
-
-        String result = "";
 
         /*
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",60000,true,"GET", UserInfo.getUserInfo().getAuthToken()));
@@ -89,9 +84,11 @@ public class GetFileAction extends AsyncTask{
         return result;
     }
 
-    public void downloadFile(String fileURL, String saveDir, String authToken)
+    public String downloadFile(String fileURL, String saveDir, String authToken)
             throws IOException {
         final int BUFFER_SIZE = 4096;
+
+        String rezult = "OK";
 
         URL url = new URL(fileURL);
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
@@ -140,15 +137,21 @@ public class GetFileAction extends AsyncTask{
                 outputStream.close();
                 inputStream.close();
             }
+
+            file = saveFilePath;
+        } else {
+            rezult = httpConn.getResponseMessage();
         }
         httpConn.disconnect();
+
+        return rezult;
     }
 
     @Override
     protected void onPostExecute(Object o) {
         String resultData = (String) o;
         if(mContext!=null) {
-            ((RequestFile) mContext).onRequestFile(resultData, "");
+            ((RequestFile) mContext).onRequestFile(resultData, file);
         }
     }
 }

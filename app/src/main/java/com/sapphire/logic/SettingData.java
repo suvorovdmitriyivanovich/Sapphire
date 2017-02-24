@@ -11,6 +11,7 @@ public class SettingData {
     private boolean canUpdate = false;
     private boolean canDelete = false;
     private boolean canRead = false;
+    private boolean canDownload = false;
 
     public SettingData() {
 
@@ -29,6 +30,9 @@ public class SettingData {
             }
             if (!data.isNull("CanRead")) {
                 setCanRead(data.getBoolean("CanRead"));
+            }
+            if (!data.isNull("CanDownload")) {
+                setCanDownload(data.getBoolean("CanDownload"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -65,5 +69,13 @@ public class SettingData {
 
     public void setCanRead(boolean canRead) {
         this.canRead = canRead;
+    }
+
+    public boolean getCanDownload() {
+        return canDownload;
+    }
+
+    public void setCanDownload(boolean canDownload) {
+        this.canDownload = canDownload;
     }
 }
