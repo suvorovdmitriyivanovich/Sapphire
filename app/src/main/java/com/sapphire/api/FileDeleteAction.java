@@ -2,6 +2,7 @@ package com.sapphire.api;
 
 import android.content.Context;
 import android.os.AsyncTask;
+
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
@@ -9,18 +10,21 @@ import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
 import com.sapphire.logic.UserInfo;
+
 import java.util.ArrayList;
 
-public class AuthenticationsDeleteAction extends AsyncTask{
+public class FileDeleteAction extends AsyncTask{
 
-    public interface RequestAuthenticationsDelete {
-        public void onRequestAuthenticationsDelete(String result);
+    public interface RequestFileDelete {
+        public void onRequestFileDelete(String result);
     }
 
     private Context mContext;
+    private String id;
 
-    public AuthenticationsDeleteAction(Context context) {
+    public FileDeleteAction(Context context, String id) {
         this.mContext = context;
+        this.id = id;
     }
 
     @Override
@@ -28,7 +32,7 @@ public class AuthenticationsDeleteAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.SecurityAuthenticationsURL;
+        String urlstring = Environment.SERVER + Environment.DocumentManagementFilesURL + "?model%5B%5D="+id;
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"DELETE", UserInfo.getUserInfo().getAuthToken()));
 
@@ -88,7 +92,7 @@ public class AuthenticationsDeleteAction extends AsyncTask{
     protected void onPostExecute(Object o) {
         String resultData = (String) o;
         if(mContext!=null) {
-            ((RequestAuthenticationsDelete) mContext).onRequestAuthenticationsDelete(resultData);
+            ((RequestFileDelete) mContext).onRequestFileDelete(resultData);
         }
     }
 }

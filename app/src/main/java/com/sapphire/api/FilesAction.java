@@ -6,20 +6,24 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.ErrorMessageData;
+import com.sapphire.logic.FileData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
 import com.sapphire.logic.UserInfo;
+import org.json.JSONArray;
+import org.json.JSONException;
 import java.util.ArrayList;
 
-public class AuthenticationsDeleteAction extends AsyncTask{
+public class FilesAction extends AsyncTask{
 
-    public interface RequestAuthenticationsDelete {
-        public void onRequestAuthenticationsDelete(String result);
+    public interface RequestFiles {
+        public void onRequestFiles(String result, ArrayList<FileData> fileDatas);
     }
 
     private Context mContext;
+    private ArrayList<FileData> fileDatas;
 
-    public AuthenticationsDeleteAction(Context context) {
+    public FilesAction(Context context) {
         this.mContext = context;
     }
 
@@ -28,43 +32,34 @@ public class AuthenticationsDeleteAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.SecurityAuthenticationsURL;
 
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"DELETE", UserInfo.getUserInfo().getAuthToken()));
+        String filter = "";
+        ArrayList<FileData> filesDatas = UserInfo.getUserInfo().getFileDatas();
+        for (FileData item: filesDatas) {
+            if (filter.equals("")) {
+                filter = "?$filter=";
+            } else {
+                filter = filter + "%20or%20";
+            }
+            filter = filter + "FileId%20eq%20guid'"+item.getId()+"'";
+        }
+
+        String urlstring = Environment.SERVER + Environment.DocumentManagementFilesURL + filter;
+
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthToken()));
 
         String result = "";
 
         if (responseData.getSuccess()) {
-            /*
             JSONArray data = responseData.getData();
-            policiesDatas = new ArrayList<PoliciesData>();
+            fileDatas = new ArrayList<FileData>();
             for (int y=0; y < data.length(); y++) {
                 try {
-                    if (!data.getJSONObject(y).isNull("ParentId")) {
-                        continue;
-                    }
-                    policiesDatas.add(new PoliciesData(data.getJSONObject(y)));
+                    fileDatas.add(new FileData(data.getJSONObject(y)));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            for (int y=0; y < data.length(); y++) {
-                try {
-                    if (data.getJSONObject(y).isNull("ParentId")) {
-                        continue;
-                    }
-                    PoliciesData policiesData = new PoliciesData(data.getJSONObject(y));
-                    for (int z=0; z < policiesDatas.size(); z++) {
-                        if (policiesDatas.get(z).getId().equals(policiesData.getParentId())) {
-                            policiesDatas.get(z).getSubPolicies().add(policiesData);
-                            break;
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            */
 
             result = "OK";
         } else {
@@ -88,7 +83,7 @@ public class AuthenticationsDeleteAction extends AsyncTask{
     protected void onPostExecute(Object o) {
         String resultData = (String) o;
         if(mContext!=null) {
-            ((RequestAuthenticationsDelete) mContext).onRequestAuthenticationsDelete(resultData);
+            ((RequestFiles) mContext).onRequestFiles(resultData, fileDatas);
         }
     }
 }

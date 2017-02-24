@@ -20,7 +20,6 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -178,6 +177,36 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         text_template = findViewById(R.id.text_template);
         posted = (CheckBox) findViewById(R.id.posted);
 
+        Intent intent = getIntent();
+        workplaceInspectionId = intent.getStringExtra("workplaceInspectionId");
+        if (workplaceInspectionId == null) {
+            workplaceInspectionId = "";
+        }
+        if (!workplaceInspectionId.equals("")) {
+            nameOld = intent.getStringExtra("name");
+            descriptionOld = intent.getStringExtra("description");
+            dateOld = intent.getLongExtra("date", 0l);
+            dateNew = dateOld;
+            name.setText(nameOld);
+            description.setText(descriptionOld);
+            postedOld = intent.getBooleanExtra("posted", false);
+            posted.setChecked(postedOld);
+
+            if (dateOld != 0l) {
+                try {
+                    Date thisdaten = new Date();
+                    thisdaten.setTime(dateOld);
+                    String datet = format.format(thisdaten);
+                    date.setText(datet);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            template.setVisibility(View.GONE);
+            text_template.setVisibility(View.GONE);
+        }
+
         if (workplaceInspectionId.equals("")) {
             templates = new ArrayList<>();
             templates.addAll(UserInfo.getUserInfo().getTemplateDatas());
@@ -293,36 +322,6 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
                 hideSoftKeyboard();
             }
         });
-
-        Intent intent = getIntent();
-        workplaceInspectionId = intent.getStringExtra("workplaceInspectionId");
-        if (workplaceInspectionId == null) {
-            workplaceInspectionId = "";
-        }
-        if (!workplaceInspectionId.equals("")) {
-            nameOld = intent.getStringExtra("name");
-            descriptionOld = intent.getStringExtra("description");
-            dateOld = intent.getLongExtra("date", 0l);
-            dateNew = dateOld;
-            name.setText(nameOld);
-            description.setText(descriptionOld);
-            postedOld = intent.getBooleanExtra("posted", false);
-            posted.setChecked(postedOld);
-
-            if (dateOld != 0l) {
-                try {
-                    Date thisdaten = new Date();
-                    thisdaten.setTime(dateOld);
-                    String datet = format.format(thisdaten);
-                    date.setText(datet);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            template.setVisibility(View.GONE);
-            text_template.setVisibility(View.GONE);
-        }
 
         itemlist = (RecyclerView) findViewById(R.id.itemlist);
         itemlist.setNestedScrollingEnabled(false);

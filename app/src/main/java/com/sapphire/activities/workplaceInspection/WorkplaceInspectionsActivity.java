@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.activities.BaseActivity;
+import com.sapphire.activities.FilesActivity;
 import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.WorkplaceInspectionsAdapter;
@@ -29,6 +30,7 @@ import com.sapphire.api.ItemStatusesAction;
 import com.sapphire.api.TemplatesAction;
 import com.sapphire.api.WorkplaceInspectionDeleteAction;
 import com.sapphire.api.WorkplaceInspectionsAction;
+import com.sapphire.logic.FileData;
 import com.sapphire.logic.ItemPriorityData;
 import com.sapphire.logic.ItemStatusData;
 import com.sapphire.logic.TemplateData;
@@ -39,6 +41,7 @@ import java.util.ArrayList;
 public class WorkplaceInspectionsActivity extends BaseActivity implements WorkplaceInspectionsAdapter.OnRootClickListener,
                                                                           WorkplaceInspectionsAdapter.OnOpenClickListener,
                                                                           WorkplaceInspectionsAdapter.OnDeleteClickListener,
+                                                                          WorkplaceInspectionsAdapter.OnFilesClickListener,
                                                                           TemplatesAction.RequestTemplates,
                                                                           TemplatesAction.RequestTemplatesData,
                                                                           WorkplaceInspectionsAction.RequestWorkplaceInspections,
@@ -166,12 +169,12 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
     @Override
     public void onOpenClick(int position) {
         Intent intent = new Intent(WorkplaceInspectionsActivity.this, WorkplaceInspectionActivity.class);
-        WorkplaceInspectionData templateData = workplaceInspectionDatas.get(position);
-        intent.putExtra("name", templateData.getName());
-        intent.putExtra("description", templateData.getDescription());
-        intent.putExtra("date", templateData.getDate());
-        intent.putExtra("workplaceInspectionId", templateData.getWorkplaceInspectionId());
-        intent.putExtra("posted", templateData.getPosted());
+        WorkplaceInspectionData workplaceInspectionData = workplaceInspectionDatas.get(position);
+        intent.putExtra("name", workplaceInspectionData.getName());
+        intent.putExtra("description", workplaceInspectionData.getDescription());
+        intent.putExtra("date", workplaceInspectionData.getDate());
+        intent.putExtra("workplaceInspectionId", workplaceInspectionData.getWorkplaceInspectionId());
+        intent.putExtra("posted", workplaceInspectionData.getPosted());
         startActivity(intent);
     }
 
@@ -183,6 +186,22 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         button_cancel_save.setText(getResources().getString(R.string.text_cancel));
         button_send_save.setText(getResources().getString(R.string.text_delete));
         dialog_confirm.show();
+    }
+
+    @Override
+    public void onFilesClick(int position) {
+        Intent intent = new Intent(WorkplaceInspectionsActivity.this, FilesActivity.class);
+        WorkplaceInspectionData workplaceInspectionData = workplaceInspectionDatas.get(position);
+        intent.putExtra("name", workplaceInspectionData.getName());
+        intent.putExtra("id", workplaceInspectionData.getWorkplaceInspectionId());
+
+        //TODO временно
+        ArrayList<FileData> fileDatas = new ArrayList<FileData>();
+        fileDatas.add(new FileData("3d5fdd39-9c53-7c30-cddb-d8cbb6a1d14e"));
+        fileDatas.add(new FileData("3d5fdd39-e859-716a-9f6f-52029ada550c"));
+
+        UserInfo.getUserInfo().setFileDatas(fileDatas);
+        startActivity(intent);
     }
 
     @Override

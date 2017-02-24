@@ -27,7 +27,7 @@ public class NetRequests {
         String rez = "";
 
         if (timout == 0) {
-            timout = 60000;
+            timout = 20000;
         }
 
         try {

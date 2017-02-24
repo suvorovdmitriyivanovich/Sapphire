@@ -18,4 +18,5 @@
     <color name="light_grey">#efefef</color>
     <color name="border">#FFE0E0E0</color>
     <color name="black">#000000</color>
+    <color name="dark_grey">#2b2929</color>
 </resources>

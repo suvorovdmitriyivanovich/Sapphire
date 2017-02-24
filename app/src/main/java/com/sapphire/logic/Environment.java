@@ -3,6 +3,7 @@ package com.sapphire.logic;
 public class Environment {
     public static final String ID = "id";
     public static final String EDIT = "edit";
+    public static final String KEY = "passkey";
 
     public static final String SERVER = "http://apiv1.dealerpilothr.com";
     public static final String SERVERFull = "http://portal.dealerpilothr.com";
@@ -17,7 +18,6 @@ public class Environment {
     public static final String QuizzesLogURL = "/v1/Quizzes/Log";
     public static final String WorkplaceInspectionTemplatesURL = "/v1/HealthAndSafety/WorkplaceInspectionTemplates";
     public static final String WorkplaceInspectionTemplateItemsURL = "/v1/HealthAndSafety/WorkplaceInspectionTemplateItems";
-    public static final String KEY = "passkey";
     public static final String PolicyStatusStarted = "1586dc39-979b-3991-c822-a4bcb14d1345";
     public static final String PolicyStatusAcknowledged  = "1586dc39-979b-ab1c-838f-1917fce340de";
     public static final String AccountQuizStatusStarted  = "af29dc39-68b9-d431-2653-724eb8a104e8";
@@ -32,4 +32,6 @@ public class Environment {
     public static final String WorkplaceInspectionsURL = "/v1/HealthAndSafety/WorkplaceInspections";
     public static final String WorkplaceInspectionsItemPrioritiesURL = "/v1/HealthAndSafety/WorkplaceInspections/ItemPriorities";
     public static final String WorkplaceInspectionsItemStatusesURL = "/v1/HealthAndSafety/WorkplaceInspections/ItemStatuses";
+    public static final String InvestigationsURL = "/v1/HealthAndSafety/Investigations";
+    public static final String DocumentManagementFilesURL = "/v1/DocumentManagement/Files";
 }

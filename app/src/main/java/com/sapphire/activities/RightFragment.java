@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.adapters.LanguagesAdapter;
+import com.sapphire.api.AuthenticationsDeleteAction;
+import com.sapphire.api.TemplateDeleteAction;
 import com.sapphire.logic.LanguageData;
 import java.util.ArrayList;
 
@@ -75,6 +77,8 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             @Override
             public void onClick(View v) {
                 drawerLayout.closeDrawers();
+
+                new AuthenticationsDeleteAction(null).execute();
 
                 SharedPreferences sPref = getActivity().getSharedPreferences("GlobalPreferences", getActivity().MODE_PRIVATE);
                 SharedPreferences.Editor ed = sPref.edit();

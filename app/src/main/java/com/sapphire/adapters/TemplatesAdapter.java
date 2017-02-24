@@ -59,7 +59,7 @@ public class TemplatesAdapter extends RecyclerView.Adapter<TemplatesAdapter.View
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view_full, parent, false);
         return new TemplatesAdapter.ViewHolder(view);
     }
 

@@ -11,6 +11,7 @@ public class UserInfo {
     private ArrayList<TemplateData> templateDatas = new ArrayList<TemplateData>();
     private ArrayList<ItemPriorityData> itemPriorityDatas = new ArrayList<ItemPriorityData>();
     private ArrayList<ItemStatusData> itemStatusDatas = new ArrayList<ItemStatusData>();
+    private ArrayList<FileData> fileDatas = new ArrayList<FileData>();
 
     //---------------------Singleton---------------------------
     private static UserInfo userInfo;
@@ -117,5 +118,14 @@ public class UserInfo {
         this.itemStatusDatas.clear();
         this.itemStatusDatas.add(new ItemStatusData());
         this.itemStatusDatas.addAll(itemStatusDatas);
+    }
+
+    public ArrayList<FileData> getFileDatas() {
+        return fileDatas;
+    }
+
+    public void setFileDatas(ArrayList<FileData> fileDatas) {
+        this.fileDatas.clear();
+        this.fileDatas.addAll(fileDatas);
     }
 }

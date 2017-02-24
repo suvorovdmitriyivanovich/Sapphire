@@ -39,7 +39,7 @@ public class GetCourseFileAction extends AsyncTask{
         //String urlstring = Environment.SERVER + "/v1/CoursesFiles" + "?$filter=CourseFileId%20eq%20guid'"+courseId+"'";
         //String urlstring = Environment.SERVER + "/v1/DocumentManagement/Files/DownloadZip" + "?fileId="+courseId;
 
-        String result = NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET",UserInfo.getUserInfo().getAuthToken());
+        String result = NetRequests.getNetRequests().SendRequestCommon(urlstring,"",60000,true,"GET",UserInfo.getUserInfo().getAuthToken());
 
         /*
         String result = "";
