@@ -16,20 +16,24 @@ import java.util.ArrayList;
 
 public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceInspectionsAdapter.ViewHolder> {
 
-    public interface OnRootClickListener{
-        void onRootClick(int position);
+    public interface OnRootWorkplaceInspectionsClickListener{
+        void onRootWorkplaceInspectionsClick(int position);
     }
 
-    public interface OnOpenClickListener{
-        void onOpenClick(int position);
+    public interface OnOpenWorkplaceInspectionsClickListener{
+        void onOpenWorkplaceInspectionsClick(int position);
     }
 
-    public interface OnDeleteClickListener{
-        void onDeleteClick(int position);
+    public interface OnDeleteWorkplaceInspectionsClickListener{
+        void onDeleteWorkplaceInspectionsClick(int position);
     }
 
-    public interface OnFilesClickListener{
-        void onFilesClick(int position);
+    public interface OnFilesWorkplaceInspectionsClickListener{
+        void onFilesWorkplaceInspectionsClick(int position);
+    }
+
+    public interface OnReportWorkplaceInspectionsClickListener{
+        void onReportWorkplaceInspectionsClick(int position);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -38,6 +42,7 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
         Button open;
         Button delete;
         Button files;
+        Button report;
         View border;
         View item;
 
@@ -48,6 +53,7 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
             open = (Button) itemView.findViewById(R.id.open);
             delete = (Button) itemView.findViewById(R.id.delete);
             files = (Button) itemView.findViewById(R.id.files);
+            report = (Button) itemView.findViewById(R.id.report);
             border = itemView.findViewById(R.id.border);
             item = itemView;
         }
@@ -56,11 +62,13 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
     private ArrayList<WorkplaceInspectionData> mData;
     private Context mContext;
     private Typeface typeFace;
+    private boolean isDashboard = false;
 
-    public WorkplaceInspectionsAdapter(Context context) {
+    public WorkplaceInspectionsAdapter(Context context, boolean isDashboard) {
         mContext = context;
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
         mData = new ArrayList<WorkplaceInspectionData>();
+        this.isDashboard = isDashboard;
     }
 
     @Override
@@ -84,8 +92,8 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
         holder.open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mContext instanceof OnOpenClickListener) {
-                    ((OnOpenClickListener) mContext).onOpenClick(holder.getAdapterPosition());
+                if (mContext instanceof OnOpenWorkplaceInspectionsClickListener) {
+                    ((OnOpenWorkplaceInspectionsClickListener) mContext).onOpenWorkplaceInspectionsClick(holder.getAdapterPosition());
                 }
                 else {
                     //TODO generate error dialog
@@ -98,8 +106,8 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mContext instanceof OnDeleteClickListener) {
-                    ((OnDeleteClickListener) mContext).onDeleteClick(holder.getAdapterPosition());
+                if (mContext instanceof OnDeleteWorkplaceInspectionsClickListener) {
+                    ((OnDeleteWorkplaceInspectionsClickListener) mContext).onDeleteWorkplaceInspectionsClick(holder.getAdapterPosition());
                 }
                 else {
                     //TODO generate error dialog
@@ -112,8 +120,22 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
         holder.files.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mContext instanceof OnFilesClickListener) {
-                    ((OnFilesClickListener) mContext).onFilesClick(holder.getAdapterPosition());
+                if (mContext instanceof OnFilesWorkplaceInspectionsClickListener) {
+                    ((OnFilesWorkplaceInspectionsClickListener) mContext).onFilesWorkplaceInspectionsClick(holder.getAdapterPosition());
+                }
+                else {
+                    //TODO generate error dialog
+                }
+            }
+        });
+
+        holder.report.setTypeface(typeFace);
+        holder.report.setText(Html.fromHtml("&#61889;"));
+        holder.report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mContext instanceof OnReportWorkplaceInspectionsClickListener) {
+                    ((OnReportWorkplaceInspectionsClickListener) mContext).onReportWorkplaceInspectionsClick(holder.getAdapterPosition());
                 }
                 else {
                     //TODO generate error dialog
@@ -124,14 +146,26 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mContext instanceof OnRootClickListener) {
-                    ((OnRootClickListener) mContext).onRootClick(holder.getAdapterPosition());
+                if (mContext instanceof OnRootWorkplaceInspectionsClickListener) {
+                    ((OnRootWorkplaceInspectionsClickListener) mContext).onRootWorkplaceInspectionsClick(holder.getAdapterPosition());
                 }
                 else {
                     //TODO generate error dialog
                 }
             }
         });
+
+        if (isDashboard) {
+            holder.open.setVisibility(View.GONE);
+            holder.delete.setVisibility(View.GONE);
+            holder.files.setVisibility(View.GONE);
+            holder.report.setVisibility(View.VISIBLE);
+        } else {
+            holder.open.setVisibility(View.VISIBLE);
+            holder.delete.setVisibility(View.VISIBLE);
+            holder.files.setVisibility(View.VISIBLE);
+            holder.report.setVisibility(View.GONE);
+        }
     }
 
     @Override

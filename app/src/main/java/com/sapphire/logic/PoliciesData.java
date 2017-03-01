@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class PoliciesData {
+    private String policyId = "";
     private String name = "";
     private boolean isAcknowledged = false;
     private String description = "";
@@ -18,8 +19,8 @@ public class PoliciesData {
     private Long dateModified = 0l;
     private DurationData duration = new DurationData();
     private Long dateCreated = 0l;
-    private String id = "";
     private String fileId = "";
+    private Long acknowledgedOn = 0l;
     private ArrayList<PoliciesData> subPolicies = new ArrayList<PoliciesData>();
 
     public PoliciesData() {
@@ -28,11 +29,17 @@ public class PoliciesData {
 
     public PoliciesData(JSONObject data) {
         try {
+            if (!data.isNull("PolicyId")) {
+                setPolicyId(data.getString("PolicyId"));
+            }
             if (!data.isNull("Name")) {
                 setName(data.getString("Name"));
             }
             if (!data.isNull("IsAcknowledged")) {
                 setIsAcknowledged(data.getBoolean("IsAcknowledged"));
+            }
+            if (!data.isNull("AcknowledgedOn")) {
+                setAcknowledgedOn(data.getString("IsAcknowledged"));
             }
             if (!data.isNull("Description")) {
                 setDescription(data.getString("Description"));
@@ -57,9 +64,6 @@ public class PoliciesData {
             }
             if (!data.isNull("DateCreated")) {
                 setDateCreated(data.getString("DateCreated"));
-            }
-            if (!data.isNull("Id")) {
-                setId(data.getString("Id"));
             }
             if (!data.isNull("FileId")) {
                 setFileId(data.getString("FileId"));
@@ -184,12 +188,12 @@ public class PoliciesData {
         this.dateCreated = dateCreatedLong;
     }
 
-    public String getId() {
-        return id;
+    public String getPolicyId() {
+        return policyId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setPolicyId(String policyId) {
+        this.policyId = policyId;
     }
 
     public String getFileId() {
@@ -198,5 +202,21 @@ public class PoliciesData {
 
     public void setFileId(String fileId) {
         this.fileId = fileId;
+    }
+
+    public Long getAcknowledgedOn() {
+        return acknowledgedOn;
+    }
+
+    public void setAcknowledgedOn(String acknowledgedOn) {
+        Long dateLong = 0l;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        try {
+            Date newdate = format.parse(acknowledgedOn);
+            dateLong = newdate.getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.acknowledgedOn = dateLong;
     }
 }

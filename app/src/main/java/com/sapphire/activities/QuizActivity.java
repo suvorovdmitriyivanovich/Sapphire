@@ -3,6 +3,7 @@ package com.sapphire.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -203,6 +204,11 @@ public class QuizActivity extends BaseActivity implements AnswersAdapter.OnRootC
         }
 
         button_next.setEnabled(isChecked);
+        if (isChecked) {
+            button_next.setTextColor(ContextCompat.getColor(this, R.color.white));
+        } else {
+            button_next.setTextColor(ContextCompat.getColor(this, R.color.grey));
+        }
     }
 
     @Override

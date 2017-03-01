@@ -39,7 +39,7 @@ public class GetProfilesAction extends AsyncTask{
 
         UserInfo userInfo = UserInfo.getUserInfo();
 
-        String urlstring = Environment.SERVER + Environment.ProfilesURL + "?$filter=ProfileId%20eq%20guid'"+userInfo.getProfileId()+"'";
+        String urlstring = Environment.SERVER + Environment.ProfilesURL + "?$filter=ProfileId%20eq%20guid'"+userInfo.getProfile().getProfileId()+"'";
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", userInfo.getAuthToken()));
 

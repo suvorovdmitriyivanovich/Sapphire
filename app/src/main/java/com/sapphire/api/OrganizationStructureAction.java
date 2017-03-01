@@ -49,7 +49,7 @@ public class OrganizationStructureAction extends AsyncTask{
             filter = filter + "OrganizationId%20eq%20guid'"+item.getOrganizationId()+"'";
         }
 
-        String urlstring = Environment.SERVER + Environment.OrganizationStructureURL + filter;
+        String urlstring = Environment.SERVER + Environment.OrganizationsOrganizationStructureURL + filter;
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthToken()));
 

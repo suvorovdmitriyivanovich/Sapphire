@@ -30,6 +30,8 @@ public class ProfileData {
     private String firstName = "";
     private String lastName = "";
     private String avatarId = "";
+    private String fullName = "";
+    private String status = "";
 
     public ProfileData() {
 
@@ -39,6 +41,12 @@ public class ProfileData {
         try {
             if (!data.isNull("ProfileId")) {
                 setProfileId(data.getString("ProfileId"));
+            }
+            if (!data.isNull("FullName")) {
+                setFullName(data.getString("FullName"));
+            }
+            if (!data.isNull("Status")) {
+                setStatus(data.getString("Status"));
             }
             if (!data.isNull("Birthday")) {
                 setBirthday(data.getString("Birthday"));
@@ -117,6 +125,18 @@ public class ProfileData {
 
     public String getProfileId() {
         return profileId;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public void setBirthday(String birthday) {
@@ -426,5 +446,26 @@ public class ProfileData {
 
     public String getAvatarId() {
         return avatarId;
+    }
+
+    public String getFullName() {
+        String fullNameReturn = "";
+        if (!fullName.equals("")) {
+            fullNameReturn = fullName;
+        } else {
+            if (!firstName.equals("")) {
+                if (!fullNameReturn.equals("")) {
+                    fullNameReturn = fullNameReturn + " ";
+                }
+                fullNameReturn = fullNameReturn + firstName;
+            }
+            if (!lastName.equals("")) {
+                if (!fullNameReturn.equals("")) {
+                    fullNameReturn = fullNameReturn + " ";
+                }
+                fullNameReturn = fullNameReturn + lastName;
+            }
+        }
+        return fullNameReturn;
     }
 }

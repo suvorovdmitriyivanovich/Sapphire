@@ -8,8 +8,8 @@
     <string name="text_timeaut">Timeout when request at runtime</string>
     <string name="text_enter_your_email">Enter your email address and password.</string>
     <string name="text_email_label">Phone/E-mail</string>
-    <string name="text_main">Main</string>
-    <string name="text_exit">Sing out</string>
+    <string name="text_dashboard">Dashboard</string>
+    <string name="text_exit">Sign Out</string>
     <string name="text_messages">Notification</string>
     <string name="text_need_internet">No internet connection</string>
     <string name="text_not_user">The user is not found</string>
@@ -23,7 +23,7 @@
     <string name="text_signin">SIGN IN</string>
     <string name="text_problems_signin">PROBLEMS WITH SIGN IN?</string>
     <string name="text_policies">My Policies &#38; Handbooks</string>
-    <string name="text_acknowledge">ACKNOWLEDGE</string>
+    <string name="text_acknowledge">Acknowledge</string>
     <string name="unknown_error">Unknown error</string>
     <string name="text_courses">My Training Courses</string>
     <string name="text_duration">Duration</string>
@@ -85,7 +85,11 @@
     <string name="text_secondary_residence">Secondary Residence</string>
     <string name="text_adress">Adress</string>
     <string name="text_phone">Phone</string>
+    <string name="text_home_phone">Home Phone Number</string>
+    <string name="text_cell_phone">Cell Phone Number</string>
     <string name="text_email">Email</string>
+    <string name="text_business_email">Business Email</string>
+    <string name="text_personal_email">Personal Email</string>
     <string name="text_confirm_delete">Are you sure you want to delete?</string>
     <string name="text_delete">Delete</string>
     <string name="text_workplace_inspections">Workplace Inspections</string>
@@ -109,4 +113,23 @@
     <string name="text_error_open">You have no apps to open this file</string>
     <string name="text_file">Select file from storage</string>
     <string name="text_no_file">File is not exist</string>
+    <string name="text_outstanding_courses">Outstanding Training Courses</string>
+    <string name="text_outstanding_policies">Outstanding Policies</string>
+    <string name="text_courses_no">No pending courses to display</string>
+    <string name="text_policies_no">No pending policies</string>
+    <string name="text_workplace_no">No uncompleted inspections posted on board</string>
+    <string name="text_manager">Manager</string>
+    <string name="text_secondary_manager">Secondary Manager</string>
+    <string name="text_number">Number</string>
+    <string name="text_punch_number">Punch Number</string>
+    <string name="text_pay_frequency">Pay Frequency</string>
+    <string name="text_hours_per_day">Hours Per Day</string>
+    <string name="text_salary">Salary</string>
+    <string name="text_hourly_rate">Hourly Rate</string>
+    <string name="text_custom">Custom Fields</string>
+    <string name="text_custom1">Custom Field 1</string>
+    <string name="text_custom2">Custom Field 2</string>
+    <string name="text_member">Health And Safety Member</string>
+    <string name="text_certified">CPR Certified</string>
+    <string name="text_aidcertified">First Aid Certified</string>
 </resources>

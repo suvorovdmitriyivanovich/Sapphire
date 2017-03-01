@@ -30,7 +30,7 @@ import java.util.ArrayList;
 public class WorkplaceInspectionItemActivity extends BaseActivity implements WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
     private String workplaceInspectionItemId = "";
     private String workplaceInspectionId = "";
-    ProgressDialog pd;
+    private ProgressDialog pd;
     private EditText name;
     private EditText description;
     private View text_name_error;

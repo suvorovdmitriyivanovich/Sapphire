@@ -13,24 +13,27 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
+
 import com.sapphire.R;
 import com.sapphire.adapters.CoursesAdapter;
 import com.sapphire.api.CoursesAction;
 import com.sapphire.logic.CoursesData;
 import java.util.ArrayList;
 
-public class CoursesActivity extends BaseActivity implements CoursesAdapter.OnRootClickListener,
-                                                                  CoursesAdapter.OnOpenClickListener,
-                                                                  CoursesAdapter.OnListClickListener,
+public class CoursesActivity extends BaseActivity implements CoursesAdapter.OnRootCoursesClickListener,
+                                                                  CoursesAdapter.OnOpenCoursesClickListener,
+                                                                  CoursesAdapter.OnListCoursesClickListener,
                                                                   CoursesAction.RequestCourses,
                                                                   CoursesAction.RequestCoursesData {
     public final static String PARAM_TASK = "task";
     public final static String BROADCAST_ACTION = "com.sapphire.activities.CoursesActivity";
-    BroadcastReceiver br;
+    private BroadcastReceiver br;
     private ArrayList<CoursesData> coursesDatas;
     private CoursesAdapter adapter;
-    ProgressDialog pd;
+    private ProgressDialog pd;
     private ExpandableListView courseslist;
+    private View text_courses_no;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,16 +95,28 @@ public class CoursesActivity extends BaseActivity implements CoursesAdapter.OnRo
 
         adapter = new CoursesAdapter(this);
         courseslist.setAdapter(adapter);
+
+        text_courses_no = findViewById(R.id.text_courses_no);
+    }
+
+    public void updateVisibility() {
+        if (coursesDatas.size() == 0) {
+            text_courses_no.setVisibility(View.VISIBLE);
+            courseslist.setVisibility(View.GONE);
+        } else {
+            courseslist.setVisibility(View.VISIBLE);
+            text_courses_no.setVisibility(View.GONE);
+        }
     }
 
     @Override
-    public void onRootClick(int groupPosition, int childPosition) {
+    public void onRootCoursesClick(int groupPosition, int childPosition) {
         //Intent intent = new Intent(PoliciesActivity.this, PdfActivity.class);
         //startActivity(intent);
     }
 
     @Override
-    public void onOpenClick(int groupPosition, int childPosition) {
+    public void onOpenCoursesClick(int groupPosition, int childPosition) {
         Intent intent = new Intent(CoursesActivity.this, CourseActivity.class);
         CoursesData coursesData = coursesDatas.get(groupPosition).getSubCourses().get(childPosition);
         intent.putExtra("name", coursesData.getName());
@@ -115,7 +130,7 @@ public class CoursesActivity extends BaseActivity implements CoursesAdapter.OnRo
     }
 
     @Override
-    public void onListClick(int groupPosition, int childPosition) {
+    public void onListCoursesClick(int groupPosition, int childPosition) {
         Intent intent = new Intent(CoursesActivity.this, QuizActivity.class);
         CoursesData coursesData = coursesDatas.get(groupPosition).getSubCourses().get(childPosition);
         intent.putExtra("name", coursesData.getName());
@@ -126,7 +141,12 @@ public class CoursesActivity extends BaseActivity implements CoursesAdapter.OnRo
 
     @Override
     public void onRequestCourses(String result) {
+        updateVisibility();
         pd.hide();
+        if (!result.equals("OK")) {
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -143,6 +163,8 @@ public class CoursesActivity extends BaseActivity implements CoursesAdapter.OnRo
         //        courseslist.collapseGroup(i);
         //    }
         //}
+
+        updateVisibility();
 
         pd.hide();
     }
@@ -168,7 +190,7 @@ public class CoursesActivity extends BaseActivity implements CoursesAdapter.OnRo
         } catch (Exception e) {}
 
         pd.show();
-        new CoursesAction(CoursesActivity.this).execute();
+        new CoursesAction(CoursesActivity.this, false).execute();
     }
 
     @Override

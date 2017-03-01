@@ -4,31 +4,25 @@ import android.content.Context;
 import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.ContactData;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
 import com.sapphire.logic.UserInfo;
-import org.json.JSONArray;
-import org.json.JSONException;
 import java.util.ArrayList;
 
-public class GetContactsAction extends AsyncTask{
+public class OrganizationStructureDeleteAction extends AsyncTask{
 
-    public interface RequestContacts {
-        public void onRequestContacts(String result);
-    }
-
-    public interface RequestContactsData {
-        public void onRequestContactsData(ArrayList<ContactData> adressDatas);
+    public interface RequestOrganizationStructureDelete {
+        public void onRequestOrganizationStructureDelete(String result);
     }
 
     private Context mContext;
-    private ArrayList<ContactData> adressDatas = new ArrayList<ContactData>();
+    private String id;
 
-    public GetContactsAction(Context context) {
+    public OrganizationStructureDeleteAction(Context context, String id) {
         this.mContext = context;
+        this.id = id;
     }
 
     @Override
@@ -36,27 +30,43 @@ public class GetContactsAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
+        String urlstring = Environment.SERVER + Environment.OrganizationStructureURL + "?model%5B%5D="+id;
 
-        UserInfo userInfo = UserInfo.getUserInfo();
-
-        String urlstring = Environment.SERVER + Environment.ContactsURL + "?$filter=Profiles/any(profile:%20profile/ProfileId%20eq%20guid'"+userInfo.getProfile().getProfileId()+"')";
-
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", userInfo.getAuthToken()));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"DELETE", UserInfo.getUserInfo().getAuthToken()));
 
         String result = "";
 
         if (responseData.getSuccess()) {
+            /*
             JSONArray data = responseData.getData();
+            policiesDatas = new ArrayList<PoliciesData>();
             for (int y=0; y < data.length(); y++) {
                 try {
-                    ContactData contactData = new ContactData(data.getJSONObject(y));
-                    if (!contactData.getAddress().getAddress().equals("")) {
-                        adressDatas.add(contactData);
+                    if (!data.getJSONObject(y).isNull("ParentId")) {
+                        continue;
+                    }
+                    policiesDatas.add(new PoliciesData(data.getJSONObject(y)));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            for (int y=0; y < data.length(); y++) {
+                try {
+                    if (data.getJSONObject(y).isNull("ParentId")) {
+                        continue;
+                    }
+                    PoliciesData policiesData = new PoliciesData(data.getJSONObject(y));
+                    for (int z=0; z < policiesDatas.size(); z++) {
+                        if (policiesDatas.get(z).getId().equals(policiesData.getParentId())) {
+                            policiesDatas.get(z).getSubPolicies().add(policiesData);
+                            break;
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
+            */
 
             result = "OK";
         } else {
@@ -80,11 +90,7 @@ public class GetContactsAction extends AsyncTask{
     protected void onPostExecute(Object o) {
         String resultData = (String) o;
         if(mContext!=null) {
-            if (resultData.equals("OK")) {
-                ((RequestContactsData) mContext).onRequestContactsData(adressDatas);
-            } else {
-                ((RequestContacts) mContext).onRequestContacts(resultData);
-            }
+            ((RequestOrganizationStructureDelete) mContext).onRequestOrganizationStructureDelete(resultData);
         }
     }
 }

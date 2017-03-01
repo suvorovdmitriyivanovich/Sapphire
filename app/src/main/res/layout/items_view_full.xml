@@ -46,7 +46,8 @@
             android:layout_toStartOf="@+id/delete"
             android:layout_marginRight="10dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:background="@drawable/button_selector" />
+            android:background="@drawable/button_selector_dark"
+            android:textColor="@color/white" />
 
         <Button
             android:layout_width="45dp"

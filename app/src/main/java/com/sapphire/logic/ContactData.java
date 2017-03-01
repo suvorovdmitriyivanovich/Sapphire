@@ -12,7 +12,7 @@ public class ContactData {
     private String email1 = "";
     private String email2 = "";
     private boolean isPrimary = false;
-    private String address = "";
+    private AdressData address = new AdressData();
     private ContactTypeData contactType = new ContactTypeData();
     private String note = "";
 
@@ -47,7 +47,7 @@ public class ContactData {
                 setIsPrimary(data.getBoolean("IsPrimary"));
             }
             if (!data.isNull("Address")) {
-                setAddress(data.getString("Address"));
+                setAddress(data.getJSONObject("Address"));
             }
             if (!data.isNull("ContactType")) {
                 setContactType(data.getJSONObject("ContactType"));
@@ -124,11 +124,11 @@ public class ContactData {
         this.isPrimary = isPrimary;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setAddress(JSONObject address) {
+        this.address = new AdressData(address);
     }
 
-    public String getAddress() {
+    public AdressData getAddress() {
         return address;
     }
 

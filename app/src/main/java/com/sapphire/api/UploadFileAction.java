@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.webkit.MimeTypeMap;
-
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
@@ -13,18 +12,12 @@ import com.sapphire.logic.FileData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
 import com.sapphire.logic.UserInfo;
-
 import org.json.JSONArray;
 import org.json.JSONException;
-
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -107,7 +100,6 @@ public class UploadFileAction extends AsyncTask{
 
         String extension = MimeTypeMap.getFileExtensionFromUrl(String.valueOf(Uri.fromFile(new File(photo.getAbsolutePath().toLowerCase()))));
         String fileMimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-        fileMimeType = "image/png";
 
         try{
             FileInputStream fileInputStream = new FileInputStream(photo);

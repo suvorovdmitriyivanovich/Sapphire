@@ -3,7 +3,6 @@ package com.sapphire.logic;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,7 +13,8 @@ public class WorkplaceInspectionData {
     private String description = "";
     private Long date = 0l;
     private boolean completed = false;
-    private boolean posted = false;
+    private boolean postedOnBoard = false;
+    private ArrayList<FileData> files = new ArrayList<FileData>();
 
     public WorkplaceInspectionData() {
 
@@ -41,8 +41,11 @@ public class WorkplaceInspectionData {
             if (!data.isNull("Completed")) {
                 setCompleted(data.getBoolean("Completed"));
             }
-            if (!data.isNull("Posted")) {
-                setPosted(data.getBoolean("Posted"));
+            if (!data.isNull("PostedOnBoard")) {
+                setPostedOnBoard(data.getBoolean("PostedOnBoard"));
+            }
+            if (!data.isNull("Files")) {
+                setFiles(data.getJSONArray("Files"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -114,11 +117,27 @@ public class WorkplaceInspectionData {
         this.completed = completed;
     }
 
-    public boolean getPosted() {
-        return posted;
+    public boolean getPostedOnBoard() {
+        return postedOnBoard;
     }
 
-    public void setPosted(boolean posted) {
-        this.posted = posted;
+    public void setPostedOnBoard(boolean postedOnBoard) {
+        this.postedOnBoard = postedOnBoard;
+    }
+
+    public ArrayList<FileData> getFiles() {
+        return files;
+    }
+
+    public void setFiles(JSONArray files) {
+        ArrayList<FileData> fileDatas = new ArrayList<FileData>();
+        for (int y=0; y < files.length(); y++) {
+            try {
+                fileDatas.add(new FileData(files.getJSONObject(y)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        this.files = fileDatas;
     }
 }

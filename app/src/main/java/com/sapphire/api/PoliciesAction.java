@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
+import com.sapphire.logic.CoursesData;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
@@ -28,9 +29,11 @@ public class PoliciesAction extends AsyncTask{
 
     private Context mContext;
     private ArrayList<PoliciesData> policiesDatas;
+    private boolean onlyOutstanding;
 
-    public PoliciesAction(Context context) {
+    public PoliciesAction(Context context, boolean onlyOutstanding) {
         this.mContext = context;
+        this.onlyOutstanding = onlyOutstanding;
     }
 
     @Override
@@ -63,14 +66,28 @@ public class PoliciesAction extends AsyncTask{
                         continue;
                     }
                     PoliciesData policiesData = new PoliciesData(data.getJSONObject(y));
+                    if (onlyOutstanding && policiesData.getIsAcknowledged()) {
+                        continue;
+                    }
                     for (int z=0; z < policiesDatas.size(); z++) {
-                        if (policiesDatas.get(z).getId().equals(policiesData.getParentId())) {
+                        if (policiesDatas.get(z).getPolicyId().equals(policiesData.getParentId())) {
                             policiesDatas.get(z).getSubPolicies().add(policiesData);
                             break;
                         }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+            }
+            if (onlyOutstanding) {
+                ArrayList<PoliciesData> policiesDatasRemove = new ArrayList<PoliciesData>();
+                for (PoliciesData item: policiesDatas) {
+                    if (item.getSubPolicies().size() == 0) {
+                        policiesDatasRemove.add(item);
+                    }
+                }
+                for (PoliciesData item: policiesDatasRemove) {
+                    policiesDatas.remove(item);
                 }
             }
 

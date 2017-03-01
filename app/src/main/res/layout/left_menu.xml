@@ -35,6 +35,7 @@
         android:divider="@null"
         android:dividerHeight="0dp"
         android:childDivider="@null"
-        android:layout_below="@+id/header_root" />
+        android:layout_below="@+id/header_root"
+        android:layout_marginTop="20dp" />
 
 </RelativeLayout>

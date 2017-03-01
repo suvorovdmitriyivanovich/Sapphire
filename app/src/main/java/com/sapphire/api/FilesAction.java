@@ -41,7 +41,13 @@ public class FilesAction extends AsyncTask{
             } else {
                 filter = filter + "%20or%20";
             }
-            filter = filter + "FileId%20eq%20guid'"+item.getId()+"'";
+            filter = filter + "FileId%20eq%20guid'"+item.getFileId()+"'";
+        }
+
+        fileDatas = new ArrayList<FileData>();
+
+        if (filter.equals("")) {
+            return "OK";
         }
 
         String urlstring = Environment.SERVER + Environment.DocumentManagementFilesURL + filter;
@@ -52,7 +58,6 @@ public class FilesAction extends AsyncTask{
 
         if (responseData.getSuccess()) {
             JSONArray data = responseData.getData();
-            fileDatas = new ArrayList<FileData>();
             for (int y=0; y < data.length(); y++) {
                 try {
                     fileDatas.add(new FileData(data.getJSONObject(y)));

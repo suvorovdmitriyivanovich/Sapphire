@@ -1,7 +1,9 @@
 package com.sapphire.logic;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.util.ArrayList;
 
 public class WorkplaceInspectionItemData {
     private String workplaceInspectionItemId = "";
@@ -11,6 +13,7 @@ public class WorkplaceInspectionItemData {
     private ItemStatusData status = new ItemStatusData();
     private ItemPriorityData priority = new ItemPriorityData();
     private int severity = 0;
+    private ArrayList<FileData> files = new ArrayList<FileData>();
 
     public WorkplaceInspectionItemData() {
 
@@ -42,6 +45,9 @@ public class WorkplaceInspectionItemData {
             }
             if (!data.isNull("Priority")) {
                 setPriority(data.getJSONObject("Priority"));
+            }
+            if (!data.isNull("Files")) {
+                setFiles(data.getJSONArray("Files"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -117,5 +123,21 @@ public class WorkplaceInspectionItemData {
         if (severity != null && !severity.equals("")) {
             this.severity = Integer.parseInt(severity);
         }
+    }
+
+    public ArrayList<FileData> getFiles() {
+        return files;
+    }
+
+    public void setFiles(JSONArray files) {
+        ArrayList<FileData> fileDatas = new ArrayList<FileData>();
+        for (int y=0; y < files.length(); y++) {
+            try {
+                fileDatas.add(new FileData(files.getJSONObject(y)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        this.files = fileDatas;
     }
 }

@@ -17,6 +17,10 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.api.PolicyLogAction;
 import com.sapphire.logic.Environment;
+import com.sapphire.logic.UserInfo;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class PdfActivity extends BaseActivity implements PolicyLogAction.RequestPolicyLog {
@@ -72,7 +76,10 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
         id = intent.getStringExtra("id");
 
         String urlstring = Environment.SERVER + Environment.DocumentManagementFilesDownloadURL + fileId;
-        webView.loadUrl(Environment.GoogleURLReadPDF+urlstring);
+        Map<String, String> extraHeaders = new HashMap<String, String>();
+        //extraHeaders.put("x-yauth", UserInfo.getUserInfo().getAuthToken());
+        extraHeaders.put("X-YAUTH", UserInfo.getUserInfo().getAuthToken());
+        webView.loadUrl(Environment.GoogleURLReadPDF+urlstring,extraHeaders);
         //webView.setWebViewClient(new HelloWebViewClient());
 
         if (intent.getBooleanExtra("acknowledged", false)) {
@@ -103,12 +110,14 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
 
         //int i = Integer.parseInt(hex,16);
 
+        /*
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 pd.hide();
             }
         }, 10000);
+        */
     }
 
     private class MyWebViewClient extends WebViewClient {

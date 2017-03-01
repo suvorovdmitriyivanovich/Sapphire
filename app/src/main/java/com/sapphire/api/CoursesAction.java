@@ -1,7 +1,6 @@
 package com.sapphire.api;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
@@ -11,7 +10,6 @@ import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.CoursesData;
 import com.sapphire.logic.ResponseData;
 import com.sapphire.logic.UserInfo;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import java.util.ArrayList;
@@ -28,9 +26,11 @@ public class CoursesAction extends AsyncTask{
 
     private Context mContext;
     private ArrayList<CoursesData> coursesDatas;
+    private boolean onlyOutstanding;
 
-    public CoursesAction(Context context) {
+    public CoursesAction(Context context, boolean onlyOutstanding) {
         this.mContext = context;
+        this.onlyOutstanding = onlyOutstanding;
     }
 
     @Override
@@ -63,6 +63,9 @@ public class CoursesAction extends AsyncTask{
                         continue;
                     }
                     CoursesData coursesData = new CoursesData(data.getJSONObject(y));
+                    if (onlyOutstanding && coursesData.getQuizPassed()) {
+                        continue;
+                    }
                     for (int z=0; z < coursesDatas.size(); z++) {
                         if (coursesDatas.get(z).getCourseFileId().equals(coursesData.getParentId())) {
                             coursesDatas.get(z).getSubCourses().add(coursesData);
@@ -71,6 +74,17 @@ public class CoursesAction extends AsyncTask{
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+            }
+            if (onlyOutstanding) {
+                ArrayList<CoursesData> coursesDatasRemove = new ArrayList<CoursesData>();
+                for (CoursesData item: coursesDatas) {
+                    if (item.getSubCourses().size() == 0) {
+                        coursesDatasRemove.add(item);
+                    }
+                }
+                for (CoursesData item: coursesDatasRemove) {
+                    coursesDatas.remove(item);
                 }
             }
 

@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/rootLayout">
+    android:id="@+id/rootLayout"
+    android:background="@color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -36,9 +37,10 @@
             android:textColor="#ffffff"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="56dp"
-            android:layout_marginRight="56dp"
-            android:text="@string/text_my_hr_details" />
+            android:layout_marginLeft="61dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/text_my_hr_details"
+            android:singleLine="true" />
 
     </RelativeLayout>
 
@@ -68,21 +70,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:id="@+id/border"
-                android:background="@color/light_light_green"
+                android:background="@color/dark_light_green"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="10dp" />
 
-            <android.support.v7.widget.RecyclerView
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/adresslist"
-                android:divider="@null"
-                android:dividerHeight="0dp"
-                android:layout_marginLeft="20dp"
+                android:id="@+id/personal_group"
                 android:layout_marginRight="20dp"
+                android:background="@drawable/login_input"
+                android:padding="10dp"
                 android:layout_marginBottom="10dp"
-                android:nestedScrollingEnabled="false" />
+                android:layout_marginLeft="20dp"
+                android:visibility="gone">
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/adresslist"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:nestedScrollingEnabled="false" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -160,7 +171,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:id="@+id/border2"
-                android:background="@color/light_light_green"
+                android:background="@color/dark_light_green"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="10dp" />
@@ -256,6 +267,95 @@
                     android:layout_alignLeft="@+id/text_work_additional"
                     android:layout_alignStart="@+id/text_work_additional"
                     android:layout_marginTop="10dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/custom_group"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/login_input"
+                android:padding="10dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/text_custom"
+                    android:id="@+id/text_custom"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/custom"
+                    android:layout_below="@+id/text_custom"
+                    android:layout_alignLeft="@+id/text_custom"
+                    android:layout_alignStart="@+id/text_custom"
+                    android:layout_marginTop="10dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/member_group"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/login_input"
+                android:padding="10dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/text_member"
+                    android:id="@+id/text_member"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/text_member"
+                    android:id="@+id/member"
+                    android:layout_below="@+id/text_member"
+                    android:layout_alignLeft="@+id/text_member"
+                    android:layout_alignStart="@+id/text_member"
+                    android:layout_marginTop="10dp"
+                    android:clickable="false" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/text_certified"
+                    android:id="@+id/certified"
+                    android:layout_below="@+id/member"
+                    android:layout_alignLeft="@+id/member"
+                    android:layout_alignStart="@+id/member"
+                    android:layout_marginTop="10dp"
+                    android:clickable="false" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/text_aidcertified"
+                    android:id="@+id/aidcertified"
+                    android:layout_below="@+id/certified"
+                    android:layout_alignLeft="@+id/certified"
+                    android:layout_alignStart="@+id/certified"
+                    android:layout_marginTop="10dp"
+                    android:clickable="false" />
+
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

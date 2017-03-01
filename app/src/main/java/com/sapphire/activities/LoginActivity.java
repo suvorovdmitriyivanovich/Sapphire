@@ -78,6 +78,7 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
         button_signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard();
                 boolean allOk = true;
 
                 //userInfo.setLogin(name.getText().toString());

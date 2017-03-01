@@ -39,7 +39,9 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/back"
             android:layout_toEndOf="@+id/back"
-            android:layout_marginRight="104dp" />
+            android:layout_marginRight="109dp"
+            android:singleLine="true"
+            android:layout_marginLeft="5dp" />
 
         <RelativeLayout
             android:layout_width="56dp"

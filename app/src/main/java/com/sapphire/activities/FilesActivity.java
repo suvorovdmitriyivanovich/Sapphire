@@ -18,6 +18,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,8 +30,8 @@ import com.sapphire.api.FileDeleteAction;
 import com.sapphire.api.FilesAction;
 import com.sapphire.api.GetFileAction;
 import com.sapphire.api.UploadFileAction;
-import com.sapphire.logic.Environment;
 import com.sapphire.logic.FileData;
+import com.sapphire.logic.UserInfo;
 import com.sapphire.ui.OpenFileDialog;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -71,6 +72,8 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
     static final int GALLERY_REQUEST = 3;
     private Uri picUri;
     private boolean isOpenGalery = false;
+    private String url = "";
+    private String nameField = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +89,9 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
         if (!id.equals("")) {
             TextView text_header = (TextView) findViewById(R.id.text_header);
             text_header.setText(intent.getStringExtra("name") + " " + getResources().getString(R.string.text_files));
+
+            url = intent.getStringExtra("url");
+            nameField = intent.getStringExtra("nameField");
         }
 
         AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
@@ -113,13 +119,14 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
                 if (typeDialog == 1) {
                     pd.show();
 
-                    new FileDeleteAction(FilesActivity.this, fileDatas.get(currentPosition).getId()).execute();
+                    new FileDeleteAction(FilesActivity.this, fileDatas.get(currentPosition).getFileId()).execute();
                 } else if (typeDialog == 2) {
                     Uri uri = Uri.fromFile(new File(file.toLowerCase()));
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    //String extension = MimeTypeMap.getFileExtensionFromUrl(String.valueOf(uri));
-                    //String mType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-                    //intent.setDataAndType(uri, mType);
+                    //Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    String extension = MimeTypeMap.getFileExtensionFromUrl(String.valueOf(uri));
+                    String mType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+                    intent.setDataAndType(uri, mType);
                     try {
                         startActivity(intent);
                     } catch (Exception e) {
@@ -303,7 +310,7 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
         }
         // Continue only if the File was successfully created
         if (photoFile != null) {
-            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+            SimpleDateFormat format = new SimpleDateFormat("ddMMyyyy HHmmss");
             Date thisDate = new Date();
             String date = format.format(thisDate);
 
@@ -404,7 +411,7 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
     }
 
     @Override
-    public void onDownloadClick(int position) {
+    public void onDownloadClick(final int position) {
         fileDialogBuilder = new OpenFileDialog(this, 2, ".qqq\\.qqq")
                 //.setFilter(".qqq\\.qqq")
                 .setAccessDeniedMessage(getResources().getString(R.string.text_access_denied))
@@ -414,7 +421,7 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
                     @Override
                     public void OnSelectedFile(String folder) {
                         pd.show();
-                        new GetFileAction(FilesActivity.this, fileDatas.get(currentPosition).getId(), fileDatas.get(currentPosition).getName(), folder).execute();
+                        new GetFileAction(FilesActivity.this, fileDatas.get(position).getFileId(), fileDatas.get(position).getName(), folder).execute();
                     }
                 });
         fileDialogBuilder.setOnKeyListener(new DialogInterface.OnKeyListener() {
@@ -491,8 +498,9 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
         } else {
+            UserInfo.getUserInfo().getFileDatas().add(fileData);
             //new FilesAction(FilesActivity.this).execute();
-            new FileAddAction(FilesActivity.this, fileData.getId(), id, Environment.WorkplaceInspectionsFilesURL, "WorkplaceInspectionId").execute();
+            new FileAddAction(FilesActivity.this, fileData.getFileId(), id, url, nameField).execute();
         }
     }
 

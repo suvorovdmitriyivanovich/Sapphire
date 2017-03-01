@@ -27,7 +27,8 @@ public class Environment {
     public static final String CourseLogURL = "/v1/Courses/Files/Logs";
     public static final String ContactsURL = "/v1/Contacts";
     public static final String WorkplaceInspectionsCurrentURL = "/v1/HealthAndSafety/WorkplaceInspections/Current";
-    public static final String OrganizationStructureURL = "/v1/Security/Organizations/OrganizationStructures";
+    public static final String OrganizationStructureURL = "/v1/Security/OrganizationStructures";
+    public static final String OrganizationsOrganizationStructureURL = "/v1/Security/Organizations/OrganizationStructures";
     public static final String WorkplaceInspectionItemsURL = "/v1/HealthAndSafety/WorkplaceInspections/Items";
     public static final String WorkplaceInspectionsURL = "/v1/HealthAndSafety/WorkplaceInspections";
     public static final String WorkplaceInspectionsItemPrioritiesURL = "/v1/HealthAndSafety/WorkplaceInspections/ItemPriorities";
@@ -36,4 +37,5 @@ public class Environment {
     public static final String DocumentManagementFilesURL = "/v1/DocumentManagement/Files";
     public static final String DocumentManagementFilesUploadURL = "/v1/DocumentManagement/Files/OrganizationSystemFolder";
     public static final String WorkplaceInspectionsFilesURL = "/v1/HealthAndSafety/WorkplaceInspections/Files";
+    public static final String WorkplaceInspectionsItemsFilesURL = "/v1/HealthAndSafety/WorkplaceInspections/Items/Files";
 }

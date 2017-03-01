@@ -1,35 +1,27 @@
 package com.sapphire.activities;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.api.GetCourseFileAction;
 import com.sapphire.logic.CoursesData;
 import com.sapphire.logic.UserInfo;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class EventCalendarActivity extends BaseActivity implements GetCourseFileAction.RequestCourses,
-                                                                 GetCourseFileAction.RequestCoursesData{
-    WebView webView;
-    ProgressDialog pd;
+                                                                   GetCourseFileAction.RequestCoursesData{
+    private WebView webView;
+    private ProgressDialog pd;
     private boolean needClose = false;
 
     @Override
@@ -68,14 +60,16 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
         //SharedPreferences sPref = getSharedPreferences("GlobalPreferences", MODE_PRIVATE);
         //extraHeaders.put("x-yauth", sPref.getString("AUTHTOKEN",""));
         extraHeaders.put("x-yauth", UserInfo.getUserInfo().getAuthToken());
-        webView.loadUrl("http://portal.dealerpilothr.com/health-and-safety/event-calendar",extraHeaders);
+        webView.loadUrl("http://portal.dealerpilothr.com/me/my-calendar",extraHeaders);
 
+        /*
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 pd.hide();
             }
         }, 15000);
+        */
     }
 
     private class MyWebViewClient extends WebViewClient {

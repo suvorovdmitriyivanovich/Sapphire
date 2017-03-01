@@ -1,4 +1,4 @@
-package com.sapphire.activities.workplaceInspection;
+package com.sapphire.activities.organizationStructure;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -10,6 +10,8 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,37 +19,41 @@ import android.widget.Toast;
 
 import com.sapphire.R;
 import com.sapphire.activities.BaseActivity;
-import com.sapphire.api.TemplateItemAddAction;
+import com.sapphire.api.OrganizationStructureItemAddAction;
+import com.sapphire.logic.Environment;
+import com.sapphire.logic.OrganizationStructureData;
+import com.sapphire.logic.UserInfo;
 
-public class WorkplaceInpsectionItemActivity extends BaseActivity implements TemplateItemAddAction.RequestTemplateItemAdd{
-    private String workplaceInspectionTemplateItemId = "";
-    private String workplaceInspectionTemplateId = "";
-    ProgressDialog pd;
+public class OrganizationStructureItemActivity extends BaseActivity implements OrganizationStructureItemAddAction.RequestOrganizationStructureItemAdd {
+
+    private OrganizationStructureData organizationStructureData;
+    private String parrentId = "";
     private EditText name;
     private EditText description;
-    private View text_name_error;
-    private View text_name;
-    private String nameOld = "";
-    private String descriptionOld = "";
+    private CheckBox isCurrent;
+    private CheckBox isPosition;
+    private ProgressDialog pd;
     private Dialog dialog_confirm;
     private TextView tittle_message;
     private Button button_cancel_save;
     private Button button_send_save;
+    private View text_name_error;
+    private View text_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_template_item);
+        setContentView(R.layout.activity_add_organization_structure);
 
-        View back = findViewById(R.id.back);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideSoftKeyboard();
-                exit();
-            }
-        });
+        Intent intent = getIntent();
+        String id = intent.getStringExtra(Environment.ID);
+        if(id != null && !id.isEmpty()) {
+            organizationStructureData = UserInfo.getUserInfo().getOrganizationStructureDataById(id);
+        } else {
+            organizationStructureData = new OrganizationStructureData();
+        }
+        parrentId = intent.getStringExtra("parrentId");
 
         pd = new ProgressDialog(this);
         pd.setTitle(getResources().getString(R.string.text_loading));
@@ -82,20 +88,55 @@ public class WorkplaceInpsectionItemActivity extends BaseActivity implements Tem
             }
         });
 
+        TextView text_header = (TextView) findViewById(R.id.text_header);
+        text_header.setText(organizationStructureData.getName());
+
         name = (EditText) findViewById(R.id.name);
-        description = (EditText) findViewById(R.id.description);
         text_name_error = findViewById(R.id.text_name_error);
         text_name = findViewById(R.id.text_name);
+        description = (EditText) findViewById(R.id.description);
+        isCurrent = (CheckBox) findViewById(R.id.current);
+        isPosition = (CheckBox) findViewById(R.id.position);
+        isPosition.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    isCurrent.setVisibility(View.GONE);
+                } else {
+                    isCurrent.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        name.setText(organizationStructureData.getName());
+        description.setText(organizationStructureData.getDescription());
+        isPosition.setChecked(organizationStructureData.getIsPosition());
+        isCurrent.setChecked(organizationStructureData.getIsCurrent());
+
+        if (organizationStructureData.getIsPosition()) {
+            isCurrent.setVisibility(View.GONE);
+        }
 
         TextWatcher inputTextWatcher = new TextWatch();
         name.addTextChangedListener(inputTextWatcher);
 
-        View button_ok = findViewById(R.id.ok);
-        button_ok.setOnClickListener(new View.OnClickListener() {
+        View back = findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if (workplaceInspectionTemplateItemId.equals("") || !nameOld.equals(name.getText().toString())
-                        || !descriptionOld.equals(description.getText().toString())) {
+            public void onClick(View view) {
+                hideSoftKeyboard();
+                exit();
+            }
+        });
+
+        View ok = findViewById(R.id.ok);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (organizationStructureData.getId().equals("") || !organizationStructureData.getName().equals(name.getText().toString())
+                        || !organizationStructureData.getDescription().equals(description.getText().toString())
+                        || organizationStructureData.getIsPosition() != isPosition.isChecked()
+                        || organizationStructureData.getIsCurrent() != isCurrent.isChecked()) {
                     saveChanged();
                 } else {
                     finish();
@@ -111,22 +152,6 @@ public class WorkplaceInpsectionItemActivity extends BaseActivity implements Tem
             }
         });
 
-        Intent intent = getIntent();
-        workplaceInspectionTemplateItemId = intent.getStringExtra("workplaceInspectionTemplateItemId");
-        if (workplaceInspectionTemplateItemId == null) {
-            workplaceInspectionTemplateItemId = "";
-        }
-        workplaceInspectionTemplateId = intent.getStringExtra("workplaceInspectionTemplateId");
-        if (workplaceInspectionTemplateId == null) {
-            workplaceInspectionTemplateId = "";
-        }
-        if (!workplaceInspectionTemplateItemId.equals("")) {
-            nameOld = intent.getStringExtra("name");
-            descriptionOld = intent.getStringExtra("description");
-            name.setText(nameOld);
-            description.setText(descriptionOld);
-        }
-
         updateViews();
     }
 
@@ -141,7 +166,14 @@ public class WorkplaceInpsectionItemActivity extends BaseActivity implements Tem
         if (allOk) {
             pd.show();
 
-            new TemplateItemAddAction(WorkplaceInpsectionItemActivity.this, workplaceInspectionTemplateItemId, workplaceInspectionTemplateId, name.getText().toString(), description.getText().toString()).execute();
+            OrganizationStructureData organizationStructureData = new OrganizationStructureData();
+            organizationStructureData.setName(name.getText().toString());
+            organizationStructureData.setDescription(description.getText().toString());
+            organizationStructureData.setId(organizationStructureData.getId());
+            organizationStructureData.setIsPosition(isPosition.isChecked());
+            organizationStructureData.setIsCurrent(isCurrent.isChecked());
+
+            new OrganizationStructureItemAddAction(OrganizationStructureItemActivity.this, organizationStructureData, parrentId).execute();
         }
     }
 
@@ -177,8 +209,10 @@ public class WorkplaceInpsectionItemActivity extends BaseActivity implements Tem
     }
 
     private void exit() {
-        if (!nameOld.equals(name.getText().toString())
-            || !descriptionOld.equals(description.getText().toString())) {
+        if (!organizationStructureData.getName().equals(name.getText().toString())
+                || !organizationStructureData.getDescription().equals(description.getText().toString())
+                || organizationStructureData.getIsPosition() != isPosition.isChecked()
+                || organizationStructureData.getIsCurrent() != isCurrent.isChecked()) {
             tittle_message.setText(getResources().getString(R.string.text_save_change));
             dialog_confirm.show();
         } else {
@@ -187,7 +221,7 @@ public class WorkplaceInpsectionItemActivity extends BaseActivity implements Tem
     }
 
     @Override
-    public void onRequestTemplateItemAdd(String result) {
+    public void onRequestOrganizationStructureItemAdd(String result) {
         pd.hide();
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,

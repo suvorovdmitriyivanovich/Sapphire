@@ -17,12 +17,12 @@ import java.util.ArrayList;
 
 public class PoliciesAdapter extends BaseExpandableListAdapter {
 
-    public interface OnRootClickListener{
-        void onRootClick(int groupPosition, int childPosition);
+    public interface OnRootPoliciesClickListener{
+        void onRootPoliciesClick(int groupPosition, int childPosition);
     }
 
-    public interface OnOpenClickListener{
-        void onOpenClick(int groupPosition, int childPosition);
+    public interface OnOpenPoliciesClickListener{
+        void onOpenPoliciesClick(int groupPosition, int childPosition);
     }
 
     private ArrayList<PoliciesData> mGroups;
@@ -101,17 +101,36 @@ public class PoliciesAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.child_policies_view, null);
         }
 
-        TextView name = (TextView) convertView.findViewById(R.id.text_name);
-        name.setText(mGroups.get(groupPosition).getSubPolicies().get(childPosition).getName());
+        PoliciesData data = mGroups.get(groupPosition).getSubPolicies().get(childPosition);
 
-        CheckBox acknowledged = (CheckBox) convertView.findViewById(R.id.acknowledged);
-        acknowledged.setChecked(mGroups.get(groupPosition).getSubPolicies().get(childPosition).getIsAcknowledged());
+        TextView name = (TextView) convertView.findViewById(R.id.text_name);
+        name.setText(data.getName());
+
+        String textAcknowledged = "";
+        textAcknowledged = textAcknowledged + Sapphire.getInstance().getResources().getString(R.string.text_acknowledge);
+        textAcknowledged = textAcknowledged + ": ";
+        if (data.getIsAcknowledged()) {
+            textAcknowledged = textAcknowledged + "<big><font color=#16a085>&#61452;</font></big> ";
+        } else {
+            textAcknowledged = textAcknowledged + "<big><font color=#cc3300>&#61453;</font></big>";
+        }
+
+        TextView description = (TextView) convertView.findViewById(R.id.text_description);
+        description.setTypeface(typeFace);
+        description.setText(Html.fromHtml(textAcknowledged));
+
+        View border = convertView.findViewById(R.id.border);
+        if (childPosition < mGroups.get(groupPosition).getSubPolicies().size()-1) {
+            border.setVisibility(View.VISIBLE);
+        } else {
+            border.setVisibility(View.GONE);
+        }
 
         View root = convertView.findViewById(R.id.root);
         root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((OnRootClickListener)mContext).onRootClick(groupPosition, childPosition);
+                ((OnRootPoliciesClickListener)mContext).onRootPoliciesClick(groupPosition, childPosition);
             }
         });
 
@@ -119,7 +138,7 @@ public class PoliciesAdapter extends BaseExpandableListAdapter {
         open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((OnOpenClickListener)mContext).onOpenClick(groupPosition, childPosition);
+                ((OnOpenPoliciesClickListener)mContext).onOpenPoliciesClick(groupPosition, childPosition);
             }
         });
 

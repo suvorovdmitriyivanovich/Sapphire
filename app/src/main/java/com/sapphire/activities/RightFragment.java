@@ -2,20 +2,26 @@ package com.sapphire.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.adapters.LanguagesAdapter;
 import com.sapphire.api.AuthenticationsDeleteAction;
-import com.sapphire.api.TemplateDeleteAction;
 import com.sapphire.logic.LanguageData;
+import com.sapphire.logic.UserInfo;
+import java.io.File;
 import java.util.ArrayList;
 
 public class RightFragment extends Fragment implements LanguagesAdapter.OnRootClickListener {
@@ -56,23 +62,31 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
         adapter = new LanguagesAdapter(this, languageDatas);
         languagelist.setAdapter(adapter);
 
+        ImageView ico = (ImageView) rootView.findViewById(R.id.ico);
+        File f = new File(Sapphire.getInstance().getFilesDir().getAbsolutePath() + "/user.png");
+        if (f.exists()) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), options);
+            ico.setImageBitmap(bitmap);
+        } else {
+            ico.setImageResource(R.drawable.user);
+        }
+
         TextView name = (TextView) rootView.findViewById(R.id.name);
-        name.setText(sPref.getString("USER",""));
+        String userName = UserInfo.getUserInfo().getProfile().getFullName();
+        if (userName.equals("")) {
+            userName = sPref.getString("USER","");
+        }
+        name.setText(userName);
 
-        View settings = rootView.findViewById(R.id.settings);
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.closeDrawers();
-                //if (getActivity().getClass() != MainActivity.class) {
-                //    getActivity().finish();
-                //}
-                //Intent intent = new Intent(getActivity(), PdfActivity.class);
-                //startActivity(intent);
-            }
-        });
+        Typeface typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
 
-        View log_out = rootView.findViewById(R.id.log_out);
+        TextView logoutIco = (TextView) rootView.findViewById(R.id.logoutIco);
+        logoutIco.setTypeface(typeFace);
+        logoutIco.setText(Html.fromHtml("&#61579;"));
+
+        View log_out = rootView.findViewById(R.id.logout_group);
         log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

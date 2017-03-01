@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class UserInfo {
     private String authToken = "";
     private String accountId = "";
-    private String profileId = "";
+    private ProfileData profile = new ProfileData();
     private ArrayList<OrganizationData> organizations = new ArrayList<OrganizationData>();
     private ArrayList<OrganizationStructureData> organizationStructureDatas = new ArrayList<OrganizationStructureData>();
     private ArrayList<TemplateData> templateDatas = new ArrayList<TemplateData>();
@@ -39,12 +39,12 @@ public class UserInfo {
         return accountId;
     }
 
-    public void setProfileId(String profileId) {
-        this.profileId = profileId;
+    public void setProfile(ProfileData profile) {
+        this.profile = profile;
     }
 
-    public String getProfileId() {
-        return profileId;
+    public ProfileData getProfile() {
+        return profile;
     }
 
     public void setOrganizations(ArrayList<OrganizationData> organizations) {

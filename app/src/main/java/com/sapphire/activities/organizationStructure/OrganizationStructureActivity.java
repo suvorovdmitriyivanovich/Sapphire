@@ -118,7 +118,7 @@ public class OrganizationStructureActivity extends BaseActivity implements Organ
 
     @Override
     public void onAddClick(int position) {
-        Intent intent = new Intent(OrganizationStructureActivity.this, AddOrganizationStructureActivity.class);
+        Intent intent = new Intent(OrganizationStructureActivity.this, OrganizationStructureItemActivity.class);
         intent.putExtra(Environment.ID, adapter.getDataItem(position).getId());
         startActivity(intent);
     }

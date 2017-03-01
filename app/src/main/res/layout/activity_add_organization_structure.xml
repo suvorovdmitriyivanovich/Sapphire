@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/rootLayout">
+    android:id="@+id/rootLayout"
+    android:background="@color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -36,8 +37,9 @@
             android:textColor="#ffffff"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="56dp"
-            android:layout_marginRight="56dp" />
+            android:layout_marginLeft="61dp"
+            android:layout_marginRight="61dp"
+            android:singleLine="true" />
 
         <RelativeLayout
             android:layout_width="56dp"

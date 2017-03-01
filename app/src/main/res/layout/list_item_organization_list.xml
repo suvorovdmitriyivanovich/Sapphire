@@ -35,7 +35,8 @@
         android:layout_toStartOf="@+id/edit"
         android:layout_marginRight="10dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:background="@drawable/button_selector" />
+        android:background="@drawable/button_selector"
+        android:textColor="@color/white" />
 
     <Button
         android:layout_width="45dp"

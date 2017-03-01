@@ -96,7 +96,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
 
-        <activity android:name=".activities.organizationStructure.AddOrganizationStructureActivity"
+        <activity android:name=".activities.organizationStructure.OrganizationStructureItemActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
 

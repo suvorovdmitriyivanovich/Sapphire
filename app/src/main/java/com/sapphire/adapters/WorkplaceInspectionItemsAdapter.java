@@ -28,11 +28,16 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
         void onDeleteClick(int position);
     }
 
+    public interface OnFilesClickListener{
+        void onFilesClick(int position);
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView text_name;
         TextView text_description;
         Button open;
         Button delete;
+        Button files;
         View border;
         View item;
 
@@ -42,6 +47,7 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
             text_description = (TextView) itemView.findViewById(R.id.text_description);
             open = (Button) itemView.findViewById(R.id.open);
             delete = (Button) itemView.findViewById(R.id.delete);
+            files = (Button) itemView.findViewById(R.id.files);
             border = itemView.findViewById(R.id.border);
             item = itemView;
         }
@@ -59,7 +65,7 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view_files, parent, false);
         return new WorkplaceInspectionItemsAdapter.ViewHolder(view);
     }
 
@@ -94,6 +100,20 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
             public void onClick(View v) {
                 if (context instanceof OnDeleteClickListener) {
                     ((OnDeleteClickListener) context).onDeleteClick(holder.getAdapterPosition());
+                }
+                else {
+                    //TODO generate error dialog
+                }
+            }
+        });
+
+        holder.files.setTypeface(typeFace);
+        holder.files.setText(Html.fromHtml("&#61787;"));
+        holder.files.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (context instanceof OnFilesClickListener) {
+                    ((OnFilesClickListener) context).onFilesClick(holder.getAdapterPosition());
                 }
                 else {
                     //TODO generate error dialog

@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.activities.BaseActivity;
+import com.sapphire.activities.FilesActivity;
 import com.sapphire.adapters.SpinTemplatesAdapter;
 import com.sapphire.adapters.WorkplaceInspectionItemsAdapter;
 import com.sapphire.api.GetTemplateAction;
@@ -32,6 +33,7 @@ import com.sapphire.api.GetWorkplaceInspectionAction;
 import com.sapphire.api.WorkplaceInspectionItemAddAction;
 import com.sapphire.api.WorkplaceInspectionItemDeleteAction;
 import com.sapphire.api.WorkplaceInspectionAddAction;
+import com.sapphire.logic.Environment;
 import com.sapphire.logic.TemplateData;
 import com.sapphire.logic.TemplateItemData;
 import com.sapphire.logic.UserInfo;
@@ -50,6 +52,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
                                                               WorkplaceInspectionItemsAdapter.OnRootClickListener,
                                                               WorkplaceInspectionItemsAdapter.OnOpenClickListener,
                                                               WorkplaceInspectionItemsAdapter.OnDeleteClickListener,
+                                                              WorkplaceInspectionItemsAdapter.OnFilesClickListener,
                                                               WorkplaceInspectionItemDeleteAction.RequestWorkplaceInspectionItemDelete,
                                                               WorkplaceInspectionAddAction.RequestWorkplaceInspectionAdd,
                                                               WorkplaceInspectionAddAction.RequestWorkplaceInspectionAddData,
@@ -656,6 +659,18 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         pressType = 0;
         Toast.makeText(getBaseContext(), result,
                 Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onFilesClick(int position) {
+        Intent intent = new Intent(WorkplaceInspectionActivity.this, FilesActivity.class);
+        WorkplaceInspectionItemData workplaceInspectionItemData = workplaceInspectionItemDatas.get(position);
+        intent.putExtra("name", workplaceInspectionItemData.getName());
+        intent.putExtra("id", workplaceInspectionItemData.getWorkplaceInspectionItemId());
+        intent.putExtra("url", Environment.WorkplaceInspectionsItemsFilesURL);
+        intent.putExtra("nameField", "WorkplaceInspectionItemId");
+        UserInfo.getUserInfo().setFileDatas(workplaceInspectionItemData.getFiles());
+        startActivity(intent);
     }
 
     @Override

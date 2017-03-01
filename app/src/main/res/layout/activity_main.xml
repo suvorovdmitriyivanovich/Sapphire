@@ -2,7 +2,8 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/drawerLayout">
+    android:id="@+id/drawerLayout"
+    android:background="@color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -37,13 +38,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/text_main"
+                android:text="@string/text_dashboard"
                 android:id="@+id/text_header"
                 android:textColor="#ffffff"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginLeft="56dp"
-                android:layout_marginRight="56dp" />
+                android:layout_marginLeft="61dp"
+                android:layout_marginRight="61dp"
+                android:singleLine="true" />
 
             <RelativeLayout
                 android:layout_width="56dp"
@@ -63,6 +65,170 @@
             </RelativeLayout>
 
         </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/scrollView"
+            android:layout_below="@+id/top_group"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/scroll_group">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/courses_group"
+                    android:background="@drawable/login_input"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/text_outstanding_courses"
+                        android:id="@+id/text_courses"
+                        android:singleLine="true" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:id="@+id/border_courses"
+                        android:background="@color/dark_light_green"
+                        android:layout_below="@+id/text_courses"
+                        android:layout_alignLeft="@+id/text_courses"
+                        android:layout_alignStart="@+id/text_courses"
+                        android:layout_marginTop="5dp" />
+
+                    <ExpandableListView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/courseslist"
+                        android:headerDividersEnabled="true"
+                        android:drawSelectorOnTop="true"
+                        android:choiceMode="multipleChoice"
+                        android:footerDividersEnabled="true"
+                        android:divider="@null"
+                        android:dividerHeight="0dp"
+                        android:childDivider="@null"
+                        android:layout_marginTop="10dp"
+                        android:layout_below="@+id/border_courses"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="@string/text_courses_no"
+                        android:id="@+id/text_courses_no"
+                        android:layout_below="@+id/border_courses"
+                        android:layout_marginTop="10dp"
+                        android:minHeight="60dp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/policies_group"
+                    android:background="@drawable/login_input"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/text_outstanding_policies"
+                        android:id="@+id/text_policies"
+                        android:singleLine="true" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:id="@+id/border_policies"
+                        android:background="@color/dark_light_green"
+                        android:layout_below="@+id/text_policies"
+                        android:layout_alignLeft="@+id/text_policies"
+                        android:layout_alignStart="@+id/text_policies"
+                        android:layout_marginTop="5dp" />
+
+                    <ExpandableListView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/policieslist"
+                        android:headerDividersEnabled="true"
+                        android:drawSelectorOnTop="true"
+                        android:choiceMode="multipleChoice"
+                        android:footerDividersEnabled="true"
+                        android:divider="@null"
+                        android:dividerHeight="0dp"
+                        android:childDivider="@null"
+                        android:layout_below="@+id/border_policies"
+                        android:layout_marginTop="10dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="@string/text_policies_no"
+                        android:id="@+id/text_policies_no"
+                        android:layout_below="@+id/border_policies"
+                        android:layout_marginTop="10dp"
+                        android:minHeight="60dp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/workplace_group"
+                    android:background="@drawable/login_input"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/text_workplace_inspections"
+                        android:id="@+id/text_workplace"
+                        android:singleLine="true" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:id="@+id/border_workplace"
+                        android:background="@color/dark_light_green"
+                        android:layout_below="@+id/text_workplace"
+                        android:layout_alignLeft="@+id/text_workplace"
+                        android:layout_alignStart="@+id/text_workplace"
+                        android:layout_marginTop="5dp" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/workplaceinspectionslist"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="vertical"
+                        android:layout_below="@+id/border_workplace" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="@string/text_workplace_no"
+                        android:id="@+id/text_workplace_no"
+                        android:layout_below="@+id/border_workplace"
+                        android:layout_marginTop="10dp"
+                        android:minHeight="60dp" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+        </ScrollView>
 
     </RelativeLayout>
 

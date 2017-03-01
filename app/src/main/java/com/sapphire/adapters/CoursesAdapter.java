@@ -18,16 +18,16 @@ import java.util.ArrayList;
 
 public class CoursesAdapter extends BaseExpandableListAdapter {
 
-    public interface OnRootClickListener{
-        void onRootClick(int groupPosition, int childPosition);
+    public interface OnRootCoursesClickListener{
+        void onRootCoursesClick(int groupPosition, int childPosition);
     }
 
-    public interface OnOpenClickListener{
-        void onOpenClick(int groupPosition, int childPosition);
+    public interface OnOpenCoursesClickListener{
+        void onOpenCoursesClick(int groupPosition, int childPosition);
     }
 
-    public interface OnListClickListener{
-        void onListClick(int groupPosition, int childPosition);
+    public interface OnListCoursesClickListener{
+        void onListCoursesClick(int groupPosition, int childPosition);
     }
 
     private ArrayList<CoursesData> mGroups;
@@ -108,6 +108,13 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
 
         CoursesData coursesData = mGroups.get(groupPosition).getSubCourses().get(childPosition);
 
+        View border = convertView.findViewById(R.id.border);
+        if (childPosition < mGroups.get(groupPosition).getSubCourses().size()-1) {
+            border.setVisibility(View.VISIBLE);
+        } else {
+            border.setVisibility(View.GONE);
+        }
+
         TextView name = (TextView) convertView.findViewById(R.id.text_name);
         name.setText(coursesData.getName());
 
@@ -122,27 +129,27 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
         textCourse = textCourse + Sapphire.getInstance().getResources().getString(R.string.text_course);
         textCourse = textCourse + ": ";
         if (coursesData.getCoursePassed()) {
-            textCourse = textCourse + "<big><font color=#009900>&#61452;</font></big> ";
+            textCourse = textCourse + "<big><font color=#16a085>&#61452;</font></big> ";
         } else {
             textCourse = textCourse + "<big><font color=#cc3300>&#61453;</font></big>";
         }
         textCourse = textCourse + "<br>" + Sapphire.getInstance().getResources().getString(R.string.text_quiz);
         textCourse = textCourse + ": ";
         if (coursesData.getQuizPassed()) {
-            textCourse = textCourse + "<big><font color=#009900>&#61452;</font></big> ";
+            textCourse = textCourse + "<big><font color=#16a085>&#61452;</font></big> ";
         } else {
             textCourse = textCourse + "<big><font color=#cc3300>&#61453;</font></big>";
         }
 
-        TextView course = (TextView) convertView.findViewById(R.id.text_course);
-        course.setTypeface(typeFace);
-        course.setText(Html.fromHtml(textCourse));
+        TextView description = (TextView) convertView.findViewById(R.id.text_description);
+        description.setTypeface(typeFace);
+        description.setText(Html.fromHtml(textCourse));
 
         View root = convertView.findViewById(R.id.root);
         root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((OnRootClickListener)mContext).onRootClick(groupPosition, childPosition);
+                ((OnRootCoursesClickListener)mContext).onRootCoursesClick(groupPosition, childPosition);
             }
         });
 
@@ -150,7 +157,7 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
         open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((OnOpenClickListener)mContext).onOpenClick(groupPosition, childPosition);
+                ((OnOpenCoursesClickListener)mContext).onOpenCoursesClick(groupPosition, childPosition);
             }
         });
 
@@ -158,7 +165,7 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
         list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((OnListClickListener)mContext).onListClick(groupPosition, childPosition);
+                ((OnListCoursesClickListener)mContext).onListCoursesClick(groupPosition, childPosition);
             }
         });
 

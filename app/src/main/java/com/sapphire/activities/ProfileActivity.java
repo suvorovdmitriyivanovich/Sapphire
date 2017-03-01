@@ -22,14 +22,16 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
                                                              GetProfilesAction.RequestProfilesData,
                                                              GetContactsAction.RequestContacts,
                                                              GetContactsAction.RequestContactsData{
-    ProgressDialog pd;
+    private ProgressDialog pd;
     private TextView contact;
     private TextView additional;
     private TextView employee;
     private TextView payroll;
     private TextView work_additional;
+    private TextView custom;
     private RecyclerView adresslist;
     private AdressAdapter adapter;
+    private View personal_group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,8 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         employee = (TextView) findViewById(R.id.employee);
         payroll = (TextView) findViewById(R.id.payroll);
         work_additional = (TextView) findViewById(R.id.work_additional);
+        custom = (TextView) findViewById(R.id.custom);
+        personal_group = findViewById(R.id.personal_group);
 
         adresslist = (RecyclerView) findViewById(R.id.adresslist);
         adapter = new AdressAdapter(this);
@@ -81,32 +85,71 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
 
     @Override
     public void onRequestProfilesData(ProfileData profileData) {
-        contact.setText(profileData.getContact().getAddress());
+        String detail = "";
+        //if (!profileData.getContact().getPhone1().equals("")) {
+            if (!detail.equals("")) {
+                detail = detail + "<br>";
+            }
+            detail = detail + "<b>" + getResources().getString(R.string.text_home_phone) + "</b>: " + profileData.getContact().getPhone1();
+        //}
+        //if (!profileData.getContact().getPhone2().equals("")) {
+            if (!detail.equals("")) {
+                detail = detail + "<br>";
+            }
+            detail = detail + "<b>" + getResources().getString(R.string.text_cell_phone) + "</b>: " + profileData.getContact().getPhone2();
+        //}
+        //if (!profileData.getContact().getEmail1().equals("")) {
+            if (!detail.equals("")) {
+                detail = detail + "<br>";
+            }
+            detail = detail + "<b>" + getResources().getString(R.string.text_business_email) + "</b>: " + profileData.getContact().getEmail1();
+        //}
+        //if (!profileData.getContact().getEmail2().equals("")) {
+            if (!detail.equals("")) {
+                detail = detail + "<br>";
+            }
+            detail = detail + "<b>" + getResources().getString(R.string.text_personal_email) + "</b>: " + profileData.getContact().getEmail2();
+        //}
+        contact.setText(Html.fromHtml(detail));
 
         String additionalStr = "";
-        additionalStr = additionalStr + getResources().getString(R.string.text_birthday) + ": " + profileData.getBirthdayString();
-        additionalStr = additionalStr + "<br>" + getResources().getString(R.string.text_sinnumber) + ": " + profileData.getSINNumber();
-        additionalStr = additionalStr + "<br>" + getResources().getString(R.string.text_driver_license) + ": " + profileData.getDriverLicenseNumber();
-        additionalStr = additionalStr + "<br>" + getResources().getString(R.string.text_expire_date) + ": " + profileData.getDriverLicenseNumberExpireString();
+        additionalStr = additionalStr + "<b>" + getResources().getString(R.string.text_birthday) + "</b>: " + profileData.getBirthdayString();
+        additionalStr = additionalStr + "<br><b>" + getResources().getString(R.string.text_sinnumber) + "</b>: " + profileData.getSINNumber();
+        additionalStr = additionalStr + "<br><b>" + getResources().getString(R.string.text_driver_license) + "</b>: " + profileData.getDriverLicenseNumber();
+        additionalStr = additionalStr + "<br><b>" + getResources().getString(R.string.text_expire_date) + "</b>: " + profileData.getDriverLicenseNumberExpireString();
         additional.setText(Html.fromHtml(additionalStr));
 
         String employeeStr = "";
-        employeeStr = employeeStr + getResources().getString(R.string.text_hire_date) + ": " + profileData.getHireDateString();
-        employeeStr = employeeStr + "<br>" + getResources().getString(R.string.text_probation) + ": " + profileData.getProbationEndDateString();
-        employeeStr = employeeStr + "<br>" + getResources().getString(R.string.text_termination) + ": " + profileData.getTerminationDateString();
-        employeeStr = employeeStr + "<br>" + getResources().getString(R.string.text_hire_type) + ": " + profileData.getHireType();
+        employeeStr = employeeStr + "<b>" + getResources().getString(R.string.text_hire_date) + "</b>: " + profileData.getHireDateString();
+        employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_probation) + "</b>: " + profileData.getProbationEndDateString();
+        employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_hire_type) + "</b>: " + profileData.getHireType();
+        employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_manager) + "</b>: " + "";
+        employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_secondary_manager) + "</b>: " + "";
+        employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_termination) + "</b>: " + profileData.getTerminationDateString();
         employee.setText(Html.fromHtml(employeeStr));
 
-        payroll.setText(profileData.getPayrollInformation());
+        String payrollStr = "";
+        payrollStr = payrollStr + "<b>" + getResources().getString(R.string.text_number) + "</b>: " + profileData.getPayrollInformation();
+        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_punch_number) + "</b>: " + "";
+        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_pay_frequency) + "</b>: " + "";
+        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_hours_per_day) + "</b>: " + "";
+        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_salary) + "</b>: " + "";
+        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_hourly_rate) + "</b>: " + "";
+        payroll.setText(Html.fromHtml(payrollStr));
 
         String additionalworkStr = "";
-        additionalworkStr = additionalworkStr + getResources().getString(R.string.text_work_permit) + ": " + profileData.getWorkPermitNumber();
-        additionalworkStr = additionalworkStr + "<br>" + getResources().getString(R.string.text_tech_license) + ": " + profileData.getTechLicenseNumber();
-        additionalworkStr = additionalworkStr + "<br>" + getResources().getString(R.string.text_vsr_number) + ": " + profileData.getVSRNumber();
-        additionalworkStr = additionalworkStr + "<br>" + getResources().getString(R.string.text_driver_license_expire) + ": " + profileData.getDriverLicenseNumberExpireString();
-        additionalworkStr = additionalworkStr + "<br>" + getResources().getString(R.string.text_tech_license_expire) + ": " + profileData.getTechLicenseNumberExpireString();
-        additionalworkStr = additionalworkStr + "<br>" + getResources().getString(R.string.text_vsr_expire) + ": " + profileData.getVSRNumberExpireString();
+        additionalworkStr = additionalworkStr + "<b>" + getResources().getString(R.string.text_work_permit) + "</b>: " + profileData.getWorkPermitNumber();
+        additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_driver_license_expire) + "</b>: " + profileData.getDriverLicenseNumberExpireString();
+        additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_tech_license) + "</b>: " + profileData.getTechLicenseNumber();
+        additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_tech_license_expire) + "</b>: " + profileData.getTechLicenseNumberExpireString();
+        additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_vsr_number) + "</b>: " + profileData.getVSRNumber();
+        additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_vsr_expire) + "</b>: " + profileData.getVSRNumberExpireString();
         work_additional.setText(Html.fromHtml(additionalworkStr));
+
+        String customStr = "";
+        customStr = customStr + "<b>" + getResources().getString(R.string.text_custom1) + "</b>: " + profileData.getCustomField1();
+        customStr = customStr + "<br><b>" + getResources().getString(R.string.text_custom2) + "</b>: " + profileData.getCustomField1();
+        custom.setText(Html.fromHtml(customStr));
 
         new GetContactsAction(ProfileActivity.this).execute();
         //pd.hide();
@@ -115,6 +158,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     @Override
     public void onRequestContacts(String result) {
         pd.hide();
+        personal_group.setVisibility(View.GONE);
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
@@ -124,6 +168,11 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     @Override
     public void onRequestContactsData(ArrayList<ContactData> adressDatas) {
         adapter.setData(adressDatas);
+        if (adressDatas.size() == 0) {
+            personal_group.setVisibility(View.GONE);
+        } else {
+            personal_group.setVisibility(View.VISIBLE);
+        }
 
         pd.hide();
     }

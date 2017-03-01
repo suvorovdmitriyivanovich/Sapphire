@@ -28,6 +28,7 @@ public class AdressAdapter extends RecyclerView.Adapter<AdressAdapter.ViewHolder
         TextView text_detail;
         Button open;
         View root;
+        View border;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -35,6 +36,7 @@ public class AdressAdapter extends RecyclerView.Adapter<AdressAdapter.ViewHolder
             text_detail = (TextView) itemView.findViewById(R.id.text_detail);
             open = (Button) itemView.findViewById(R.id.open);
             root = itemView.findViewById(R.id.root);
+            border = itemView.findViewById(R.id.border);
         }
     }
 
@@ -70,6 +72,12 @@ public class AdressAdapter extends RecyclerView.Adapter<AdressAdapter.ViewHolder
 
         ContactData data = (ContactData) listData.get(position);
 
+        if (position < listData.size()-1) {
+            viewHolder.border.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.border.setVisibility(View.GONE);
+        }
+
         String name = "";
         if (data.getIsPrimary()) {
             name = Sapphire.getInstance().getResources().getString(R.string.text_primary_residence);
@@ -82,37 +90,13 @@ public class AdressAdapter extends RecyclerView.Adapter<AdressAdapter.ViewHolder
             if (!detail.equals("")) {
                 detail = detail + "<br>";
             }
-            detail = detail + Sapphire.getInstance().getResources().getString(R.string.name) + ": " + data.getName();
+            detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.name) + "</b>: " + data.getName();
         }
-        if (!data.getAddress().equals("")) {
+        if (!data.getAddress().getAddress().equals("")) {
             if (!detail.equals("")) {
                 detail = detail + "<br>";
             }
-            detail = detail + Sapphire.getInstance().getResources().getString(R.string.text_adress) + ": " + data.getAddress();
-        }
-        if (!data.getPhone1().equals("")) {
-            if (!detail.equals("")) {
-                detail = detail + "<br>";
-            }
-            detail = detail + Sapphire.getInstance().getResources().getString(R.string.text_phone) + " 1: " + data.getPhone1();
-        }
-        if (!data.getPhone2().equals("")) {
-            if (!detail.equals("")) {
-                detail = detail + "<br>";
-            }
-            detail = detail + Sapphire.getInstance().getResources().getString(R.string.text_phone) + " 2: " + data.getPhone2();
-        }
-        if (!data.getEmail1().equals("")) {
-            if (!detail.equals("")) {
-                detail = detail + "<br>";
-            }
-            detail = detail + Sapphire.getInstance().getResources().getString(R.string.text_email) + " 1: " + data.getEmail1();
-        }
-        if (!data.getEmail2().equals("")) {
-            if (!detail.equals("")) {
-                detail = detail + "<br>";
-            }
-            detail = detail + Sapphire.getInstance().getResources().getString(R.string.text_email) + " 2: " + data.getEmail2();
+            detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_adress) + "</b>: " + data.getAddress();
         }
 
         viewHolder.text_name.setText(name);

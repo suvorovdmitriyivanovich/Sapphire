@@ -125,7 +125,7 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
         } else if (urlRoute.equals("/me/my-training-courses")) {
             Intent intent = new Intent(getActivity(), CoursesActivity.class);
             startActivity(intent);
-        } else if (urlRoute.equals("/configuration/workforce-management-settings")) {
+        } else if (urlRoute.equals("/configuration/health-and-safety")) {
             Intent intent = new Intent(getActivity(), TemplatesActivity.class);
             startActivity(intent);
         } else if (urlRoute.equals("/me/my-calendar")) {
@@ -137,9 +137,9 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
         } else if (urlRoute.equals("/health-and-safety/workplace-inspections-reports")) {
             Intent intent = new Intent(getActivity(), WorkplaceInspectionsActivity.class);
             startActivity(intent);
-        } else if (urlRoute.equals("/health-and-safety/members")) {
-            Intent intent = new Intent(getActivity(), OrganizationStructureActivity.class);
-            startActivity(intent);
+        //} else if (urlRoute.equals("/health-and-safety/members")) {
+        //    Intent intent = new Intent(getActivity(), OrganizationStructureActivity.class);
+        //    startActivity(intent);
         }
         //Intent intent = new Intent(getActivity(), SettingsActivity.class);
         //startActivity(intent);

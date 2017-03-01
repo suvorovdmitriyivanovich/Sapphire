@@ -80,6 +80,8 @@ public class AuthenticationsAction extends AsyncTask{
                 }
             }
 
+            result = "OK";
+
             if (accountDatas.size() == 1) {
                 ArrayList<NavigationMenuData> navigationMenuDatas = accountDatas.get(0).getNavigationMenus();
                 if (navigationMenuDatas != null && navigationMenuDatas.size() > 0) {
@@ -89,14 +91,32 @@ public class AuthenticationsAction extends AsyncTask{
                 UserInfo userInfo = UserInfo.getUserInfo();
                 userInfo.setAuthToken(accountDatas.get(0).getAuthToken());
                 userInfo.setAccountId(accountDatas.get(0).getAccountId());
-                userInfo.setProfileId(accountDatas.get(0).getCurrentProfile().getProfileId());
+                userInfo.setProfile(accountDatas.get(0).getCurrentProfile());
                 userInfo.setOrganizations(accountDatas.get(0).getOrganizations());
                 //ed.putString("AUTHTOKEN", accountDatas.get(0).getAuthToken());
                 //ed.putString("ACCOUNTID", accountDatas.get(0).getAccountId());
                 //ed.apply();
-            }
 
-            result = "OK";
+                //userInfo.getProfile().setAvatarId("6993dd39-d2da-8230-6ad8-86f3839db097");
+
+                String folder = Sapphire.getInstance().getFilesDir().getAbsolutePath();
+
+                if (!userInfo.getProfile().getAvatarId().equals("")) {
+                    urlstring = Environment.SERVER + Environment.DocumentManagementFilesDownloadURL + userInfo.getProfile().getAvatarId();
+
+                    try {
+                        result = downloadFile(urlstring, folder, userInfo.getAuthToken());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        result = e.getMessage();
+                    }
+                } else {
+                    File sdPath = new File(folder + File.separator + "user.png");
+                    if(sdPath.exists()){
+                        sdPath.delete();
+                    }
+                }
+            }
         } else {
             ed.putBoolean("INSUCCESS", false);
             ed.apply();
@@ -117,12 +137,17 @@ public class AuthenticationsAction extends AsyncTask{
         return result;
     }
 
-    public void downloadFile(String fileURL, String saveDir)
+    public String downloadFile(String fileURL, String saveDir, String authToken)
             throws IOException {
         final int BUFFER_SIZE = 4096;
 
+        String rezult = "OK";
+
         URL url = new URL(fileURL);
         HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+        if (!authToken.equals("")) {
+            httpConn.setRequestProperty("x-yauth", authToken);
+        }
         int responseCode = httpConn.getResponseCode();
 
         // always check HTTP response code first
@@ -130,7 +155,7 @@ public class AuthenticationsAction extends AsyncTask{
 
             String fileName = "";
             int contentLength = httpConn.getContentLength();
-            String disposition = httpConn.getHeaderField("Content-Disposition");
+            //String disposition = httpConn.getHeaderField("Content-Disposition");
             //String contentType = httpConn.getContentType();
 
             /*
@@ -167,8 +192,12 @@ public class AuthenticationsAction extends AsyncTask{
                 outputStream.close();
                 inputStream.close();
             }
+        } else {
+            rezult = httpConn.getResponseMessage();
         }
         httpConn.disconnect();
+
+        return rezult;
     }
 
     @Override

@@ -13,23 +13,26 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
+
 import com.sapphire.R;
 import com.sapphire.adapters.PoliciesAdapter;
 import com.sapphire.api.PoliciesAction;
 import com.sapphire.logic.PoliciesData;
 import java.util.ArrayList;
 
-public class PoliciesActivity extends BaseActivity implements PoliciesAdapter.OnRootClickListener,
-                                                                   PoliciesAdapter.OnOpenClickListener,
+public class PoliciesActivity extends BaseActivity implements PoliciesAdapter.OnRootPoliciesClickListener,
+                                                                   PoliciesAdapter.OnOpenPoliciesClickListener,
                                                                    PoliciesAction.RequestPolicies,
                                                                    PoliciesAction.RequestPoliciesData {
     public final static String PARAM_TASK = "task";
     public final static String BROADCAST_ACTION = "com.sapphire.activities.PoliciesActivity";
-    BroadcastReceiver br;
+    private BroadcastReceiver br;
     private ArrayList<PoliciesData> policiesDatas;
     private PoliciesAdapter adapter;
-    ProgressDialog pd;
+    private ProgressDialog pd;
     private ExpandableListView policieslist;
+    private View text_policies_no;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,29 +128,46 @@ public class PoliciesActivity extends BaseActivity implements PoliciesAdapter.On
         */
         adapter = new PoliciesAdapter(this);
         policieslist.setAdapter(adapter);
+
+        text_policies_no = findViewById(R.id.text_policies_no);
+    }
+
+    public void updateVisibility() {
+        if (policiesDatas.size() == 0) {
+            text_policies_no.setVisibility(View.VISIBLE);
+            policieslist.setVisibility(View.GONE);
+        } else {
+            policieslist.setVisibility(View.VISIBLE);
+            text_policies_no.setVisibility(View.GONE);
+        }
     }
 
     @Override
-    public void onRootClick(int groupPosition, int childPosition) {
+    public void onRootPoliciesClick(int groupPosition, int childPosition) {
         //Intent intent = new Intent(PoliciesActivity.this, PdfActivity.class);
         //startActivity(intent);
     }
 
     @Override
-    public void onOpenClick(int groupPosition, int childPosition) {
+    public void onOpenPoliciesClick(int groupPosition, int childPosition) {
         Intent intent = new Intent(PoliciesActivity.this, PdfActivity.class);
         PoliciesData policiesData = policiesDatas.get(groupPosition).getSubPolicies().get(childPosition);
         intent.putExtra("acknowledged", policiesData.getIsAcknowledged());
         intent.putExtra("name", policiesData.getName());
         intent.putExtra("fileId", policiesData.getFileId());
         intent.putExtra("duration", (policiesData.getDuration().getHours() * 60 * 60) + (policiesData.getDuration().getMinutes() * 60) + policiesData.getDuration().getSeconds());
-        intent.putExtra("id", policiesData.getId());
+        intent.putExtra("id", policiesData.getPolicyId());
         startActivity(intent);
     }
 
     @Override
     public void onRequestPolicies(String result) {
+        updateVisibility();
         pd.hide();
+        if (!result.equals("OK")) {
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -164,6 +184,8 @@ public class PoliciesActivity extends BaseActivity implements PoliciesAdapter.On
         //        policieslist.collapseGroup(i);
         //    }
         //}
+
+        updateVisibility();
 
         pd.hide();
     }
@@ -189,7 +211,7 @@ public class PoliciesActivity extends BaseActivity implements PoliciesAdapter.On
         } catch (Exception e) {}
 
         pd.show();
-        new PoliciesAction(PoliciesActivity.this).execute();
+        new PoliciesAction(PoliciesActivity.this, false).execute();
     }
 
     @Override

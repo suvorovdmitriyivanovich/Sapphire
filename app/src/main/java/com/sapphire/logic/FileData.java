@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class FileData {
-    private String id = "";
+    private String fileId = "";
     private String name = "";
     private String description = "";
     private int size = 0;
@@ -17,14 +17,16 @@ public class FileData {
 
     }
 
-    public FileData(String id) {
-        this.id = id;
+    public FileData(String fileId) {
+        this.fileId = fileId;
     }
 
     public FileData(JSONObject data) {
         try {
-            if (!data.isNull("Id")) {
-                setId(data.getString("Id"));
+            if (!data.isNull("FileId")) {
+                setFileId(data.getString("FileId"));
+            } else if (!data.isNull("Id")) {
+                setFileId(data.getString("Id"));
             }
             if (!data.isNull("Name")) {
                 setName(data.getString("Name"));
@@ -52,12 +54,12 @@ public class FileData {
         }
     }
 
-    public String getId() {
-        return id;
+    public String getFileId() {
+        return fileId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setFileId(String fileId) {
+        this.fileId = fileId;
     }
 
     public String getName() {
