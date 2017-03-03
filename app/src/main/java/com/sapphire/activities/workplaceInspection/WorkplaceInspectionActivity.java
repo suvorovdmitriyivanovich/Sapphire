@@ -96,6 +96,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     private Long dateNew;
     private boolean postedOld = false;
     private WorkplaceInspectionData workplaceInspectionData = new WorkplaceInspectionData();
+    private View text_no;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,6 +180,8 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         spinnerTemplate = (Spinner) findViewById(R.id.spinnerTemplate);
         text_template = findViewById(R.id.text_template);
         posted = (CheckBox) findViewById(R.id.posted);
+
+        format = new SimpleDateFormat("dd.MM.yyyy");
 
         Intent intent = getIntent();
         workplaceInspectionId = intent.getStringExtra("workplaceInspectionId");
@@ -275,8 +278,6 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             }
         });
 
-        format = new SimpleDateFormat("dd.MM.yyyy");
-
         TextWatcher inputTextWatcher = new TextWatch();
         name.addTextChangedListener(inputTextWatcher);
 
@@ -334,6 +335,20 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         itemlist.setAdapter(adapter);
 
         updateViews();
+
+        text_no = findViewById(R.id.text_no);
+
+        updateVisibility();
+    }
+
+    public void updateVisibility() {
+        if (workplaceInspectionItemDatas == null || workplaceInspectionItemDatas.size() == 0) {
+            text_no.setVisibility(View.VISIBLE);
+            itemlist.setVisibility(View.GONE);
+        } else {
+            itemlist.setVisibility(View.VISIBLE);
+            text_no.setVisibility(View.GONE);
+        }
     }
 
     private void choiseDate() {
@@ -516,6 +531,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     @Override
     public void onRequestWorkplaceInspection(String result) {
         pressType = 0;
+        updateVisibility();
         pd.hide();
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
@@ -527,6 +543,8 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     public void onRequestWorkplaceInspectionData(ArrayList<WorkplaceInspectionItemData> workplaceInspectionItemDatas) {
         this.workplaceInspectionItemDatas = workplaceInspectionItemDatas;
         adapter.setListArray(workplaceInspectionItemDatas);
+        updateVisibility();
+
         pd.hide();
         if (pressType == 2) {
             pressType = 0;

@@ -68,6 +68,8 @@ public class NetRequests {
                 in.close();
 
                 rez = response.toString();
+            } else if (responseCode == 400) {
+                rez = "400";
             } else {
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream(), "utf-8"), 8);
                 String inputLine;

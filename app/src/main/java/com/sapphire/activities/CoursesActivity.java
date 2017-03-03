@@ -100,7 +100,7 @@ public class CoursesActivity extends BaseActivity implements CoursesAdapter.OnRo
     }
 
     public void updateVisibility() {
-        if (coursesDatas.size() == 0) {
+        if (coursesDatas == null || coursesDatas.size() == 0) {
             text_courses_no.setVisibility(View.VISIBLE);
             courseslist.setVisibility(View.GONE);
         } else {

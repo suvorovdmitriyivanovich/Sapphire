@@ -12,6 +12,7 @@ public class UserInfo {
     private ArrayList<ItemPriorityData> itemPriorityDatas = new ArrayList<ItemPriorityData>();
     private ArrayList<ItemStatusData> itemStatusDatas = new ArrayList<ItemStatusData>();
     private ArrayList<FileData> fileDatas = new ArrayList<FileData>();
+    private OrganizationData currentOrganization = new OrganizationData();
 
     //---------------------Singleton---------------------------
     private static UserInfo userInfo;
@@ -53,6 +54,14 @@ public class UserInfo {
 
     public ArrayList<OrganizationData> getOrganizations() {
         return organizations;
+    }
+
+    public void setCurrentOrganization(OrganizationData currentOrganization) {
+        this.currentOrganization = currentOrganization;
+    }
+
+    public OrganizationData getCurrentOrganization() {
+        return currentOrganization;
     }
 
     public ArrayList<OrganizationStructureData> getOrganizationStructureDatas() {

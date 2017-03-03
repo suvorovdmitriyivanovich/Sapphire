@@ -12,6 +12,10 @@ public class ContactTypeData {
 
     }
 
+    public ContactTypeData(String data) {
+        setContactTypeId(data);
+    }
+
     public ContactTypeData(JSONObject data) {
         try {
             if (!data.isNull("ContactTypeId")) {

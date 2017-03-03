@@ -132,4 +132,19 @@
     <string name="text_member">Health And Safety Member</string>
     <string name="text_certified">CPR Certified</string>
     <string name="text_aidcertified">First Aid Certified</string>
+    <string name="text_investigations">Investigations</string>
+    <string name="text_investigation_no">No uncompleted investigations</string>
+    <string name="text_investigation">Investigation</string>
+    <string name="text_investigation_item">Investigation Item</string>
+    <string name="text_my_contacts">My Contacts</string>
+    <string name="text_emergency_contacts">Emergency Contacts</string>
+    <string name="text_family_members">Family Members / Dependents</string>
+    <string name="text_health_safety">Health &#38; Safety</string>
+    <string name="text_relationship">Relationship</string>
+    <string name="text_primary_phone">Primary Phone</string>
+    <string name="text_additional_phone">Additional Phone</string>
+    <string name="text_notes">Notes</string>
+    <string name="text_template_no">No templates</string>
+    <string name="text_files_no">No files</string>
+    <string name="text_item_no">No items</string>
 </resources>

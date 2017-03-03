@@ -1,4 +1,4 @@
-package com.sapphire.activities.template;
+package com.sapphire.activities.investigation;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -21,40 +21,46 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.activities.BaseActivity;
+import com.sapphire.activities.FilesActivity;
 import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
-import com.sapphire.adapters.TemplatesAdapter;
-import com.sapphire.api.TemplateDeleteAction;
-import com.sapphire.api.TemplatesAction;
-import com.sapphire.logic.TemplateData;
-
+import com.sapphire.adapters.InvestigationsAdapter;
+import com.sapphire.api.InvestigationsAction;
+import com.sapphire.api.InvestigationDeleteAction;
+import com.sapphire.logic.Environment;
+import com.sapphire.logic.InvestigationData;
+import com.sapphire.logic.UserInfo;
 import java.util.ArrayList;
 
-public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.OnRootClickListener,
-                                                                    TemplatesAdapter.OnOpenClickListener,
-                                                                    TemplatesAdapter.OnDeleteClickListener,
-                                                                    TemplatesAction.RequestTemplates,
-                                                                    TemplatesAction.RequestTemplatesData,
-                                                                    TemplateDeleteAction.RequestTemplateDelete{
+public class InvestigationsActivity extends BaseActivity implements InvestigationsAdapter.OnRootInvestigationsClickListener,
+                                                                    InvestigationsAdapter.OnOpenInvestigationsClickListener,
+                                                                    InvestigationsAdapter.OnDeleteInvestigationsClickListener,
+                                                                    InvestigationsAdapter.OnFilesInvestigationsClickListener,
+                                                                    InvestigationsAction.RequestInvestigations,
+                                                                    InvestigationDeleteAction.RequestInvestigationDelete{
     public final static String PARAM_TASK = "task";
-    public final static String BROADCAST_ACTION = "com.sapphire.activities.template.TemplatesActivity";
+    public final static String BROADCAST_ACTION = "com.sapphire.activities.investigation.Investigations";
     private BroadcastReceiver br;
-    private ArrayList<TemplateData> templatesDatas;
-    private TemplatesAdapter adapter;
+    private ArrayList<InvestigationData> investigationDatas;
+    private InvestigationsAdapter adapter;
     private ProgressDialog pd;
-    private RecyclerView templateslist;
+    private RecyclerView list;
     private Dialog dialog_confirm;
     private TextView tittle_message;
     private Button button_cancel_save;
     private Button button_send_save;
     private int currentPosition = 0;
     private View text_no;
+    private boolean me = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_templates);
+        setContentView(R.layout.activity_investigations);
+
+        Intent intent = getIntent();
+        me = intent.getBooleanExtra("me", false);
 
         AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
         adb_save.setCancelable(true);
@@ -80,7 +86,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
 
                 pd.show();
 
-                new TemplateDeleteAction(TemplatesActivity.this, templatesDatas.get(currentPosition).getWorkplaceInspectionTemplateId()).execute();
+                new InvestigationDeleteAction(InvestigationsActivity.this, investigationDatas.get(currentPosition).getInvestigationId()).execute();
             }
         });
 
@@ -106,7 +112,8 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TemplatesActivity.this, TemplateActivity.class);
+                Intent intent = new Intent(InvestigationsActivity.this, InvestigationActivity.class);
+                intent.putExtra("me", me);
                 startActivity(intent);
             }
         });
@@ -138,44 +145,48 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
         pd.setCancelable(false);
         pd.setCanceledOnTouchOutside(false);
 
-        templateslist = (RecyclerView) findViewById(R.id.templateslist);
-        templateslist.setNestedScrollingEnabled(false);
-        templateslist.setLayoutManager(new LinearLayoutManager(TemplatesActivity.this));
+        list = (RecyclerView) findViewById(R.id.list);
+        list.setNestedScrollingEnabled(false);
+        list.setLayoutManager(new LinearLayoutManager(InvestigationsActivity.this));
 
-        adapter = new TemplatesAdapter(this);
-        templateslist.setAdapter(adapter);
+        adapter = new InvestigationsAdapter(this, false);
+        list.setAdapter(adapter);
 
         text_no = findViewById(R.id.text_no);
+
+        updateVisibility();
     }
 
     public void updateVisibility() {
-        if (templatesDatas == null || templatesDatas.size() == 0) {
+        if (investigationDatas == null || investigationDatas.size() == 0) {
             text_no.setVisibility(View.VISIBLE);
-            templateslist.setVisibility(View.GONE);
+            list.setVisibility(View.GONE);
         } else {
-            templateslist.setVisibility(View.VISIBLE);
+            list.setVisibility(View.VISIBLE);
             text_no.setVisibility(View.GONE);
         }
     }
 
     @Override
-    public void onRootClick(int position) {
+    public void onRootInvestigationsClick(int position) {
         //Intent intent = new Intent(PoliciesActivity.this, PdfActivity.class);
         //startActivity(intent);
     }
 
     @Override
-    public void onOpenClick(int position) {
-        Intent intent = new Intent(TemplatesActivity.this, TemplateActivity.class);
-        TemplateData templateData = templatesDatas.get(position);
-        intent.putExtra("name", templateData.getName());
-        intent.putExtra("description", templateData.getDescription());
-        intent.putExtra("workplaceInspectionTemplateId", templateData.getWorkplaceInspectionTemplateId());
+    public void onOpenInvestigationsClick(int position) {
+        Intent intent = new Intent(InvestigationsActivity.this, InvestigationActivity.class);
+        InvestigationData investigationData = investigationDatas.get(position);
+        intent.putExtra("name", investigationData.getName());
+        intent.putExtra("description", investigationData.getDescription());
+        intent.putExtra("date", investigationData.getDate());
+        intent.putExtra("id", investigationData.getInvestigationId());
+        intent.putExtra("me", me);
         startActivity(intent);
     }
 
     @Override
-    public void onDeleteClick(int position) {
+    public void onDeleteInvestigationsClick(int position) {
         currentPosition = position;
 
         tittle_message.setText(getResources().getString(R.string.text_confirm_delete));
@@ -185,41 +196,43 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
     }
 
     @Override
-    public void onRequestTemplates(String result) {
-        updateVisibility();
-        pd.hide();
+    public void onFilesInvestigationsClick(int position) {
+        Intent intent = new Intent(InvestigationsActivity.this, FilesActivity.class);
+        InvestigationData investigationData = investigationDatas.get(position);
+        intent.putExtra("name", investigationData.getName());
+        intent.putExtra("id", investigationData.getInvestigationId());
+        intent.putExtra("url", Environment.InvestigationsFilesURL);
+        intent.putExtra("nameField", "InvestigationId");
+        UserInfo.getUserInfo().setFileDatas(investigationData.getFiles());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRequestInvestigations(String result, ArrayList<InvestigationData> investigationDatas) {
         if (!result.equals("OK")) {
+            updateVisibility();
+            pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+        } else {
+            this.investigationDatas = investigationDatas;
+            adapter.setData(investigationDatas);
+
+            updateVisibility();
+
+            pd.hide();
         }
     }
 
     @Override
-    public void onRequestTemplateDelete(String result) {
+    public void onRequestInvestigationDelete(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
         } else {
-            new TemplatesAction(TemplatesActivity.this).execute();
+            new InvestigationsAction(InvestigationsActivity.this, me).execute();
         }
-    }
-
-    @Override
-    public void onRequestTemplatesData(ArrayList<TemplateData> templatesDatas) {
-        this.templatesDatas = templatesDatas;
-        adapter.setData(templatesDatas);
-
-        updateVisibility();
-
-        pd.hide();
-    }
-
-    public int GetPixelFromDips(float pixels) {
-        // Get the screen's density scale
-        final float scale = getResources().getDisplayMetrics().density;
-        // Convert the dps to pixels, based on density scale
-        return (int) (pixels * scale + 0.5f);
     }
 
     @Override
@@ -236,7 +249,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
         } catch (Exception e) {}
 
         pd.show();
-        new TemplatesAction(TemplatesActivity.this).execute();
+        new InvestigationsAction(InvestigationsActivity.this, me).execute();
     }
 
     @Override

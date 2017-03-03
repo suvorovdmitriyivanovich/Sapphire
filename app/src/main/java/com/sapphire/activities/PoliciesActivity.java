@@ -133,7 +133,7 @@ public class PoliciesActivity extends BaseActivity implements PoliciesAdapter.On
     }
 
     public void updateVisibility() {
-        if (policiesDatas.size() == 0) {
+        if (policiesDatas == null || policiesDatas.size() == 0) {
             text_policies_no.setVisibility(View.VISIBLE);
             policieslist.setVisibility(View.GONE);
         } else {

@@ -4,9 +4,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.ContactData;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.ErrorMessageData;
+import com.sapphire.logic.InvestigationData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
 import com.sapphire.logic.UserInfo;
@@ -14,27 +14,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import java.util.ArrayList;
 
-public class GetContactsAction extends AsyncTask{
+public class InvestigationsAction extends AsyncTask{
 
-    public interface RequestContacts {
-        public void onRequestContacts(String result);
-    }
-
-    public interface RequestContactsData {
-        public void onRequestContactsData(ArrayList<ContactData> adressDatas);
-    }
-
-    public interface RequestContactsMe {
-        public void onRequestContactsMe(String result, ArrayList<ContactData> emergencyDatas, ArrayList<ContactData> familyDatas);
+    public interface RequestInvestigations {
+        public void onRequestInvestigations(String result, ArrayList<InvestigationData> investigationDatas);
     }
 
     private Context mContext;
-    private ArrayList<ContactData> adressDatas = new ArrayList<ContactData>();
-    private ArrayList<ContactData> emergencyDatas = new ArrayList<ContactData>();
-    private ArrayList<ContactData> familyDatas = new ArrayList<ContactData>();
+    private ArrayList<InvestigationData> investigationDatas;
     private boolean me = false;
 
-    public GetContactsAction(Context context, boolean me) {
+    public InvestigationsAction(Context context, boolean me) {
         this.mContext = context;
         this.me = me;
     }
@@ -49,12 +39,12 @@ public class GetContactsAction extends AsyncTask{
 
         String filter = "";
         if (me) {
-            filter = "?$filter=(ContactTypeId%20eq%20guid'"+Environment.EmergencyContactType+"'%20or%20ContactTypeId%20eq%20guid'"+Environment.FamilyContactType+"')%20and%20Profiles/any(profile:%20profile/ProfileId%20eq%20guid'"+userInfo.getProfile().getProfileId()+"')";
-        } else {
             filter = "?$filter=Profiles/any(profile:%20profile/ProfileId%20eq%20guid'"+userInfo.getProfile().getProfileId()+"')";
+        } else {
+            filter = "?$filter=OrganizationId%20eq%20guid'"+userInfo.getCurrentOrganization().getOrganizationId()+"'";
         }
 
-        String urlstring = Environment.SERVER + Environment.ContactsURL + filter;
+        String urlstring = Environment.SERVER + Environment.InvestigationsCurrentURL + filter;
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", userInfo.getAuthToken()));
 
@@ -62,20 +52,10 @@ public class GetContactsAction extends AsyncTask{
 
         if (responseData.getSuccess()) {
             JSONArray data = responseData.getData();
+            investigationDatas = new ArrayList<InvestigationData>();
             for (int y=0; y < data.length(); y++) {
                 try {
-                    ContactData contactData = new ContactData(data.getJSONObject(y));
-                    if (me) {
-                        if (contactData.getContactType().getContactTypeId().equals(Environment.EmergencyContactType)) {
-                            emergencyDatas.add(contactData);
-                        } else if (contactData.getContactType().getContactTypeId().equals(Environment.FamilyContactType)) {
-                            familyDatas.add(contactData);
-                        }
-                    } else {
-                        if (!contactData.getAddress().getAddress().equals("")) {
-                            adressDatas.add(contactData);
-                        }
-                    }
+                    investigationDatas.add(new InvestigationData(data.getJSONObject(y)));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -103,13 +83,7 @@ public class GetContactsAction extends AsyncTask{
     protected void onPostExecute(Object o) {
         String resultData = (String) o;
         if(mContext!=null) {
-            if (me) {
-                ((RequestContactsMe) mContext).onRequestContactsMe(resultData, emergencyDatas, familyDatas);
-            } else if (resultData.equals("OK")) {
-                ((RequestContactsData) mContext).onRequestContactsData(adressDatas);
-            } else {
-                ((RequestContacts) mContext).onRequestContacts(resultData);
-            }
+            ((RequestInvestigations) mContext).onRequestInvestigations(resultData, investigationDatas);
         }
     }
 }

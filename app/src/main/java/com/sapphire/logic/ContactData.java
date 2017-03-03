@@ -14,7 +14,7 @@ public class ContactData {
     private boolean isPrimary = false;
     private AdressData address = new AdressData();
     private ContactTypeData contactType = new ContactTypeData();
-    private String note = "";
+    private NoteData note = new NoteData();
 
     public ContactData() {
 
@@ -52,8 +52,11 @@ public class ContactData {
             if (!data.isNull("ContactType")) {
                 setContactType(data.getJSONObject("ContactType"));
             }
+            if (!data.isNull("ContactTypeId")) {
+                setContactType(data.getString("ContactTypeId"));
+            }
             if (!data.isNull("Note")) {
-                setNote(data.getString("Note"));
+                setNote(data.getJSONObject("Note"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -136,15 +139,19 @@ public class ContactData {
         this.contactType = new ContactTypeData(contactType);
     }
 
+    public void setContactType(String contactType) {
+        this.contactType = new ContactTypeData(contactType);
+    }
+
     public ContactTypeData getContactType() {
         return contactType;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setNote(JSONObject note) {
+        this.note = new NoteData(note);
     }
 
-    public String getNote() {
+    public NoteData getNote() {
         return note;
     }
 }

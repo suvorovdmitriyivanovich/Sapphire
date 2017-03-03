@@ -34,6 +34,12 @@ public class ResponseData {
 
     public ResponseData(String data) {
         JSONObject jsonObject;
+        if (data.equals("400")) {
+            setSuccess(true);
+            setData(new JSONArray());
+            setDataCount(0);
+            return;
+        }
         try {
             jsonObject = new JSONObject(data);
             if (!jsonObject.isNull("request")) {

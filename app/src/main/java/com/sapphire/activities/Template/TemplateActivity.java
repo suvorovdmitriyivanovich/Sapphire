@@ -54,6 +54,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     private Button button_send_save;
     private boolean deleteItem = false;
     private int currentPosition = 0;
+    private View text_no;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,6 +191,20 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
         itemlist.setAdapter(adapter);
 
         updateViews();
+
+        text_no = findViewById(R.id.text_no);
+
+        updateVisibility();
+    }
+
+    public void updateVisibility() {
+        if (templateItemDatas == null || templateItemDatas.size() == 0) {
+            text_no.setVisibility(View.VISIBLE);
+            itemlist.setVisibility(View.GONE);
+        } else {
+            itemlist.setVisibility(View.VISIBLE);
+            text_no.setVisibility(View.GONE);
+        }
     }
 
     private void updateTemplate(boolean add) {
@@ -260,6 +275,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
 
     @Override
     public void onRequestTemplate(String result) {
+        updateVisibility();
         pd.hide();
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
@@ -271,6 +287,9 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     public void onRequestTemplateData(ArrayList<TemplateItemData> templatesItemDatas) {
         this.templateItemDatas = templatesItemDatas;
         adapter.setListArray(templatesItemDatas);
+
+        updateVisibility();
+
         pd.hide();
     }
 

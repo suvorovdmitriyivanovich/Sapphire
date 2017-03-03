@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/text_templates"
+                android:text="@string/text_health_safety"
                 android:id="@+id/text_header"
                 android:textColor="@color/white"
                 android:layout_centerVertical="true"
@@ -90,6 +90,18 @@
             android:id="@+id/templateslist"
             android:scrollbars="vertical"
             android:layout_below="@+id/top_group" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/text_template_no"
+            android:id="@+id/text_no"
+            android:layout_below="@+id/top_group"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
+import com.sapphire.activities.investigation.InvestigationsActivity;
 import com.sapphire.activities.organizationStructure.OrganizationStructureActivity;
 import com.sapphire.activities.template.TemplatesActivity;
 import com.sapphire.activities.workplaceInspection.WorkplaceInspectionsActivity;
@@ -137,11 +138,16 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
         } else if (urlRoute.equals("/health-and-safety/workplace-inspections-reports")) {
             Intent intent = new Intent(getActivity(), WorkplaceInspectionsActivity.class);
             startActivity(intent);
-        //} else if (urlRoute.equals("/health-and-safety/members")) {
-        //    Intent intent = new Intent(getActivity(), OrganizationStructureActivity.class);
-        //    startActivity(intent);
+        } else if (urlRoute.equals("/health-and-safety/investigations")) {
+            Intent intent = new Intent(getActivity(), InvestigationsActivity.class);
+            startActivity(intent);
+        } else if (urlRoute.equals("/me/my-investigations")) {
+            Intent intent = new Intent(getActivity(), InvestigationsActivity.class);
+            intent.putExtra("me", true);
+            startActivity(intent);
+        } else if (urlRoute.equals("/me/my-contacts")) {
+            Intent intent = new Intent(getActivity(), MyContactsActivity.class);
+            startActivity(intent);
         }
-        //Intent intent = new Intent(getActivity(), SettingsActivity.class);
-        //startActivity(intent);
     }
 }

@@ -207,21 +207,21 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
     }
 
     public void updateVisibility() {
-        if (coursesDatas.size() == 0) {
+        if (coursesDatas == null || coursesDatas.size() == 0) {
             text_courses_no.setVisibility(View.VISIBLE);
             courseslist.setVisibility(View.GONE);
         } else {
             courseslist.setVisibility(View.VISIBLE);
             text_courses_no.setVisibility(View.GONE);
         }
-        if (policiesDatas.size() == 0) {
+        if (policiesDatas == null || policiesDatas.size() == 0) {
             text_policies_no.setVisibility(View.VISIBLE);
             policieslist.setVisibility(View.GONE);
         } else {
             policieslist.setVisibility(View.VISIBLE);
             text_policies_no.setVisibility(View.GONE);
         }
-        if (workplaceInspectionDatas.size() == 0) {
+        if (workplaceInspectionDatas == null || workplaceInspectionDatas.size() == 0) {
             text_workplace_no.setVisibility(View.VISIBLE);
             workplaceinspectionslist.setVisibility(View.GONE);
         } else {

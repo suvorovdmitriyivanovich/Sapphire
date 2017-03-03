@@ -50,7 +50,7 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
                                                            FileAddAction.RequestFileAdd{
     private ArrayList<FileData> fileDatas;
     private FilesAdapter adapter;
-    ProgressDialog pd;
+    private ProgressDialog pd;
     private RecyclerView fileslist;
     private Dialog dialog_confirm;
     private TextView tittle_message;
@@ -74,6 +74,7 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
     private boolean isOpenGalery = false;
     private String url = "";
     private String nameField = "";
+    private View text_no;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,6 +230,18 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
                 dialog.dismiss();
             }
         });
+
+        text_no = findViewById(R.id.text_no);
+    }
+
+    public void updateVisibility() {
+        if (fileDatas == null || fileDatas.size() == 0) {
+            text_no.setVisibility(View.VISIBLE);
+            fileslist.setVisibility(View.GONE);
+        } else {
+            fileslist.setVisibility(View.VISIBLE);
+            text_no.setVisibility(View.GONE);
+        }
     }
 
     private void choiseFile() {
@@ -453,13 +466,19 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
 
     @Override
     public void onRequestFiles(String result, ArrayList<FileData> fileDatas) {
-        pd.hide();
         if (!result.equals("OK")) {
+            updateVisibility();
+
+            pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
         } else {
             this.fileDatas = fileDatas;
             adapter.setData(fileDatas);
+
+            updateVisibility();
+
+            pd.hide();
         }
     }
 

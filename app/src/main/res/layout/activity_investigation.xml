@@ -33,15 +33,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/text_template"
+            android:text="@string/text_investigation"
             android:id="@+id/text_header"
             android:textColor="#ffffff"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/back"
             android:layout_toEndOf="@+id/back"
             android:layout_marginRight="109dp"
-            android:layout_marginLeft="5dp"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:layout_marginLeft="5dp" />
 
         <RelativeLayout
             android:layout_width="56dp"
@@ -96,7 +96,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_below="@+id/top_group"
                 android:text="@string/name"
                 android:id="@+id/text_name"
                 android:layout_marginLeft="10dp"
@@ -105,7 +104,6 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/text_name"
                 android:inputType="text"
                 android:id="@+id/name"
                 android:hint="@string/name"
@@ -116,7 +114,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_below="@+id/name"
                 android:text="@string/name_error"
                 android:id="@+id/text_name_error"
                 android:layout_marginLeft="12dp"
@@ -127,7 +124,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_below="@+id/text_name_error"
                 android:text="@string/text_description"
                 android:id="@+id/text_description"
                 android:layout_marginLeft="10dp"
@@ -136,7 +132,6 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/text_description"
                 android:inputType="text"
                 android:id="@+id/description"
                 android:hint="@string/text_description"
@@ -147,7 +142,91 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_below="@+id/description"
+                android:text="@string/text_date"
+                android:id="@+id/text_date"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/date_group"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <EditText
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:id="@+id/date"
+                    android:gravity="center"
+                    android:focusable="false" />
+
+                <RelativeLayout
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/image_date_group"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/date"
+                    android:layout_toEndOf="@+id/date"
+                    android:background="@drawable/dialog_button">
+
+                    <ImageView
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:id="@+id/image_date"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/date"/>
+                </RelativeLayout>
+
+                <EditText
+                    android:layout_width="95dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/time"
+                    android:layout_marginLeft="6dp"
+                    android:layout_toRightOf="@+id/image_date_group"
+                    android:layout_toEndOf="@+id/image_date_group"
+                    android:gravity="center"
+                    android:focusable="false" />
+
+                <RelativeLayout
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/image_time_group"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/time"
+                    android:layout_toEndOf="@+id/time"
+                    android:background="@drawable/dialog_button">
+
+                    <ImageView
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:id="@+id/image_time"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/time" />
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/date_error"
+                android:id="@+id/text_date_error"
+                android:layout_marginLeft="12dp"
+                android:textColor="@color/red"
+                android:layout_marginRight="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/text_items"
                 android:id="@+id/text_items"
                 android:layout_marginLeft="10dp"
@@ -165,7 +244,7 @@
                     android:layout_height="match_parent"
                     android:id="@+id/itemlist"
                     android:scrollbars="vertical"
-                    android:layout_marginTop="5dp" />
+                    android:layout_marginTop="5dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -178,6 +257,7 @@
                     android:layout_marginRight="10dp"
                     android:visibility="gone" />
             </RelativeLayout>
+
         </LinearLayout>
     </ScrollView>
 

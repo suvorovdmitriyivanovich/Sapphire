@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/text_workplace_inspections"
+                android:text="@string/text_investigations"
                 android:id="@+id/text_header"
                 android:textColor="#ffffff"
                 android:layout_centerVertical="true"
@@ -86,7 +86,7 @@
         </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/workplaceinspectionslist"
+            android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
@@ -96,8 +96,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/text_workplace_no"
-            android:id="@+id/text_workplace_no"
+            android:text="@string/text_investigation_no"
+            android:id="@+id/text_no"
             android:layout_below="@+id/top_group"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"

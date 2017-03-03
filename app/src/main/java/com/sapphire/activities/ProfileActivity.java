@@ -66,12 +66,9 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         personal_group = findViewById(R.id.personal_group);
 
         adresslist = (RecyclerView) findViewById(R.id.adresslist);
-        adapter = new AdressAdapter(this);
+        adapter = new AdressAdapter(this, false);
         adresslist.setAdapter(adapter);
         adresslist.setLayoutManager(new LinearLayoutManager(this));
-
-        pd.show();
-        new GetProfilesAction(ProfileActivity.this).execute();
     }
 
     @Override
@@ -151,7 +148,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         customStr = customStr + "<br><b>" + getResources().getString(R.string.text_custom2) + "</b>: " + profileData.getCustomField1();
         custom.setText(Html.fromHtml(customStr));
 
-        new GetContactsAction(ProfileActivity.this).execute();
+        new GetContactsAction(ProfileActivity.this, false).execute();
         //pd.hide();
     }
 
@@ -167,10 +164,10 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
 
     @Override
     public void onRequestContactsData(ArrayList<ContactData> adressDatas) {
-        adapter.setData(adressDatas);
-        if (adressDatas.size() == 0) {
+        if (adressDatas == null || adressDatas.size() == 0) {
             personal_group.setVisibility(View.GONE);
         } else {
+            adapter.setData(adressDatas);
             personal_group.setVisibility(View.VISIBLE);
         }
 
@@ -190,6 +187,9 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     @Override
     protected void onResume() {
         super.onResume();
+
+        pd.show();
+        new GetProfilesAction(ProfileActivity.this).execute();
     }
 
     @Override

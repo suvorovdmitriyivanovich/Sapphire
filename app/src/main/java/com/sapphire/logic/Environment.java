@@ -18,12 +18,7 @@ public class Environment {
     public static final String QuizzesLogURL = "/v1/Quizzes/Log";
     public static final String WorkplaceInspectionTemplatesURL = "/v1/HealthAndSafety/WorkplaceInspectionTemplates";
     public static final String WorkplaceInspectionTemplateItemsURL = "/v1/HealthAndSafety/WorkplaceInspectionTemplateItems";
-    public static final String PolicyStatusStarted = "1586dc39-979b-3991-c822-a4bcb14d1345";
-    public static final String PolicyStatusAcknowledged  = "1586dc39-979b-ab1c-838f-1917fce340de";
-    public static final String AccountQuizStatusStarted  = "af29dc39-68b9-d431-2653-724eb8a104e8";
     public static final String ProfilesURL = "/v1/Profiles";
-    public static final String AccountCourseFileStatus  = "c9c8db39-2b01-0997-33a6-699e5ed75383";
-    public static final String AccountCourseFileStatusFinish  = "c9c8db39-2b01-b87e-3632-1589834c115e";
     public static final String CourseLogURL = "/v1/Courses/Files/Logs";
     public static final String ContactsURL = "/v1/Contacts";
     public static final String WorkplaceInspectionsCurrentURL = "/v1/HealthAndSafety/WorkplaceInspections/Current";
@@ -38,4 +33,16 @@ public class Environment {
     public static final String DocumentManagementFilesUploadURL = "/v1/DocumentManagement/Files/OrganizationSystemFolder";
     public static final String WorkplaceInspectionsFilesURL = "/v1/HealthAndSafety/WorkplaceInspections/Files";
     public static final String WorkplaceInspectionsItemsFilesURL = "/v1/HealthAndSafety/WorkplaceInspections/Items/Files";
+    public static final String InvestigationsCurrentURL = "/v1/HealthAndSafety/Investigations";
+    public static final String InvestigationsFilesURL = "/v1/HealthAndSafety/Investigations/InvestigationFiles";
+    public static final String InvestigationItemsURL = "/v1/HealthAndSafety/Investigations/Items";
+    public static final String InvestigationsItemsFilesURL = "/v1/HealthAndSafety/Investigations/Items/InvestigationItemFiles";
+
+    public static final String PolicyStatusStarted = "1586dc39-979b-3991-c822-a4bcb14d1345";
+    public static final String PolicyStatusAcknowledged  = "1586dc39-979b-ab1c-838f-1917fce340de";
+    public static final String AccountQuizStatusStarted  = "af29dc39-68b9-d431-2653-724eb8a104e8";
+    public static final String AccountCourseFileStatus  = "c9c8db39-2b01-0997-33a6-699e5ed75383";
+    public static final String AccountCourseFileStatusFinish  = "c9c8db39-2b01-b87e-3632-1589834c115e";
+    public static final String EmergencyContactType  = "c9c8db39-2b01-dc72-4427-c51834bbec82";
+    public static final String FamilyContactType  = "c9c8db39-2b01-c6c9-27ff-eb9e0a5b0cf0";
 }

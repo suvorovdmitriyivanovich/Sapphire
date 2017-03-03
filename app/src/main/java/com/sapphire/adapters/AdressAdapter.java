@@ -42,10 +42,12 @@ public class AdressAdapter extends RecyclerView.Adapter<AdressAdapter.ViewHolder
 
     private Context mContext;
     private ArrayList<ContactData> listData;
+    private boolean full = false;
 
-    public AdressAdapter(Context mContext) {
+    public AdressAdapter(Context mContext, boolean full) {
         this.mContext = mContext;
         this.listData = new ArrayList<ContactData>();
+        this.full = full;
     }
 
     public void setData(ArrayList<ContactData> list) {
@@ -92,11 +94,43 @@ public class AdressAdapter extends RecyclerView.Adapter<AdressAdapter.ViewHolder
             }
             detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.name) + "</b>: " + data.getName();
         }
+        if (full) {
+            if (!data.getRelationship().equals("")) {
+                if (!detail.equals("")) {
+                    detail = detail + "<br>";
+                }
+                detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_relationship) + "</b>: " + data.getRelationship();
+            }
+            if (!data.getPhone1().equals("")) {
+                if (!detail.equals("")) {
+                    detail = detail + "<br>";
+                }
+                detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_primary_phone) + "</b>: " + data.getPhone1();
+            }
+            if (!data.getPhone2().equals("")) {
+                if (!detail.equals("")) {
+                    detail = detail + "<br>";
+                }
+                detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_additional_phone) + "</b>: " + data.getPhone2();
+            }
+            if (!data.getEmail1().equals("")) {
+                if (!detail.equals("")) {
+                    detail = detail + "<br>";
+                }
+                detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_email) + "</b>: " + data.getEmail1();
+            }
+            if (!data.getNote().getText().equals("")) {
+                if (!detail.equals("")) {
+                    detail = detail + "<br>";
+                }
+                detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_notes) + "</b>: " + data.getNote().getText();
+            }
+        }
         if (!data.getAddress().getAddress().equals("")) {
             if (!detail.equals("")) {
                 detail = detail + "<br>";
             }
-            detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_adress) + "</b>: " + data.getAddress();
+            detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_adress) + "</b>: " + data.getAddress().getAddress();
         }
 
         viewHolder.text_name.setText(name);

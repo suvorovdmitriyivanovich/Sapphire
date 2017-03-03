@@ -11,25 +11,25 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.WorkplaceInspectionItemData;
+import com.sapphire.logic.InvestigationItemData;
 import java.util.ArrayList;
 
-public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<WorkplaceInspectionItemsAdapter.ViewHolder> {
+public class InvestigationItemsAdapter extends RecyclerView.Adapter<InvestigationItemsAdapter.ViewHolder> {
 
-    public interface OnRootClickListener{
-        void onRootClick(int position);
+    public interface OnRootInvestigationClickListener{
+        void onRootInvestigationClick(int position);
     }
 
-    public interface OnOpenClickListener{
-        void onOpenClick(int position);
+    public interface OnOpenInvestigationClickListener{
+        void onOpenInvestigationClick(int position);
     }
 
-    public interface OnDeleteClickListener{
-        void onDeleteClick(int position);
+    public interface OnDeleteInvestigationClickListener{
+        void onDeleteInvestigationClick(int position);
     }
 
-    public interface OnFilesClickListener{
-        void onFilesClick(int position);
+    public interface OnFilesInvestigationClickListener{
+        void onFilesInvestigationClick(int position);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -53,54 +53,39 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
         }
     }
 
-    private ArrayList<WorkplaceInspectionItemData> listData;
+    private ArrayList<InvestigationItemData> listData;
     private Context context;
     private Typeface typeFace;
 
-    public WorkplaceInspectionItemsAdapter(Context context) {
+    public InvestigationItemsAdapter(Context context) {
         this.context = context;
-        listData = new ArrayList<WorkplaceInspectionItemData>();
+        listData = new ArrayList<InvestigationItemData>();
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view_files, parent, false);
-        return new WorkplaceInspectionItemsAdapter.ViewHolder(view);
+        return new InvestigationItemsAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        WorkplaceInspectionItemData data = listData.get(position);
+        InvestigationItemData data = listData.get(position);
 
         holder.border.setVisibility(View.VISIBLE);
 
         holder.text_name.setText(data.getName());
-
-        String textDescription = "";
-        if (!data.getDescription().equals("")) {
-            textDescription = data.getDescription();
-        }
-        if (!textDescription.equals("")) {
-            textDescription = textDescription + "<br>";
-        }
-        if (data.getStatus().getName().equals("Pass")) {
-            textDescription = textDescription + "<big><font color=#16a085>&#61452;</font></big>";
-        } else if (data.getStatus().getName().equals("Fail")) {
-            textDescription = textDescription + "<big><font color=#cc3300>&#61453;</font></big>";
-        }
-
-        holder.text_description.setTypeface(typeFace);
-        holder.text_description.setText(Html.fromHtml(textDescription));
+        holder.text_description.setText(data.getDescription());
 
         holder.open.setTypeface(typeFace);
         holder.open.setText(Html.fromHtml("&#61504;"));
         holder.open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (context instanceof OnOpenClickListener) {
-                    ((OnOpenClickListener) context).onOpenClick(holder.getAdapterPosition());
+                if (context instanceof OnOpenInvestigationClickListener) {
+                    ((OnOpenInvestigationClickListener) context).onOpenInvestigationClick(holder.getAdapterPosition());
                 }
                 else {
                     //TODO generate error dialog
@@ -113,8 +98,8 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (context instanceof OnDeleteClickListener) {
-                    ((OnDeleteClickListener) context).onDeleteClick(holder.getAdapterPosition());
+                if (context instanceof OnDeleteInvestigationClickListener) {
+                    ((OnDeleteInvestigationClickListener) context).onDeleteInvestigationClick(holder.getAdapterPosition());
                 }
                 else {
                     //TODO generate error dialog
@@ -127,8 +112,8 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
         holder.files.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (context instanceof OnFilesClickListener) {
-                    ((OnFilesClickListener) context).onFilesClick(holder.getAdapterPosition());
+                if (context instanceof OnFilesInvestigationClickListener) {
+                    ((OnFilesInvestigationClickListener) context).onFilesInvestigationClick(holder.getAdapterPosition());
                 }
                 else {
                     //TODO generate error dialog
@@ -139,8 +124,8 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (context instanceof OnRootClickListener) {
-                    ((OnRootClickListener) context).onRootClick(holder.getAdapterPosition());
+                if (context instanceof OnRootInvestigationClickListener) {
+                    ((OnRootInvestigationClickListener) context).onRootInvestigationClick(holder.getAdapterPosition());
                 }
                 else {
                     //TODO generate error dialog
@@ -157,7 +142,7 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
             return 0;
     }
 
-    public void setListArray(ArrayList<WorkplaceInspectionItemData> list){
+    public void setListArray(ArrayList<InvestigationItemData> list){
         listData.clear();
         listData.addAll(list);
         notifyDataSetChanged();
