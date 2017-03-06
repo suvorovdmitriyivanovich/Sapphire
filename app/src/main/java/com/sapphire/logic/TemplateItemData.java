@@ -4,8 +4,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class TemplateItemData {
-    private String workplaceInspectionTemplateItemId = "";
-    private String workplaceInspectionTemplateId = "";
+    private String templateItemId = "";
+    private String templateId = "";
     private String name = "";
     private String description = "";
     private ItemStatusData status = new ItemStatusData();
@@ -23,10 +23,16 @@ public class TemplateItemData {
     public TemplateItemData(JSONObject data) {
         try {
             if (!data.isNull("WorkplaceInspectionTemplateItemId")) {
-                setWorkplaceInspectionTemplateItemId(data.getString("WorkplaceInspectionTemplateItemId"));
+                setTemplateItemId(data.getString("WorkplaceInspectionTemplateItemId"));
+            }
+            if (!data.isNull("MeetingTopicTemplateItemId")) {
+                setTemplateItemId(data.getString("MeetingTopicTemplateItemId"));
             }
             if (!data.isNull("WorkplaceInspectionTemplateId")) {
-                setWorkplaceInspectionTemplateId(data.getString("WorkplaceInspectionTemplateId"));
+                setTemplateId(data.getString("WorkplaceInspectionTemplateId"));
+            }
+            if (!data.isNull("MeetingTopicTemplateId")) {
+                setTemplateId(data.getString("MeetingTopicTemplateId"));
             }
             if (!data.isNull("Name")) {
                 setName(data.getString("Name"));
@@ -48,20 +54,20 @@ public class TemplateItemData {
         }
     }
 
-    public String getWorkplaceInspectionTemplateItemId() {
-        return workplaceInspectionTemplateItemId;
+    public String getTemplateItemId() {
+        return templateItemId;
     }
 
-    public void setWorkplaceInspectionTemplateItemId(String workplaceInspectionTemplateItemId) {
-        this.workplaceInspectionTemplateItemId = workplaceInspectionTemplateItemId;
+    public void setTemplateItemId(String templateItemId) {
+        this.templateItemId = templateItemId;
     }
 
-    public String getWorkplaceInspectionTemplateId() {
-        return workplaceInspectionTemplateId;
+    public String getTemplateId() {
+        return templateId;
     }
 
-    public void setWorkplaceInspectionTemplateId(String workplaceInspectionTemplateId) {
-        this.workplaceInspectionTemplateId = workplaceInspectionTemplateId;
+    public void setTemplateId(String templateId) {
+        this.templateId = templateId;
     }
 
     public String getName() {

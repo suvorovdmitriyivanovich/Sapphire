@@ -235,12 +235,12 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
                         return;
                     }
                     template.setText(templates.get(position).getName());
-                    templateId = templates.get(position).getWorkplaceInspectionTemplateId();
+                    templateId = templates.get(position).getTemplateId();
                     clickSpinner = false;
 
                     if (!templateId.equals("")) {
                         pd.show();
-                        new GetTemplateAction(WorkplaceInspectionActivity.this, templateId).execute();
+                        new GetTemplateAction(WorkplaceInspectionActivity.this, templateId, getResources().getString(R.string.text_workplace_templates)).execute();
                         //} else if (!workplaceInspectionId.equals("")) {
                         //    new GetWorkplaceInspectionAction(WorkplaceInspectionActivity.this, workplaceInspectionId).execute();
                     } else {

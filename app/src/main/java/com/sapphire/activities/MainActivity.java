@@ -472,7 +472,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
 
         updateVisibility();
 
-        new TemplatesAction(MainActivity.this).execute();
+        new TemplatesAction(MainActivity.this, getResources().getString(R.string.text_workplace_templates)).execute();
 
         //pd.hide();
     }

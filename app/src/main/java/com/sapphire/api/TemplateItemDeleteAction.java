@@ -1,9 +1,7 @@
 package com.sapphire.api;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
@@ -11,7 +9,6 @@ import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
 import com.sapphire.logic.UserInfo;
-
 import java.util.ArrayList;
 
 public class TemplateItemDeleteAction extends AsyncTask{
@@ -21,11 +18,13 @@ public class TemplateItemDeleteAction extends AsyncTask{
     }
 
     private Context mContext;
-    private String workplaceInspectionTemplateItemId;
+    private String templateItemId;
+    private String typeId;
 
-    public TemplateItemDeleteAction(Context context, String workplaceInspectionTemplateItemId) {
+    public TemplateItemDeleteAction(Context context, String templateItemId, String typeId) {
         this.mContext = context;
-        this.workplaceInspectionTemplateItemId = workplaceInspectionTemplateItemId;
+        this.templateItemId = templateItemId;
+        this.typeId = typeId;
     }
 
     @Override
@@ -33,7 +32,12 @@ public class TemplateItemDeleteAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.WorkplaceInspectionTemplateItemsURL + "?model%5B%5D="+workplaceInspectionTemplateItemId;
+        String urlstring = Environment.SERVER;
+        if (typeId.equals(Sapphire.getInstance().getResources().getString(R.string.text_meetings_templates))) {
+            urlstring = urlstring + Environment.TopicTemplateItemsURL + "?model%5B%5D="+templateItemId;
+        } else {
+            urlstring = urlstring + Environment.WorkplaceInspectionTemplateItemsURL + "?model%5B%5D="+templateItemId;
+        }
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"DELETE", UserInfo.getUserInfo().getAuthToken()));
 

@@ -245,7 +245,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
 
         updateVisibility();
 
-        new TemplatesAction(WorkplaceInspectionsActivity.this).execute();
+        new TemplatesAction(WorkplaceInspectionsActivity.this, getResources().getString(R.string.text_workplace_templates)).execute();
 
         //pd.hide();
     }

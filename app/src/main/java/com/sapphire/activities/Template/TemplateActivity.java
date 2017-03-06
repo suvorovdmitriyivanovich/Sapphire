@@ -15,7 +15,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
@@ -36,7 +35,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
                                                               TemplateItemDeleteAction.RequestTemplateItemDelete,
                                                               TemplateAddAction.RequestTemplateAdd,
                                                               TemplateAddAction.RequestTemplateAddData{
-    private String workplaceInspectionTemplateId = "";
+    private String templateId = "";
     ProgressDialog pd;
     private ArrayList<TemplateItemData> templateItemDatas;
     private RecyclerView itemlist;
@@ -55,6 +54,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     private boolean deleteItem = false;
     private int currentPosition = 0;
     private View text_no;
+    private String typeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +119,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
                     deleteItem = false;
                     pd.show();
 
-                    new TemplateItemDeleteAction(TemplateActivity.this, templateItemDatas.get(currentPosition).getWorkplaceInspectionTemplateItemId()).execute();
+                    new TemplateItemDeleteAction(TemplateActivity.this, templateItemDatas.get(currentPosition).getTemplateItemId(), typeId).execute();
                 } else {
                     updateTemplate(false);
                 }
@@ -138,7 +138,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
         button_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (workplaceInspectionTemplateId.equals("") || !nameOld.equals(name.getText().toString())
+                if (templateId.equals("") || !nameOld.equals(name.getText().toString())
                         || !descriptionOld.equals(description.getText().toString())) {
                     updateTemplate(false);
                 } else {
@@ -172,11 +172,12 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
         });
 
         Intent intent = getIntent();
-        workplaceInspectionTemplateId = intent.getStringExtra("workplaceInspectionTemplateId");
-        if (workplaceInspectionTemplateId == null) {
-            workplaceInspectionTemplateId = "";
+        typeId = intent.getStringExtra("typeId");
+        templateId = intent.getStringExtra("templateId");
+        if (templateId == null) {
+            templateId = "";
         }
-        if (!workplaceInspectionTemplateId.equals("")) {
+        if (!templateId.equals("")) {
             nameOld = intent.getStringExtra("name");
             descriptionOld = intent.getStringExtra("description");
             name.setText(nameOld);
@@ -219,7 +220,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
             pd.show();
 
             pressAdd = add;
-            new TemplateAddAction(TemplateActivity.this, workplaceInspectionTemplateId, name.getText().toString(), description.getText().toString()).execute();
+            new TemplateAddAction(TemplateActivity.this, templateId, name.getText().toString(), description.getText().toString(), typeId).execute();
         }
     }
 
@@ -269,7 +270,8 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     private void addItem() {
         hideSoftKeyboard();
         Intent intent = new Intent(TemplateActivity.this, TemplateItemActivity.class);
-        intent.putExtra("workplaceInspectionTemplateId", workplaceInspectionTemplateId);
+        intent.putExtra("typeId", typeId);
+        intent.putExtra("templateId", templateId);
         startActivity(intent);
     }
 
@@ -318,8 +320,9 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
         TemplateItemData templateItemData = templateItemDatas.get(position);
         intent.putExtra("name", templateItemData.getName());
         intent.putExtra("description", templateItemData.getDescription());
-        intent.putExtra("workplaceInspectionTemplateItemId", templateItemData.getWorkplaceInspectionTemplateItemId());
-        intent.putExtra("workplaceInspectionTemplateId", templateItemData.getWorkplaceInspectionTemplateId());
+        intent.putExtra("templateItemId", templateItemData.getTemplateItemId());
+        intent.putExtra("templateId", templateItemData.getTemplateId());
+        intent.putExtra("typeId", typeId);
         startActivity(intent);
     }
 
@@ -331,7 +334,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
         } else {
-            new GetTemplateAction(TemplateActivity.this, workplaceInspectionTemplateId).execute();
+            new GetTemplateAction(TemplateActivity.this, templateId, typeId).execute();
         }
     }
 
@@ -342,7 +345,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
             pressAdd = false;
             nameOld = name.getText().toString();
             descriptionOld = description.getText().toString();
-            workplaceInspectionTemplateId = templateData.getWorkplaceInspectionTemplateId();
+            templateId = templateData.getTemplateId();
             addItem();
         } else {
             finish();
@@ -362,9 +365,9 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     protected void onResume() {
         super.onResume();
 
-        if (!workplaceInspectionTemplateId.equals("")) {
+        if (!templateId.equals("")) {
             pd.show();
-            new GetTemplateAction(TemplateActivity.this, workplaceInspectionTemplateId).execute();
+            new GetTemplateAction(TemplateActivity.this, templateId, typeId).execute();
         }
     }
 

@@ -147,4 +147,7 @@
     <string name="text_template_no">No templates</string>
     <string name="text_files_no">No files</string>
     <string name="text_item_no">No items</string>
+    <string name="text_type">Type templates</string>
+    <string name="text_workplace_templates">Workplace Inspection Templates</string>
+    <string name="text_meetings_templates">Meetings Topic Templates</string>
 </resources>

@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class TemplateData {
-    private String workplaceInspectionTemplateId = "";
+    private String templateId = "";
     private String name = "";
     private String description = "";
     private ArrayList<TemplateData> subTemplates = new ArrayList<TemplateData>();
@@ -22,7 +22,10 @@ public class TemplateData {
     public TemplateData(JSONObject data) {
         try {
             if (!data.isNull("WorkplaceInspectionTemplateId")) {
-                setWorkplaceInspectionTemplateId(data.getString("WorkplaceInspectionTemplateId"));
+                setTemplateId(data.getString("WorkplaceInspectionTemplateId"));
+            }
+            if (!data.isNull("MeetingTopicTemplateId")) {
+                setTemplateId(data.getString("MeetingTopicTemplateId"));
             }
             if (!data.isNull("Name")) {
                 setName(data.getString("Name"));
@@ -38,12 +41,12 @@ public class TemplateData {
         }
     }
 
-    public String getWorkplaceInspectionTemplateId() {
-        return workplaceInspectionTemplateId;
+    public String getTemplateId() {
+        return templateId;
     }
 
-    public void setWorkplaceInspectionTemplateId(String workplaceInspectionTemplateId) {
-        this.workplaceInspectionTemplateId = workplaceInspectionTemplateId;
+    public void setTemplateId(String templateId) {
+        this.templateId = templateId;
     }
 
     public String getName() {

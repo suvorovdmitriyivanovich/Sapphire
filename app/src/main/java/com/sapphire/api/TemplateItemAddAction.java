@@ -1,7 +1,6 @@
 package com.sapphire.api;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
@@ -10,7 +9,6 @@ import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
 import com.sapphire.logic.UserInfo;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,17 +21,19 @@ public class TemplateItemAddAction extends AsyncTask{
     }
 
     private Context mContext;
-    private String workplaceInspectionTemplateItemId;
-    private String workplaceInspectionTemplateId;
+    private String templateItemId;
+    private String templateId;
     private String name;
     private String description;
+    private String typeId;
 
-    public TemplateItemAddAction(Context context, String workplaceInspectionTemplateItemId, String workplaceInspectionTemplateId, String name, String description) {
+    public TemplateItemAddAction(Context context, String templateItemId, String templateId, String name, String description, String typeId) {
         this.mContext = context;
-        this.workplaceInspectionTemplateItemId = workplaceInspectionTemplateItemId;
-        this.workplaceInspectionTemplateId = workplaceInspectionTemplateId;
+        this.templateItemId = templateItemId;
+        this.templateId = templateId;
         this.name = name;
         this.description = description;
+        this.typeId = typeId;
     }
 
     @Override
@@ -41,15 +41,28 @@ public class TemplateItemAddAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.WorkplaceInspectionTemplateItemsURL;
+        String urlstring = Environment.SERVER;
+        if (typeId.equals(Sapphire.getInstance().getResources().getString(R.string.text_meetings_templates))) {
+            urlstring = urlstring + Environment.TopicTemplateItemsURL;
+        } else {
+            urlstring = urlstring + Environment.WorkplaceInspectionTemplateItemsURL;
+        }
 
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
         try {
-            if (!workplaceInspectionTemplateItemId.equals("")) {
-                jsonObject.put("WorkplaceInspectionTemplateItemId", workplaceInspectionTemplateItemId);
+            if (!templateItemId.equals("")) {
+                if (typeId.equals(Sapphire.getInstance().getResources().getString(R.string.text_meetings_templates))) {
+                    jsonObject.put("MeetingTopicTemplateItemId", templateItemId);
+                } else {
+                    jsonObject.put("WorkplaceInspectionTemplateItemId", templateItemId);
+                }
             }
-            jsonObject.put("WorkplaceInspectionTemplateId", workplaceInspectionTemplateId);
+            if (typeId.equals(Sapphire.getInstance().getResources().getString(R.string.text_meetings_templates))) {
+                jsonObject.put("MeetingTopicTemplateId", templateId);
+            } else {
+                jsonObject.put("WorkplaceInspectionTemplateId", templateId);
+            }
             jsonObject.put("Name", name);
             jsonObject.put("Description", description);
             jsonArray.put(jsonObject);
@@ -58,7 +71,7 @@ public class TemplateItemAddAction extends AsyncTask{
         }
 
         String method = "POST";
-        if (!workplaceInspectionTemplateItemId.equals("")) {
+        if (!templateItemId.equals("")) {
             method = "PUT";
         }
 

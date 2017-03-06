@@ -15,19 +15,22 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
+import com.sapphire.adapters.SpinTypesAdapter;
 import com.sapphire.adapters.TemplatesAdapter;
 import com.sapphire.api.TemplateDeleteAction;
 import com.sapphire.api.TemplatesAction;
 import com.sapphire.logic.TemplateData;
-
 import java.util.ArrayList;
 
 public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.OnRootClickListener,
@@ -49,6 +52,12 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
     private Button button_send_save;
     private int currentPosition = 0;
     private View text_no;
+    private Spinner spinnerType;
+    private ArrayList<String> types;
+    private SpinTypesAdapter adapterType;
+    private boolean clickSpinner = false;
+    private EditText type;
+    private String typeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +89,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
 
                 pd.show();
 
-                new TemplateDeleteAction(TemplatesActivity.this, templatesDatas.get(currentPosition).getWorkplaceInspectionTemplateId()).execute();
+                new TemplateDeleteAction(TemplatesActivity.this, templatesDatas.get(currentPosition).getTemplateId(), typeId).execute();
             }
         });
 
@@ -107,6 +116,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TemplatesActivity.this, TemplateActivity.class);
+                intent.putExtra("typeId", typeId);
                 startActivity(intent);
             }
         });
@@ -146,6 +156,44 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
         templateslist.setAdapter(adapter);
 
         text_no = findViewById(R.id.text_no);
+        spinnerType = (Spinner) findViewById(R.id.spinnerType);
+        type = (EditText) findViewById(R.id.type);
+        typeId = getResources().getString(R.string.text_workplace_templates);
+        type.setText(typeId);
+
+        types = new ArrayList<>();
+        types.add(getResources().getString(R.string.text_workplace_templates));
+        types.add(getResources().getString(R.string.text_meetings_templates));
+
+        adapterType = new SpinTypesAdapter(this, R.layout.spinner_list_item_black);
+        spinnerType.setAdapter(adapterType);
+        adapterType.setValues(types);
+        type.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickSpinner = true;
+                spinnerType.performClick();
+            }
+        });
+        spinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!clickSpinner) {
+                    return;
+                }
+                type.setText(types.get(position));
+                typeId = types.get(position);
+                clickSpinner = false;
+
+                pd.show();
+                new TemplatesAction(TemplatesActivity.this, typeId).execute();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     public void updateVisibility() {
@@ -170,7 +218,8 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
         TemplateData templateData = templatesDatas.get(position);
         intent.putExtra("name", templateData.getName());
         intent.putExtra("description", templateData.getDescription());
-        intent.putExtra("workplaceInspectionTemplateId", templateData.getWorkplaceInspectionTemplateId());
+        intent.putExtra("templateId", templateData.getTemplateId());
+        intent.putExtra("typeId", typeId);
         startActivity(intent);
     }
 
@@ -201,7 +250,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
         } else {
-            new TemplatesAction(TemplatesActivity.this).execute();
+            new TemplatesAction(TemplatesActivity.this, typeId).execute();
         }
     }
 
@@ -236,7 +285,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
         } catch (Exception e) {}
 
         pd.show();
-        new TemplatesAction(TemplatesActivity.this).execute();
+        new TemplatesAction(TemplatesActivity.this, typeId).execute();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.sapphire.api;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
@@ -10,7 +9,6 @@ import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
 import com.sapphire.logic.UserInfo;
-
 import java.util.ArrayList;
 
 public class TemplateDeleteAction extends AsyncTask{
@@ -20,11 +18,13 @@ public class TemplateDeleteAction extends AsyncTask{
     }
 
     private Context mContext;
-    private String workplaceInspectionTemplateId;
+    private String templateId;
+    private String typeId;
 
-    public TemplateDeleteAction(Context context, String workplaceInspectionTemplateId) {
+    public TemplateDeleteAction(Context context, String templateId, String typeId) {
         this.mContext = context;
-        this.workplaceInspectionTemplateId = workplaceInspectionTemplateId;
+        this.templateId = templateId;
+        this.typeId = typeId;
     }
 
     @Override
@@ -32,7 +32,12 @@ public class TemplateDeleteAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.WorkplaceInspectionTemplatesURL + "?model%5B%5D="+workplaceInspectionTemplateId;
+        String urlstring = Environment.SERVER;
+        if (typeId.equals(Sapphire.getInstance().getResources().getString(R.string.text_meetings_templates))) {
+            urlstring = urlstring + Environment.TopicTemplatesURL + "?model%5B%5D="+templateId;
+        } else {
+            urlstring = urlstring + Environment.WorkplaceInspectionTemplatesURL + "?model%5B%5D="+templateId;
+        }
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"DELETE", UserInfo.getUserInfo().getAuthToken()));
 

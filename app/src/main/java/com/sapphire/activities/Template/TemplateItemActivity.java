@@ -19,8 +19,8 @@ import com.sapphire.activities.BaseActivity;
 import com.sapphire.api.TemplateItemAddAction;
 
 public class TemplateItemActivity extends BaseActivity implements TemplateItemAddAction.RequestTemplateItemAdd{
-    private String workplaceInspectionTemplateItemId = "";
-    private String workplaceInspectionTemplateId = "";
+    private String templateItemId = "";
+    private String templateId = "";
     ProgressDialog pd;
     private EditText name;
     private EditText description;
@@ -32,6 +32,7 @@ public class TemplateItemActivity extends BaseActivity implements TemplateItemAd
     private TextView tittle_message;
     private Button button_cancel_save;
     private Button button_send_save;
+    private String typeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +94,7 @@ public class TemplateItemActivity extends BaseActivity implements TemplateItemAd
         button_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (workplaceInspectionTemplateItemId.equals("") || !nameOld.equals(name.getText().toString())
+                if (templateItemId.equals("") || !nameOld.equals(name.getText().toString())
                         || !descriptionOld.equals(description.getText().toString())) {
                     saveChanged();
                 } else {
@@ -111,15 +112,16 @@ public class TemplateItemActivity extends BaseActivity implements TemplateItemAd
         });
 
         Intent intent = getIntent();
-        workplaceInspectionTemplateItemId = intent.getStringExtra("workplaceInspectionTemplateItemId");
-        if (workplaceInspectionTemplateItemId == null) {
-            workplaceInspectionTemplateItemId = "";
+        typeId = intent.getStringExtra("typeId");
+        templateItemId = intent.getStringExtra("templateItemId");
+        if (templateItemId == null) {
+            templateItemId = "";
         }
-        workplaceInspectionTemplateId = intent.getStringExtra("workplaceInspectionTemplateId");
-        if (workplaceInspectionTemplateId == null) {
-            workplaceInspectionTemplateId = "";
+        templateId = intent.getStringExtra("templateId");
+        if (templateId == null) {
+            templateId = "";
         }
-        if (!workplaceInspectionTemplateItemId.equals("")) {
+        if (!templateItemId.equals("")) {
             nameOld = intent.getStringExtra("name");
             descriptionOld = intent.getStringExtra("description");
             name.setText(nameOld);
@@ -140,7 +142,7 @@ public class TemplateItemActivity extends BaseActivity implements TemplateItemAd
         if (allOk) {
             pd.show();
 
-            new TemplateItemAddAction(TemplateItemActivity.this, workplaceInspectionTemplateItemId, workplaceInspectionTemplateId, name.getText().toString(), description.getText().toString()).execute();
+            new TemplateItemAddAction(TemplateItemActivity.this, templateItemId, templateId, name.getText().toString(), description.getText().toString(), typeId).execute();
         }
     }
 

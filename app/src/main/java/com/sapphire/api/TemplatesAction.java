@@ -1,7 +1,6 @@
 package com.sapphire.api;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
@@ -11,7 +10,6 @@ import com.sapphire.logic.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.ResponseData;
 import com.sapphire.logic.UserInfo;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import java.util.ArrayList;
@@ -28,9 +26,11 @@ public class TemplatesAction extends AsyncTask{
 
     private Context mContext;
     private ArrayList<TemplateData> templatesDatas;
+    private String typeId;
 
-    public TemplatesAction(Context context) {
+    public TemplatesAction(Context context, String typeId) {
         this.mContext = context;
+        this.typeId = typeId;
     }
 
     @Override
@@ -38,7 +38,12 @@ public class TemplatesAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.WorkplaceInspectionTemplatesURL;
+        String urlstring = Environment.SERVER;
+        if (typeId.equals(Sapphire.getInstance().getResources().getString(R.string.text_meetings_templates))) {
+            urlstring = urlstring + Environment.TopicTemplatesURL;
+        } else {
+            urlstring = urlstring + Environment.WorkplaceInspectionTemplatesURL;
+        }
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthToken()));
 
