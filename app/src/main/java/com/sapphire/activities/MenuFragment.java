@@ -148,6 +148,9 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
         } else if (urlRoute.equals("/me/my-contacts")) {
             Intent intent = new Intent(getActivity(), MyContactsActivity.class);
             startActivity(intent);
+        } else if (urlRoute.equals("/health-and-safety/members")) {
+            Intent intent = new Intent(getActivity(), MembersActivity.class);
+            startActivity(intent);
         }
     }
 }

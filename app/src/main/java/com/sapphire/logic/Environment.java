@@ -39,6 +39,7 @@ public class Environment {
     public static final String InvestigationsItemsFilesURL = "/v1/HealthAndSafety/Investigations/Items/InvestigationItemFiles";
     public static final String TopicTemplatesURL = "/v1/HealthAndSafety/TopicTemplates";
     public static final String TopicTemplateItemsURL = "/v1/HealthAndSafety/TopicTemplates/Items";
+    public static final String MembersURL = "/v1/HealthAndSafety/Members";
 
     public static final String PolicyStatusStarted = "1586dc39-979b-3991-c822-a4bcb14d1345";
     public static final String PolicyStatusAcknowledged  = "1586dc39-979b-ab1c-838f-1917fce340de";

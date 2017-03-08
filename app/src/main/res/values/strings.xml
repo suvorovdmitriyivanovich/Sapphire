@@ -150,4 +150,8 @@
     <string name="text_type">Type templates</string>
     <string name="text_workplace_templates">Workplace Inspection Templates</string>
     <string name="text_meetings_templates">Meetings Topic Templates</string>
+    <string name="text_members">Members</string>
+    <string name="text_members_no">No members to display</string>
+    <string name="certified">Certified</string>
+    <string name="text_firstaid">FirstAid</string>
 </resources>

@@ -2,7 +2,6 @@ package com.sapphire.logic;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -32,6 +31,11 @@ public class ProfileData {
     private String avatarId = "";
     private String fullName = "";
     private String status = "";
+    private String name = "";
+    private String position = "";
+    private String email = "";
+    private boolean isCPRCertified = false;
+    private boolean isFirstAidCertified = false;
 
     public ProfileData() {
 
@@ -113,6 +117,21 @@ public class ProfileData {
             }
             if (!data.isNull("AvatarId")) {
                 setAvatarId(data.getString("AvatarId"));
+            }
+            if (!data.isNull("Name")) {
+                setName(data.getString("Name"));
+            }
+            if (!data.isNull("Position")) {
+                setPosition(data.getString("Position"));
+            }
+            if (!data.isNull("Email")) {
+                setEmail(data.getString("Email"));
+            }
+            if (!data.isNull("IsCPRCertified")) {
+                setIsCPRCertified(data.getBoolean("IsCPRCertified"));
+            }
+            if (!data.isNull("IsFirstAidCertified")) {
+                setIsFirstAidCertified(data.getBoolean("IsFirstAidCertified"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -467,5 +486,45 @@ public class ProfileData {
             }
         }
         return fullNameReturn;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setIsCPRCertified(boolean isCPRCertified) {
+        this.isCPRCertified = isCPRCertified;
+    }
+
+    public boolean getIsCPRCertified() {
+        return isCPRCertified;
+    }
+
+    public void setIsFirstAidCertified(boolean isFirstAidCertified) {
+        this.isFirstAidCertified = isFirstAidCertified;
+    }
+
+    public boolean getIsFirstAidCertified() {
+        return isFirstAidCertified;
     }
 }
