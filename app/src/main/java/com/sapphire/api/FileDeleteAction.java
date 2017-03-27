@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import com.sapphire.R;
 import com.sapphire.Sapphire;
+import com.sapphire.db.DBHelper;
 import com.sapphire.logic.Environment;
 import com.sapphire.models.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
@@ -39,6 +40,7 @@ public class FileDeleteAction extends AsyncTask{
         String result = "";
 
         if (responseData.getSuccess()) {
+            DBHelper.getInstance(Sapphire.getInstance()).deleteWorkplaceInspectionItemFileServerId(id);
             /*
             JSONArray data = responseData.getData();
             policiesDatas = new ArrayList<PoliciesData>();

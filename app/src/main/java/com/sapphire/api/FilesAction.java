@@ -21,7 +21,7 @@ public class FilesAction extends AsyncTask{
     }
 
     private Context mContext;
-    private ArrayList<FileData> fileDatas;
+    private ArrayList<FileData> fileDatas = new ArrayList<FileData>();
 
     public FilesAction(Context context) {
         this.mContext = context;

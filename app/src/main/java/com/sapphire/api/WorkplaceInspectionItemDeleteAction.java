@@ -2,7 +2,6 @@ package com.sapphire.api;
 
 import android.content.Context;
 import android.os.AsyncTask;
-
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
@@ -10,7 +9,6 @@ import com.sapphire.models.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.ResponseData;
 import com.sapphire.logic.UserInfo;
-
 import java.util.ArrayList;
 
 public class WorkplaceInspectionItemDeleteAction extends AsyncTask{

@@ -52,6 +52,9 @@ public class WorkplaceInspectionItemAddAction extends AsyncTask{
         }
 
         String result = "";
+        if (datas.size() == 0) {
+            result = "OK";
+        }
 
         for (WorkplaceInspectionItemData item: datas) {
             JSONArray jsonArray = new JSONArray();

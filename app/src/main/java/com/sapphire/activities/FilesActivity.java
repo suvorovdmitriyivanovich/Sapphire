@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,7 +36,8 @@ import com.sapphire.api.FileDeleteAction;
 import com.sapphire.api.FilesAction;
 import com.sapphire.api.GetFileAction;
 import com.sapphire.api.UploadFileAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
+import com.sapphire.db.DBHelper;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.FileData;
@@ -56,7 +58,7 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
                                                            GetFileAction.RequestFile,
                                                            UploadFileAction.RequestUploadFile,
                                                            FileAddAction.RequestFileAdd,
-                                                           WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                           UpdateAction.RequestUpdate{
     private ArrayList<FileData> fileDatas;
     private FilesAdapter adapter;
     private ProgressDialog pd;
@@ -87,6 +89,11 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
     private BroadcastReceiver br;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private TextView text_nointernet;
+    private TextView text_setinternet;
+    private boolean setUpdateAll = false;
+    private String newFile = "";
+    private FileData fileData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,8 +138,18 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
 
                 if (typeDialog == 1) {
                     pd.show();
-
-                    new FileDeleteAction(FilesActivity.this, fileDatas.get(currentPosition).getFileId()).execute();
+                    if (fileDatas.get(currentPosition).getFileId().equals("")) {
+                        DBHelper.getInstance(Sapphire.getInstance()).deleteWorkplaceInspectionItemFile(fileDatas.get(currentPosition).getId());
+                        if (fileDatas.get(currentPosition).getFile().indexOf(getApplicationContext().getFilesDir().getAbsolutePath() + "/temp/") == 0) {
+                            File file = new File(fileDatas.get(currentPosition).getFile());
+                            if (file.exists()) {
+                                file.delete();
+                            }
+                        }
+                        new FilesAction(FilesActivity.this).execute();
+                    } else {
+                        new FileDeleteAction(FilesActivity.this, fileDatas.get(currentPosition).getFileId()).execute();
+                    }
                 } else if (typeDialog == 2) {
                     Uri uri = Uri.fromFile(new File(file.toLowerCase()));
                     //Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -271,12 +288,20 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
 
         nointernet_group = findViewById(R.id.nointernet_group);
         par_nointernet_group = nointernet_group.getLayoutParams();
+        text_nointernet = (TextView) findViewById(R.id.text_nointernet);
+        text_setinternet = (TextView) findViewById(R.id.text_setinternet);
         nointernet_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pd.show();
+                if (setUpdateAll) {
+                    pd.show();
 
-                new WorkplaceInspectionItemAddAction(FilesActivity.this, null, true, 0, "").execute();
+                    //new UpdateAction(FilesActivity.this, null, true, 0, "").execute();
+                    new UpdateAction(FilesActivity.this);
+                } else {
+                    Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -284,13 +309,33 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
     }
 
     private void UpdateBottom() {
-        if (Sapphire.getInstance().getNeedUpdate()) {
-            par_nointernet_group.height = GetPixelFromDips(56);
+        if (url.equals(Environment.WorkplaceInspectionsItemsFilesURL)) {
+            text_nointernet.setText(getResources().getString(R.string.text_need_internet));
+            text_setinternet.setText(getResources().getString(R.string.text_setinternet));
+            setUpdateAll = false;
+            if (NetRequests.getNetRequests().isOnline(false)) {
+                if (Sapphire.getInstance().getNeedUpdate()) {
+                    setUpdateAll = true;
+                    text_nointernet.setText(getResources().getString(R.string.text_exits_nosynchronize));
+                    text_setinternet.setText(getResources().getString(R.string.text_synchronize));
+                    par_nointernet_group.height = GetPixelFromDips(56);
+                } else {
+                    par_nointernet_group.height = 0;
+                }
+            } else {
+                par_nointernet_group.height = GetPixelFromDips(56);
+            }
+            nointernet_group.setLayoutParams(par_nointernet_group);
+            nointernet_group.requestLayout();
         } else {
-            par_nointernet_group.height = 0;
+            if (Sapphire.getInstance().getNeedUpdate()) {
+                par_nointernet_group.height = GetPixelFromDips(56);
+            } else {
+                par_nointernet_group.height = 0;
+            }
+            nointernet_group.setLayoutParams(par_nointernet_group);
+            nointernet_group.requestLayout();
         }
-        nointernet_group.setLayoutParams(par_nointernet_group);
-        nointernet_group.requestLayout();
     }
 
     public void updateVisibility() {
@@ -314,7 +359,8 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
                     public void OnSelectedFile(String file) {
                         fileDialog.dismiss();
                         pd.show();
-                        new UploadFileAction(FilesActivity.this, file).execute();
+                        newFile = file;
+                        new UploadFileAction(FilesActivity.this, newFile).execute();
                     }
                 });
         fileDialogBuilder.setOnKeyListener(new DialogInterface.OnKeyListener() {
@@ -402,7 +448,8 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
                 outStream.close();
 
                 pd.show();
-                new UploadFileAction(FilesActivity.this, file.getAbsolutePath()).execute();
+                newFile = file.getAbsolutePath();
+                new UploadFileAction(FilesActivity.this, newFile).execute();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -525,20 +572,41 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
 
     @Override
     public void onRequestFiles(String result, ArrayList<FileData> fileDatas) {
-        if (!result.equals("OK")) {
+        if (!result.equals("OK") && (!result.equals(getResources().getString(R.string.text_need_internet)) || !url.equals(Environment.WorkplaceInspectionsItemsFilesURL))) {
             updateVisibility();
 
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
-        } else {
-            this.fileDatas = fileDatas;
-            adapter.setData(fileDatas);
-
-            updateVisibility();
-
-            pd.hide();
+            return;
         }
+
+        ArrayList<FileData> allDatas = new ArrayList<FileData>();
+        ArrayList<FileData> datas = DBHelper.getInstance(Sapphire.getInstance()).getWorkplaceInspectionItemFiles(id);
+
+        boolean isExist = false;
+        for (FileData item: fileDatas) {
+            isExist = false;
+            for (FileData item2: datas) {
+                if (item.getParentId().equals(item2.getParentId())) {
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                allDatas.add(item);
+            }
+        }
+        for (FileData item: datas) {
+            allDatas.add(item);
+        }
+
+        this.fileDatas = allDatas;
+        adapter.setData(this.fileDatas);
+
+        updateVisibility();
+
+        pd.hide();
     }
 
     @Override
@@ -572,11 +640,25 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
     public void onRequestUploadFile(String result, FileData fileData) {
         if (!result.equals("OK")) {
             isOpenGalery = false;
-            pd.hide();
-            Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_LONG).show();
+            if (url.equals(Environment.WorkplaceInspectionsItemsFilesURL) && result.equals(getResources().getString(R.string.text_need_internet))) {
+                FileData newFileData = new FileData();
+                newFileData.setIsFolder(false);
+                newFileData.setParentId(id);
+                newFileData.setFile(newFile);
+                File file = new File(newFile);
+                newFileData.setName(file.getName());
+                newFileData.setSize((int) file.length());
+
+                DBHelper.getInstance(Sapphire.getInstance()).addWorkplaceInspectionItemFile(newFileData);
+                new FilesAction(FilesActivity.this).execute();
+            } else {
+                pd.hide();
+                Toast.makeText(getBaseContext(), result,
+                        Toast.LENGTH_LONG).show();
+            }
         } else {
-            UserInfo.getUserInfo().getFileDatas().add(fileData);
+            this.fileData = fileData;
+            UserInfo.getUserInfo().getFileDatas().add(this.fileData);
             //new FilesAction(FilesActivity.this).execute();
             new FileAddAction(FilesActivity.this, fileData.getFileId(), id, url, nameField).execute();
         }
@@ -586,16 +668,25 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
     public void onRequestFileAdd(String result) {
         isOpenGalery = false;
         if (!result.equals("OK")) {
-            pd.hide();
-            Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_LONG).show();
+            if (url.equals(Environment.WorkplaceInspectionsItemsFilesURL) && result.equals(getResources().getString(R.string.text_need_internet))) {
+                fileData.setIsFolder(false);
+                fileData.setParentId(id);
+                fileData.setFile(newFile);
+
+                DBHelper.getInstance(Sapphire.getInstance()).addWorkplaceInspectionItemFile(fileData);
+                new FilesAction(FilesActivity.this).execute();
+            } else {
+                pd.hide();
+                Toast.makeText(getBaseContext(), result,
+                        Toast.LENGTH_LONG).show();
+            }
         } else {
             new FilesAction(FilesActivity.this).execute();
         }
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

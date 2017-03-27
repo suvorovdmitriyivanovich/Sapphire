@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -44,10 +43,9 @@ import com.sapphire.api.MeetingsAction;
 import com.sapphire.api.MembersAction;
 import com.sapphire.api.PoliciesAction;
 import com.sapphire.api.TemplatesAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.api.WorkplaceInspectionDeleteAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
 import com.sapphire.api.WorkplaceInspectionsAction;
-import com.sapphire.db.DBHelper;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.CoursesData;
 import com.sapphire.logic.Environment;
@@ -91,7 +89,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
                                                           MeetingDeleteAction.RequestMeetingDelete,
                                                           MembersAction.RequestMembers,
                                                           MembersAdapter.OnRootMembersClickListener,
-                                                          WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                          UpdateAction.RequestUpdate{
     private static long back_pressed;
     private SharedPreferences sPref;
     private SharedPreferences.Editor ed;
@@ -265,7 +263,8 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(MainActivity.this, null, true, 0, "").execute();
+                //new WorkplaceInspectionItemAddAction(MainActivity.this, null, true, 0, "").execute();
+                new UpdateAction(MainActivity.this);
             }
         });
 
@@ -716,7 +715,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

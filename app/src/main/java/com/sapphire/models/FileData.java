@@ -1,12 +1,10 @@
 package com.sapphire.models;
 
-import com.sapphire.models.FileTypeData;
-import com.sapphire.models.SettingData;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class FileData {
+    private String id = "";
     private String fileId = "";
     private String name = "";
     private String description = "";
@@ -15,6 +13,7 @@ public class FileData {
     private FileTypeData fileType = new FileTypeData();
     private boolean isFolder = false;
     private SettingData settings = new SettingData();
+    private String file = "";
 
     public FileData() {
 
@@ -55,6 +54,14 @@ public class FileData {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getFileId() {
@@ -121,11 +128,27 @@ public class FileData {
         this.isFolder = isFolder;
     }
 
+    public void setIsFolder(int isFolder) {
+        if (isFolder == 1) {
+            this.isFolder = true;
+        } else {
+            this.isFolder = false;
+        }
+    }
+
     public SettingData getSettings() {
         return settings;
     }
 
     public void setSettings(JSONObject settings) {
         this.settings = new SettingData(settings);
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
     }
 }

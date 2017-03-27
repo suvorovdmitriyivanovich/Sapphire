@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
+import com.sapphire.models.FileData;
 import com.sapphire.models.ItemPriorityData;
 import com.sapphire.models.ItemStatusData;
 import com.sapphire.models.MessageData;
@@ -89,6 +90,17 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "severity text,"
                 + "statusid text,"
                 + "priorityid text"
+                + ");");
+
+        db.execSQL("create table workplaceinspectionitemfiles ("
+                + "id integer primary key autoincrement,"
+                + "fileid text,"
+                + "name text,"
+                + "description text,"
+                + "size integer,"
+                + "parentid text,"
+                + "isfolder integer,"
+                + "file text"
                 + ");");
     }
 
@@ -472,6 +484,124 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void addWorkplaceInspectionItemFile(FileData data) {
+        SQLiteDatabase db = getWriteDatabase();
+        db.beginTransaction();
+        try {
+            ContentValues cv = new ContentValues();
+
+            cv.put("fileid", data.getFileId());
+            cv.put("name", data.getName());
+            cv.put("description", data.getDescription());
+            cv.put("parentid", data.getParentId());
+            cv.put("size", data.getSize());
+            cv.put("isfolder", data.getIsFolder());
+            cv.put("file", data.getFile());
+
+            db.insert("workplaceinspectionitemfiles", null, cv);
+
+            db.setTransactionSuccessful();
+        }finally {
+            db.endTransaction();
+        }
+    }
+
+    public ArrayList<FileData> getWorkplaceInspectionItemFiles(String id) {
+        ArrayList<FileData> mDatas = new ArrayList<FileData>();
+
+        String select = null;
+        String[] selectarg = null;
+        if (!id.equals("")) {
+            select = "parentid" + EQUALS;
+            selectarg = new String[]{String.valueOf(id)};
+        }
+
+        Cursor c = getReadDatabase().query("workplaceinspectionitemfiles", null, select, selectarg, null, null, null);
+
+        if (c.moveToFirst()) {
+            int idColIndex = c.getColumnIndex("id");
+            int fileidColIndex = c.getColumnIndex("fileid");
+            int nameColIndex = c.getColumnIndex("name");
+            int descriptionColIndex = c.getColumnIndex("description");
+            int parentidColIndex = c.getColumnIndex("parentid");
+            int sizeColIndex = c.getColumnIndex("size");
+            int isfolderColIndex = c.getColumnIndex("isfolder");
+            int fileColIndex = c.getColumnIndex("file");
+
+            do {
+                FileData data = new FileData();
+                if (idColIndex != -1) {
+                    data.setId(c.getString(idColIndex));
+                }
+                if (fileidColIndex != -1) {
+                    data.setFileId(c.getString(fileidColIndex));
+                }
+                if (nameColIndex != -1) {
+                    data.setName(c.getString(nameColIndex));
+                }
+                if (descriptionColIndex != -1) {
+                    data.setDescription(c.getString(descriptionColIndex));
+                }
+                if (parentidColIndex != -1) {
+                    data.setParentId(c.getString(parentidColIndex));
+                }
+                if (sizeColIndex != -1) {
+                    data.setSize(c.getInt(sizeColIndex));
+                }
+                if (isfolderColIndex != -1) {
+                    data.setIsFolder(c.getInt(isfolderColIndex));
+                }
+                if (fileColIndex != -1) {
+                    data.setFile(c.getString(fileColIndex));
+                }
+
+                mDatas.add(data);
+            } while (c.moveToNext());
+        }
+        c.close();
+
+        return mDatas;
+    }
+
+    public void deleteWorkplaceInspectionItemFile(String id) {
+        SQLiteDatabase db = getWriteDatabase();
+        db.beginTransaction();
+        try {
+            db.delete("workplaceinspectionitemfiles", "id = " + id, null);
+            db.setTransactionSuccessful();
+        }finally {
+            db.endTransaction();
+        }
+    }
+
+    public void deleteWorkplaceInspectionItemFileServerId(String fileid) {
+        String id = "";
+
+        SQLiteDatabase db = getWriteDatabase();
+
+        Cursor c = db.query("workplaceinspectionitemfiles", null, "fileid = ?", new String[] {String.valueOf(fileid)}, null, null, null);
+
+        if (c.moveToFirst()) {
+            int idColIndex = c.getColumnIndex("id");
+
+            do {
+                id = c.getString(idColIndex);
+                break;
+            } while (c.moveToNext());
+        }
+        c.close();
+
+        if (!id.equals("")) {
+            db.beginTransaction();
+            try {
+                db.delete("workplaceinspectionitemfiles", "id = " + id, null);
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
+        }
+    }
+
     public boolean existUpdate() {
         boolean exist = false;
 
@@ -484,6 +614,19 @@ public class DBHelper extends SQLiteOpenHelper {
             c.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        if (!exist) {
+            try {
+                Cursor c = getReadDatabase().query("workplaceinspectionitemfiles", null, null, null, null, null, null);
+
+                if (c.moveToFirst()) {
+                    exist = true;
+                }
+                c.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return exist;
