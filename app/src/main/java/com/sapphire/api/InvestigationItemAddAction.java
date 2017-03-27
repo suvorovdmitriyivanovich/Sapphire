@@ -5,11 +5,11 @@ import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
-import com.sapphire.logic.ErrorMessageData;
+import com.sapphire.models.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.logic.ResponseData;
+import com.sapphire.models.ResponseData;
 import com.sapphire.logic.UserInfo;
-import com.sapphire.logic.InvestigationItemData;
+import com.sapphire.models.InvestigationItemData;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +47,7 @@ public class InvestigationItemAddAction extends AsyncTask{
             jsonObject.put("InvestigationId", data.getInvestigationId());
             jsonObject.put("Name", data.getName());
             jsonObject.put("Description", data.getDescription());
-            jsonObject.put("Date", data.getDateStringApi());
+            jsonObject.put("Date", data.getDateServer());
             jsonArray.put(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();

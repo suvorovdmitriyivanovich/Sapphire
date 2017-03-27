@@ -61,143 +61,159 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/scrollView"
         android:layout_below="@+id/top_group"
-        android:text="@string/name"
-        android:id="@+id/text_name"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp" />
+        android:layout_above="@+id/nointernet_group">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_name"
-        android:inputType="text"
-        android:id="@+id/name"
-        android:hint="@string/name"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scroll_group">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_below="@+id/name"
-        android:text="@string/name_error"
-        android:id="@+id/text_name_error"
-        android:layout_marginLeft="12dp"
-        android:textColor="@color/red"
-        android:layout_marginRight="10dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/name"
+                android:id="@+id/text_name"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/text_description"
-        android:id="@+id/text_description"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/text_name_error" />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:id="@+id/name"
+                android:hint="@string/name"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_description"
-        android:inputType="text"
-        android:id="@+id/description"
-        android:hint="@string/text_description"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/name_error"
+                android:id="@+id/text_name_error"
+                android:layout_marginLeft="12dp"
+                android:textColor="@color/red"
+                android:layout_marginRight="10dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/text_date"
-        android:id="@+id/text_date"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/description"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/text_description"
+                android:id="@+id/text_description"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:id="@+id/description"
+                android:hint="@string/text_description"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/text_date"
+                android:id="@+id/text_date"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/date_group"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <EditText
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:id="@+id/date"
+                    android:hint="@string/text_date"
+                    android:focusable="false" />
+
+                <RelativeLayout
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/image_date_group"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/date"
+                    android:layout_toEndOf="@+id/date"
+                    android:background="@drawable/dialog_button">
+
+                    <ImageView
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:id="@+id/image_date"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/date"/>
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/date_error"
+                android:id="@+id/text_date_error"
+                android:layout_marginLeft="12dp"
+                android:textColor="@color/red"
+                android:layout_marginRight="10dp"/>
+
+        </LinearLayout>
+    </ScrollView>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/date_group"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_below="@+id/text_date">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/nointernet_group"
+        android:background="@drawable/black_button">
 
-        <EditText
-            android:layout_width="105dp"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/text_exits_nosynchronize"
+            android:id="@+id/text_nointernet"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:id="@+id/date"
-            android:gravity="center"
-            android:focusable="false" />
+            android:layout_marginLeft="24dp"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:layout_toLeftOf="@+id/text_setinternet"
+            android:layout_toStartOf="@+id/text_setinternet"
+            android:layout_marginRight="10dp" />
 
-        <RelativeLayout
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:id="@+id/image_date_group"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/date"
-            android:layout_toEndOf="@+id/date"
-            android:background="@drawable/dialog_button">
-
-            <ImageView
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:id="@+id/image_date"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/date"/>
-        </RelativeLayout>
-
-        <EditText
-            android:layout_width="95dp"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/text_synchronize"
+            android:id="@+id/text_setinternet"
             android:layout_centerVertical="true"
-            android:id="@+id/time"
-            android:layout_marginLeft="6dp"
-            android:layout_toRightOf="@+id/image_date_group"
-            android:layout_toEndOf="@+id/image_date_group"
-            android:gravity="center"
-            android:focusable="false" />
-
-        <RelativeLayout
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:id="@+id/image_time_group"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/time"
-            android:layout_toEndOf="@+id/time"
-            android:background="@drawable/dialog_button">
-
-            <ImageView
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:id="@+id/image_time"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/time" />
-        </RelativeLayout>
-
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="24dp"
+            android:singleLine="true"
+            android:textColor="@color/green_light"
+            android:textSize="14sp"/>
     </RelativeLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/date_error"
-        android:id="@+id/text_date_error"
-        android:layout_marginLeft="12dp"
-        android:textColor="@color/red"
-        android:layout_marginRight="10dp"
-        android:layout_below="@+id/date_group"/>
 
 </RelativeLayout>

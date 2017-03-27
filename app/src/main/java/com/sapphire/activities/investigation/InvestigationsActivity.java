@@ -15,11 +15,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
+import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.FilesActivity;
 import com.sapphire.activities.MenuFragment;
@@ -27,8 +29,10 @@ import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.InvestigationsAdapter;
 import com.sapphire.api.InvestigationsAction;
 import com.sapphire.api.InvestigationDeleteAction;
+import com.sapphire.api.WorkplaceInspectionItemAddAction;
 import com.sapphire.logic.Environment;
-import com.sapphire.logic.InvestigationData;
+import com.sapphire.logic.NetRequests;
+import com.sapphire.models.InvestigationData;
 import com.sapphire.logic.UserInfo;
 import java.util.ArrayList;
 
@@ -37,9 +41,8 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
                                                                     InvestigationsAdapter.OnDeleteInvestigationsClickListener,
                                                                     InvestigationsAdapter.OnFilesInvestigationsClickListener,
                                                                     InvestigationsAction.RequestInvestigations,
-                                                                    InvestigationDeleteAction.RequestInvestigationDelete{
-    public final static String PARAM_TASK = "task";
-    public final static String BROADCAST_ACTION = "com.sapphire.activities.investigation.Investigations";
+                                                                    InvestigationDeleteAction.RequestInvestigationDelete,
+                                                                    WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
     private BroadcastReceiver br;
     private ArrayList<InvestigationData> investigationDatas;
     private InvestigationsAdapter adapter;
@@ -52,6 +55,8 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
     private int currentPosition = 0;
     private View text_no;
     private boolean me = false;
+    private View nointernet_group;
+    private ViewGroup.LayoutParams par_nointernet_group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,11 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
 
         Intent intent = getIntent();
         me = intent.getBooleanExtra("me", false);
+
+        if (me) {
+            TextView text_header = (TextView) findViewById(R.id.text_header);
+            text_header.setText(getResources().getString(R.string.text_my_investigations));
+        }
 
         AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
         adb_save.setCancelable(true);
@@ -122,7 +132,7 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
         br = new BroadcastReceiver() {
             // действия при получении сообщений
             public void onReceive(Context context, Intent intent) {
-                final String putreqwest = intent.getStringExtra(PARAM_TASK);
+                final String putreqwest = intent.getStringExtra(Environment.PARAM_TASK);
 
                 if (putreqwest.equals("updateleftmenu")) {
                     try {
@@ -130,11 +140,13 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
                     } catch (Exception e) {}
+                } else if (putreqwest.equals("updatebottom")) {
+                    UpdateBottom();
                 }
             }
         };
         // создаем фильтр для BroadcastReceiver
-        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+        IntentFilter intFilt = new IntentFilter(Environment.BROADCAST_ACTION);
         // регистрируем (включаем) BroadcastReceiver
         registerReceiver(br, intFilt);
 
@@ -154,7 +166,28 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
 
         text_no = findViewById(R.id.text_no);
 
-        updateVisibility();
+        nointernet_group = findViewById(R.id.nointernet_group);
+        par_nointernet_group = nointernet_group.getLayoutParams();
+        nointernet_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pd.show();
+
+                new WorkplaceInspectionItemAddAction(InvestigationsActivity.this, null, true, 0, "").execute();
+            }
+        });
+
+        UpdateBottom();
+    }
+
+    private void UpdateBottom() {
+        if (Sapphire.getInstance().getNeedUpdate()) {
+            par_nointernet_group.height = GetPixelFromDips(56);
+        } else {
+            par_nointernet_group.height = 0;
+        }
+        nointernet_group.setLayoutParams(par_nointernet_group);
+        nointernet_group.requestLayout();
     }
 
     public void updateVisibility() {
@@ -233,6 +266,26 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
         } else {
             new InvestigationsAction(InvestigationsActivity.this, me).execute();
         }
+    }
+
+    @Override
+    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+        } else {
+            Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
+            UpdateBottom();
+            pd.hide();
+        }
+    }
+
+    public int GetPixelFromDips(float pixels) {
+        // Get the screen's density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (pixels * scale + 0.5f);
     }
 
     @Override

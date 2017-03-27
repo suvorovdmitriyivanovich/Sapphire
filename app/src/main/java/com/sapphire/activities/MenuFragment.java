@@ -11,13 +11,18 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
+import com.sapphire.activities.course.CoursesActivity;
+import com.sapphire.activities.discipline.DisciplinesActivity;
+import com.sapphire.activities.document.DocumentsActivity;
 import com.sapphire.activities.investigation.InvestigationsActivity;
-import com.sapphire.activities.organizationStructure.OrganizationStructureActivity;
+import com.sapphire.activities.meeting.MeetingsActivity;
+import com.sapphire.activities.performance.PerformancesActivity;
+import com.sapphire.activities.policy.PoliciesActivity;
 import com.sapphire.activities.template.TemplatesActivity;
 import com.sapphire.activities.workplaceInspection.WorkplaceInspectionsActivity;
 import com.sapphire.adapters.MenuAdapter;
 import com.sapphire.db.DBHelper;
-import com.sapphire.logic.NavigationMenuData;
+import com.sapphire.models.NavigationMenuData;
 import java.util.ArrayList;
 
 public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickListener {
@@ -150,6 +155,18 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
             startActivity(intent);
         } else if (urlRoute.equals("/health-and-safety/members")) {
             Intent intent = new Intent(getActivity(), MembersActivity.class);
+            startActivity(intent);
+        } else if (urlRoute.equals("/health-and-safety/meetings")) {
+            Intent intent = new Intent(getActivity(), MeetingsActivity.class);
+            startActivity(intent);
+        } else if (urlRoute.equals("/me/my-performance")) {
+            Intent intent = new Intent(getActivity(), PerformancesActivity.class);
+            startActivity(intent);
+        } else if (urlRoute.equals("/me/my-discipline")) {
+            Intent intent = new Intent(getActivity(), DisciplinesActivity.class);
+            startActivity(intent);
+        } else if (urlRoute.equals("/me/my-documents")) {
+            Intent intent = new Intent(getActivity(), DocumentsActivity.class);
             startActivity(intent);
         }
     }

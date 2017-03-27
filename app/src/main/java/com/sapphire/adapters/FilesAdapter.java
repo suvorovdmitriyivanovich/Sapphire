@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.FileData;
-import com.sapphire.logic.TemplateData;
+import com.sapphire.logic.Environment;
+import com.sapphire.models.FileData;
 
 import java.util.ArrayList;
 
@@ -77,29 +77,23 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
         holder.text_description.setText(data.getSizeKbString() + " Kb");
 
         holder.download.setTypeface(typeFace);
-        holder.download.setText(Html.fromHtml("&#61465;"));
+        holder.download.setText(Html.fromHtml("&#"+Environment.IcoDownload+";"));
         holder.download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mContext instanceof OnDownloadClickListener) {
                     ((OnDownloadClickListener) mContext).onDownloadClick(holder.getAdapterPosition());
                 }
-                else {
-                    //TODO generate error dialog
-                }
             }
         });
 
         holder.delete.setTypeface(typeFace);
-        holder.delete.setText(Html.fromHtml("&#61944;"));
+        holder.delete.setText(Html.fromHtml("&#"+Environment.IcoDelete+";"));
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mContext instanceof OnDeleteClickListener) {
                     ((OnDeleteClickListener) mContext).onDeleteClick(holder.getAdapterPosition());
-                }
-                else {
-                    //TODO generate error dialog
                 }
             }
         });
@@ -109,9 +103,6 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
             public void onClick(View view) {
                 if (mContext instanceof OnRootClickListener) {
                     ((OnRootClickListener) mContext).onRootClick(holder.getAdapterPosition());
-                }
-                else {
-                    //TODO generate error dialog
                 }
             }
         });

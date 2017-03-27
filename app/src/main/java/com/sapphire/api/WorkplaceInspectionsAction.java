@@ -5,10 +5,10 @@ import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
-import com.sapphire.logic.ErrorMessageData;
+import com.sapphire.models.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.logic.ResponseData;
-import com.sapphire.logic.WorkplaceInspectionData;
+import com.sapphire.models.ResponseData;
+import com.sapphire.models.WorkplaceInspectionData;
 import com.sapphire.logic.UserInfo;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,9 +26,11 @@ public class WorkplaceInspectionsAction extends AsyncTask{
 
     private Context mContext;
     private ArrayList<WorkplaceInspectionData> workplaceInspectionDatas;
+    private boolean isDashboard = false;
 
-    public WorkplaceInspectionsAction(Context context) {
+    public WorkplaceInspectionsAction(Context context, boolean isDashboard) {
         this.mContext = context;
+        this.isDashboard = isDashboard;
     }
 
     @Override
@@ -47,7 +49,13 @@ public class WorkplaceInspectionsAction extends AsyncTask{
             workplaceInspectionDatas = new ArrayList<WorkplaceInspectionData>();
             for (int y=0; y < data.length(); y++) {
                 try {
-                    workplaceInspectionDatas.add(new WorkplaceInspectionData(data.getJSONObject(y)));
+                    WorkplaceInspectionData workplaceInspectionData = new WorkplaceInspectionData(data.getJSONObject(y));
+                    if (isDashboard) {
+                        if (!workplaceInspectionData.getCompleted() || !workplaceInspectionData.getPostedOnBoard()) {
+                            continue;
+                        }
+                    }
+                    workplaceInspectionDatas.add(workplaceInspectionData);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -70,6 +70,8 @@ public class NetRequests {
                 rez = response.toString();
             } else if (responseCode == 400) {
                 rez = "400";
+            } else if (responseCode == 401) {
+                rez = Sapphire.getInstance().getResources().getString(R.string.text_unauthorized);
             } else {
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream(), "utf-8"), 8);
                 String inputLine;

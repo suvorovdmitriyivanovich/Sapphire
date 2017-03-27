@@ -11,7 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.InvestigationData;
+import com.sapphire.logic.Environment;
+import com.sapphire.models.InvestigationData;
 import java.util.ArrayList;
 
 public class InvestigationsAdapter extends RecyclerView.Adapter<InvestigationsAdapter.ViewHolder> {
@@ -88,57 +89,45 @@ public class InvestigationsAdapter extends RecyclerView.Adapter<InvestigationsAd
         holder.text_date.setText(data.getDateString());
 
         holder.open.setTypeface(typeFace);
-        holder.open.setText(Html.fromHtml("&#61504;"));
+        holder.open.setText(Html.fromHtml("&#"+Environment.IcoEdit+";"));
         holder.open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mContext instanceof OnOpenInvestigationsClickListener) {
                     ((OnOpenInvestigationsClickListener) mContext).onOpenInvestigationsClick(holder.getAdapterPosition());
                 }
-                else {
-                    //TODO generate error dialog
-                }
             }
         });
 
         holder.delete.setTypeface(typeFace);
-        holder.delete.setText(Html.fromHtml("&#61944;"));
+        holder.delete.setText(Html.fromHtml("&#"+Environment.IcoDelete+";"));
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mContext instanceof OnDeleteInvestigationsClickListener) {
                     ((OnDeleteInvestigationsClickListener) mContext).onDeleteInvestigationsClick(holder.getAdapterPosition());
                 }
-                else {
-                    //TODO generate error dialog
-                }
             }
         });
 
         holder.files.setTypeface(typeFace);
-        holder.files.setText(Html.fromHtml("&#61787;"));
+        holder.files.setText(Html.fromHtml("&#"+Environment.IcoFiles+";"));
         holder.files.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mContext instanceof OnFilesInvestigationsClickListener) {
                     ((OnFilesInvestigationsClickListener) mContext).onFilesInvestigationsClick(holder.getAdapterPosition());
                 }
-                else {
-                    //TODO generate error dialog
-                }
             }
         });
 
         holder.report.setTypeface(typeFace);
-        holder.report.setText(Html.fromHtml("&#61889;"));
+        holder.report.setText(Html.fromHtml("&#"+Environment.IcoReport+";"));
         holder.report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mContext instanceof OnReportInvestigationsClickListener) {
                     ((OnReportInvestigationsClickListener) mContext).onReportInvestigationsClick(holder.getAdapterPosition());
-                }
-                else {
-                    //TODO generate error dialog
                 }
             }
         });
@@ -148,9 +137,6 @@ public class InvestigationsAdapter extends RecyclerView.Adapter<InvestigationsAd
             public void onClick(View view) {
                 if (mContext instanceof OnRootInvestigationsClickListener) {
                     ((OnRootInvestigationsClickListener) mContext).onRootInvestigationsClick(holder.getAdapterPosition());
-                }
-                else {
-                    //TODO generate error dialog
                 }
             }
         });

@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import com.sapphire.logic.ItemStatusData;
+
 import java.util.ArrayList;
 
 public class SpinTypesAdapter extends ArrayAdapter<String> {

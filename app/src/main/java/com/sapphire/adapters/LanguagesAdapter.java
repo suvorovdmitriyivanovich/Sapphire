@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.RightFragment;
-import com.sapphire.logic.LanguageData;
+import com.sapphire.models.LanguageData;
 import java.util.ArrayList;
 
 public class LanguagesAdapter extends BaseAdapter {

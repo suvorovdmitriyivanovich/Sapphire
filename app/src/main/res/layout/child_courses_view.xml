@@ -70,5 +70,7 @@
         android:layout_below="@+id/root"
         android:background="@color/border"
         android:id="@+id/border"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
 </RelativeLayout>

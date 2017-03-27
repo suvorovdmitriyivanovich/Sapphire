@@ -4,8 +4,11 @@ import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -18,19 +21,24 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
+import com.sapphire.Sapphire;
 import com.sapphire.adapters.FilesAdapter;
 import com.sapphire.api.FileAddAction;
 import com.sapphire.api.FileDeleteAction;
 import com.sapphire.api.FilesAction;
 import com.sapphire.api.GetFileAction;
 import com.sapphire.api.UploadFileAction;
-import com.sapphire.logic.FileData;
+import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.logic.Environment;
+import com.sapphire.logic.NetRequests;
+import com.sapphire.models.FileData;
 import com.sapphire.logic.UserInfo;
 import com.sapphire.ui.OpenFileDialog;
 import java.io.File;
@@ -47,7 +55,8 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
                                                            FileDeleteAction.RequestFileDelete,
                                                            GetFileAction.RequestFile,
                                                            UploadFileAction.RequestUploadFile,
-                                                           FileAddAction.RequestFileAdd{
+                                                           FileAddAction.RequestFileAdd,
+                                                           WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
     private ArrayList<FileData> fileDatas;
     private FilesAdapter adapter;
     private ProgressDialog pd;
@@ -69,12 +78,15 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
     private Dialog dialog;
     private final int CAMERA_CAPTURE = 1;
     private final int PIC_CROP = 2;
-    static final int GALLERY_REQUEST = 3;
+    private static final int GALLERY_REQUEST = 3;
     private Uri picUri;
     private boolean isOpenGalery = false;
     private String url = "";
     private String nameField = "";
     private View text_no;
+    private BroadcastReceiver br;
+    private View nointernet_group;
+    private ViewGroup.LayoutParams par_nointernet_group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +163,15 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.show();
+                if ((!url.equals(Environment.PerformanceEvaluationsFilesURL)
+                    && !url.equals(Environment.DisciplinesFilesURL)
+                    && !url.equals(Environment.DocumentsFilesURL))
+                    || fileDatas.size() == 0) {
+                    dialog.show();
+                } else {
+                    Toast.makeText(getBaseContext(), getResources().getString(R.string.text_error_add_files),
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -232,6 +252,45 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
         });
 
         text_no = findViewById(R.id.text_no);
+
+        // создаем BroadcastReceiver
+        br = new BroadcastReceiver() {
+            // действия при получении сообщений
+            public void onReceive(Context context, Intent intent) {
+                final String putreqwest = intent.getStringExtra(Environment.PARAM_TASK);
+
+                if (putreqwest.equals("updatebottom")) {
+                    UpdateBottom();
+                }
+            }
+        };
+        // создаем фильтр для BroadcastReceiver
+        IntentFilter intFilt = new IntentFilter(Environment.BROADCAST_ACTION);
+        // регистрируем (включаем) BroadcastReceiver
+        registerReceiver(br, intFilt);
+
+        nointernet_group = findViewById(R.id.nointernet_group);
+        par_nointernet_group = nointernet_group.getLayoutParams();
+        nointernet_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pd.show();
+
+                new WorkplaceInspectionItemAddAction(FilesActivity.this, null, true, 0, "").execute();
+            }
+        });
+
+        UpdateBottom();
+    }
+
+    private void UpdateBottom() {
+        if (Sapphire.getInstance().getNeedUpdate()) {
+            par_nointernet_group.height = GetPixelFromDips(56);
+        } else {
+            par_nointernet_group.height = 0;
+        }
+        nointernet_group.setLayoutParams(par_nointernet_group);
+        nointernet_group.requestLayout();
     }
 
     public void updateVisibility() {
@@ -536,6 +595,26 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
     }
 
     @Override
+    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+        } else {
+            Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
+            UpdateBottom();
+            pd.hide();
+        }
+    }
+
+    public int GetPixelFromDips(float pixels) {
+        // Get the screen's density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (pixels * scale + 0.5f);
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
@@ -553,5 +632,6 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
     @Override
     public void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(br);
     }
 }

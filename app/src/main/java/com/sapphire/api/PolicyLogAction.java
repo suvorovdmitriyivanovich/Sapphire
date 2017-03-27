@@ -1,21 +1,18 @@
 package com.sapphire.api;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
-import com.sapphire.logic.ErrorMessageData;
+import com.sapphire.models.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.logic.PoliciesData;
-import com.sapphire.logic.ResponseData;
+import com.sapphire.models.PolicyData;
+import com.sapphire.models.ResponseData;
 import com.sapphire.logic.UserInfo;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 public class PolicyLogAction extends AsyncTask{
@@ -27,7 +24,7 @@ public class PolicyLogAction extends AsyncTask{
     private Context mContext;
     private String policyId;
     private String policyStatusId;
-    private ArrayList<PoliciesData> policiesDatas;
+    private ArrayList<PolicyData> policiesDatas;
 
     public PolicyLogAction(Context context, String policyId, String policyStatusId) {
         this.mContext = context;

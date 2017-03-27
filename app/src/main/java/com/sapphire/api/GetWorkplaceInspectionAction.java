@@ -6,12 +6,11 @@ import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
-import com.sapphire.logic.ErrorMessageData;
+import com.sapphire.models.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.logic.ResponseData;
-import com.sapphire.logic.TemplateItemData;
+import com.sapphire.models.ResponseData;
 import com.sapphire.logic.UserInfo;
-import com.sapphire.logic.WorkplaceInspectionItemData;
+import com.sapphire.models.WorkplaceInspectionItemData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,15 +20,11 @@ import java.util.ArrayList;
 public class GetWorkplaceInspectionAction extends AsyncTask{
 
     public interface RequestWorkplaceInspection {
-        public void onRequestWorkplaceInspection(String result);
-    }
-
-    public interface RequestWorkplaceInspectionData {
-        public void onRequestWorkplaceInspectionData(ArrayList<WorkplaceInspectionItemData> workplaceInspectionItemDatas);
+        public void onRequestWorkplaceInspection(String result, ArrayList<WorkplaceInspectionItemData> workplaceInspectionItemDatas);
     }
 
     private Context mContext;
-    private ArrayList<WorkplaceInspectionItemData> workplaceInspectionItemDatas;
+    private ArrayList<WorkplaceInspectionItemData> workplaceInspectionItemDatas = new ArrayList<WorkplaceInspectionItemData>();
     private String workplaceInspectionId = "";
 
     public GetWorkplaceInspectionAction(Context context, String workplaceInspectionId) {
@@ -82,11 +77,7 @@ public class GetWorkplaceInspectionAction extends AsyncTask{
     protected void onPostExecute(Object o) {
         String resultData = (String) o;
         if(mContext!=null) {
-            if (resultData.equals("OK")) {
-                ((RequestWorkplaceInspectionData) mContext).onRequestWorkplaceInspectionData(workplaceInspectionItemDatas);
-            } else {
-                ((RequestWorkplaceInspection) mContext).onRequestWorkplaceInspection(resultData);
-            }
+            ((RequestWorkplaceInspection) mContext).onRequestWorkplaceInspection(resultData, workplaceInspectionItemDatas);
         }
     }
 }

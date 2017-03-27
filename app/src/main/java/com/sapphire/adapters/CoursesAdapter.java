@@ -8,12 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.CourseData;
-import com.sapphire.logic.CoursesData;
+import com.sapphire.logic.Environment;
+import com.sapphire.models.CoursesData;
 import java.util.ArrayList;
 
 public class CoursesAdapter extends BaseExpandableListAdapter {
@@ -129,16 +128,16 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
         textCourse = textCourse + Sapphire.getInstance().getResources().getString(R.string.text_course);
         textCourse = textCourse + ": ";
         if (coursesData.getCoursePassed()) {
-            textCourse = textCourse + "<big><font color=#16a085>&#61452;</font></big> ";
+            textCourse = textCourse + "<big><font color=#16a085>&#"+Environment.IcoOk+";</font></big> ";
         } else {
-            textCourse = textCourse + "<big><font color=#cc3300>&#61453;</font></big>";
+            textCourse = textCourse + "<big><font color=#cc3300>&#"+Environment.IcoClose+";</font></big>";
         }
         textCourse = textCourse + "<br>" + Sapphire.getInstance().getResources().getString(R.string.text_quiz);
         textCourse = textCourse + ": ";
         if (coursesData.getQuizPassed()) {
-            textCourse = textCourse + "<big><font color=#16a085>&#61452;</font></big> ";
+            textCourse = textCourse + "<big><font color=#16a085>&#"+Environment.IcoOk+";</font></big> ";
         } else {
-            textCourse = textCourse + "<big><font color=#cc3300>&#61453;</font></big>";
+            textCourse = textCourse + "<big><font color=#cc3300>&#"+Environment.IcoClose+";</font></big>";
         }
 
         TextView description = (TextView) convertView.findViewById(R.id.text_description);
@@ -172,10 +171,10 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
         list.setEnabled(coursesData.getQuizEnabled());
 
         open.setTypeface(typeFace);
-        open.setText(Html.fromHtml("&#61515;"));
+        open.setText(Html.fromHtml("&#"+Environment.IcoPlay+";"));
 
         list.setTypeface(typeFace);
-        list.setText(Html.fromHtml("&#61498;"));
+        list.setText(Html.fromHtml("&#"+Environment.IcoList+";"));
 
         return convertView;
     }

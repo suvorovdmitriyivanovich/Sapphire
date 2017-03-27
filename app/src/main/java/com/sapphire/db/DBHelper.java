@@ -8,17 +8,19 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import com.sapphire.Sapphire;
-import com.sapphire.activities.MainActivity;
-import com.sapphire.logic.MessageData;
-import com.sapphire.logic.NavigationMenuData;
-
+import com.sapphire.logic.Environment;
+import com.sapphire.models.ItemPriorityData;
+import com.sapphire.models.ItemStatusData;
+import com.sapphire.models.MessageData;
+import com.sapphire.models.NavigationMenuData;
+import com.sapphire.models.WorkplaceInspectionItemData;
 import java.util.ArrayList;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String ID = "id";
     private static final String EQUALS = " = ?";
     private static final String NOT = " != ?";
-    private static final String DB_NAME = "leDB";
+    private static final String DB_NAME = "sDB";
     private static final int DB_VERSION = 1;
     private Context mContext;
     private static DBHelper sInstance;
@@ -74,6 +76,19 @@ public class DBHelper extends SQLiteOpenHelper {
                 + "urlroute text,"
                 + "cssclass text,"
                 + "unicodeicon text"
+                + ");");
+
+        db.execSQL("create table workplaceinspectionitems ("
+                + "id integer primary key autoincrement,"
+                + "name text,"
+                + "description text,"
+                + "comments text,"
+                + "recommendedactions text,"
+                + "workplaceinspectionitemid text,"
+                + "workplaceinspectionid text,"
+                + "severity text,"
+                + "statusid text,"
+                + "priorityid text"
                 + ");");
     }
 
@@ -323,12 +338,154 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     void sendBrodcastLeftmenu() {
-        Intent intent = new Intent(MainActivity.BROADCAST_ACTION);
+        Intent intent = new Intent(Environment.BROADCAST_ACTION);
         try {
-            intent.putExtra(MainActivity.PARAM_TASK, "updateleftmenu");
+            intent.putExtra(Environment.PARAM_TASK, "updateleftmenu");
             Sapphire.getInstance().sendBroadcast(intent);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void addWorkplaceInspectionItem(WorkplaceInspectionItemData data) {
+        SQLiteDatabase db = getWriteDatabase();
+        db.beginTransaction();
+        try {
+            ContentValues cv = new ContentValues();
+
+            cv.put("name", data.getName());
+            cv.put("description", data.getDescription());
+            cv.put("comments", data.getComments());
+            cv.put("recommendedactions", data.getRecommendedActions());
+            cv.put("workplaceinspectionitemid", data.getWorkplaceInspectionItemId());
+            cv.put("workplaceinspectionid", data.getWorkplaceInspectionId());
+            cv.put("severity", data.getSeverity());
+            cv.put("statusid", data.getStatus().getWorkplaceInspectionItemStatusId());
+            cv.put("priorityid", data.getPriority().getWorkplaceInspectionItemPriorityId());
+
+            db.insert("workplaceinspectionitems", null, cv);
+
+            db.setTransactionSuccessful();
+        }finally {
+            db.endTransaction();
+        }
+    }
+
+    public void changeWorkplaceInspectionItem(WorkplaceInspectionItemData data) {
+        SQLiteDatabase db = getWriteDatabase();
+        db.beginTransaction();
+        try {
+            ContentValues cv = new ContentValues();
+
+            cv.put("name", data.getName());
+            cv.put("description", data.getDescription());
+            cv.put("comments", data.getComments());
+            cv.put("recommendedactions", data.getRecommendedActions());
+            cv.put("workplaceinspectionitemid", data.getWorkplaceInspectionItemId());
+            cv.put("workplaceinspectionid", data.getWorkplaceInspectionId());
+            cv.put("severity", data.getSeverity());
+            cv.put("statusid", data.getStatus().getWorkplaceInspectionItemStatusId());
+            cv.put("priorityid", data.getPriority().getWorkplaceInspectionItemPriorityId());
+
+            db.update("workplaceinspectionitems", cv, "id" + EQUALS,
+                    new String[]{String.valueOf(data.getId())});
+
+            db.setTransactionSuccessful();
+        }finally {
+            db.endTransaction();
+        }
+    }
+
+    public ArrayList<WorkplaceInspectionItemData> getWorkplaceInspectionItems(String id) {
+        ArrayList<WorkplaceInspectionItemData> mDatas = new ArrayList<WorkplaceInspectionItemData>();
+
+        String select = null;
+        String[] selectarg = null;
+        if (!id.equals("")) {
+            select = "workplaceinspectionid" + EQUALS;
+            selectarg = new String[]{String.valueOf(id)};
+        }
+
+        Cursor c = getReadDatabase().query("workplaceinspectionitems", null, select, selectarg, null, null, null);
+
+        if (c.moveToFirst()) {
+            int idColIndex = c.getColumnIndex("id");
+            int nameColIndex = c.getColumnIndex("name");
+            int descriptionColIndex = c.getColumnIndex("description");
+            int commentsColIndex = c.getColumnIndex("comments");
+            int recommendedactionsColIndex = c.getColumnIndex("recommendedactions");
+            int workplaceinspectionitemidColIndex = c.getColumnIndex("workplaceinspectionitemid");
+            int workplaceinspectionidColIndex = c.getColumnIndex("workplaceinspectionid");
+            int severityColIndex = c.getColumnIndex("severity");
+            int statusidColIndex = c.getColumnIndex("statusid");
+            int priorityidColIndex = c.getColumnIndex("priorityid");
+
+            do {
+                WorkplaceInspectionItemData data = new WorkplaceInspectionItemData();
+                if (idColIndex != -1) {
+                    data.setId(c.getString(idColIndex));
+                }
+                if (nameColIndex != -1) {
+                    data.setName(c.getString(nameColIndex));
+                }
+                if (descriptionColIndex != -1) {
+                    data.setDescription(c.getString(descriptionColIndex));
+                }
+                if (commentsColIndex != -1) {
+                    data.setComments(c.getString(commentsColIndex));
+                }
+                if (recommendedactionsColIndex != -1) {
+                    data.setRecommendedActions(c.getString(recommendedactionsColIndex));
+                }
+                if (workplaceinspectionitemidColIndex != -1) {
+                    data.setWorkplaceInspectionItemId(c.getString(workplaceinspectionitemidColIndex));
+                }
+                if (workplaceinspectionidColIndex != -1) {
+                    data.setWorkplaceInspectionId(c.getString(workplaceinspectionidColIndex));
+                }
+                if (severityColIndex != -1) {
+                    data.setSeverity(c.getString(severityColIndex));
+                }
+                if (statusidColIndex != -1) {
+                    data.setStatus(new ItemStatusData(c.getString(statusidColIndex)));
+                }
+                if (priorityidColIndex != -1) {
+                    data.setPriority(new ItemPriorityData(c.getString(priorityidColIndex)));
+                }
+
+                mDatas.add(data);
+            } while (c.moveToNext());
+        }
+        c.close();
+
+        return mDatas;
+    }
+
+    public void deleteWorkplaceInspectionItem(String id) {
+        SQLiteDatabase db = getWriteDatabase();
+        db.beginTransaction();
+        try {
+            db.delete("workplaceinspectionitems", "id = " + id, null);
+            db.setTransactionSuccessful();
+        }finally {
+            db.endTransaction();
+        }
+    }
+
+    public boolean existUpdate() {
+        boolean exist = false;
+
+        try {
+            Cursor c = getReadDatabase().query("workplaceinspectionitems", null, null, null, null, null, null);
+
+            if (c.moveToFirst()) {
+                exist = true;
+            }
+            c.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return exist;
     }
 }

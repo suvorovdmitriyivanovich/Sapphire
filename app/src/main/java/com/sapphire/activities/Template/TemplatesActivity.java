@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
+import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
@@ -30,17 +32,19 @@ import com.sapphire.adapters.SpinTypesAdapter;
 import com.sapphire.adapters.TemplatesAdapter;
 import com.sapphire.api.TemplateDeleteAction;
 import com.sapphire.api.TemplatesAction;
-import com.sapphire.logic.TemplateData;
+import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.logic.Environment;
+import com.sapphire.logic.NetRequests;
+import com.sapphire.models.TemplateData;
 import java.util.ArrayList;
 
 public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.OnRootClickListener,
-                                                                    TemplatesAdapter.OnOpenClickListener,
-                                                                    TemplatesAdapter.OnDeleteClickListener,
-                                                                    TemplatesAction.RequestTemplates,
-                                                                    TemplatesAction.RequestTemplatesData,
-                                                                    TemplateDeleteAction.RequestTemplateDelete{
-    public final static String PARAM_TASK = "task";
-    public final static String BROADCAST_ACTION = "com.sapphire.activities.template.TemplatesActivity";
+                                                               TemplatesAdapter.OnOpenClickListener,
+                                                               TemplatesAdapter.OnDeleteClickListener,
+                                                               TemplatesAction.RequestTemplates,
+                                                               TemplatesAction.RequestTemplatesData,
+                                                               TemplateDeleteAction.RequestTemplateDelete,
+                                                               WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
     private BroadcastReceiver br;
     private ArrayList<TemplateData> templatesDatas;
     private TemplatesAdapter adapter;
@@ -58,6 +62,8 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
     private boolean clickSpinner = false;
     private EditText type;
     private String typeId;
+    private View nointernet_group;
+    private ViewGroup.LayoutParams par_nointernet_group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +131,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
         br = new BroadcastReceiver() {
             // действия при получении сообщений
             public void onReceive(Context context, Intent intent) {
-                final String putreqwest = intent.getStringExtra(PARAM_TASK);
+                final String putreqwest = intent.getStringExtra(Environment.PARAM_TASK);
 
                 if (putreqwest.equals("updateleftmenu")) {
                     try {
@@ -133,11 +139,13 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
                     } catch (Exception e) {}
+                } else if (putreqwest.equals("updatebottom")) {
+                    UpdateBottom();
                 }
             }
         };
         // создаем фильтр для BroadcastReceiver
-        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+        IntentFilter intFilt = new IntentFilter(Environment.BROADCAST_ACTION);
         // регистрируем (включаем) BroadcastReceiver
         registerReceiver(br, intFilt);
 
@@ -194,6 +202,29 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
 
             }
         });
+
+        nointernet_group = findViewById(R.id.nointernet_group);
+        par_nointernet_group = nointernet_group.getLayoutParams();
+        nointernet_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pd.show();
+
+                new WorkplaceInspectionItemAddAction(TemplatesActivity.this, null, true, 0, "").execute();
+            }
+        });
+
+        UpdateBottom();
+    }
+
+    private void UpdateBottom() {
+        if (Sapphire.getInstance().getNeedUpdate()) {
+            par_nointernet_group.height = GetPixelFromDips(56);
+        } else {
+            par_nointernet_group.height = 0;
+        }
+        nointernet_group.setLayoutParams(par_nointernet_group);
+        nointernet_group.requestLayout();
     }
 
     public void updateVisibility() {
@@ -255,7 +286,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
     }
 
     @Override
-    public void onRequestTemplatesData(ArrayList<TemplateData> templatesDatas) {
+    public void onRequestTemplatesData(ArrayList<TemplateData> templatesDatas, String type) {
         this.templatesDatas = templatesDatas;
         adapter.setData(templatesDatas);
 
@@ -269,6 +300,19 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
         final float scale = getResources().getDisplayMetrics().density;
         // Convert the dps to pixels, based on density scale
         return (int) (pixels * scale + 0.5f);
+    }
+
+    @Override
+    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+        } else {
+            Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
+            UpdateBottom();
+            pd.hide();
+        }
     }
 
     @Override

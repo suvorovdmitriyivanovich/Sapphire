@@ -19,4 +19,7 @@
     <color name="border">#FFE0E0E0</color>
     <color name="black">#000000</color>
     <color name="dark_grey">#333333</color>
+    <color name="black_light">#323232</color>
+    <color name="black_light_pressed">#606060</color>
+    <color name="green_light">#80CBC4</color>
 </resources>

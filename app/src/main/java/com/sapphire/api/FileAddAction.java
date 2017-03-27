@@ -5,12 +5,11 @@ import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
-import com.sapphire.logic.ErrorMessageData;
+import com.sapphire.models.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.logic.ResponseData;
-import com.sapphire.logic.TemplateData;
+import com.sapphire.models.ResponseData;
+import com.sapphire.models.TemplateData;
 import com.sapphire.logic.UserInfo;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +54,11 @@ public class FileAddAction extends AsyncTask{
         }
 
         String method = "POST";
+        if (url.equals(Environment.PerformanceEvaluationsFilesURL)
+            || url.equals(Environment.DisciplinesFilesURL)
+            || url.equals(Environment.DocumentsFilesURL)) {
+            method = "PUT";
+        }
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonArray.toString(),0,true,method, UserInfo.getUserInfo().getAuthToken()));
 

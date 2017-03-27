@@ -8,11 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.PoliciesData;
+import com.sapphire.logic.Environment;
+import com.sapphire.models.PolicyData;
 import java.util.ArrayList;
 
 public class PoliciesAdapter extends BaseExpandableListAdapter {
@@ -25,14 +25,14 @@ public class PoliciesAdapter extends BaseExpandableListAdapter {
         void onOpenPoliciesClick(int groupPosition, int childPosition);
     }
 
-    private ArrayList<PoliciesData> mGroups;
+    private ArrayList<PolicyData> mGroups;
     private Context mContext;
     private Typeface typeFace;
 
     public PoliciesAdapter(Context context) {
         mContext = context;
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
-        mGroups = new ArrayList<PoliciesData>();
+        mGroups = new ArrayList<PolicyData>();
     }
 
     @Override
@@ -101,7 +101,7 @@ public class PoliciesAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.child_policies_view, null);
         }
 
-        PoliciesData data = mGroups.get(groupPosition).getSubPolicies().get(childPosition);
+        PolicyData data = mGroups.get(groupPosition).getSubPolicies().get(childPosition);
 
         TextView name = (TextView) convertView.findViewById(R.id.text_name);
         name.setText(data.getName());
@@ -110,9 +110,9 @@ public class PoliciesAdapter extends BaseExpandableListAdapter {
         textAcknowledged = textAcknowledged + Sapphire.getInstance().getResources().getString(R.string.text_acknowledge);
         textAcknowledged = textAcknowledged + ": ";
         if (data.getIsAcknowledged()) {
-            textAcknowledged = textAcknowledged + "<big><font color=#16a085>&#61452;</font></big> ";
+            textAcknowledged = textAcknowledged + "<big><font color=#16a085>&#"+Environment.IcoOk+";</font></big> ";
         } else {
-            textAcknowledged = textAcknowledged + "<big><font color=#cc3300>&#61453;</font></big>";
+            textAcknowledged = textAcknowledged + "<big><font color=#cc3300>&#"+Environment.IcoClose+";</font></big>";
         }
 
         TextView description = (TextView) convertView.findViewById(R.id.text_description);
@@ -143,7 +143,7 @@ public class PoliciesAdapter extends BaseExpandableListAdapter {
         });
 
         open.setTypeface(typeFace);
-        open.setText(Html.fromHtml("&#61485;"));
+        open.setText(Html.fromHtml("&#"+Environment.IcoOpen+";"));
 
         return convertView;
     }
@@ -153,7 +153,7 @@ public class PoliciesAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    public void setData(ArrayList<PoliciesData> groups) {
+    public void setData(ArrayList<PolicyData> groups) {
         mGroups.clear();
         mGroups.addAll(groups);
         notifyDataSetChanged();

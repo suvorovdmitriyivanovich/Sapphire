@@ -9,7 +9,7 @@ import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import com.sapphire.R;
-import com.sapphire.logic.AnswerData;
+import com.sapphire.models.AnswerData;
 import java.util.ArrayList;
 
 public class AnswersAdapter extends BaseAdapter {

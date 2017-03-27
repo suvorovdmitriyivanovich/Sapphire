@@ -5,10 +5,10 @@ import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
-import com.sapphire.logic.ErrorMessageData;
+import com.sapphire.models.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.logic.ResponseData;
-import com.sapphire.logic.TemplateData;
+import com.sapphire.models.ResponseData;
+import com.sapphire.models.TemplateData;
 import com.sapphire.logic.UserInfo;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,6 +45,9 @@ public class TemplateAddAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
+
+        UserInfo userInfo = UserInfo.getUserInfo();
+
         String urlstring = Environment.SERVER;
         if (typeId.equals(Sapphire.getInstance().getResources().getString(R.string.text_meetings_templates))) {
             urlstring = urlstring + Environment.TopicTemplatesURL;
@@ -61,6 +64,7 @@ public class TemplateAddAction extends AsyncTask{
                 } else {
                     jsonObject.put("WorkplaceInspectionTemplateId", templateId);
                 }
+                jsonObject.put("OrganizationId", userInfo.getCurrentOrganization().getOrganizationId());
             }
             jsonObject.put("Name", name);
             jsonObject.put("Description", description);
@@ -74,7 +78,7 @@ public class TemplateAddAction extends AsyncTask{
             method = "PUT";
         }
 
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonArray.toString(),0,true,method, UserInfo.getUserInfo().getAuthToken()));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonArray.toString(),0,true,method, userInfo.getAuthToken()));
 
         String result = "";
 

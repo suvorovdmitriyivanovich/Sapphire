@@ -35,6 +35,9 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
     private View text_name;
     private View text_pass;
     private TextView text_error;
+    private boolean isCheckOrganization = false;
+    private boolean isCheckName = false;
+    private boolean isCheckPass = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +59,22 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
         text_pass = findViewById(R.id.text_password);
         text_error = (TextView) findViewById(R.id.text_error);
 
-        TextWatcher inputTextWatcher = new TextWatch();
+        TextWatcher inputTextWatcher = new TextWatch(1);
         organization.addTextChangedListener(inputTextWatcher);
+        inputTextWatcher = new TextWatch(2);
         name.addTextChangedListener(inputTextWatcher);
+        inputTextWatcher = new TextWatch(3);
         pass.addTextChangedListener(inputTextWatcher);
 
-        organization.setText(sPref.getString(ORGANIZATION, ""));
-        name.setText(sPref.getString(USER, ""));
-        pass.setText(sPref.getString(PASS, ""));
+        if (!sPref.getString(ORGANIZATION, "").equals("")) {
+            organization.setText(sPref.getString(ORGANIZATION, ""));
+        }
+        if (!sPref.getString(USER, "").equals("")) {
+            name.setText(sPref.getString(USER, ""));
+        }
+        if (!sPref.getString(PASS, "").equals("")) {
+            pass.setText(sPref.getString(PASS, ""));
+        }
 
         userInfo = UserInfo.getUserInfo();
 
@@ -91,6 +102,10 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
                     || name.getText().toString().equals("")
                     || pass.getText().toString().equals("")
                     || pass.getText().length() < 6) {
+                    isCheckOrganization = true;
+                    isCheckName = true;
+                    isCheckPass = true;
+                    updateViews();
                     allOk = false;
                 }
 
@@ -120,11 +135,21 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
     }
 
     private class TextWatch implements TextWatcher {
-        public TextWatch(){
+        private int type;
+
+        public TextWatch(int type){
             super();
+            this.type = type;
         }
 
         public void afterTextChanged(Editable s) {
+            if (type == 1) {
+                isCheckOrganization = true;
+            } else if (type == 2) {
+                isCheckName = true;
+            } else if (type == 3) {
+                isCheckPass = true;
+            }
             updateViews();
         }
 
@@ -134,26 +159,26 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
     }
 
     private void updateViews() {
-        if (organization.getText().toString().equals("")) {
+        if (isCheckOrganization && organization.getText().toString().equals("")) {
             text_organization_error.setVisibility(View.VISIBLE);
             text_organization.setVisibility(View.GONE);
         } else {
             text_organization_error.setVisibility(View.GONE);
             text_organization.setVisibility(View.VISIBLE);
         }
-        if (name.getText().toString().equals("")) {
+        if (isCheckName && name.getText().toString().equals("")) {
             text_name_error.setVisibility(View.VISIBLE);
             text_name.setVisibility(View.GONE);
         } else {
             text_name_error.setVisibility(View.GONE);
             text_name.setVisibility(View.VISIBLE);
         }
-        if (pass.getText().toString().equals("") || pass.getText().length() < 6) {
+        if (isCheckPass && (pass.getText().toString().equals("") || pass.getText().length() < 6)) {
             text_pass_error.setVisibility(View.VISIBLE);
         } else {
             text_pass_error.setVisibility(View.GONE);
         }
-        if (pass.getText().toString().equals("")) {
+        if (isCheckPass && pass.getText().toString().equals("")) {
             text_pass.setVisibility(View.GONE);
         } else {
             text_pass.setVisibility(View.VISIBLE);

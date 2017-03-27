@@ -1,16 +1,15 @@
 package com.sapphire.api;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
-import com.sapphire.logic.ErrorMessageData;
+import com.sapphire.models.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.logic.PoliciesData;
-import com.sapphire.logic.ResponseData;
+import com.sapphire.models.PolicyData;
+import com.sapphire.models.ResponseData;
 import com.sapphire.logic.UserInfo;
 
 import org.json.JSONArray;
@@ -28,7 +27,7 @@ public class QuizzesLogAction extends AsyncTask{
     private Context mContext;
     private String quizeId;
     private String accountQuizStatusId;
-    private ArrayList<PoliciesData> policiesDatas;
+    private ArrayList<PolicyData> policiesDatas;
 
     public QuizzesLogAction(Context context, String quizeId, String accountQuizStatusId) {
         this.mContext = context;

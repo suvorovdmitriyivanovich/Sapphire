@@ -11,7 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.WorkplaceInspectionItemData;
+import com.sapphire.logic.Environment;
+import com.sapphire.models.WorkplaceInspectionItemData;
 import java.util.ArrayList;
 
 public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<WorkplaceInspectionItemsAdapter.ViewHolder> {
@@ -86,52 +87,43 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
             textDescription = textDescription + "<br>";
         }
         if (data.getStatus().getName().equals("Pass")) {
-            textDescription = textDescription + "<big><font color=#16a085>&#61452;</font></big>";
+            textDescription = textDescription + "<big><font color=#16a085>&#"+Environment.IcoOk+";</font></big>";
         } else if (data.getStatus().getName().equals("Fail")) {
-            textDescription = textDescription + "<big><font color=#cc3300>&#61453;</font></big>";
+            textDescription = textDescription + "<big><font color=#cc3300>&#"+Environment.IcoClose+";</font></big>";
         }
 
         holder.text_description.setTypeface(typeFace);
         holder.text_description.setText(Html.fromHtml(textDescription));
 
         holder.open.setTypeface(typeFace);
-        holder.open.setText(Html.fromHtml("&#61504;"));
+        holder.open.setText(Html.fromHtml("&#"+Environment.IcoEdit+";"));
         holder.open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (context instanceof OnOpenClickListener) {
                     ((OnOpenClickListener) context).onOpenClick(holder.getAdapterPosition());
                 }
-                else {
-                    //TODO generate error dialog
-                }
             }
         });
 
         holder.delete.setTypeface(typeFace);
-        holder.delete.setText(Html.fromHtml("&#61944;"));
+        holder.delete.setText(Html.fromHtml("&#"+Environment.IcoDelete+";"));
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (context instanceof OnDeleteClickListener) {
                     ((OnDeleteClickListener) context).onDeleteClick(holder.getAdapterPosition());
                 }
-                else {
-                    //TODO generate error dialog
-                }
             }
         });
 
         holder.files.setTypeface(typeFace);
-        holder.files.setText(Html.fromHtml("&#61787;"));
+        holder.files.setText(Html.fromHtml("&#"+Environment.IcoFiles+";"));
         holder.files.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (context instanceof OnFilesClickListener) {
                     ((OnFilesClickListener) context).onFilesClick(holder.getAdapterPosition());
-                }
-                else {
-                    //TODO generate error dialog
                 }
             }
         });
@@ -141,9 +133,6 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
             public void onClick(View view) {
                 if (context instanceof OnRootClickListener) {
                     ((OnRootClickListener) context).onRootClick(holder.getAdapterPosition());
-                }
-                else {
-                    //TODO generate error dialog
                 }
             }
         });

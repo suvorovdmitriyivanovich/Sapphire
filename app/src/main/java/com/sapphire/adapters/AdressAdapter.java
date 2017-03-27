@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.ContactData;
+import com.sapphire.models.ContactData;
 import java.util.ArrayList;
 
 public class AdressAdapter extends RecyclerView.Adapter<AdressAdapter.ViewHolder> {
@@ -68,7 +68,9 @@ public class AdressAdapter extends RecyclerView.Adapter<AdressAdapter.ViewHolder
         viewHolder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((OnRootClickListener)mContext).onRootClick(viewHolder.getAdapterPosition());
+                if (mContext instanceof OnRootClickListener) {
+                    ((OnRootClickListener) mContext).onRootClick(viewHolder.getAdapterPosition());
+                }
             }
         });
 

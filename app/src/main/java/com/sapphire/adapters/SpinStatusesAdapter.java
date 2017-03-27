@@ -6,8 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.sapphire.logic.ItemStatusData;
-import com.sapphire.logic.TemplateData;
+import com.sapphire.models.ItemStatusData;
 
 import java.util.ArrayList;
 

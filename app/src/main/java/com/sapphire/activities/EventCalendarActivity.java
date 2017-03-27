@@ -1,17 +1,25 @@
 package com.sapphire.activities;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.api.GetCourseFileAction;
-import com.sapphire.logic.CoursesData;
+import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.logic.Environment;
+import com.sapphire.logic.NetRequests;
+import com.sapphire.models.CoursesData;
 import com.sapphire.logic.UserInfo;
 import java.io.File;
 import java.util.ArrayList;
@@ -19,10 +27,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EventCalendarActivity extends BaseActivity implements GetCourseFileAction.RequestCourses,
-                                                                   GetCourseFileAction.RequestCoursesData{
+                                                                   GetCourseFileAction.RequestCoursesData,
+                                                                   WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
     private WebView webView;
     private ProgressDialog pd;
     private boolean needClose = false;
+    private BroadcastReceiver br;
+    private View nointernet_group;
+    private ViewGroup.LayoutParams par_nointernet_group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +74,22 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
         extraHeaders.put("x-yauth", UserInfo.getUserInfo().getAuthToken());
         webView.loadUrl("http://portal.dealerpilothr.com/me/my-calendar",extraHeaders);
 
+        // создаем BroadcastReceiver
+        br = new BroadcastReceiver() {
+            // действия при получении сообщений
+            public void onReceive(Context context, Intent intent) {
+                final String putreqwest = intent.getStringExtra(Environment.PARAM_TASK);
+
+                if (putreqwest.equals("updatebottom")) {
+                    UpdateBottom();
+                }
+            }
+        };
+        // создаем фильтр для BroadcastReceiver
+        IntentFilter intFilt = new IntentFilter(Environment.BROADCAST_ACTION);
+        // регистрируем (включаем) BroadcastReceiver
+        registerReceiver(br, intFilt);
+
         /*
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -70,6 +98,29 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
             }
         }, 15000);
         */
+
+        nointernet_group = findViewById(R.id.nointernet_group);
+        par_nointernet_group = nointernet_group.getLayoutParams();
+        nointernet_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pd.show();
+
+                new WorkplaceInspectionItemAddAction(EventCalendarActivity.this, null, true, 0, "").execute();
+            }
+        });
+
+        UpdateBottom();
+    }
+
+    private void UpdateBottom() {
+        if (Sapphire.getInstance().getNeedUpdate()) {
+            par_nointernet_group.height = GetPixelFromDips(56);
+        } else {
+            par_nointernet_group.height = 0;
+        }
+        nointernet_group.setLayoutParams(par_nointernet_group);
+        nointernet_group.requestLayout();
     }
 
     private class MyWebViewClient extends WebViewClient {
@@ -142,6 +193,26 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
     }
 
     @Override
+    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+        } else {
+            Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
+            UpdateBottom();
+            pd.hide();
+        }
+    }
+
+    public int GetPixelFromDips(float pixels) {
+        // Get the screen's density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (pixels * scale + 0.5f);
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
             webView.goBack();
@@ -158,5 +229,6 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
     @Override
     public void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(br);
     }
 }

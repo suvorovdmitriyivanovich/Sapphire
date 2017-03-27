@@ -3,8 +3,11 @@ package com.sapphire.activities.workplaceInspection;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -13,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -24,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
+import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.FilesActivity;
 import com.sapphire.adapters.SpinTemplatesAdapter;
@@ -33,12 +38,14 @@ import com.sapphire.api.GetWorkplaceInspectionAction;
 import com.sapphire.api.WorkplaceInspectionItemAddAction;
 import com.sapphire.api.WorkplaceInspectionItemDeleteAction;
 import com.sapphire.api.WorkplaceInspectionAddAction;
+import com.sapphire.db.DBHelper;
 import com.sapphire.logic.Environment;
-import com.sapphire.logic.TemplateData;
-import com.sapphire.logic.TemplateItemData;
+import com.sapphire.logic.NetRequests;
+import com.sapphire.models.TemplateData;
+import com.sapphire.models.TemplateItemData;
 import com.sapphire.logic.UserInfo;
-import com.sapphire.logic.WorkplaceInspectionData;
-import com.sapphire.logic.WorkplaceInspectionItemData;
+import com.sapphire.models.WorkplaceInspectionData;
+import com.sapphire.models.WorkplaceInspectionItemData;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,19 +53,18 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class WorkplaceInspectionActivity extends BaseActivity implements GetTemplateAction.RequestTemplate,
-                                                              GetTemplateAction.RequestTemplateData,
-                                                              GetWorkplaceInspectionAction.RequestWorkplaceInspection,
-                                                              GetWorkplaceInspectionAction.RequestWorkplaceInspectionData,
-                                                              WorkplaceInspectionItemsAdapter.OnRootClickListener,
-                                                              WorkplaceInspectionItemsAdapter.OnOpenClickListener,
-                                                              WorkplaceInspectionItemsAdapter.OnDeleteClickListener,
-                                                              WorkplaceInspectionItemsAdapter.OnFilesClickListener,
-                                                              WorkplaceInspectionItemDeleteAction.RequestWorkplaceInspectionItemDelete,
-                                                              WorkplaceInspectionAddAction.RequestWorkplaceInspectionAdd,
-                                                              WorkplaceInspectionAddAction.RequestWorkplaceInspectionAddData,
-                                                              WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                                         GetTemplateAction.RequestTemplateData,
+                                                                         GetWorkplaceInspectionAction.RequestWorkplaceInspection,
+                                                                         WorkplaceInspectionItemsAdapter.OnRootClickListener,
+                                                                         WorkplaceInspectionItemsAdapter.OnOpenClickListener,
+                                                                         WorkplaceInspectionItemsAdapter.OnDeleteClickListener,
+                                                                         WorkplaceInspectionItemsAdapter.OnFilesClickListener,
+                                                                         WorkplaceInspectionItemDeleteAction.RequestWorkplaceInspectionItemDelete,
+                                                                         WorkplaceInspectionAddAction.RequestWorkplaceInspectionAdd,
+                                                                         WorkplaceInspectionAddAction.RequestWorkplaceInspectionAddData,
+                                                                         WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
     private String workplaceInspectionId = "";
-    ProgressDialog pd;
+    private ProgressDialog pd;
     private ArrayList<WorkplaceInspectionItemData> workplaceInspectionItemDatas = new ArrayList<WorkplaceInspectionItemData>();
     private RecyclerView itemlist;
     private WorkplaceInspectionItemsAdapter adapter;
@@ -97,6 +103,12 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     private boolean postedOld = false;
     private WorkplaceInspectionData workplaceInspectionData = new WorkplaceInspectionData();
     private View text_no;
+    private boolean isCheckName = false;
+    private boolean isCheckDate = false;
+    private BroadcastReceiver br;
+    private View nointernet_group;
+    private ViewGroup.LayoutParams par_nointernet_group;
+    private boolean updateAll = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,9 +171,15 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
                 dialog_confirm.dismiss();
                 if (deleteItem) {
                     deleteItem = false;
-                    pd.show();
+                    if (workplaceInspectionItemDatas.get(currentPosition).getWorkplaceInspectionItemId().equals("")) {
+                        DBHelper.getInstance(Sapphire.getInstance()).deleteWorkplaceInspectionItem(workplaceInspectionItemDatas.get(currentPosition).getId());
+                        pd.show();
+                        new GetWorkplaceInspectionAction(WorkplaceInspectionActivity.this, workplaceInspectionId).execute();
+                    } else {
+                        pd.show();
 
-                    new WorkplaceInspectionItemDeleteAction(WorkplaceInspectionActivity.this, workplaceInspectionItemDatas.get(currentPosition).getWorkplaceInspectionItemId()).execute();
+                        new WorkplaceInspectionItemDeleteAction(WorkplaceInspectionActivity.this, workplaceInspectionItemDatas.get(currentPosition).getWorkplaceInspectionItemId()).execute();
+                    }
                 } else {
                     updateWorkplaceInspection(0);
                 }
@@ -305,6 +323,9 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
                 hideSoftKeyboard();
 
                 if (name.getText().toString().equals("") || date.getText().toString().equals("")) {
+                    isCheckName = true;
+                    isCheckDate = true;
+                    updateViews();
                     return;
                 }
 
@@ -334,11 +355,49 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         adapter = new WorkplaceInspectionItemsAdapter(this);
         itemlist.setAdapter(adapter);
 
+        // создаем BroadcastReceiver
+        br = new BroadcastReceiver() {
+            // действия при получении сообщений
+            public void onReceive(Context context, Intent intent) {
+                final String putreqwest = intent.getStringExtra(Environment.PARAM_TASK);
+
+                if (putreqwest.equals("updatebottom")) {
+                    UpdateBottom();
+                }
+            }
+        };
+        // создаем фильтр для BroadcastReceiver
+        IntentFilter intFilt = new IntentFilter(Environment.BROADCAST_ACTION);
+        // регистрируем (включаем) BroadcastReceiver
+        registerReceiver(br, intFilt);
+
         updateViews();
 
         text_no = findViewById(R.id.text_no);
 
-        updateVisibility();
+        nointernet_group = findViewById(R.id.nointernet_group);
+        par_nointernet_group = nointernet_group.getLayoutParams();
+        nointernet_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pd.show();
+
+                updateAll = true;
+                new WorkplaceInspectionItemAddAction(WorkplaceInspectionActivity.this, null, true, 0, "").execute();
+            }
+        });
+
+        UpdateBottom();
+    }
+
+    private void UpdateBottom() {
+        if (Sapphire.getInstance().getNeedUpdate()) {
+            par_nointernet_group.height = GetPixelFromDips(56);
+        } else {
+            par_nointernet_group.height = 0;
+        }
+        nointernet_group.setLayoutParams(par_nointernet_group);
+        nointernet_group.requestLayout();
     }
 
     public void updateVisibility() {
@@ -421,6 +480,8 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
                 }
             }
 
+            act.isCheckDate = true;
+
             act.updateViews();
         }
     }
@@ -430,6 +491,9 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         boolean allOk = true;
 
         if (name.getText().toString().equals("") || date.getText().toString().equals("")) {
+            isCheckName = true;
+            isCheckDate = true;
+            updateViews();
             allOk = false;
         }
 
@@ -448,6 +512,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         }
 
         public void afterTextChanged(Editable s) {
+            isCheckName = true;
             updateViews();
         }
 
@@ -457,14 +522,14 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     }
 
     private void updateViews() {
-        if (name.getText().toString().equals("")) {
+        if (isCheckName && name.getText().toString().equals("")) {
             text_name_error.setVisibility(View.VISIBLE);
             text_name.setVisibility(View.GONE);
         } else {
             text_name_error.setVisibility(View.GONE);
             text_name.setVisibility(View.VISIBLE);
         }
-        if (date.getText().toString().equals("")) {
+        if (isCheckDate && date.getText().toString().equals("")) {
             text_date_error.setVisibility(View.VISIBLE);
             text_date.setVisibility(View.GONE);
         } else {
@@ -529,20 +594,38 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     }
 
     @Override
-    public void onRequestWorkplaceInspection(String result) {
-        pressType = 0;
-        updateVisibility();
-        pd.hide();
-        if (!result.equals("OK")) {
+    public void onRequestWorkplaceInspection(String result, ArrayList<WorkplaceInspectionItemData> workplaceInspectionItemDatas) {
+        if (!result.equals("OK") && !result.equals(getResources().getString(R.string.text_need_internet))) {
+            pressType = 0;
+            updateVisibility();
+            pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            return;
         }
-    }
 
-    @Override
-    public void onRequestWorkplaceInspectionData(ArrayList<WorkplaceInspectionItemData> workplaceInspectionItemDatas) {
-        this.workplaceInspectionItemDatas = workplaceInspectionItemDatas;
-        adapter.setListArray(workplaceInspectionItemDatas);
+        ArrayList<WorkplaceInspectionItemData> allDatas = new ArrayList<WorkplaceInspectionItemData>();
+        ArrayList<WorkplaceInspectionItemData> datas = DBHelper.getInstance(Sapphire.getInstance()).getWorkplaceInspectionItems(workplaceInspectionId);
+
+        boolean isExist = false;
+        for (WorkplaceInspectionItemData item: workplaceInspectionItemDatas) {
+            isExist = false;
+            for (WorkplaceInspectionItemData item2: datas) {
+                if (item.getWorkplaceInspectionItemId().equals(item2.getWorkplaceInspectionItemId())) {
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                allDatas.add(item);
+            }
+        }
+        for (WorkplaceInspectionItemData item: datas) {
+            allDatas.add(item);
+        }
+
+        this.workplaceInspectionItemDatas = allDatas;
+        adapter.setListArray(this.workplaceInspectionItemDatas);
         updateVisibility();
 
         pd.hide();
@@ -584,8 +667,11 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     private void openItem() {
         Intent intent = new Intent(WorkplaceInspectionActivity.this, WorkplaceInspectionItemActivity.class);
         WorkplaceInspectionItemData workplaceInspectionItemData = workplaceInspectionItemDatas.get(currentPosition);
+        intent.putExtra("idloc", workplaceInspectionItemData.getId());
         intent.putExtra("name", workplaceInspectionItemData.getName());
         intent.putExtra("description", workplaceInspectionItemData.getDescription());
+        intent.putExtra("comments", workplaceInspectionItemData.getComments());
+        intent.putExtra("recommendedActions", workplaceInspectionItemData.getRecommendedActions());
         intent.putExtra("workplaceInspectionItemId", workplaceInspectionItemData.getWorkplaceInspectionItemId());
         intent.putExtra("workplaceInspectionId", workplaceInspectionItemData.getWorkplaceInspectionId());
         intent.putExtra("severity", workplaceInspectionItemData.getSeverity());
@@ -625,7 +711,8 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             workplaceInspectionItemData.setStatus(workplaceInspectionItemDatas.get(0).getStatus());
             workplaceInspectionItemData.setPriority(workplaceInspectionItemDatas.get(0).getPriority());
 
-            new WorkplaceInspectionItemAddAction(WorkplaceInspectionActivity.this, workplaceInspectionItemData, workplaceInspectionItemDatas.size() == 1, 0).execute();
+            updateAll = false;
+            new WorkplaceInspectionItemAddAction(WorkplaceInspectionActivity.this, workplaceInspectionItemData, workplaceInspectionItemDatas.size() == 1, 0, "").execute();
         } else {
             workplaceInspectionId = workplaceInspectionData.getWorkplaceInspectionId();
 
@@ -647,12 +734,17 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms) {
+    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
         if (!result.equals("OK")) {
             pd.hide();
 
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+        } else if (updateAll) {
+            Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
+            UpdateBottom();
+            updateAll = false;
+            pd.hide();
         } else if (neddclosepd) {
             pd.hide();
 
@@ -666,7 +758,8 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             workplaceInspectionItemData.setStatus(workplaceInspectionItemDatas.get(ihms).getStatus());
             workplaceInspectionItemData.setPriority(workplaceInspectionItemDatas.get(ihms).getPriority());
 
-            new WorkplaceInspectionItemAddAction(WorkplaceInspectionActivity.this, workplaceInspectionItemData, ihms == workplaceInspectionItemDatas.size()-1, ihms).execute();
+            updateAll = false;
+            new WorkplaceInspectionItemAddAction(WorkplaceInspectionActivity.this, workplaceInspectionItemData, ihms == workplaceInspectionItemDatas.size()-1, ihms, "").execute();
         }
     }
 
@@ -691,6 +784,13 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         startActivity(intent);
     }
 
+    public int GetPixelFromDips(float pixels) {
+        // Get the screen's density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (pixels * scale + 0.5f);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -709,5 +809,6 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     @Override
     public void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(br);
     }
 }

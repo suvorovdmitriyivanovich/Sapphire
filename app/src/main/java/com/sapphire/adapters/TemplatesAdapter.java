@@ -11,7 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.TemplateData;
+import com.sapphire.logic.Environment;
+import com.sapphire.models.TemplateData;
 import java.util.ArrayList;
 
 public class TemplatesAdapter extends RecyclerView.Adapter<TemplatesAdapter.ViewHolder> {
@@ -74,29 +75,23 @@ public class TemplatesAdapter extends RecyclerView.Adapter<TemplatesAdapter.View
         holder.text_description.setText(data.getDescription());
 
         holder.open.setTypeface(typeFace);
-        holder.open.setText(Html.fromHtml("&#61504;"));
+        holder.open.setText(Html.fromHtml("&#"+Environment.IcoEdit+";"));
         holder.open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mContext instanceof OnOpenClickListener) {
                     ((OnOpenClickListener) mContext).onOpenClick(holder.getAdapterPosition());
                 }
-                else {
-                    //TODO generate error dialog
-                }
             }
         });
 
         holder.delete.setTypeface(typeFace);
-        holder.delete.setText(Html.fromHtml("&#61944;"));
+        holder.delete.setText(Html.fromHtml("&#"+Environment.IcoDelete+";"));
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mContext instanceof OnDeleteClickListener) {
                     ((OnDeleteClickListener) mContext).onDeleteClick(holder.getAdapterPosition());
-                }
-                else {
-                    //TODO generate error dialog
                 }
             }
         });
@@ -106,9 +101,6 @@ public class TemplatesAdapter extends RecyclerView.Adapter<TemplatesAdapter.View
             public void onClick(View view) {
                 if (mContext instanceof OnRootClickListener) {
                     ((OnRootClickListener) mContext).onRootClick(holder.getAdapterPosition());
-                }
-                else {
-                    //TODO generate error dialog
                 }
             }
         });

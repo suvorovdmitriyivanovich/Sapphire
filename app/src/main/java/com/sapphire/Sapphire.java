@@ -3,14 +3,19 @@ package com.sapphire;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
+import com.sapphire.db.DBHelper;
+import com.sapphire.logic.Environment;
+import com.sapphire.logic.NetRequests;
 
 public class Sapphire extends Application {
     private static Sapphire mInstance;
+    private boolean needUpdate = false;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
     }
 
     public static synchronized Sapphire getInstance() {
@@ -27,5 +32,57 @@ public class Sapphire extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
+    }
+
+    public void setNeedUpdate(boolean needUpdate) {
+        if (needUpdate) {
+            needUpdate = DBHelper.getInstance(mInstance).existUpdate();
+        }
+        this.needUpdate = needUpdate;
+
+        Intent intentBr = new Intent(Environment.BROADCAST_ACTION);
+        try {
+            intentBr.putExtra(Environment.PARAM_TASK, "updatebottom");
+            mInstance.sendBroadcast(intentBr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        /*
+        try {
+            Class activityThreadClass = Class.forName("android.app.ActivityThread");
+            Object activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(null);
+            Field activitiesField = activityThreadClass.getDeclaredField("mActivities");
+            activitiesField.setAccessible(true);
+
+            Map<Object, Object> activities = (Map<Object, Object>) activitiesField.get(activityThread);
+            for (Object activityRecord : activities.values()) {
+                Class activityRecordClass = activityRecord.getClass();
+                Field pausedField = activityRecordClass.getDeclaredField("paused");
+                pausedField.setAccessible(true);
+                if (!pausedField.getBoolean(activityRecord)) {
+                    Field activityField = activityRecordClass.getDeclaredField("activity");
+                    activityField.setAccessible(true);
+                    Activity activity = (Activity) activityField.get(activityRecord);
+                    if (activity != null) {
+                        intentBr = new Intent(activity.getLocalClassName());
+                        try {
+                            intentBr.putExtra(Environment.PARAM_TASK, "updatebottom");
+                            mInstance.sendBroadcast(intentBr);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        */
+
+    }
+
+    public boolean getNeedUpdate() {
+        return needUpdate;
     }
 }

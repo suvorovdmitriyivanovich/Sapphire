@@ -1,18 +1,17 @@
 package com.sapphire.api;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
-import com.sapphire.logic.ErrorMessageData;
+import com.sapphire.models.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.logic.QuestionData;
-import com.sapphire.logic.QuizData;
-import com.sapphire.logic.QuizScoreData;
-import com.sapphire.logic.ResponseData;
+import com.sapphire.models.QuestionData;
+import com.sapphire.models.QuizData;
+import com.sapphire.models.QuizScoreData;
+import com.sapphire.models.ResponseData;
 import com.sapphire.logic.UserInfo;
 
 import org.json.JSONArray;

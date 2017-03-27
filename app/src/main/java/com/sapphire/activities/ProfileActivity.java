@@ -1,19 +1,28 @@
 package com.sapphire.activities;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
+import com.sapphire.Sapphire;
 import com.sapphire.adapters.AdressAdapter;
 import com.sapphire.api.GetContactsAction;
 import com.sapphire.api.GetProfilesAction;
-import com.sapphire.logic.ContactData;
-import com.sapphire.logic.ProfileData;
+import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.logic.Environment;
+import com.sapphire.logic.NetRequests;
+import com.sapphire.models.ContactData;
+import com.sapphire.models.ProfileData;
 import java.util.ArrayList;
 
 public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRootClickListener,
@@ -21,7 +30,8 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
                                                              GetProfilesAction.RequestProfiles,
                                                              GetProfilesAction.RequestProfilesData,
                                                              GetContactsAction.RequestContacts,
-                                                             GetContactsAction.RequestContactsData{
+                                                             GetContactsAction.RequestContactsData,
+                                                             WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
     private ProgressDialog pd;
     private TextView contact;
     private TextView additional;
@@ -32,6 +42,9 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     private RecyclerView adresslist;
     private AdressAdapter adapter;
     private View personal_group;
+    private BroadcastReceiver br;
+    private View nointernet_group;
+    private ViewGroup.LayoutParams par_nointernet_group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +82,45 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         adapter = new AdressAdapter(this, false);
         adresslist.setAdapter(adapter);
         adresslist.setLayoutManager(new LinearLayoutManager(this));
+
+        // создаем BroadcastReceiver
+        br = new BroadcastReceiver() {
+            // действия при получении сообщений
+            public void onReceive(Context context, Intent intent) {
+                final String putreqwest = intent.getStringExtra(Environment.PARAM_TASK);
+
+                if (putreqwest.equals("updatebottom")) {
+                    UpdateBottom();
+                }
+            }
+        };
+        // создаем фильтр для BroadcastReceiver
+        IntentFilter intFilt = new IntentFilter(Environment.BROADCAST_ACTION);
+        // регистрируем (включаем) BroadcastReceiver
+        registerReceiver(br, intFilt);
+
+        nointernet_group = findViewById(R.id.nointernet_group);
+        par_nointernet_group = nointernet_group.getLayoutParams();
+        nointernet_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pd.show();
+
+                new WorkplaceInspectionItemAddAction(ProfileActivity.this, null, true, 0, "").execute();
+            }
+        });
+
+        UpdateBottom();
+    }
+
+    private void UpdateBottom() {
+        if (Sapphire.getInstance().getNeedUpdate()) {
+            par_nointernet_group.height = GetPixelFromDips(56);
+        } else {
+            par_nointernet_group.height = 0;
+        }
+        nointernet_group.setLayoutParams(par_nointernet_group);
+        nointernet_group.requestLayout();
     }
 
     @Override
@@ -185,6 +237,26 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     }
 
     @Override
+    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+        } else {
+            Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
+            UpdateBottom();
+            pd.hide();
+        }
+    }
+
+    public int GetPixelFromDips(float pixels) {
+        // Get the screen's density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (pixels * scale + 0.5f);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -195,5 +267,6 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     @Override
     public void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(br);
     }
 }

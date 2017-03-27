@@ -11,7 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.WorkplaceInspectionData;
+import com.sapphire.logic.Environment;
+import com.sapphire.models.WorkplaceInspectionData;
 import java.util.ArrayList;
 
 public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceInspectionsAdapter.ViewHolder> {
@@ -82,63 +83,55 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
 
         WorkplaceInspectionData data = mData.get(position);
 
-        holder.border.setVisibility(View.VISIBLE);
+        if (position < mData.size()-1 || !isDashboard) {
+            holder.border.setVisibility(View.VISIBLE);
+        } else {
+            holder.border.setVisibility(View.GONE);
+        }
 
         holder.text_name.setText(data.getName());
         holder.text_date.setText(data.getDateString());
 
         holder.open.setTypeface(typeFace);
-        holder.open.setText(Html.fromHtml("&#61504;"));
+        holder.open.setText(Html.fromHtml("&#"+Environment.IcoEdit+";"));
         holder.open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mContext instanceof OnOpenWorkplaceInspectionsClickListener) {
                     ((OnOpenWorkplaceInspectionsClickListener) mContext).onOpenWorkplaceInspectionsClick(holder.getAdapterPosition());
                 }
-                else {
-                    //TODO generate error dialog
-                }
             }
         });
 
         holder.delete.setTypeface(typeFace);
-        holder.delete.setText(Html.fromHtml("&#61944;"));
+        holder.delete.setText(Html.fromHtml("&#"+Environment.IcoDelete+";"));
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mContext instanceof OnDeleteWorkplaceInspectionsClickListener) {
                     ((OnDeleteWorkplaceInspectionsClickListener) mContext).onDeleteWorkplaceInspectionsClick(holder.getAdapterPosition());
                 }
-                else {
-                    //TODO generate error dialog
-                }
             }
         });
 
         holder.files.setTypeface(typeFace);
-        holder.files.setText(Html.fromHtml("&#61787;"));
+        holder.files.setText(Html.fromHtml("&#"+Environment.IcoFiles+";"));
         holder.files.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mContext instanceof OnFilesWorkplaceInspectionsClickListener) {
                     ((OnFilesWorkplaceInspectionsClickListener) mContext).onFilesWorkplaceInspectionsClick(holder.getAdapterPosition());
                 }
-                else {
-                    //TODO generate error dialog
-                }
             }
         });
 
         holder.report.setTypeface(typeFace);
-        holder.report.setText(Html.fromHtml("&#61889;"));
+        holder.report.setText(Html.fromHtml("&#"+Environment.IcoReport+";"));
         holder.report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mContext instanceof OnReportWorkplaceInspectionsClickListener) {
                     ((OnReportWorkplaceInspectionsClickListener) mContext).onReportWorkplaceInspectionsClick(holder.getAdapterPosition());
-                }
-                else {
-                    //TODO generate error dialog
                 }
             }
         });
@@ -148,9 +141,6 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
             public void onClick(View view) {
                 if (mContext instanceof OnRootWorkplaceInspectionsClickListener) {
                     ((OnRootWorkplaceInspectionsClickListener) mContext).onRootWorkplaceInspectionsClick(holder.getAdapterPosition());
-                }
-                else {
-                    //TODO generate error dialog
                 }
             }
         });

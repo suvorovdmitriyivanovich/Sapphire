@@ -1,6 +1,19 @@
 package com.sapphire.logic;
 
+import com.sapphire.models.CategoryData;
+import com.sapphire.models.FileData;
+import com.sapphire.models.ItemPriorityData;
+import com.sapphire.models.ItemStatusData;
+import com.sapphire.models.MemberData;
+import com.sapphire.models.OrganizationData;
+import com.sapphire.models.OrganizationStructureData;
+import com.sapphire.models.ProfileData;
+import com.sapphire.models.TemplateData;
+import com.sapphire.models.TimeZoneData;
+import com.sapphire.models.TopicData;
+
 import java.util.ArrayList;
+import java.util.TimeZone;
 
 public class UserInfo {
     private String authToken = "";
@@ -9,10 +22,18 @@ public class UserInfo {
     private ArrayList<OrganizationData> organizations = new ArrayList<OrganizationData>();
     private ArrayList<OrganizationStructureData> organizationStructureDatas = new ArrayList<OrganizationStructureData>();
     private ArrayList<TemplateData> templateDatas = new ArrayList<TemplateData>();
+    private ArrayList<TemplateData> templateMeetingDatas = new ArrayList<TemplateData>();
     private ArrayList<ItemPriorityData> itemPriorityDatas = new ArrayList<ItemPriorityData>();
     private ArrayList<ItemStatusData> itemStatusDatas = new ArrayList<ItemStatusData>();
     private ArrayList<FileData> fileDatas = new ArrayList<FileData>();
     private OrganizationData currentOrganization = new OrganizationData();
+    private ArrayList<MemberData> members = new ArrayList<MemberData>();
+    private ArrayList<TopicData> topics = new ArrayList<TopicData>();
+    private ArrayList<MemberData> allmembers = new ArrayList<MemberData>();
+    private TopicData topic = null;
+    private int position = -1;
+    private ArrayList<CategoryData> docCategoryDatas = new ArrayList<CategoryData>();
+    private TimeZoneData timeZone = new TimeZoneData();
 
     //---------------------Singleton---------------------------
     private static UserInfo userInfo;
@@ -109,6 +130,16 @@ public class UserInfo {
         this.templateDatas.addAll(templateDatas);
     }
 
+    public ArrayList<TemplateData> getTemplateMeetingDatas() {
+        return templateMeetingDatas;
+    }
+
+    public void setTemplateMeetingDatas(ArrayList<TemplateData> templateMeetingDatas) {
+        this.templateMeetingDatas.clear();
+        this.templateMeetingDatas.add(new TemplateData());
+        this.templateMeetingDatas.addAll(templateMeetingDatas);
+    }
+
     public ArrayList<ItemPriorityData> getItemPriorityDatas() {
         return itemPriorityDatas;
     }
@@ -136,5 +167,66 @@ public class UserInfo {
     public void setFileDatas(ArrayList<FileData> fileDatas) {
         this.fileDatas.clear();
         this.fileDatas.addAll(fileDatas);
+    }
+
+    public ArrayList<MemberData> getMembers() {
+        return members;
+    }
+
+    public void setMembers(ArrayList<MemberData> members) {
+        this.members.clear();
+        this.members.addAll(members);
+    }
+
+    public ArrayList<TopicData> getTopics() {
+        return topics;
+    }
+
+    public void setTopics(ArrayList<TopicData> topics) {
+        this.topics.clear();
+        this.topics.addAll(topics);
+    }
+
+    public ArrayList<MemberData> getAllMembers() {
+        return allmembers;
+    }
+
+    public void setAllMembers(ArrayList<MemberData> allmembers) {
+        this.allmembers.clear();
+        this.allmembers.addAll(allmembers);
+    }
+
+    public void setTopic(TopicData topic) {
+        this.topic = topic;
+    }
+
+    public TopicData getTopic() {
+        return topic;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public ArrayList<CategoryData> getDocCategoryDatas() {
+        return docCategoryDatas;
+    }
+
+    public void setDocCategoryDatas(ArrayList<CategoryData> datas) {
+        this.docCategoryDatas.clear();
+        this.docCategoryDatas.add(new CategoryData());
+        this.docCategoryDatas.addAll(datas);
+    }
+
+    public void setTimeZone(TimeZoneData timeZone) {
+        this.timeZone = timeZone;
+    }
+
+    public TimeZoneData getTimeZone() {
+        return timeZone;
     }
 }

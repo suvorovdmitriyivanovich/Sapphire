@@ -6,8 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.sapphire.logic.ItemPriorityData;
-import com.sapphire.logic.ItemStatusData;
+import com.sapphire.models.ItemPriorityData;
 
 import java.util.ArrayList;
 

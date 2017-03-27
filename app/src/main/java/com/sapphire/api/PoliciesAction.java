@@ -1,18 +1,15 @@
 package com.sapphire.api;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.CoursesData;
 import com.sapphire.logic.Environment;
-import com.sapphire.logic.ErrorMessageData;
+import com.sapphire.models.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.logic.PoliciesData;
-import com.sapphire.logic.ResponseData;
+import com.sapphire.models.PolicyData;
+import com.sapphire.models.ResponseData;
 import com.sapphire.logic.UserInfo;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import java.util.ArrayList;
@@ -24,11 +21,11 @@ public class PoliciesAction extends AsyncTask{
     }
 
     public interface RequestPoliciesData {
-        public void onRequestPoliciesData(ArrayList<PoliciesData> policiesDatas);
+        public void onRequestPoliciesData(ArrayList<PolicyData> policiesDatas);
     }
 
     private Context mContext;
-    private ArrayList<PoliciesData> policiesDatas;
+    private ArrayList<PolicyData> policiesDatas;
     private boolean onlyOutstanding;
 
     public PoliciesAction(Context context, boolean onlyOutstanding) {
@@ -49,13 +46,13 @@ public class PoliciesAction extends AsyncTask{
 
         if (responseData.getSuccess()) {
             JSONArray data = responseData.getData();
-            policiesDatas = new ArrayList<PoliciesData>();
+            policiesDatas = new ArrayList<PolicyData>();
             for (int y=0; y < data.length(); y++) {
                 try {
                     if (!data.getJSONObject(y).isNull("ParentId")) {
                         continue;
                     }
-                    policiesDatas.add(new PoliciesData(data.getJSONObject(y)));
+                    policiesDatas.add(new PolicyData(data.getJSONObject(y)));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -65,7 +62,7 @@ public class PoliciesAction extends AsyncTask{
                     if (data.getJSONObject(y).isNull("ParentId")) {
                         continue;
                     }
-                    PoliciesData policiesData = new PoliciesData(data.getJSONObject(y));
+                    PolicyData policiesData = new PolicyData(data.getJSONObject(y));
                     if (onlyOutstanding && policiesData.getIsAcknowledged()) {
                         continue;
                     }
@@ -80,13 +77,13 @@ public class PoliciesAction extends AsyncTask{
                 }
             }
             if (onlyOutstanding) {
-                ArrayList<PoliciesData> policiesDatasRemove = new ArrayList<PoliciesData>();
-                for (PoliciesData item: policiesDatas) {
+                ArrayList<PolicyData> policiesDatasRemove = new ArrayList<PolicyData>();
+                for (PolicyData item: policiesDatas) {
                     if (item.getSubPolicies().size() == 0) {
                         policiesDatasRemove.add(item);
                     }
                 }
-                for (PoliciesData item: policiesDatasRemove) {
+                for (PolicyData item: policiesDatasRemove) {
                     policiesDatas.remove(item);
                 }
             }

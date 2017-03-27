@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.MenuFragment;
-import com.sapphire.logic.NavigationMenuData;
+import com.sapphire.models.NavigationMenuData;
 import java.util.ArrayList;
 
 public class MenuAdapter extends BaseExpandableListAdapter {

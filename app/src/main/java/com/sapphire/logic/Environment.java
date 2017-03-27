@@ -2,8 +2,9 @@ package com.sapphire.logic;
 
 public class Environment {
     public static final String ID = "id";
-    public static final String EDIT = "edit";
     public static final String KEY = "passkey";
+    public static final String PARAM_TASK = "task";
+    public static final String BROADCAST_ACTION = "action";
 
     public static final String SERVER = "http://apiv1.dealerpilothr.com";
     public static final String SERVERFull = "http://portal.dealerpilothr.com";
@@ -40,6 +41,14 @@ public class Environment {
     public static final String TopicTemplatesURL = "/v1/HealthAndSafety/TopicTemplates";
     public static final String TopicTemplateItemsURL = "/v1/HealthAndSafety/TopicTemplates/Items";
     public static final String MembersURL = "/v1/HealthAndSafety/Members";
+    public static final String MeetingsURL = "/v1/HealthAndSafety/Meetings";
+    public static final String PerformanceEvaluations = "/v1/PerformanceEvaluations";
+    public static final String PerformanceEvaluationsFilesURL = "/v1/PerformanceEvaluations/AttachFile";
+    public static final String Disciplines = "/v1/Disciplines";
+    public static final String DisciplinesFilesURL = "/v1/Disciplines/AttachFile";
+    public static final String Documents = "/v1/Docs";
+    public static final String DocumentsFilesURL = "/v1/Docs/AttachFile";
+    public static final String DocCategoriesURL = "/v1/Docs/Categories";
 
     public static final String PolicyStatusStarted = "1586dc39-979b-3991-c822-a4bcb14d1345";
     public static final String PolicyStatusAcknowledged  = "1586dc39-979b-ab1c-838f-1917fce340de";
@@ -48,4 +57,16 @@ public class Environment {
     public static final String AccountCourseFileStatusFinish  = "c9c8db39-2b01-b87e-3632-1589834c115e";
     public static final String EmergencyContactType  = "c9c8db39-2b01-dc72-4427-c51834bbec82";
     public static final String FamilyContactType  = "c9c8db39-2b01-c6c9-27ff-eb9e0a5b0cf0";
+
+    public static final String IcoEdit  = "61504";
+    public static final String IcoDelete  = "61944";
+    public static final String IcoFiles  = "61678";
+    public static final String IcoReport  = "61889";
+    public static final String IcoOk  = "61452";
+    public static final String IcoClose  = "61453";
+    public static final String IcoAdd  = "61543";
+    public static final String IcoOpen  = "61889";
+    public static final String IcoPlay  = "61515";
+    public static final String IcoList  = "61498";
+    public static final String IcoDownload  = "61465";
 }

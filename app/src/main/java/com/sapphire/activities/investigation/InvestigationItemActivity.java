@@ -4,13 +4,17 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -20,15 +24,20 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import com.sapphire.R;
+import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.api.InvestigationItemAddAction;
-import com.sapphire.logic.InvestigationItemData;
+import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.logic.Environment;
+import com.sapphire.logic.NetRequests;
+import com.sapphire.models.InvestigationItemData;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class InvestigationItemActivity extends BaseActivity implements InvestigationItemAddAction.RequestInvestigationItemAdd{
+public class InvestigationItemActivity extends BaseActivity implements InvestigationItemAddAction.RequestInvestigationItemAdd,
+                                                                       WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
     private String itemId = "";
     private String id = "";
     private ProgressDialog pd;
@@ -51,12 +60,13 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
     private int myYear = cal.get(Calendar.YEAR);
     private int myMonth = cal.get(Calendar.MONTH);
     private int myDay = cal.get(Calendar.DAY_OF_MONTH);
-    private int myHour = cal.get(Calendar.HOUR_OF_DAY);
-    private int myMinute = cal.get(Calendar.MINUTE);
     private Long dateNew;
-    private EditText time;
-    private View image_time_group;
     private EditText date;
+    private boolean isCheckName = false;
+    private boolean isCheckDate = false;
+    private BroadcastReceiver br;
+    private View nointernet_group;
+    private ViewGroup.LayoutParams par_nointernet_group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,11 +122,9 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
         image_date_group = findViewById(R.id.image_date_group);
         text_date_error = findViewById(R.id.text_date_error);
         text_date = findViewById(R.id.text_date);
-        time = (EditText) findViewById(R.id.time);
-        image_time_group = findViewById(R.id.image_time_group);
         date = (EditText) findViewById(R.id.date);
 
-        format = new SimpleDateFormat("dd.MM.yyyy hh:mm aa");
+        format = new SimpleDateFormat("dd.MM.yyyy");
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,20 +137,6 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
             @Override
             public void onClick(View v) {
                 choiseDate();
-            }
-        });
-
-        time.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                choiseTime();
-            }
-        });
-
-        image_time_group.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                choiseTime();
             }
         });
 
@@ -193,106 +187,53 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
                     Date thisdaten = new Date();
                     thisdaten.setTime(dateOld);
                     String datet = format.format(thisdaten);
-                    date.setText(datet.substring(0,10));
-                    time.setText(datet.substring(11));
+                    date.setText(datet);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        updateViews();
-    }
+        // создаем BroadcastReceiver
+        br = new BroadcastReceiver() {
+            // действия при получении сообщений
+            public void onReceive(Context context, Intent intent) {
+                final String putreqwest = intent.getStringExtra(Environment.PARAM_TASK);
 
-    private void choiseTime() {
-        hideSoftKeyboard();
-
-        Date date = null;
-        try {
-            date = format.parse("01.01.1980 " + time.getText().toString() + ":00");
-        } catch (ParseException e) {
-            date = new Date();
-            //date.setTime((long) mParphones.get(thisposition).get("datein"));
-            e.printStackTrace();
-        }
-
-        cal.setTime(date);
-
-        myHour = cal.get(Calendar.HOUR_OF_DAY);
-        myMinute = cal.get(Calendar.MINUTE);
-
-        DialogFragment newFragment = new TimePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "timePicker");
-    }
-
-    public static class TimePickerFragment extends DialogFragment
-            implements TimePickerDialog.OnTimeSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current time as the default values for the picker
-            //final Calendar c = Calendar.getInstance();
-            //int hour = c.get(Calendar.HOUR_OF_DAY);
-            //int minute = c.get(Calendar.MINUTE);
-
-            InvestigationItemActivity act = (InvestigationItemActivity) getActivity();
-
-            // Create a new instance of TimePickerDialog and return it
-            return new TimePickerDialog(getActivity(), this, act.myHour, act.myMinute, false);
-            //DateFormat.is24HourFormat(getActivity()));
-            //.is24HourFormat(getActivity()));
-        }
-
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            // Do something with the time chosen by the user
-            InvestigationItemActivity act = (InvestigationItemActivity) getActivity();
-
-            String ampm = "AM";
-            act.myHour = hourOfDay;
-            act.myMinute = minute;
-            if (hourOfDay == 0) {
-                hourOfDay = 12;
-            } else if (hourOfDay == 12) {
-                ampm = "PM";
-            } else if (hourOfDay >= 13) {
-                hourOfDay = hourOfDay - 12;
-                ampm = "PM";
-            }
-
-            String mHour = "";
-            String mMinute = "";
-            //if ((hourOfDay+"").length() == 1) {
-            //    mHour = "0" + hourOfDay;
-            //} else {
-            mHour = hourOfDay + "";
-            //}
-            if ((act.myMinute+"").length() == 1) {
-                mMinute = "0" + act.myMinute;
-            } else {
-                mMinute = act.myMinute+"";
-            }
-
-            act.time.setText("" + mHour + ":" + mMinute + " " + ampm);
-
-            Date dateD = null;
-            if (act.date.getText().toString().equals("")) {
-                dateD = new Date();
-                String datet = format.format(dateD);
-                act.date.setText(datet.substring(0,10));
-            }
-
-            String dateNewstr = act.date.getText().toString() + " " + act.time.getText().toString();
-            if (!dateNewstr.equals("")) {
-                try {
-                    dateD = format.parse(dateNewstr);
-                    act.dateNew = dateD.getTime();
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                if (putreqwest.equals("updatebottom")) {
+                    UpdateBottom();
                 }
             }
+        };
+        // создаем фильтр для BroadcastReceiver
+        IntentFilter intFilt = new IntentFilter(Environment.BROADCAST_ACTION);
+        // регистрируем (включаем) BroadcastReceiver
+        registerReceiver(br, intFilt);
 
-            act.updateViews();
+        updateViews();
+
+        nointernet_group = findViewById(R.id.nointernet_group);
+        par_nointernet_group = nointernet_group.getLayoutParams();
+        nointernet_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pd.show();
+
+                new WorkplaceInspectionItemAddAction(InvestigationItemActivity.this, null, true, 0, "").execute();
+            }
+        });
+
+        UpdateBottom();
+    }
+
+    private void UpdateBottom() {
+        if (Sapphire.getInstance().getNeedUpdate()) {
+            par_nointernet_group.height = GetPixelFromDips(56);
+        } else {
+            par_nointernet_group.height = 0;
         }
+        nointernet_group.setLayoutParams(par_nointernet_group);
+        nointernet_group.requestLayout();
     }
 
     private void choiseDate() {
@@ -355,13 +296,7 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
             act.date.setText("" + mDay + "." + mMonth + "." + act.myYear);
 
             Date dateD = null;
-            if (act.time.getText().toString().equals("")) {
-                dateD = new Date();
-                String datet = format.format(dateD);
-                act.time.setText(datet.substring(11));
-            }
-
-            String dateNewstr = act.date.getText().toString() + " " + act.time.getText().toString();
+            String dateNewstr = act.date.getText().toString();
             if (!dateNewstr.equals("")) {
                 try {
                     dateD = format.parse(dateNewstr);
@@ -379,7 +314,10 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
         hideSoftKeyboard();
         boolean allOk = true;
 
-        if (name.getText().toString().equals("")) {
+        if (name.getText().toString().equals("") || date.getText().toString().equals("")) {
+            isCheckName = true;
+            isCheckDate = true;
+            updateViews();
             allOk = false;
         }
 
@@ -403,6 +341,7 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
         }
 
         public void afterTextChanged(Editable s) {
+            isCheckName = true;
             updateViews();
         }
 
@@ -412,14 +351,14 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
     }
 
     private void updateViews() {
-        if (name.getText().toString().equals("")) {
+        if (isCheckName && name.getText().toString().equals("")) {
             text_name_error.setVisibility(View.VISIBLE);
             text_name.setVisibility(View.GONE);
         } else {
             text_name_error.setVisibility(View.GONE);
             text_name.setVisibility(View.VISIBLE);
         }
-        if (date.getText().toString().equals("")) {
+        if (isCheckDate && date.getText().toString().equals("")) {
             text_date_error.setVisibility(View.VISIBLE);
             text_date.setVisibility(View.GONE);
         } else {
@@ -458,6 +397,26 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
     }
 
     @Override
+    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+        } else {
+            Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
+            UpdateBottom();
+            pd.hide();
+        }
+    }
+
+    public int GetPixelFromDips(float pixels) {
+        // Get the screen's density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (pixels * scale + 0.5f);
+    }
+
+    @Override
     public void onBackPressed() {
         exit();
     }
@@ -470,5 +429,6 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
     @Override
     public void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(br);
     }
 }

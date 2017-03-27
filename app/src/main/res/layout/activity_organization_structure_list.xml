@@ -50,6 +50,44 @@
         android:scrollbars="vertical"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/top_group" />
+        android:layout_below="@+id/top_group"
+        android:layout_above="@+id/nointernet_group"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/nointernet_group"
+        android:background="@drawable/black_button">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_exits_nosynchronize"
+            android:id="@+id/text_nointernet"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="24dp"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:layout_toLeftOf="@+id/text_setinternet"
+            android:layout_toStartOf="@+id/text_setinternet"
+            android:layout_marginRight="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_synchronize"
+            android:id="@+id/text_setinternet"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="24dp"
+            android:singleLine="true"
+            android:textColor="@color/green_light"
+            android:textSize="14sp"/>
+    </RelativeLayout>
 
 </RelativeLayout>

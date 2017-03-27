@@ -2,12 +2,17 @@ package com.sapphire.activities.workplaceInspection;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -17,26 +22,36 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
+import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.adapters.SpinPrioritisAdapter;
 import com.sapphire.adapters.SpinStatusesAdapter;
+import com.sapphire.adapters.SpinStringAdapter;
 import com.sapphire.api.WorkplaceInspectionItemAddAction;
-import com.sapphire.logic.ItemPriorityData;
-import com.sapphire.logic.ItemStatusData;
+import com.sapphire.db.DBHelper;
+import com.sapphire.logic.Environment;
+import com.sapphire.logic.NetRequests;
+import com.sapphire.models.ItemPriorityData;
+import com.sapphire.models.ItemStatusData;
 import com.sapphire.logic.UserInfo;
-import com.sapphire.logic.WorkplaceInspectionItemData;
+import com.sapphire.models.WorkplaceInspectionItemData;
 import java.util.ArrayList;
 
 public class WorkplaceInspectionItemActivity extends BaseActivity implements WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+    private String idloc = "";
     private String workplaceInspectionItemId = "";
     private String workplaceInspectionId = "";
     private ProgressDialog pd;
     private EditText name;
     private EditText description;
+    private EditText comments;
+    private EditText recommendedActions;
     private View text_name_error;
     private View text_name;
     private String nameOld = "";
     private String descriptionOld = "";
+    private String commentsOld = "";
+    private String recommendedActionsOld = "";
     private int severityOld = 0;
     private Dialog dialog_confirm;
     private TextView tittle_message;
@@ -46,6 +61,9 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
     private Spinner spinnerStatus;
     private ArrayList<ItemStatusData> statuses;
     private SpinStatusesAdapter adapterStatus;
+    private Spinner spinnerSeverity;
+    private ArrayList<String> severitis;
+    private SpinStringAdapter adapterSeverity;
     private boolean clickSpinner = false;
     private String statusId = "";
     private String statusIdOld = "";
@@ -56,6 +74,15 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
     private String priorityIdOld = "";
     private EditText status;
     private EditText priority;
+    private boolean isCheckName = false;
+    private View nointernet_group;
+    private ViewGroup.LayoutParams par_nointernet_group;
+    private WorkplaceInspectionItemData workplaceInspectionItemData;
+    private BroadcastReceiver br;
+    private boolean updateAll = false;
+    private TextView text_nointernet;
+    private TextView text_setinternet;
+    private boolean setUpdateAll = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,10 +133,13 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
 
         name = (EditText) findViewById(R.id.name);
         description = (EditText) findViewById(R.id.description);
+        comments = (EditText) findViewById(R.id.comments);
+        recommendedActions = (EditText) findViewById(R.id.recommendedActions);
         text_name_error = findViewById(R.id.text_name_error);
         text_name = findViewById(R.id.text_name);
         severity = (EditText) findViewById(R.id.severity);
         spinnerStatus = (Spinner) findViewById(R.id.spinnerStatus);
+        spinnerSeverity = (Spinner) findViewById(R.id.spinnerSeverity);
         spinnerPriority = (Spinner) findViewById(R.id.spinnerPriority);
         status = (EditText) findViewById(R.id.status);
         priority = (EditText) findViewById(R.id.priority);
@@ -136,6 +166,41 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
                 }
                 status.setText(statuses.get(position).getName());
                 statusId = statuses.get(position).getWorkplaceInspectionItemStatusId();
+                clickSpinner = false;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        severitis = new ArrayList<>();
+        severitis.add("");
+        severitis.add("1");
+        severitis.add("2");
+        severitis.add("3");
+        severitis.add("4");
+        severitis.add("5");
+
+        adapterSeverity = new SpinStringAdapter(this, R.layout.spinner_list_item_black);
+        spinnerSeverity.setAdapter(adapterSeverity);
+        adapterSeverity.setValues(severitis);
+        severity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSoftKeyboard();
+                clickSpinner = true;
+                spinnerSeverity.performClick();
+            }
+        });
+        spinnerSeverity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!clickSpinner) {
+                    return;
+                }
+                severity.setText(severitis.get(position));
                 clickSpinner = false;
             }
 
@@ -187,8 +252,10 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
                 if (!severity.getText().toString().equals("")) {
                     severityNew = Integer.valueOf(severity.getText().toString());
                 }
-                if (workplaceInspectionItemId.equals("") || !nameOld.equals(name.getText().toString())
+                if ((workplaceInspectionItemId.equals("") && idloc.equals("")) || !nameOld.equals(name.getText().toString())
                         || !descriptionOld.equals(description.getText().toString())
+                        || !commentsOld.equals(comments.getText().toString())
+                        || !recommendedActionsOld.equals(recommendedActions.getText().toString())
                         || severityOld != severityNew
                         || !statusIdOld.equals(statusId)
                         || !priorityIdOld.equals(priorityId)) {
@@ -216,11 +283,19 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
         if (workplaceInspectionId == null) {
             workplaceInspectionId = "";
         }
-        if (!workplaceInspectionItemId.equals("")) {
+        idloc = intent.getStringExtra("idloc");
+        if (idloc == null) {
+            idloc = "";
+        }
+        if (!workplaceInspectionItemId.equals("") || !idloc.equals("")) {
             nameOld = intent.getStringExtra("name");
             descriptionOld = intent.getStringExtra("description");
+            commentsOld = intent.getStringExtra("comments");
+            recommendedActionsOld = intent.getStringExtra("recommendedActions");
             name.setText(nameOld);
             description.setText(descriptionOld);
+            comments.setText(commentsOld);
+            recommendedActions.setText(recommendedActionsOld);
             int severityInt = intent.getIntExtra("severity", 0);
             if (severityInt != 0) {
                 severityOld = severityInt;
@@ -274,7 +349,71 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
             }, 10);
         }
 
+        nointernet_group = findViewById(R.id.nointernet_group);
+        par_nointernet_group = nointernet_group.getLayoutParams();
+        text_nointernet = (TextView) findViewById(R.id.text_nointernet);
+        text_setinternet = (TextView) findViewById(R.id.text_setinternet);
+        nointernet_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (setUpdateAll) {
+                    pd.show();
+
+                    updateAll = true;
+                    new WorkplaceInspectionItemAddAction(WorkplaceInspectionItemActivity.this, null, true, 0, idloc).execute();
+                } else {
+                    Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        // создаем BroadcastReceiver
+        br = new BroadcastReceiver() {
+            // действия при получении сообщений
+            public void onReceive(Context context, Intent intent) {
+                final String putreqwest = intent.getStringExtra(Environment.PARAM_TASK);
+
+                if (putreqwest.equals("updatebottom")) {
+                    UpdateBottom();
+                }
+            }
+        };
+        // создаем фильтр для BroadcastReceiver
+        IntentFilter intFilt = new IntentFilter(Environment.BROADCAST_ACTION);
+        // регистрируем (включаем) BroadcastReceiver
+        registerReceiver(br, intFilt);
+
         updateViews();
+
+        UpdateBottom();
+    }
+
+    private void UpdateBottom() {
+        text_nointernet.setText(getResources().getString(R.string.text_need_internet));
+        text_setinternet.setText(getResources().getString(R.string.text_setinternet));
+        setUpdateAll = false;
+        if (NetRequests.getNetRequests().isOnline(false)) {
+            if (Sapphire.getInstance().getNeedUpdate()) {
+                setUpdateAll = true;
+                text_nointernet.setText(getResources().getString(R.string.text_exits_nosynchronize));
+                text_setinternet.setText(getResources().getString(R.string.text_synchronize));
+                par_nointernet_group.height = GetPixelFromDips(56);
+            } else {
+                par_nointernet_group.height = 0;
+            }
+        } else {
+            par_nointernet_group.height = GetPixelFromDips(56);
+        }
+        nointernet_group.setLayoutParams(par_nointernet_group);
+        nointernet_group.requestLayout();
+    }
+
+    public int GetPixelFromDips(float pixels) {
+        // Get the screen's density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (pixels * scale + 0.5f);
     }
 
     private void saveChanged() {
@@ -282,22 +421,28 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
         boolean allOk = true;
 
         if (name.getText().toString().equals("")) {
+            isCheckName = true;
+            updateViews();
             allOk = false;
         }
 
         if (allOk) {
             pd.show();
 
-            WorkplaceInspectionItemData workplaceInspectionItemData = new WorkplaceInspectionItemData();
+            workplaceInspectionItemData = new WorkplaceInspectionItemData();
+            workplaceInspectionItemData.setId(idloc);
             workplaceInspectionItemData.setName(name.getText().toString());
             workplaceInspectionItemData.setDescription(description.getText().toString());
+            workplaceInspectionItemData.setComments(comments.getText().toString());
+            workplaceInspectionItemData.setRecommendedActions(recommendedActions.getText().toString());
             workplaceInspectionItemData.setWorkplaceInspectionItemId(workplaceInspectionItemId);
             workplaceInspectionItemData.setWorkplaceInspectionId(workplaceInspectionId);
             workplaceInspectionItemData.setSeverity(severity.getText().toString());
             workplaceInspectionItemData.setStatus(new ItemStatusData(statusId));
             workplaceInspectionItemData.setPriority(new ItemPriorityData(priorityId));
 
-            new WorkplaceInspectionItemAddAction(WorkplaceInspectionItemActivity.this, workplaceInspectionItemData, true, 0).execute();
+            updateAll = false;
+            new WorkplaceInspectionItemAddAction(WorkplaceInspectionItemActivity.this, workplaceInspectionItemData, true, 0, "").execute();
         }
     }
 
@@ -307,6 +452,7 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
         }
 
         public void afterTextChanged(Editable s) {
+            isCheckName = true;
             updateViews();
         }
 
@@ -316,7 +462,7 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
     }
 
     private void updateViews() {
-        if (name.getText().toString().equals("")) {
+        if (isCheckName && name.getText().toString().equals("")) {
             text_name_error.setVisibility(View.VISIBLE);
             text_name.setVisibility(View.GONE);
         } else {
@@ -339,6 +485,8 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
         }
         if (!nameOld.equals(name.getText().toString())
             || !descriptionOld.equals(description.getText().toString())
+            || !commentsOld.equals(comments.getText().toString())
+            || !recommendedActionsOld.equals(recommendedActions.getText().toString())
             || severityOld != severityNew
             || !statusIdOld.equals(statusId)
             || !priorityIdOld.equals(priorityId)) {
@@ -350,12 +498,32 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms) {
+    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String workplaceInspectionItemId) {
         pd.hide();
         if (!result.equals("OK")) {
-            Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_need_internet))) {
+                if (!workplaceInspectionItemData.getId().equals("")) {
+                    DBHelper.getInstance(Sapphire.getInstance()).changeWorkplaceInspectionItem(workplaceInspectionItemData);
+                } else {
+                    DBHelper.getInstance(Sapphire.getInstance()).addWorkplaceInspectionItem(workplaceInspectionItemData);
+                }
+                finish();
+            } else {
+                Toast.makeText(getBaseContext(), result,
+                        Toast.LENGTH_LONG).show();
+            }
+        } else if (updateAll) {
+            this.workplaceInspectionItemId = workplaceInspectionItemId;
+
+            Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
+            UpdateBottom();
+
+            updateAll = false;
+            pd.hide();
         } else {
+            if (!workplaceInspectionItemData.getId().equals("")) {
+                DBHelper.getInstance(Sapphire.getInstance()).deleteWorkplaceInspectionItem(workplaceInspectionItemData.getId());
+            }
             finish();
         }
     }
@@ -373,5 +541,6 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
     @Override
     public void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(br);
     }
 }

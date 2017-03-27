@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import com.sapphire.logic.TemplateData;
+import com.sapphire.models.TemplateData;
 import java.util.ArrayList;
 
 public class SpinTemplatesAdapter extends ArrayAdapter<String> {

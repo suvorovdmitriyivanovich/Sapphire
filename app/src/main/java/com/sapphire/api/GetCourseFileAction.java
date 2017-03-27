@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.CoursesData;
+import com.sapphire.models.CoursesData;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.UserInfo;

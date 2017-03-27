@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.OrganizationStructureData;
+import com.sapphire.models.OrganizationStructureData;
 
 import java.util.ArrayList;
 
@@ -70,9 +70,6 @@ public class OrganizationStructureAdapter extends RecyclerView.Adapter<Organizat
                 if (mContext instanceof OnAddClickListener) {
                     ((OnAddClickListener) mContext).onAddClick(holder.getAdapterPosition());
                 }
-                else {
-                    //TODO generate error dialog
-                }
             }
         });
 
@@ -81,9 +78,6 @@ public class OrganizationStructureAdapter extends RecyclerView.Adapter<Organizat
             public void onClick(View view) {
                 if (mContext instanceof OnRootClickListener) {
                     ((OnRootClickListener) mContext).onRootClick(holder.getAdapterPosition());
-                }
-                else {
-                    //TODO generate error dialog
                 }
             }
         });

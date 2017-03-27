@@ -11,7 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.InvestigationItemData;
+import com.sapphire.logic.Environment;
+import com.sapphire.models.InvestigationItemData;
 import java.util.ArrayList;
 
 public class InvestigationItemsAdapter extends RecyclerView.Adapter<InvestigationItemsAdapter.ViewHolder> {
@@ -80,43 +81,34 @@ public class InvestigationItemsAdapter extends RecyclerView.Adapter<Investigatio
         holder.text_description.setText(data.getDescription());
 
         holder.open.setTypeface(typeFace);
-        holder.open.setText(Html.fromHtml("&#61504;"));
+        holder.open.setText(Html.fromHtml("&#"+Environment.IcoEdit+";"));
         holder.open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (context instanceof OnOpenInvestigationClickListener) {
                     ((OnOpenInvestigationClickListener) context).onOpenInvestigationClick(holder.getAdapterPosition());
                 }
-                else {
-                    //TODO generate error dialog
-                }
             }
         });
 
         holder.delete.setTypeface(typeFace);
-        holder.delete.setText(Html.fromHtml("&#61944;"));
+        holder.delete.setText(Html.fromHtml("&#"+Environment.IcoDelete+";"));
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (context instanceof OnDeleteInvestigationClickListener) {
                     ((OnDeleteInvestigationClickListener) context).onDeleteInvestigationClick(holder.getAdapterPosition());
                 }
-                else {
-                    //TODO generate error dialog
-                }
             }
         });
 
         holder.files.setTypeface(typeFace);
-        holder.files.setText(Html.fromHtml("&#61787;"));
+        holder.files.setText(Html.fromHtml("&#"+Environment.IcoFiles+";"));
         holder.files.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (context instanceof OnFilesInvestigationClickListener) {
                     ((OnFilesInvestigationClickListener) context).onFilesInvestigationClick(holder.getAdapterPosition());
-                }
-                else {
-                    //TODO generate error dialog
                 }
             }
         });
@@ -126,9 +118,6 @@ public class InvestigationItemsAdapter extends RecyclerView.Adapter<Investigatio
             public void onClick(View view) {
                 if (context instanceof OnRootInvestigationClickListener) {
                     ((OnRootInvestigationClickListener) context).onRootInvestigationClick(holder.getAdapterPosition());
-                }
-                else {
-                    //TODO generate error dialog
                 }
             }
         });

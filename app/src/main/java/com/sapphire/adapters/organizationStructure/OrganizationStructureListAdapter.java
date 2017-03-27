@@ -9,11 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.OrganizationStructureData;
-
+import com.sapphire.logic.Environment;
+import com.sapphire.models.OrganizationStructureData;
 import java.util.ArrayList;
 
 public class OrganizationStructureListAdapter extends RecyclerView.Adapter<OrganizationStructureListAdapter.ViewHolder> {
@@ -75,15 +74,12 @@ public class OrganizationStructureListAdapter extends RecyclerView.Adapter<Organ
         holder.text_name.setText(organizationStructureData.getName());
 
         holder.add.setTypeface(typeFace);
-        holder.add.setText(Html.fromHtml("&#61543;"));
+        holder.add.setText(Html.fromHtml("&#"+Environment.IcoAdd+";"));
         holder.add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mContext instanceof OnAddClickListener) {
                     ((OnAddClickListener) mContext).onAddClick(holder.getAdapterPosition());
-                }
-                else {
-                    //TODO generate error dialog
                 }
             }
         });
@@ -96,29 +92,23 @@ public class OrganizationStructureListAdapter extends RecyclerView.Adapter<Organ
         }
 
         holder.edit.setTypeface(typeFace);
-        holder.edit.setText(Html.fromHtml("&#61504;"));
+        holder.edit.setText(Html.fromHtml("&#"+Environment.IcoEdit+";"));
         holder.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mContext instanceof OnAddClickListener) {
                     ((OnEditClickListener) mContext).onEditClick(holder.getAdapterPosition());
                 }
-                else {
-                    //TODO generate error dialog
-                }
             }
         });
 
         holder.delete.setTypeface(typeFace);
-        holder.delete.setText(Html.fromHtml("&#61944;"));
+        holder.delete.setText(Html.fromHtml("&#"+Environment.IcoDelete+";"));
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mContext instanceof OnAddClickListener) {
                     ((OnDeleteClickListener) mContext).onDeleteClick(holder.getAdapterPosition());
-                }
-                else {
-                    //TODO generate error dialog
                 }
             }
         });
@@ -128,9 +118,6 @@ public class OrganizationStructureListAdapter extends RecyclerView.Adapter<Organ
             public void onClick(View view) {
                 if (mContext instanceof OnRootClickListener) {
                     ((OnRootClickListener) mContext).onRootClick(holder.getAdapterPosition());
-                }
-                else {
-                    //TODO generate error dialog
                 }
             }
         });

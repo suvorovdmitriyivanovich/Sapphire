@@ -5,11 +5,13 @@ import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
-import com.sapphire.logic.ErrorMessageData;
-import com.sapphire.logic.InvestigationData;
+import com.sapphire.models.ErrorMessageData;
+import com.sapphire.models.InvestigationData;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.logic.ResponseData;
+import com.sapphire.models.ResponseData;
 import com.sapphire.logic.UserInfo;
+import com.sapphire.utils.DateOperations;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,15 +41,7 @@ public class InvestigationAddAction extends AsyncTask{
         //this.me = me;
 
         if (dateLong != 0l) {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            try {
-                Date thisdaten = new Date();
-                thisdaten.setTime(dateLong);
-                String datet = format.format(thisdaten);
-                this.date = datet;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            this.date = DateOperations.getDateServer(dateLong);
         }
     }
 
@@ -70,6 +64,7 @@ public class InvestigationAddAction extends AsyncTask{
         try {
             if (!id.equals("")) {
                 jsonObject.put("InvestigationId", id);
+                jsonObject.put("OrganizationId", userInfo.getCurrentOrganization().getOrganizationId());
             }
             jsonObject.put("Name", name);
             jsonObject.put("Description", description);

@@ -15,11 +15,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
+import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.FilesActivity;
 import com.sapphire.activities.MenuFragment;
@@ -29,13 +31,15 @@ import com.sapphire.api.ItemPrioritiesAction;
 import com.sapphire.api.ItemStatusesAction;
 import com.sapphire.api.TemplatesAction;
 import com.sapphire.api.WorkplaceInspectionDeleteAction;
+import com.sapphire.api.WorkplaceInspectionItemAddAction;
 import com.sapphire.api.WorkplaceInspectionsAction;
 import com.sapphire.logic.Environment;
-import com.sapphire.logic.ItemPriorityData;
-import com.sapphire.logic.ItemStatusData;
-import com.sapphire.logic.TemplateData;
+import com.sapphire.logic.NetRequests;
+import com.sapphire.models.ItemPriorityData;
+import com.sapphire.models.ItemStatusData;
+import com.sapphire.models.TemplateData;
 import com.sapphire.logic.UserInfo;
-import com.sapphire.logic.WorkplaceInspectionData;
+import com.sapphire.models.WorkplaceInspectionData;
 import java.util.ArrayList;
 
 public class WorkplaceInspectionsActivity extends BaseActivity implements WorkplaceInspectionsAdapter.OnRootWorkplaceInspectionsClickListener,
@@ -50,9 +54,8 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
                                                                           ItemPrioritiesAction.RequestItemPriorities,
                                                                           ItemPrioritiesAction.RequestItemPrioritiesData,
                                                                           ItemStatusesAction.RequestItemStatuses,
-                                                                          ItemStatusesAction.RequestItemStatusesData{
-    public final static String PARAM_TASK = "task";
-    public final static String BROADCAST_ACTION = "com.sapphire.activities.workplaceInspection.WorkplaceInspectionsActivity";
+                                                                          ItemStatusesAction.RequestItemStatusesData,
+                                                                          WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
     private BroadcastReceiver br;
     private ArrayList<WorkplaceInspectionData> workplaceInspectionDatas;
     private WorkplaceInspectionsAdapter adapter;
@@ -64,6 +67,8 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
     private Button button_send_save;
     private int currentPosition = 0;
     private View text_workplace_no;
+    private View nointernet_group;
+    private ViewGroup.LayoutParams par_nointernet_group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +135,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         br = new BroadcastReceiver() {
             // действия при получении сообщений
             public void onReceive(Context context, Intent intent) {
-                final String putreqwest = intent.getStringExtra(PARAM_TASK);
+                final String putreqwest = intent.getStringExtra(Environment.PARAM_TASK);
 
                 if (putreqwest.equals("updateleftmenu")) {
                     try {
@@ -138,11 +143,13 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
                     } catch (Exception e) {}
+                } else if (putreqwest.equals("updatebottom")) {
+                    UpdateBottom();
                 }
             }
         };
         // создаем фильтр для BroadcastReceiver
-        IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+        IntentFilter intFilt = new IntentFilter(Environment.BROADCAST_ACTION);
         // регистрируем (включаем) BroadcastReceiver
         registerReceiver(br, intFilt);
 
@@ -161,10 +168,33 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         workplaceinspectionslist.setAdapter(adapter);
 
         text_workplace_no = findViewById(R.id.text_workplace_no);
+
+        nointernet_group = findViewById(R.id.nointernet_group);
+        par_nointernet_group = nointernet_group.getLayoutParams();
+        nointernet_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pd.show();
+
+                new WorkplaceInspectionItemAddAction(WorkplaceInspectionsActivity.this, null, true, 0, "").execute();
+            }
+        });
+
+        UpdateBottom();
+    }
+
+    private void UpdateBottom() {
+        if (Sapphire.getInstance().getNeedUpdate()) {
+            par_nointernet_group.height = GetPixelFromDips(56);
+        } else {
+            par_nointernet_group.height = 0;
+        }
+        nointernet_group.setLayoutParams(par_nointernet_group);
+        nointernet_group.requestLayout();
     }
 
     public void updateVisibility() {
-        if (workplaceInspectionDatas.size() == 0) {
+        if (workplaceInspectionDatas == null || workplaceInspectionDatas.size() == 0) {
             text_workplace_no.setVisibility(View.VISIBLE);
             workplaceinspectionslist.setVisibility(View.GONE);
         } else {
@@ -209,10 +239,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         intent.putExtra("id", workplaceInspectionData.getWorkplaceInspectionId());
         intent.putExtra("url", Environment.WorkplaceInspectionsFilesURL);
         intent.putExtra("nameField", "WorkplaceInspectionId");
-        //TODO временно
-        //ArrayList<FileData> fileDatas = new ArrayList<FileData>();
-        //fileDatas.add(new FileData("3d5fdd39-9c53-7c30-cddb-d8cbb6a1d14e"));
-        //fileDatas.add(new FileData("3d5fdd39-e859-716a-9f6f-52029ada550c"));
+
         UserInfo.getUserInfo().setFileDatas(workplaceInspectionData.getFiles());
         startActivity(intent);
     }
@@ -234,7 +261,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
         } else {
-            new WorkplaceInspectionsAction(WorkplaceInspectionsActivity.this).execute();
+            new WorkplaceInspectionsAction(WorkplaceInspectionsActivity.this, false).execute();
         }
     }
 
@@ -260,7 +287,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
     }
 
     @Override
-    public void onRequestTemplatesData(ArrayList<TemplateData> templatesDatas) {
+    public void onRequestTemplatesData(ArrayList<TemplateData> templatesDatas, String type) {
         UserInfo.getUserInfo().setTemplateDatas(templatesDatas);
 
         new ItemPrioritiesAction(WorkplaceInspectionsActivity.this).execute();
@@ -303,6 +330,26 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
     }
 
     @Override
+    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+        } else {
+            Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
+            UpdateBottom();
+            pd.hide();
+        }
+    }
+
+    public int GetPixelFromDips(float pixels) {
+        // Get the screen's density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (pixels * scale + 0.5f);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -316,7 +363,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         } catch (Exception e) {}
 
         pd.show();
-        new WorkplaceInspectionsAction(WorkplaceInspectionsActivity.this).execute();
+        new WorkplaceInspectionsAction(WorkplaceInspectionsActivity.this, false).execute();
     }
 
     @Override

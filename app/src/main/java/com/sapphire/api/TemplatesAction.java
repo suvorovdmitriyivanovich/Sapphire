@@ -4,11 +4,11 @@ import android.content.Context;
 import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.logic.TemplateData;
+import com.sapphire.models.TemplateData;
 import com.sapphire.logic.Environment;
-import com.sapphire.logic.ErrorMessageData;
+import com.sapphire.models.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.logic.ResponseData;
+import com.sapphire.models.ResponseData;
 import com.sapphire.logic.UserInfo;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,7 +21,7 @@ public class TemplatesAction extends AsyncTask{
     }
 
     public interface RequestTemplatesData {
-        public void onRequestTemplatesData(ArrayList<TemplateData> coursesDatas);
+        public void onRequestTemplatesData(ArrayList<TemplateData> coursesDatas, String type);
     }
 
     private Context mContext;
@@ -83,7 +83,7 @@ public class TemplatesAction extends AsyncTask{
         String resultData = (String) o;
         if(mContext!=null) {
             if (resultData.equals("OK")) {
-                ((RequestTemplatesData) mContext).onRequestTemplatesData(templatesDatas);
+                ((RequestTemplatesData) mContext).onRequestTemplatesData(templatesDatas, typeId);
             } else {
                 ((RequestTemplates) mContext).onRequestTemplates(resultData);
             }

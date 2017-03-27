@@ -5,11 +5,13 @@ import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
-import com.sapphire.logic.ErrorMessageData;
+import com.sapphire.models.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.logic.ResponseData;
+import com.sapphire.models.ResponseData;
 import com.sapphire.logic.UserInfo;
-import com.sapphire.logic.WorkplaceInspectionData;
+import com.sapphire.models.WorkplaceInspectionData;
+import com.sapphire.utils.DateOperations;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,15 +45,7 @@ public class WorkplaceInspectionAddAction extends AsyncTask{
         this.posted = posted;
 
         if (dateLong != 0l) {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            try {
-                Date thisdaten = new Date();
-                thisdaten.setTime(dateLong);
-                String datet = format.format(thisdaten);
-                this.date = datet;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            this.date = DateOperations.getDateServer(dateLong);
         }
     }
 

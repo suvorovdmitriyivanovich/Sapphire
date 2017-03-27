@@ -19,7 +19,7 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.adapters.LanguagesAdapter;
 import com.sapphire.api.AuthenticationsDeleteAction;
-import com.sapphire.logic.LanguageData;
+import com.sapphire.models.LanguageData;
 import com.sapphire.logic.UserInfo;
 import java.io.File;
 import java.util.ArrayList;
