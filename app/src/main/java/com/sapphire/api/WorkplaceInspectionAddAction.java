@@ -74,7 +74,7 @@ public class WorkplaceInspectionAddAction extends AsyncTask{
 
         String method = "POST";
         if (!workplaceInspectionId.equals("")) {
-            method = "PUT"; //
+            method = "PUT";
         }
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonArray.toString(),0,true,method, UserInfo.getUserInfo().getAuthToken()));
