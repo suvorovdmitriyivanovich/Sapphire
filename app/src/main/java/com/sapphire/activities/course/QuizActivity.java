@@ -20,7 +20,7 @@ import com.sapphire.adapters.AnswersAdapter;
 import com.sapphire.api.GetQuizAction;
 import com.sapphire.api.PostQuizzesAction;
 import com.sapphire.api.QuizzesLogAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.QuestionData;
@@ -33,7 +33,7 @@ public class QuizActivity extends BaseActivity implements AnswersAdapter.OnRootC
                                                           PostQuizzesAction.RequestPostQuizzes,
                                                           PostQuizzesAction.RequestPostQuizzesData,
                                                           QuizzesLogAction.RequestQuizzesLog,
-                                                          WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                          UpdateAction.RequestUpdate{
     private String quizeId = "";
     private ProgressDialog pd;
     private QuizData quizData;
@@ -177,7 +177,7 @@ public class QuizActivity extends BaseActivity implements AnswersAdapter.OnRootC
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(QuizActivity.this, null, true, 0, "").execute();
+                new UpdateAction(QuizActivity.this);
             }
         });
 
@@ -309,7 +309,7 @@ public class QuizActivity extends BaseActivity implements AnswersAdapter.OnRootC
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

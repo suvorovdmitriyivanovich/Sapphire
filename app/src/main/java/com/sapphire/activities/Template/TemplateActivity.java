@@ -28,7 +28,7 @@ import com.sapphire.adapters.ItemsAdapter;
 import com.sapphire.api.GetTemplateAction;
 import com.sapphire.api.TemplateAddAction;
 import com.sapphire.api.TemplateItemDeleteAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.TemplateData;
@@ -43,7 +43,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
                                                               TemplateItemDeleteAction.RequestTemplateItemDelete,
                                                               TemplateAddAction.RequestTemplateAdd,
                                                               TemplateAddAction.RequestTemplateAddData,
-                                                              WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                              UpdateAction.RequestUpdate{
     private String templateId = "";
     ProgressDialog pd;
     private ArrayList<TemplateItemData> templateItemDatas;
@@ -233,7 +233,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(TemplateActivity.this, null, true, 0, "").execute();
+                new UpdateAction(TemplateActivity.this);
             }
         });
 
@@ -417,7 +417,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

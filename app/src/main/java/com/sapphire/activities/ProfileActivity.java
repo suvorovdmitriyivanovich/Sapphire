@@ -18,7 +18,7 @@ import com.sapphire.Sapphire;
 import com.sapphire.adapters.AdressAdapter;
 import com.sapphire.api.GetContactsAction;
 import com.sapphire.api.GetProfilesAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.ContactData;
@@ -31,7 +31,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
                                                              GetProfilesAction.RequestProfilesData,
                                                              GetContactsAction.RequestContacts,
                                                              GetContactsAction.RequestContactsData,
-                                                             WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                             UpdateAction.RequestUpdate{
     private ProgressDialog pd;
     private TextView contact;
     private TextView additional;
@@ -106,7 +106,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(ProfileActivity.this, null, true, 0, "").execute();
+                new UpdateAction(ProfileActivity.this);
             }
         });
 
@@ -237,7 +237,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

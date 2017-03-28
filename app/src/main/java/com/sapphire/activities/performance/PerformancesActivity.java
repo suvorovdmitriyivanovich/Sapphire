@@ -29,7 +29,7 @@ import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.PerformancesAdapter;
 import com.sapphire.api.PerformanceDeleteAction;
 import com.sapphire.api.PerformancesAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.UserInfo;
@@ -43,7 +43,7 @@ public class PerformancesActivity extends BaseActivity implements PerformancesAd
                                                                   PerformancesAdapter.OnFilesPerformancesClickListener,
                                                                   PerformancesAction.RequestPerformances,
                                                                   PerformanceDeleteAction.RequestPerformanceDelete,
-                                                                  WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                                  UpdateAction.RequestUpdate{
     private BroadcastReceiver br;
     private ArrayList<PerformanceData> datas;
     private PerformancesAdapter adapter;
@@ -164,7 +164,7 @@ public class PerformancesActivity extends BaseActivity implements PerformancesAd
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(PerformancesActivity.this, null, true, 0, "").execute();
+                new UpdateAction(PerformancesActivity.this);
             }
         });
 
@@ -265,7 +265,7 @@ public class PerformancesActivity extends BaseActivity implements PerformancesAd
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

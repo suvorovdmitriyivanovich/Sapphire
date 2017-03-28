@@ -27,6 +27,7 @@ import com.sapphire.activities.BaseActivity;
 import com.sapphire.adapters.SpinPrioritisAdapter;
 import com.sapphire.adapters.SpinStatusesAdapter;
 import com.sapphire.adapters.SpinStringAdapter;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.api.WorkplaceInspectionItemAddAction;
 import com.sapphire.db.DBHelper;
 import com.sapphire.logic.Environment;
@@ -37,7 +38,8 @@ import com.sapphire.logic.UserInfo;
 import com.sapphire.models.WorkplaceInspectionItemData;
 import java.util.ArrayList;
 
-public class WorkplaceInspectionItemActivity extends BaseActivity implements WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+public class WorkplaceInspectionItemActivity extends BaseActivity implements WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd,
+                                                                             UpdateAction.RequestUpdate{
     private String idloc = "";
     private String workplaceInspectionItemId = "";
     private String workplaceInspectionId = "";
@@ -79,7 +81,6 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
     private ViewGroup.LayoutParams par_nointernet_group;
     private WorkplaceInspectionItemData workplaceInspectionItemData;
     private BroadcastReceiver br;
-    private boolean updateAll = false;
     private TextView text_nointernet;
     private TextView text_setinternet;
     private boolean setUpdateAll = false;
@@ -359,8 +360,7 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
                 if (setUpdateAll) {
                     pd.show();
 
-                    updateAll = true;
-                    new WorkplaceInspectionItemAddAction(WorkplaceInspectionItemActivity.this, null, true, 0, idloc).execute();
+                    new UpdateAction(WorkplaceInspectionItemActivity.this);
                 } else {
                     Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
                     startActivity(intent);
@@ -441,7 +441,6 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
             workplaceInspectionItemData.setStatus(new ItemStatusData(statusId));
             workplaceInspectionItemData.setPriority(new ItemPriorityData(priorityId));
 
-            updateAll = false;
             new WorkplaceInspectionItemAddAction(WorkplaceInspectionItemActivity.this, workplaceInspectionItemData, true, 0, "").execute();
         }
     }
@@ -512,19 +511,27 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
                 Toast.makeText(getBaseContext(), result,
                         Toast.LENGTH_LONG).show();
             }
-        } else if (updateAll) {
-            this.workplaceInspectionItemId = workplaceInspectionItemId;
-
-            Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
-            UpdateBottom();
-
-            updateAll = false;
-            pd.hide();
         } else {
             if (!workplaceInspectionItemData.getId().equals("")) {
                 DBHelper.getInstance(Sapphire.getInstance()).deleteWorkplaceInspectionItem(workplaceInspectionItemData.getId());
             }
             finish();
+        }
+    }
+
+    @Override
+    public void onRequestUpdate(String result) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+        } else {
+            this.workplaceInspectionItemId = workplaceInspectionItemId;
+
+            Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
+            UpdateBottom();
+
+            pd.hide();
         }
     }
 

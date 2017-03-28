@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
-
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
@@ -23,7 +22,7 @@ import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.CoursesAdapter;
 import com.sapphire.api.CoursesAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.CoursesData;
@@ -34,7 +33,7 @@ public class CoursesActivity extends BaseActivity implements CoursesAdapter.OnRo
                                                              CoursesAdapter.OnListCoursesClickListener,
                                                              CoursesAction.RequestCourses,
                                                              CoursesAction.RequestCoursesData,
-                                                             WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd {
+                                                             UpdateAction.RequestUpdate{
     private BroadcastReceiver br;
     private ArrayList<CoursesData> coursesDatas;
     private CoursesAdapter adapter;
@@ -116,7 +115,7 @@ public class CoursesActivity extends BaseActivity implements CoursesAdapter.OnRo
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(CoursesActivity.this, null, true, 0, "").execute();
+                new UpdateAction(CoursesActivity.this);
             }
         });
 
@@ -211,7 +210,7 @@ public class CoursesActivity extends BaseActivity implements CoursesAdapter.OnRo
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

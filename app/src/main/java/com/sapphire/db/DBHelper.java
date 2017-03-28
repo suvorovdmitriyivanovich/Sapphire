@@ -506,6 +506,29 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void changeWorkplaceInspectionItemFile(FileData data) {
+        SQLiteDatabase db = getWriteDatabase();
+        db.beginTransaction();
+        try {
+            ContentValues cv = new ContentValues();
+
+            cv.put("fileid", data.getFileId());
+            cv.put("name", data.getName());
+            cv.put("description", data.getDescription());
+            cv.put("parentid", data.getParentId());
+            cv.put("size", data.getSize());
+            cv.put("isfolder", data.getIsFolder());
+            cv.put("file", data.getFile());
+
+            db.update("workplaceinspectionitemfiles", cv, "id" + EQUALS,
+                    new String[]{String.valueOf(data.getId())});
+
+            db.setTransactionSuccessful();
+        }finally {
+            db.endTransaction();
+        }
+    }
+
     public ArrayList<FileData> getWorkplaceInspectionItemFiles(String id) {
         ArrayList<FileData> mDatas = new ArrayList<FileData>();
 

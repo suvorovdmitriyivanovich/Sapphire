@@ -20,19 +20,18 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.api.OrganizationStructureItemAddAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.OrganizationStructureData;
 import com.sapphire.logic.UserInfo;
 
 public class OrganizationStructureItemActivity extends BaseActivity implements OrganizationStructureItemAddAction.RequestOrganizationStructureItemAdd,
-                                                                               WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                                               UpdateAction.RequestUpdate{
 
     private OrganizationStructureData organizationStructureData;
     private String parrentId = "";
@@ -189,7 +188,7 @@ public class OrganizationStructureItemActivity extends BaseActivity implements O
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(OrganizationStructureItemActivity.this, null, true, 0, "").execute();
+                new UpdateAction(OrganizationStructureItemActivity.this);
             }
         });
 
@@ -286,7 +285,7 @@ public class OrganizationStructureItemActivity extends BaseActivity implements O
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.api.GetCourseFileAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.CoursesData;
@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class EventCalendarActivity extends BaseActivity implements GetCourseFileAction.RequestCourses,
                                                                    GetCourseFileAction.RequestCoursesData,
-                                                                   WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                                   UpdateAction.RequestUpdate{
     private WebView webView;
     private ProgressDialog pd;
     private boolean needClose = false;
@@ -106,7 +106,7 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(EventCalendarActivity.this, null, true, 0, "").execute();
+                new UpdateAction(EventCalendarActivity.this);
             }
         });
 
@@ -193,7 +193,7 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

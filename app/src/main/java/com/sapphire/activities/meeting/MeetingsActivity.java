@@ -30,7 +30,7 @@ import com.sapphire.api.MembersAction;
 import com.sapphire.api.MeetingsAction;
 import com.sapphire.api.TemplatesAction;
 import com.sapphire.api.MeetingDeleteAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.MemberData;
@@ -48,7 +48,7 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
                                                               MeetingsAction.RequestMeetings,
                                                               MeetingDeleteAction.RequestMeetingDelete,
                                                               MembersAction.RequestMembers,
-                                                              WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                              UpdateAction.RequestUpdate{
     private BroadcastReceiver br;
     private ArrayList<MeetingData> datas;
     private MeetingsAdapter adapter;
@@ -169,7 +169,7 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(MeetingsActivity.this, null, true, 0, "").execute();
+                new UpdateAction(MeetingsActivity.this);
             }
         });
 
@@ -293,7 +293,7 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

@@ -32,7 +32,7 @@ import com.sapphire.adapters.InvestigationItemsAdapter;
 import com.sapphire.api.GetInvestigationAction;
 import com.sapphire.api.InvestigationAddAction;
 import com.sapphire.api.InvestigationItemDeleteAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.InvestigationData;
@@ -51,7 +51,7 @@ public class InvestigationActivity extends BaseActivity implements GetInvestigat
                                                                    InvestigationItemsAdapter.OnFilesInvestigationClickListener,
                                                                    InvestigationItemDeleteAction.RequestInvestigationItemDelete,
                                                                    InvestigationAddAction.RequestInvestigationAdd,
-                                                                   WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                                   UpdateAction.RequestUpdate{
     private String id = "";
     private ProgressDialog pd;
     private ArrayList<InvestigationItemData> datas = new ArrayList<InvestigationItemData>();
@@ -295,7 +295,7 @@ public class InvestigationActivity extends BaseActivity implements GetInvestigat
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(InvestigationActivity.this, null, true, 0, "").execute();
+                new UpdateAction(InvestigationActivity.this);
             }
         });
 
@@ -607,7 +607,7 @@ public class InvestigationActivity extends BaseActivity implements GetInvestigat
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

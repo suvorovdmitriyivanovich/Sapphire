@@ -35,6 +35,7 @@ import com.sapphire.adapters.SpinTemplatesAdapter;
 import com.sapphire.adapters.WorkplaceInspectionItemsAdapter;
 import com.sapphire.api.GetTemplateAction;
 import com.sapphire.api.GetWorkplaceInspectionAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.api.WorkplaceInspectionItemAddAction;
 import com.sapphire.api.WorkplaceInspectionItemDeleteAction;
 import com.sapphire.api.WorkplaceInspectionAddAction;
@@ -62,7 +63,8 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
                                                                          WorkplaceInspectionItemDeleteAction.RequestWorkplaceInspectionItemDelete,
                                                                          WorkplaceInspectionAddAction.RequestWorkplaceInspectionAdd,
                                                                          WorkplaceInspectionAddAction.RequestWorkplaceInspectionAddData,
-                                                                         WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                                         WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd,
+                                                                         UpdateAction.RequestUpdate{
     private String workplaceInspectionId = "";
     private ProgressDialog pd;
     private ArrayList<WorkplaceInspectionItemData> workplaceInspectionItemDatas = new ArrayList<WorkplaceInspectionItemData>();
@@ -108,7 +110,6 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     private BroadcastReceiver br;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
-    private boolean updateAll = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -382,8 +383,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             public void onClick(View v) {
                 pd.show();
 
-                updateAll = true;
-                new WorkplaceInspectionItemAddAction(WorkplaceInspectionActivity.this, null, true, 0, "").execute();
+                new UpdateAction(WorkplaceInspectionActivity.this);
             }
         });
 
@@ -711,7 +711,6 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             workplaceInspectionItemData.setStatus(workplaceInspectionItemDatas.get(0).getStatus());
             workplaceInspectionItemData.setPriority(workplaceInspectionItemDatas.get(0).getPriority());
 
-            updateAll = false;
             new WorkplaceInspectionItemAddAction(WorkplaceInspectionActivity.this, workplaceInspectionItemData, workplaceInspectionItemDatas.size() == 1, 0, "").execute();
         } else {
             workplaceInspectionId = workplaceInspectionData.getWorkplaceInspectionId();
@@ -740,11 +739,6 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
 
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
-        } else if (updateAll) {
-            Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
-            UpdateBottom();
-            updateAll = false;
-            pd.hide();
         } else if (neddclosepd) {
             pd.hide();
 
@@ -758,7 +752,6 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             workplaceInspectionItemData.setStatus(workplaceInspectionItemDatas.get(ihms).getStatus());
             workplaceInspectionItemData.setPriority(workplaceInspectionItemDatas.get(ihms).getPriority());
 
-            updateAll = false;
             new WorkplaceInspectionItemAddAction(WorkplaceInspectionActivity.this, workplaceInspectionItemData, ihms == workplaceInspectionItemDatas.size()-1, ihms, "").execute();
         }
     }
@@ -782,6 +775,19 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         intent.putExtra("nameField", "WorkplaceInspectionItemId");
         UserInfo.getUserInfo().setFileDatas(workplaceInspectionItemData.getFiles());
         startActivity(intent);
+    }
+
+    @Override
+    public void onRequestUpdate(String result) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+        } else {
+            Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
+            UpdateBottom();
+            pd.hide();
+        }
     }
 
     public int GetPixelFromDips(float pixels) {

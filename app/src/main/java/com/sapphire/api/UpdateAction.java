@@ -7,6 +7,8 @@ import com.sapphire.db.DBHelper;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.UserInfo;
 import com.sapphire.models.FileData;
+
+import java.io.File;
 import java.util.ArrayList;
 
 public class UpdateAction extends BaseActivity implements WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd,
@@ -65,6 +67,17 @@ public class UpdateAction extends BaseActivity implements WorkplaceInspectionIte
         if (!result.equals("OK")) {
             returnResult();
         } else {
+            data.setFileId(fileData.getFileId());
+            data.setSize(fileData.getSize());
+            data.setName(fileData.getName());
+            if (data.getFile().indexOf(mContext.getFilesDir().getAbsolutePath() + "/temp/") == 0) {
+                File file = new File(data.getFile());
+                if (file.exists()) {
+                    file.delete();
+                }
+            }
+            data.setFile("");
+            DBHelper.getInstance(Sapphire.getInstance()).changeWorkplaceInspectionItemFile(data);
             UserInfo.getUserInfo().getFileDatas().add(fileData);
             new FileAddAction(UpdateAction.this, fileData.getFileId(), data.getParentId(), Environment.WorkplaceInspectionsItemsFilesURL, "WorkplaceInspectionItemId").execute();
         }
@@ -76,6 +89,7 @@ public class UpdateAction extends BaseActivity implements WorkplaceInspectionIte
         if (!result.equals("OK")) {
             returnResult();
         } else {
+            DBHelper.getInstance(Sapphire.getInstance()).deleteWorkplaceInspectionItemFile(data.getId());
             updateFile();
         }
     }

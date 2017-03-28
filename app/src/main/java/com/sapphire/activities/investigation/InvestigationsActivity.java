@@ -29,7 +29,7 @@ import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.InvestigationsAdapter;
 import com.sapphire.api.InvestigationsAction;
 import com.sapphire.api.InvestigationDeleteAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.InvestigationData;
@@ -42,7 +42,7 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
                                                                     InvestigationsAdapter.OnFilesInvestigationsClickListener,
                                                                     InvestigationsAction.RequestInvestigations,
                                                                     InvestigationDeleteAction.RequestInvestigationDelete,
-                                                                    WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                                    UpdateAction.RequestUpdate{
     private BroadcastReceiver br;
     private ArrayList<InvestigationData> investigationDatas;
     private InvestigationsAdapter adapter;
@@ -173,7 +173,7 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(InvestigationsActivity.this, null, true, 0, "").execute();
+                new UpdateAction(InvestigationsActivity.this);
             }
         });
 
@@ -269,7 +269,7 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

@@ -21,7 +21,7 @@ import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.adapters.organizationStructure.OrganizationStructureListAdapter;
 import com.sapphire.api.OrganizationStructureDeleteAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.OrganizationStructureData;
@@ -32,7 +32,7 @@ public class OrganizationStructureListActivity extends BaseActivity implements O
                                                                                OrganizationStructureListAdapter.OnEditClickListener,
                                                                                OrganizationStructureListAdapter.OnDeleteClickListener,
                                                                                OrganizationStructureDeleteAction.RequestOrganizationStructureDelete,
-                                                                               WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                                               UpdateAction.RequestUpdate{
 
     private OrganizationStructureData organizationStructureData;
     private OrganizationStructureListAdapter adapter;
@@ -140,7 +140,7 @@ public class OrganizationStructureListActivity extends BaseActivity implements O
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(OrganizationStructureListActivity.this, null, true, 0, "").execute();
+                new UpdateAction(OrganizationStructureListActivity.this);
             }
         });
 
@@ -207,7 +207,7 @@ public class OrganizationStructureListActivity extends BaseActivity implements O
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

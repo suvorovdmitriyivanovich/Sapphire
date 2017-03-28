@@ -8,8 +8,6 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +21,9 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
-import com.sapphire.activities.MenuFragment;
 import com.sapphire.api.CourseLogAction;
 import com.sapphire.api.GetCourseFileAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.CoursesData;
 import com.sapphire.logic.Environment;
@@ -35,7 +32,7 @@ import java.util.ArrayList;
 public class CourseActivity extends BaseActivity implements GetCourseFileAction.RequestCourses,
                                                             GetCourseFileAction.RequestCoursesData,
                                                             CourseLogAction.RequestCourseLog,
-                                                            WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                            UpdateAction.RequestUpdate{
     private WebView webView;
     private String courseId;
     private ProgressDialog pd;
@@ -166,7 +163,7 @@ public class CourseActivity extends BaseActivity implements GetCourseFileAction.
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(CourseActivity.this, null, true, 0, "").execute();
+                new UpdateAction(CourseActivity.this);
             }
         });
 
@@ -315,7 +312,7 @@ public class CourseActivity extends BaseActivity implements GetCourseFileAction.
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

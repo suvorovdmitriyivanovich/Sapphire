@@ -22,7 +22,7 @@ import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.PoliciesAdapter;
 import com.sapphire.api.PoliciesAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.PolicyData;
@@ -32,7 +32,7 @@ public class PoliciesActivity extends BaseActivity implements PoliciesAdapter.On
                                                               PoliciesAdapter.OnOpenPoliciesClickListener,
                                                               PoliciesAction.RequestPolicies,
                                                               PoliciesAction.RequestPoliciesData,
-                                                              WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                              UpdateAction.RequestUpdate{
     private BroadcastReceiver br;
     private ArrayList<PolicyData> policiesDatas;
     private PoliciesAdapter adapter;
@@ -114,7 +114,7 @@ public class PoliciesActivity extends BaseActivity implements PoliciesAdapter.On
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(PoliciesActivity.this, null, true, 0, "").execute();
+                new UpdateAction(PoliciesActivity.this);
             }
         });
 
@@ -197,7 +197,7 @@ public class PoliciesActivity extends BaseActivity implements PoliciesAdapter.On
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

@@ -29,7 +29,7 @@ import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.DisciplinesAdapter;
 import com.sapphire.api.DisciplineDeleteAction;
 import com.sapphire.api.DisciplinesAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.UserInfo;
@@ -43,7 +43,7 @@ public class DisciplinesActivity extends BaseActivity implements DisciplinesAdap
                                                                  DisciplinesAdapter.OnFilesDisciplinesClickListener,
                                                                  DisciplinesAction.RequestDisciplines,
                                                                  DisciplineDeleteAction.RequestDisciplineDelete,
-                                                                 WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                                 UpdateAction.RequestUpdate{
     private BroadcastReceiver br;
     private ArrayList<DisciplineData> datas;
     private DisciplinesAdapter adapter;
@@ -164,7 +164,7 @@ public class DisciplinesActivity extends BaseActivity implements DisciplinesAdap
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(DisciplinesActivity.this, null, true, 0, "").execute();
+                new UpdateAction(DisciplinesActivity.this);
             }
         });
 
@@ -265,7 +265,7 @@ public class DisciplinesActivity extends BaseActivity implements DisciplinesAdap
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

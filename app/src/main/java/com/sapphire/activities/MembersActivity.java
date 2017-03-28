@@ -19,7 +19,7 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.adapters.MembersAdapter;
 import com.sapphire.api.MembersAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.ProfileData;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 public class MembersActivity extends BaseActivity implements MembersAdapter.OnRootMembersClickListener,
                                                              MembersAction.RequestMembers,
-                                                             WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                             UpdateAction.RequestUpdate{
     private BroadcastReceiver br;
     private ArrayList<ProfileData> datas;
     private MembersAdapter adapter;
@@ -106,7 +106,7 @@ public class MembersActivity extends BaseActivity implements MembersAdapter.OnRo
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(MembersActivity.this, null, true, 0, "").execute();
+                new UpdateAction(MembersActivity.this);
             }
         });
 
@@ -164,7 +164,7 @@ public class MembersActivity extends BaseActivity implements MembersAdapter.OnRo
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

@@ -44,8 +44,11 @@ import com.sapphire.models.FileData;
 import com.sapphire.logic.UserInfo;
 import com.sapphire.ui.OpenFileDialog;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -296,7 +299,6 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
                 if (setUpdateAll) {
                     pd.show();
 
-                    //new UpdateAction(FilesActivity.this, null, true, 0, "").execute();
                     new UpdateAction(FilesActivity.this);
                 } else {
                     Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
@@ -523,6 +525,20 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
         startActivityForResult(cropIntent, PIC_CROP);
     }
 
+    public void copy(File src, File dst) throws IOException {
+        InputStream in = new FileInputStream(src);
+        OutputStream out = new FileOutputStream(dst);
+
+        // Transfer bytes from in to out
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        in.close();
+        out.close();
+    }
+
     @Override
     public void onRootClick(int position) {
         //Intent intent = new Intent(PoliciesActivity.this, PdfActivity.class);
@@ -539,8 +555,33 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
                 .setOpenDialogListener(new OpenFileDialog.OpenDialogListener() {
                     @Override
                     public void OnSelectedFile(String folder) {
-                        pd.show();
-                        new GetFileAction(FilesActivity.this, fileDatas.get(position).getFileId(), fileDatas.get(position).getName(), folder).execute();
+                        if (!fileDatas.get(position).getFile().equals("")) {
+                            File inFile = new File(fileDatas.get(position).getFile());
+                            File outFile = new File(folder + "/" + inFile.getName());
+                            if(inFile.exists()) {
+                                try {
+                                    if (!inFile.getAbsolutePath().equals(outFile.getAbsolutePath())) {
+                                        if (outFile.exists()) {
+                                            outFile.delete();
+                                        }
+                                        copy(inFile, outFile);
+                                    }
+
+                                    file = outFile.getAbsolutePath();
+                                    typeDialog = 2;
+                                    tittle_message.setText(getResources().getString(R.string.text_open_file));
+                                    button_cancel_save.setText(getResources().getString(R.string.text_no));
+                                    button_send_save.setText(getResources().getString(R.string.text_open));
+                                    dialog_confirm.show();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                //inFile.renameTo(outFile);
+                            }
+                        } else {
+                            pd.show();
+                            new GetFileAction(FilesActivity.this, fileDatas.get(position).getFileId(), fileDatas.get(position).getName(), folder).execute();
+                        }
                     }
                 });
         fileDialogBuilder.setOnKeyListener(new DialogInterface.OnKeyListener() {
@@ -694,7 +735,7 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();
-            pd.hide();
+            new FilesAction(FilesActivity.this).execute();
         }
     }
 

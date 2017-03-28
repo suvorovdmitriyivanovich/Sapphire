@@ -22,12 +22,12 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.api.TemplateItemAddAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 
 public class TemplateItemActivity extends BaseActivity implements TemplateItemAddAction.RequestTemplateItemAdd,
-                                                                  WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                                  UpdateAction.RequestUpdate{
     private String templateItemId = "";
     private String templateId = "";
     private ProgressDialog pd;
@@ -166,7 +166,7 @@ public class TemplateItemActivity extends BaseActivity implements TemplateItemAd
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(TemplateItemActivity.this, null, true, 0, "").execute();
+                new UpdateAction(TemplateItemActivity.this);
             }
         });
 
@@ -254,7 +254,7 @@ public class TemplateItemActivity extends BaseActivity implements TemplateItemAd
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

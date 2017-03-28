@@ -15,7 +15,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
@@ -23,19 +22,18 @@ import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.organizationStructure.OrganizationStructureAdapter;
 import com.sapphire.api.OrganizationStructureAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.OrganizationStructureData;
 import com.sapphire.logic.UserInfo;
-
 import java.util.ArrayList;
 
 public class OrganizationStructureActivity extends BaseActivity implements OrganizationStructureAdapter.OnRootClickListener,
                                                                            OrganizationStructureAdapter.OnAddClickListener,
                                                                            OrganizationStructureAction.RequestOrganizationStructures,
                                                                            OrganizationStructureAction.RequestOrganizationStructuresData,
-                                                                           WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                                           UpdateAction.RequestUpdate{
 
     private BroadcastReceiver br;
     private ProgressDialog pd;
@@ -112,7 +110,7 @@ public class OrganizationStructureActivity extends BaseActivity implements Organ
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(OrganizationStructureActivity.this, null, true, 0, "").execute();
+                new UpdateAction(OrganizationStructureActivity.this);
             }
         });
 
@@ -164,7 +162,7 @@ public class OrganizationStructureActivity extends BaseActivity implements Organ
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

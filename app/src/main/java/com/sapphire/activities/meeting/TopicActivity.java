@@ -22,13 +22,13 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.TopicData;
 import com.sapphire.logic.UserInfo;
 
-public class TopicActivity extends BaseActivity implements WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+public class TopicActivity extends BaseActivity implements UpdateAction.RequestUpdate{
     private EditText name;
     private EditText description;
     private CheckBox completed;
@@ -176,7 +176,7 @@ public class TopicActivity extends BaseActivity implements WorkplaceInspectionIt
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(TopicActivity.this, null, true, 0, "").execute();
+                new UpdateAction(TopicActivity.this);
             }
         });
 
@@ -261,7 +261,7 @@ public class TopicActivity extends BaseActivity implements WorkplaceInspectionIt
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

@@ -15,14 +15,14 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.adapters.AdressAdapter;
 import com.sapphire.api.GetContactsAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.ContactData;
 import java.util.ArrayList;
 
 public class MyContactsActivity extends BaseActivity implements GetContactsAction.RequestContactsMe,
-                                                                WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                                UpdateAction.RequestUpdate{
     private ProgressDialog pd;
     private RecyclerView emergencylist;
     private AdressAdapter adapterEmergency;
@@ -94,7 +94,7 @@ public class MyContactsActivity extends BaseActivity implements GetContactsActio
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(MyContactsActivity.this, null, true, 0, "").execute();
+                new UpdateAction(MyContactsActivity.this);
             }
         });
 
@@ -134,7 +134,7 @@ public class MyContactsActivity extends BaseActivity implements GetContactsActio
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

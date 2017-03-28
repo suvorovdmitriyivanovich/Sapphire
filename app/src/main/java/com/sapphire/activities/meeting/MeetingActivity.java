@@ -40,7 +40,7 @@ import com.sapphire.api.GetNextMeetingsAction;
 import com.sapphire.api.GetNextWorkplaceInspectionsAction;
 import com.sapphire.api.MeetingAddAction;
 import com.sapphire.api.GetTemplateAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.MeetingData;
@@ -64,7 +64,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
                                                              GetTemplateAction.RequestTemplateData,
                                                              GetNextMeetingsAction.RequestNextMeetings,
                                                              GetNextWorkplaceInspectionsAction.RequestNextWorkplaceInspections,
-                                                             WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                             UpdateAction.RequestUpdate{
     private String id = "";
     private ProgressDialog pd;
     private ArrayList<MemberData> datas = new ArrayList<MemberData>();
@@ -446,7 +446,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(MeetingActivity.this, null, true, 0, "").execute();
+                new UpdateAction(MeetingActivity.this);
             }
         });
 
@@ -973,7 +973,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

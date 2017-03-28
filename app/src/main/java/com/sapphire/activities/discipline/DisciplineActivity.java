@@ -26,7 +26,7 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.api.DisciplineAddAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.UserInfo;
@@ -37,7 +37,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DisciplineActivity extends BaseActivity implements DisciplineAddAction.RequestDisciplineAdd,
-                                                                WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                                UpdateAction.RequestUpdate{
     private String id = "";
     private ProgressDialog pd;
     private EditText name;
@@ -230,7 +230,7 @@ public class DisciplineActivity extends BaseActivity implements DisciplineAddAct
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(DisciplineActivity.this, null, true, 0, "").execute();
+                new UpdateAction(DisciplineActivity.this);
             }
         });
 
@@ -413,7 +413,7 @@ public class DisciplineActivity extends BaseActivity implements DisciplineAddAct
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

@@ -32,7 +32,7 @@ import com.sapphire.adapters.SpinTypesAdapter;
 import com.sapphire.adapters.TemplatesAdapter;
 import com.sapphire.api.TemplateDeleteAction;
 import com.sapphire.api.TemplatesAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.TemplateData;
@@ -44,7 +44,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
                                                                TemplatesAction.RequestTemplates,
                                                                TemplatesAction.RequestTemplatesData,
                                                                TemplateDeleteAction.RequestTemplateDelete,
-                                                               WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                               UpdateAction.RequestUpdate{
     private BroadcastReceiver br;
     private ArrayList<TemplateData> templatesDatas;
     private TemplatesAdapter adapter;
@@ -210,7 +210,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(TemplatesActivity.this, null, true, 0, "").execute();
+                new UpdateAction(TemplatesActivity.this);
             }
         });
 
@@ -303,7 +303,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

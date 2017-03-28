@@ -3,7 +3,6 @@ package com.sapphire.activities.investigation;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,13 +20,12 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.api.InvestigationItemAddAction;
-import com.sapphire.api.WorkplaceInspectionItemAddAction;
+import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.InvestigationItemData;
@@ -37,7 +35,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class InvestigationItemActivity extends BaseActivity implements InvestigationItemAddAction.RequestInvestigationItemAdd,
-                                                                       WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd{
+                                                                       UpdateAction.RequestUpdate{
     private String itemId = "";
     private String id = "";
     private ProgressDialog pd;
@@ -219,7 +217,7 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
             public void onClick(View v) {
                 pd.show();
 
-                new WorkplaceInspectionItemAddAction(InvestigationItemActivity.this, null, true, 0, "").execute();
+                new UpdateAction(InvestigationItemActivity.this);
             }
         });
 
@@ -397,7 +395,7 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
     }
 
     @Override
-    public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
+    public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,
