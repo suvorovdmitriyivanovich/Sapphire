@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.SpinTypesAdapter;
@@ -239,8 +240,14 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
 
     @Override
     public void onRootClick(int position) {
-        //Intent intent = new Intent(PoliciesActivity.this, PdfActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(TemplatesActivity.this, TemplateActivity.class);
+        TemplateData templateData = templatesDatas.get(position);
+        intent.putExtra("readonly", true);
+        intent.putExtra("name", templateData.getName());
+        intent.putExtra("description", templateData.getDescription());
+        intent.putExtra("templateId", templateData.getTemplateId());
+        intent.putExtra("typeId", typeId);
+        startActivity(intent);
     }
 
     @Override
@@ -271,6 +278,11 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -280,6 +292,11 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             new TemplatesAction(TemplatesActivity.this, typeId).execute();
         }
@@ -308,6 +325,11 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

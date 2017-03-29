@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.adapters.ItemsAdapter;
 import com.sapphire.api.GetTemplateAction;
 import com.sapphire.api.TemplateAddAction;
@@ -68,6 +69,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     private BroadcastReceiver br;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private boolean readonly = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,6 +195,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
             templateId = "";
         }
         if (!templateId.equals("")) {
+            readonly = intent.getBooleanExtra("readonly", false);
             nameOld = intent.getStringExtra("name");
             descriptionOld = intent.getStringExtra("description");
             name.setText(nameOld);
@@ -203,7 +206,7 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
         itemlist.setNestedScrollingEnabled(false);
         itemlist.setLayoutManager(new LinearLayoutManager(TemplateActivity.this));
 
-        adapter = new ItemsAdapter(this);
+        adapter = new ItemsAdapter(this, readonly);
         itemlist.setAdapter(adapter);
 
         // создаем BroadcastReceiver
@@ -238,6 +241,13 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
         });
 
         UpdateBottom();
+
+        if (readonly) {
+            add.setVisibility(View.GONE);
+            button_ok.setVisibility(View.GONE);
+            name.setFocusable(false);
+            description.setFocusable(false);
+        }
     }
 
     private void UpdateBottom() {
@@ -337,6 +347,11 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -353,6 +368,15 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     @Override
     public void onRootClick(int position) {
         hideSoftKeyboard();
+        Intent intent = new Intent(TemplateActivity.this, TemplateItemActivity.class);
+        TemplateItemData templateItemData = templateItemDatas.get(position);
+        intent.putExtra("readonly", true);
+        intent.putExtra("name", templateItemData.getName());
+        intent.putExtra("description", templateItemData.getDescription());
+        intent.putExtra("templateItemId", templateItemData.getTemplateItemId());
+        intent.putExtra("templateId", templateItemData.getTemplateId());
+        intent.putExtra("typeId", typeId);
+        startActivity(intent);
     }
 
     @Override
@@ -388,6 +412,11 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             new GetTemplateAction(TemplateActivity.this, templateId, typeId).execute();
         }
@@ -414,6 +443,11 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
         pressAdd = false;
         Toast.makeText(getBaseContext(), result,
                 Toast.LENGTH_LONG).show();
+        if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     @Override
@@ -422,6 +456,11 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

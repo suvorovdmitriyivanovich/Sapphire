@@ -24,6 +24,7 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.FilesActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.InvestigationsAdapter;
@@ -202,8 +203,15 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
 
     @Override
     public void onRootInvestigationsClick(int position) {
-        //Intent intent = new Intent(PoliciesActivity.this, PdfActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(InvestigationsActivity.this, InvestigationActivity.class);
+        InvestigationData investigationData = investigationDatas.get(position);
+        intent.putExtra("readonly", true);
+        intent.putExtra("name", investigationData.getName());
+        intent.putExtra("description", investigationData.getDescription());
+        intent.putExtra("date", investigationData.getDate());
+        intent.putExtra("id", investigationData.getInvestigationId());
+        intent.putExtra("me", me);
+        startActivity(intent);
     }
 
     @Override
@@ -247,6 +255,11 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             this.investigationDatas = investigationDatas;
             adapter.setData(investigationDatas);
@@ -263,6 +276,11 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             new InvestigationsAction(InvestigationsActivity.this, me).execute();
         }
@@ -274,6 +292,11 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

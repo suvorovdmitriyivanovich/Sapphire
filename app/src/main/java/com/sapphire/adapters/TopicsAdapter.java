@@ -49,11 +49,13 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
     private ArrayList<TopicData> listData;
     private Context context;
     private Typeface typeFace;
+    private boolean readonly = false;
 
-    public TopicsAdapter(Context context) {
+    public TopicsAdapter(Context context, boolean readonly) {
         this.context = context;
         listData = new ArrayList<TopicData>();
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
+        this.readonly = readonly;
     }
 
     @Override
@@ -109,6 +111,11 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
                 }
             }
         });
+
+        if (readonly) {
+            holder.open.setVisibility(View.GONE);
+            holder.delete.setVisibility(View.GONE);
+        }
     }
 
     @Override

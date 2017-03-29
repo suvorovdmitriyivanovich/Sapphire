@@ -97,6 +97,7 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
     private boolean setUpdateAll = false;
     private String newFile = "";
     private FileData fileData;
+    private boolean readonly = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +111,7 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
             id = "";
         }
         if (!id.equals("")) {
+            readonly = intent.getBooleanExtra("readonly", false);
             TextView text_header = (TextView) findViewById(R.id.text_header);
             text_header.setText(intent.getStringExtra("name") + " " + getResources().getString(R.string.text_files));
 
@@ -206,7 +208,7 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
         fileslist.setNestedScrollingEnabled(false);
         fileslist.setLayoutManager(new LinearLayoutManager(FilesActivity.this));
 
-        adapter = new FilesAdapter(this);
+        adapter = new FilesAdapter(this, readonly);
         fileslist.setAdapter(adapter);
 
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
@@ -619,6 +621,11 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
             return;
         }
 
@@ -656,6 +663,11 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             new FilesAction(FilesActivity.this).execute();
         }
@@ -667,6 +679,11 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             this.file = file;
             typeDialog = 2;
@@ -696,6 +713,11 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
                 pd.hide();
                 Toast.makeText(getBaseContext(), result,
                         Toast.LENGTH_LONG).show();
+                if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         } else {
             this.fileData = fileData;
@@ -720,6 +742,11 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
                 pd.hide();
                 Toast.makeText(getBaseContext(), result,
                         Toast.LENGTH_LONG).show();
+                if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         } else {
             new FilesAction(FilesActivity.this).execute();
@@ -732,6 +759,11 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

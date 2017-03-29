@@ -51,11 +51,13 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     private ArrayList<TemplateItemData> listData;
     private Context context;
     private Typeface typeFace;
+    private boolean readonly = false;
 
-    public ItemsAdapter(Context context) {
+    public ItemsAdapter(Context context, boolean readonly) {
         this.context = context;
         listData = new ArrayList<TemplateItemData>();
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
+        this.readonly = readonly;
     }
 
     @Override
@@ -104,6 +106,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 }
             }
         });
+
+        if (readonly) {
+            holder.open.setVisibility(View.GONE);
+            holder.delete.setVisibility(View.GONE);
+        }
     }
 
     @Override

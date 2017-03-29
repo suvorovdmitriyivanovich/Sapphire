@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.adapters.TopicsAdapter;
 import com.sapphire.adapters.MeetingMembersAdapter;
 import com.sapphire.adapters.SpinTemplatesAdapter;
@@ -124,6 +125,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
     private BroadcastReceiver br;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private boolean readonly = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -217,9 +219,6 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         topicslist.setNestedScrollingEnabled(false);
         topicslist.setLayoutManager(new LinearLayoutManager(MeetingActivity.this));
 
-        adapterTopics = new TopicsAdapter(this);
-        topicslist.setAdapter(adapterTopics);
-
         text_no = findViewById(R.id.text_no);
         text_topics_no = findViewById(R.id.text_topics_no);
 
@@ -230,6 +229,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         }
         userInfo = UserInfo.getUserInfo();
         if (!id.equals("")) {
+            readonly = intent.getBooleanExtra("readonly", false);
             nameOld = intent.getStringExtra("name");
             locationOld = intent.getStringExtra("location");
             dateOld = intent.getLongExtra("date", 0l);
@@ -290,6 +290,9 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         } else {
             datas = userInfo.getAllMembers();
         }
+
+        adapterTopics = new TopicsAdapter(this, readonly);
+        topicslist.setAdapter(adapterTopics);
 
         if (id.equals("")) {
             templates = new ArrayList<>();
@@ -353,6 +356,10 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard();
+                if (readonly) {
+                    return;
+                }
                 choiseDate();
             }
         });
@@ -360,6 +367,10 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard();
+                if (readonly) {
+                    return;
+                }
                 choiseTime(true);
             }
         });
@@ -367,6 +378,10 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         endtime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard();
+                if (readonly) {
+                    return;
+                }
                 choiseTime(false);
             }
         });
@@ -412,7 +427,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         memberslist.setNestedScrollingEnabled(false);
         memberslist.setLayoutManager(new LinearLayoutManager(MeetingActivity.this));
 
-        adapter = new MeetingMembersAdapter(this);
+        adapter = new MeetingMembersAdapter(this, readonly);
         memberslist.setAdapter(adapter);
 
         updateViews();
@@ -451,6 +466,17 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         });
 
         UpdateBottom();
+
+        if (readonly) {
+            add.setVisibility(View.GONE);
+            button_ok.setVisibility(View.GONE);
+            name.setFocusable(false);
+            location.setFocusable(false);
+            date.setFocusable(false);
+            time.setFocusable(false);
+            endtime.setFocusable(false);
+            posted.setClickable(false);
+        }
     }
 
     private void UpdateBottom() {
@@ -900,6 +926,11 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -939,6 +970,11 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             finish();
         }
@@ -953,6 +989,11 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             nextMeeting = nextDate;
             new GetNextWorkplaceInspectionsAction(MeetingActivity.this, dateNew).execute();
@@ -966,6 +1007,11 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             nextWorkplaceInspection = "-";
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             nextWorkplaceInspection = nextDate;
         }
@@ -978,6 +1024,11 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

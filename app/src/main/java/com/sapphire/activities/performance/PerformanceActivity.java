@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.api.PerformanceAddAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
@@ -69,6 +70,7 @@ public class PerformanceActivity extends BaseActivity implements PerformanceAddA
     private BroadcastReceiver br;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private boolean readonly = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +151,7 @@ public class PerformanceActivity extends BaseActivity implements PerformanceAddA
             id = "";
         }
         if (!id.equals("")) {
+            readonly = intent.getBooleanExtra("readonly", false);
             nameOld = intent.getStringExtra("name");
             datePostedOld = intent.getLongExtra("datePosted", 0l);
             datePostedNew = datePostedOld;
@@ -182,6 +185,10 @@ public class PerformanceActivity extends BaseActivity implements PerformanceAddA
         datePosted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard();
+                if (readonly) {
+                    return;
+                }
                 choiseDate(1);
             }
         });
@@ -189,6 +196,7 @@ public class PerformanceActivity extends BaseActivity implements PerformanceAddA
         image_date_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard();
                 choiseDate(1);
             }
         });
@@ -196,6 +204,10 @@ public class PerformanceActivity extends BaseActivity implements PerformanceAddA
         renewalDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard();
+                if (readonly) {
+                    return;
+                }
                 choiseDate(2);
             }
         });
@@ -203,6 +215,7 @@ public class PerformanceActivity extends BaseActivity implements PerformanceAddA
         image_renewal_date_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard();
                 choiseDate(2);
             }
         });
@@ -264,6 +277,15 @@ public class PerformanceActivity extends BaseActivity implements PerformanceAddA
         });
 
         UpdateBottom();
+
+        if (readonly) {
+            button_ok.setVisibility(View.GONE);
+            name.setFocusable(false);
+            datePosted.setFocusable(false);
+            image_date_group.setClickable(false);
+            renewalDate.setFocusable(false);
+            image_renewal_date_group.setClickable(false);
+        }
     }
 
     private void UpdateBottom() {
@@ -450,9 +472,13 @@ public class PerformanceActivity extends BaseActivity implements PerformanceAddA
     public void onRequestPerformanceAdd(String result) {
         if (!result.equals("OK")) {
             pd.hide();
-
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             finish();
         }
@@ -464,6 +490,11 @@ public class PerformanceActivity extends BaseActivity implements PerformanceAddA
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

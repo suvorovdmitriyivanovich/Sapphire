@@ -24,6 +24,7 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.FilesActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.DocumentsAdapter;
@@ -60,12 +61,16 @@ public class DocumentsActivity extends BaseActivity implements DocumentsAdapter.
     private View text_no;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private boolean edit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_documents);
+
+        Intent intent = getIntent();
+        edit = intent.getBooleanExtra("edit", false);
 
         AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
         adb_save.setCancelable(true);
@@ -155,7 +160,7 @@ public class DocumentsActivity extends BaseActivity implements DocumentsAdapter.
         list.setNestedScrollingEnabled(false);
         list.setLayoutManager(new LinearLayoutManager(DocumentsActivity.this));
 
-        adapter = new DocumentsAdapter(this);
+        adapter = new DocumentsAdapter(this, edit);
         list.setAdapter(adapter);
 
         text_no = findViewById(R.id.text_no);
@@ -172,6 +177,10 @@ public class DocumentsActivity extends BaseActivity implements DocumentsAdapter.
         });
 
         UpdateBottom();
+
+        if (!edit) {
+            add.setVisibility(View.GONE);
+        }
     }
 
     private void UpdateBottom() {
@@ -196,8 +205,14 @@ public class DocumentsActivity extends BaseActivity implements DocumentsAdapter.
 
     @Override
     public void onRootDocumentsClick(int position) {
-        //Intent intent = new Intent(PoliciesActivity.this, PdfActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(DocumentsActivity.this, DocumentActivity.class);
+        DocumentData data = datas.get(position);
+        intent.putExtra("readonly", true);
+        intent.putExtra("name", data.getName());
+        intent.putExtra("categoryId", data.getCategory().getId());
+        intent.putExtra("date", data.getDate());
+        intent.putExtra("id", data.getDocId());
+        startActivity(intent);
     }
 
     @Override
@@ -246,6 +261,11 @@ public class DocumentsActivity extends BaseActivity implements DocumentsAdapter.
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             this.datas = datas;
             adapter.setData(datas);
@@ -263,6 +283,11 @@ public class DocumentsActivity extends BaseActivity implements DocumentsAdapter.
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             UserInfo.getUserInfo().setDocCategoryDatas(datas);
         }
@@ -274,6 +299,11 @@ public class DocumentsActivity extends BaseActivity implements DocumentsAdapter.
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             new DocumentsAction(DocumentsActivity.this).execute();
         }
@@ -285,6 +315,11 @@ public class DocumentsActivity extends BaseActivity implements DocumentsAdapter.
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

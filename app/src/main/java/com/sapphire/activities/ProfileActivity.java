@@ -6,9 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -52,14 +56,21 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
 
         setContentView(R.layout.activity_profile);
 
-        View back = findViewById(R.id.back);
-        back.setOnClickListener(new View.OnClickListener() {
+        View menu = findViewById(R.id.menu);
+        menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //pd.show();
-                //needClose = true;
-                //new PolicyLogAction(CoursActivity.this, id, Environment.PolicyStatusAcknowledged).execute();
-                finish();
+                DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+                drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
+
+        View exit = findViewById(R.id.delete);
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+                drawerLayout.openDrawer(Gravity.RIGHT);
             }
         });
 
@@ -89,7 +100,13 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             public void onReceive(Context context, Intent intent) {
                 final String putreqwest = intent.getStringExtra(Environment.PARAM_TASK);
 
-                if (putreqwest.equals("updatebottom")) {
+                if (putreqwest.equals("updateleftmenu")) {
+                    try {
+                        Fragment fragment = new MenuFragment();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
+                    } catch (Exception e) {}
+                } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
                 }
             }
@@ -129,6 +146,11 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -211,6 +233,11 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -242,6 +269,11 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();
@@ -259,6 +291,15 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     @Override
     protected void onResume() {
         super.onResume();
+
+        try {
+            Fragment fragment = new MenuFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
+
+            Fragment fragmentRight = new RightFragment();
+            fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
+        } catch (Exception e) {}
 
         pd.show();
         new GetProfilesAction(ProfileActivity.this).execute();

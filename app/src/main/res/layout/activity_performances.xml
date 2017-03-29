@@ -35,18 +35,18 @@
             </RelativeLayout>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/text_performances"
                 android:id="@+id/text_header"
                 android:textColor="#ffffff"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/menu"
-                android:layout_toEndOf="@+id/menu"
-                android:layout_marginRight="109dp"
                 android:singleLine="true"
-                android:layout_marginLeft="5dp" />
+                android:layout_toLeftOf="@+id/add"
+                android:layout_toStartOf="@+id/add"
+                android:layout_marginLeft="61dp"
+                android:layout_marginRight="5dp" />
 
             <RelativeLayout
                 android:layout_width="56dp"

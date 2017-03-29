@@ -53,11 +53,13 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
     private ArrayList<FileData> listData;
     private Context mContext;
     private Typeface typeFace;
+    private boolean readonly = false;
 
-    public FilesAdapter(Context context) {
+    public FilesAdapter(Context context, boolean readonly) {
         mContext = context;
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
         listData = new ArrayList<FileData>();
+        this.readonly = readonly;
     }
 
     @Override
@@ -106,6 +108,11 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
                 }
             }
         });
+
+        if (readonly) {
+            holder.download.setVisibility(View.GONE);
+            holder.delete.setVisibility(View.GONE);
+        }
     }
 
     @Override

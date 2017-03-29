@@ -57,11 +57,13 @@ public class InvestigationItemsAdapter extends RecyclerView.Adapter<Investigatio
     private ArrayList<InvestigationItemData> listData;
     private Context context;
     private Typeface typeFace;
+    private boolean readonly = false;
 
-    public InvestigationItemsAdapter(Context context) {
+    public InvestigationItemsAdapter(Context context, boolean readonly) {
         this.context = context;
         listData = new ArrayList<InvestigationItemData>();
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
+        this.readonly = readonly;
     }
 
     @Override
@@ -121,6 +123,12 @@ public class InvestigationItemsAdapter extends RecyclerView.Adapter<Investigatio
                 }
             }
         });
+
+        if (readonly) {
+            holder.open.setVisibility(View.GONE);
+            holder.delete.setVisibility(View.GONE);
+            holder.files.setVisibility(View.GONE);
+        }
     }
 
     @Override

@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.api.InvestigationItemAddAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
@@ -65,6 +66,7 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
     private BroadcastReceiver br;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private boolean readonly = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +129,10 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard();
+                if (readonly) {
+                    return;
+                }
                 choiseDate();
             }
         });
@@ -134,6 +140,7 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
         image_date_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard();
                 choiseDate();
             }
         });
@@ -173,6 +180,7 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
             id = "";
         }
         if (!itemId.equals("")) {
+            readonly = intent.getBooleanExtra("readonly", false);
             nameOld = intent.getStringExtra("name");
             descriptionOld = intent.getStringExtra("description");
             name.setText(nameOld);
@@ -222,6 +230,14 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
         });
 
         UpdateBottom();
+
+        if (readonly) {
+            button_ok.setVisibility(View.GONE);
+            name.setFocusable(false);
+            description.setFocusable(false);
+            date.setFocusable(false);
+            image_date_group.setClickable(false);
+        }
     }
 
     private void UpdateBottom() {
@@ -389,6 +405,11 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             finish();
         }
@@ -400,6 +421,11 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

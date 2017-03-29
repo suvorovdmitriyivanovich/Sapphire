@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.MeetingsAdapter;
@@ -198,8 +199,19 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
 
     @Override
     public void onRootMeetingsClick(int position) {
-        //Intent intent = new Intent(PoliciesActivity.this, PdfActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(MeetingsActivity.this, MeetingActivity.class);
+        MeetingData data = datas.get(position);
+        intent.putExtra("readonly", true);
+        intent.putExtra("name", data.getName());
+        intent.putExtra("location", data.getLocation());
+        intent.putExtra("date", data.getMeetingDate());
+        intent.putExtra("dateend", data.getEndTime());
+        intent.putExtra("id", data.getMeetingId());
+        intent.putExtra("posted", data.getPosted());
+        UserInfo userInfo = UserInfo.getUserInfo();
+        userInfo.setMembers(data.getMembers());
+        userInfo.setTopics(data.getTopics());
+        startActivity(intent);
     }
 
     @Override
@@ -235,6 +247,11 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             this.datas = datas;
             adapter.setData(datas);
@@ -251,6 +268,11 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             new MeetingsAction(MeetingsActivity.this, false).execute();
         }
@@ -262,6 +284,11 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -280,6 +307,11 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             ArrayList<MemberData> datasMembers = new ArrayList<MemberData>();
             for (ProfileData item: datas) {
@@ -298,6 +330,11 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

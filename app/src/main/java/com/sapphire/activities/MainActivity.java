@@ -383,8 +383,19 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
 
     @Override
     public void onRootMeetingsClick(int position) {
-        //Intent intent = new Intent(PoliciesActivity.this, PdfActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(MainActivity.this, MeetingActivity.class);
+        MeetingData data = meetingDatas.get(position);
+        intent.putExtra("readonly", true);
+        intent.putExtra("name", data.getName());
+        intent.putExtra("location", data.getLocation());
+        intent.putExtra("date", data.getMeetingDate());
+        intent.putExtra("dateend", data.getEndTime());
+        intent.putExtra("id", data.getMeetingId());
+        intent.putExtra("posted", data.getPosted());
+        UserInfo userInfo = UserInfo.getUserInfo();
+        userInfo.setMembers(data.getMembers());
+        userInfo.setTopics(data.getTopics());
+        startActivity(intent);
     }
 
     @Override
@@ -421,6 +432,11 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             this.meetingDatas = datas;
             adapterMeetings.setData(datas);
@@ -437,6 +453,11 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             new MeetingsAction(MainActivity.this, true).execute();
         }
@@ -479,6 +500,11 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -530,6 +556,11 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -558,8 +589,15 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
 
     @Override
     public void onRootWorkplaceInspectionsClick(int position) {
-        //Intent intent = new Intent(PoliciesActivity.this, PdfActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(MainActivity.this, WorkplaceInspectionActivity.class);
+        WorkplaceInspectionData workplaceInspectionData = workplaceInspectionDatas.get(position);
+        intent.putExtra("readonly", true);
+        intent.putExtra("name", workplaceInspectionData.getName());
+        intent.putExtra("description", workplaceInspectionData.getDescription());
+        intent.putExtra("date", workplaceInspectionData.getDate());
+        intent.putExtra("workplaceInspectionId", workplaceInspectionData.getWorkplaceInspectionId());
+        intent.putExtra("posted", workplaceInspectionData.getPostedOnBoard());
+        startActivity(intent);
     }
 
     @Override
@@ -605,6 +643,11 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -614,6 +657,11 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             new WorkplaceInspectionsAction(MainActivity.this, false).execute();
         }
@@ -637,6 +685,11 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -662,6 +715,11 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
             updateVisibility();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             this.memberDatas = datas;
             adapterMembers.setData(datas);
@@ -685,6 +743,11 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -703,6 +766,11 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -720,6 +788,11 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

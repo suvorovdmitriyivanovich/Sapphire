@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.adapters.organizationStructure.OrganizationStructureListAdapter;
 import com.sapphire.api.OrganizationStructureDeleteAction;
 import com.sapphire.api.UpdateAction;
@@ -201,6 +202,11 @@ public class OrganizationStructureListActivity extends BaseActivity implements O
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             adapter.removeDataItem(currentPosition);
         }
@@ -212,6 +218,11 @@ public class OrganizationStructureListActivity extends BaseActivity implements O
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

@@ -31,6 +31,7 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.FilesActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.adapters.SpinTemplatesAdapter;
 import com.sapphire.adapters.WorkplaceInspectionItemsAdapter;
 import com.sapphire.api.GetTemplateAction;
@@ -110,6 +111,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     private BroadcastReceiver br;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private boolean readonly = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,6 +210,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             workplaceInspectionId = "";
         }
         if (!workplaceInspectionId.equals("")) {
+            readonly = intent.getBooleanExtra("readonly", false);
             nameOld = intent.getStringExtra("name");
             descriptionOld = intent.getStringExtra("description");
             dateOld = intent.getLongExtra("date", 0l);
@@ -286,6 +289,9 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (readonly) {
+                    return;
+                }
                 choiseDate();
             }
         });
@@ -353,7 +359,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         itemlist.setNestedScrollingEnabled(false);
         itemlist.setLayoutManager(new LinearLayoutManager(WorkplaceInspectionActivity.this));
 
-        adapter = new WorkplaceInspectionItemsAdapter(this);
+        adapter = new WorkplaceInspectionItemsAdapter(this, readonly);
         itemlist.setAdapter(adapter);
 
         // создаем BroadcastReceiver
@@ -388,6 +394,16 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         });
 
         UpdateBottom();
+
+        if (readonly) {
+            add.setVisibility(View.GONE);
+            button_ok.setVisibility(View.GONE);
+            name.setFocusable(false);
+            date.setFocusable(false);
+            image_date_group.setClickable(false);
+            posted.setClickable(false);
+            description.setFocusable(false);
+        }
     }
 
     private void UpdateBottom() {
@@ -572,6 +588,11 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -601,6 +622,11 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
             return;
         }
 
@@ -631,13 +657,15 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         pd.hide();
         if (pressType == 2) {
             pressType = 0;
-            openItem();
+            openItem(false);
         }
     }
 
     @Override
     public void onRootClick(int position) {
         hideSoftKeyboard();
+        currentPosition = position;
+        openItem(true);
     }
 
     @Override
@@ -660,13 +688,14 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         if (workplaceInspectionId.equals("")) {
             updateWorkplaceInspection(2);
         } else {
-            openItem();
+            openItem(false);
         }
     }
 
-    private void openItem() {
+    private void openItem(boolean read) {
         Intent intent = new Intent(WorkplaceInspectionActivity.this, WorkplaceInspectionItemActivity.class);
         WorkplaceInspectionItemData workplaceInspectionItemData = workplaceInspectionItemDatas.get(currentPosition);
+        intent.putExtra("readonly", read);
         intent.putExtra("idloc", workplaceInspectionItemData.getId());
         intent.putExtra("name", workplaceInspectionItemData.getName());
         intent.putExtra("description", workplaceInspectionItemData.getDescription());
@@ -687,6 +716,11 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             new GetWorkplaceInspectionAction(WorkplaceInspectionActivity.this, workplaceInspectionId).execute();
         }
@@ -739,6 +773,11 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
 
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else if (neddclosepd) {
             pd.hide();
 
@@ -763,6 +802,11 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         pressType = 0;
         Toast.makeText(getBaseContext(), result,
                 Toast.LENGTH_LONG).show();
+        if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     @Override
@@ -783,6 +827,11 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

@@ -24,6 +24,7 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.FilesActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.DisciplinesAdapter;
@@ -57,12 +58,16 @@ public class DisciplinesActivity extends BaseActivity implements DisciplinesAdap
     private View text_no;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private boolean edit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_disciplines);
+
+        Intent intent = getIntent();
+        edit = intent.getBooleanExtra("edit", false);
 
         AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
         adb_save.setCancelable(true);
@@ -152,7 +157,7 @@ public class DisciplinesActivity extends BaseActivity implements DisciplinesAdap
         list.setNestedScrollingEnabled(false);
         list.setLayoutManager(new LinearLayoutManager(DisciplinesActivity.this));
 
-        adapter = new DisciplinesAdapter(this);
+        adapter = new DisciplinesAdapter(this, edit);
         list.setAdapter(adapter);
 
         text_no = findViewById(R.id.text_no);
@@ -169,6 +174,10 @@ public class DisciplinesActivity extends BaseActivity implements DisciplinesAdap
         });
 
         UpdateBottom();
+
+        if (!edit) {
+            add.setVisibility(View.GONE);
+        }
     }
 
     private void UpdateBottom() {
@@ -193,8 +202,14 @@ public class DisciplinesActivity extends BaseActivity implements DisciplinesAdap
 
     @Override
     public void onRootDisciplinesClick(int position) {
-        //Intent intent = new Intent(PoliciesActivity.this, PdfActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(DisciplinesActivity.this, DisciplineActivity.class);
+        DisciplineData data = datas.get(position);
+        intent.putExtra("readonly", true);
+        intent.putExtra("name", data.getName());
+        intent.putExtra("notes", data.getNotes());
+        intent.putExtra("datePosted", data.getDatePosted());
+        intent.putExtra("id", data.getDisciplineId());
+        startActivity(intent);
     }
 
     @Override
@@ -243,6 +258,11 @@ public class DisciplinesActivity extends BaseActivity implements DisciplinesAdap
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             this.datas = datas;
             adapter.setData(datas);
@@ -259,6 +279,11 @@ public class DisciplinesActivity extends BaseActivity implements DisciplinesAdap
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             new DisciplinesAction(DisciplinesActivity.this).execute();
         }
@@ -270,6 +295,11 @@ public class DisciplinesActivity extends BaseActivity implements DisciplinesAdap
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

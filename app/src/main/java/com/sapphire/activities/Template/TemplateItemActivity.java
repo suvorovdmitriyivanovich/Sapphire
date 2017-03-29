@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.api.TemplateItemAddAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
@@ -46,6 +47,7 @@ public class TemplateItemActivity extends BaseActivity implements TemplateItemAd
     private BroadcastReceiver br;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private boolean readonly = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +137,7 @@ public class TemplateItemActivity extends BaseActivity implements TemplateItemAd
             templateId = "";
         }
         if (!templateItemId.equals("")) {
+            readonly = intent.getBooleanExtra("readonly", false);
             nameOld = intent.getStringExtra("name");
             descriptionOld = intent.getStringExtra("description");
             name.setText(nameOld);
@@ -171,6 +174,12 @@ public class TemplateItemActivity extends BaseActivity implements TemplateItemAd
         });
 
         UpdateBottom();
+
+        if (readonly) {
+            button_ok.setVisibility(View.GONE);
+            name.setFocusable(false);
+            description.setFocusable(false);
+        }
     }
 
     private void UpdateBottom() {
@@ -248,6 +257,11 @@ public class TemplateItemActivity extends BaseActivity implements TemplateItemAd
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             finish();
         }
@@ -259,6 +273,11 @@ public class TemplateItemActivity extends BaseActivity implements TemplateItemAd
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

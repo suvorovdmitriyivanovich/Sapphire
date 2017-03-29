@@ -24,6 +24,7 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.FilesActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.PerformancesAdapter;
@@ -57,12 +58,16 @@ public class PerformancesActivity extends BaseActivity implements PerformancesAd
     private View text_no;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private boolean edit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_performances);
+
+        Intent intent = getIntent();
+        edit = intent.getBooleanExtra("edit", false);
 
         AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
         adb_save.setCancelable(true);
@@ -152,7 +157,7 @@ public class PerformancesActivity extends BaseActivity implements PerformancesAd
         list.setNestedScrollingEnabled(false);
         list.setLayoutManager(new LinearLayoutManager(PerformancesActivity.this));
 
-        adapter = new PerformancesAdapter(this);
+        adapter = new PerformancesAdapter(this, edit);
         list.setAdapter(adapter);
 
         text_no = findViewById(R.id.text_no);
@@ -169,6 +174,10 @@ public class PerformancesActivity extends BaseActivity implements PerformancesAd
         });
 
         UpdateBottom();
+
+        if (!edit) {
+            add.setVisibility(View.GONE);
+        }
     }
 
     private void UpdateBottom() {
@@ -193,8 +202,14 @@ public class PerformancesActivity extends BaseActivity implements PerformancesAd
 
     @Override
     public void onRootPerformancesClick(int position) {
-        //Intent intent = new Intent(PoliciesActivity.this, PdfActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(PerformancesActivity.this, PerformanceActivity.class);
+        PerformanceData data = datas.get(position);
+        intent.putExtra("readonly", true);
+        intent.putExtra("name", data.getName());
+        intent.putExtra("datePosted", data.getDatePosted());
+        intent.putExtra("renewalDate", data.getRenewalDate());
+        intent.putExtra("id", data.getPerformanceEvaluationId());
+        startActivity(intent);
     }
 
     @Override
@@ -243,6 +258,11 @@ public class PerformancesActivity extends BaseActivity implements PerformancesAd
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             this.datas = datas;
             adapter.setData(datas);
@@ -259,6 +279,11 @@ public class PerformancesActivity extends BaseActivity implements PerformancesAd
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             new PerformancesAction(PerformancesActivity.this).execute();
         }
@@ -270,6 +295,11 @@ public class PerformancesActivity extends BaseActivity implements PerformancesAd
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

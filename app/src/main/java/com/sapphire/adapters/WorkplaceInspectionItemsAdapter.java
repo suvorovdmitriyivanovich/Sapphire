@@ -57,11 +57,13 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
     private ArrayList<WorkplaceInspectionItemData> listData;
     private Context context;
     private Typeface typeFace;
+    private boolean readonly = false;
 
-    public WorkplaceInspectionItemsAdapter(Context context) {
+    public WorkplaceInspectionItemsAdapter(Context context, boolean readonly) {
         this.context = context;
         listData = new ArrayList<WorkplaceInspectionItemData>();
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
+        this.readonly = readonly;
     }
 
     @Override
@@ -136,6 +138,12 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
                 }
             }
         });
+
+        if (readonly) {
+            holder.open.setVisibility(View.GONE);
+            holder.delete.setVisibility(View.GONE);
+            holder.files.setVisibility(View.GONE);
+        }
     }
 
     @Override

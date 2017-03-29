@@ -28,6 +28,7 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.FilesActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.adapters.InvestigationItemsAdapter;
 import com.sapphire.api.GetInvestigationAction;
 import com.sapphire.api.InvestigationAddAction;
@@ -89,6 +90,7 @@ public class InvestigationActivity extends BaseActivity implements GetInvestigat
     private BroadcastReceiver br;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private boolean readonly = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +180,7 @@ public class InvestigationActivity extends BaseActivity implements GetInvestigat
             id = "";
         }
         if (!id.equals("")) {
+            readonly = intent.getBooleanExtra("readonly", false);
             nameOld = intent.getStringExtra("name");
             descriptionOld = intent.getStringExtra("description");
             dateOld = intent.getLongExtra("date", 0l);
@@ -200,6 +203,10 @@ public class InvestigationActivity extends BaseActivity implements GetInvestigat
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard();
+                if (readonly) {
+                    return;
+                }
                 choiseDate();
             }
         });
@@ -207,6 +214,7 @@ public class InvestigationActivity extends BaseActivity implements GetInvestigat
         image_date_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard();
                 choiseDate();
             }
         });
@@ -265,7 +273,7 @@ public class InvestigationActivity extends BaseActivity implements GetInvestigat
         itemlist.setNestedScrollingEnabled(false);
         itemlist.setLayoutManager(new LinearLayoutManager(InvestigationActivity.this));
 
-        adapter = new InvestigationItemsAdapter(this);
+        adapter = new InvestigationItemsAdapter(this, readonly);
         itemlist.setAdapter(adapter);
 
         // создаем BroadcastReceiver
@@ -300,6 +308,15 @@ public class InvestigationActivity extends BaseActivity implements GetInvestigat
         });
 
         UpdateBottom();
+
+        if (readonly) {
+            add.setVisibility(View.GONE);
+            button_ok.setVisibility(View.GONE);
+            name.setFocusable(false);
+            description.setFocusable(false);
+            date.setFocusable(false);
+            image_date_group.setClickable(false);
+        }
     }
 
     private void UpdateBottom() {
@@ -485,6 +502,11 @@ public class InvestigationActivity extends BaseActivity implements GetInvestigat
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             this.datas = datas;
             adapter.setListArray(datas);
@@ -492,7 +514,7 @@ public class InvestigationActivity extends BaseActivity implements GetInvestigat
             pd.hide();
             if (pressType == 2) {
                 pressType = 0;
-                openItem();
+                openItem(false);
             }
         }
     }
@@ -500,6 +522,8 @@ public class InvestigationActivity extends BaseActivity implements GetInvestigat
     @Override
     public void onRootInvestigationClick(int position) {
         hideSoftKeyboard();
+        currentPosition = position;
+        openItem(true);
     }
 
     @Override
@@ -522,13 +546,14 @@ public class InvestigationActivity extends BaseActivity implements GetInvestigat
         if (id.equals("")) {
             updateWorkplaceInspection(2);
         } else {
-            openItem();
+            openItem(false);
         }
     }
 
-    private void openItem() {
+    private void openItem(boolean read) {
         Intent intent = new Intent(InvestigationActivity.this, InvestigationItemActivity.class);
         InvestigationItemData data = datas.get(currentPosition);
+        intent.putExtra("readonly", read);
         intent.putExtra("name", data.getName());
         intent.putExtra("description", data.getDescription());
         intent.putExtra("itemId", data.getInvestigationItemId());
@@ -544,6 +569,11 @@ public class InvestigationActivity extends BaseActivity implements GetInvestigat
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             new GetInvestigationAction(InvestigationActivity.this, id).execute();
         }
@@ -557,6 +587,11 @@ public class InvestigationActivity extends BaseActivity implements GetInvestigat
             pressType = 0;
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             this.data = data;
             nameOld = name.getText().toString();
@@ -612,6 +647,11 @@ public class InvestigationActivity extends BaseActivity implements GetInvestigat
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

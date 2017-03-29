@@ -9,11 +9,9 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.models.MemberData;
-
 import java.util.ArrayList;
 
 public class MeetingMembersAdapter extends RecyclerView.Adapter<MeetingMembersAdapter.ViewHolder> {
@@ -40,11 +38,13 @@ public class MeetingMembersAdapter extends RecyclerView.Adapter<MeetingMembersAd
     private ArrayList<MemberData> listData;
     private Context context;
     private Typeface typeFace;
+    private boolean readonly = false;
 
-    public MeetingMembersAdapter(Context context) {
+    public MeetingMembersAdapter(Context context, boolean readonly) {
         this.context = context;
         listData = new ArrayList<MemberData>();
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
+        this.readonly = readonly;
     }
 
     @Override
@@ -66,6 +66,9 @@ public class MeetingMembersAdapter extends RecyclerView.Adapter<MeetingMembersAd
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (readonly) {
+                    return;
+                }
                 if (context instanceof OnRootMeetingMembersClickListener) {
                     ((OnRootMeetingMembersClickListener) context).onRootMeetingMembersClick(holder.getAdapterPosition());
                 }
@@ -75,7 +78,7 @@ public class MeetingMembersAdapter extends RecyclerView.Adapter<MeetingMembersAd
         holder.presence.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (data.getPresence() == isChecked) {
+                if (data.getPresence() == isChecked || readonly) {
                     return;
                 }
                 if (context instanceof OnRootMeetingMembersClickListener) {
@@ -83,6 +86,10 @@ public class MeetingMembersAdapter extends RecyclerView.Adapter<MeetingMembersAd
                 }
             }
         });
+
+        if (readonly) {
+            holder.presence.setClickable(false);
+        }
     }
 
     @Override

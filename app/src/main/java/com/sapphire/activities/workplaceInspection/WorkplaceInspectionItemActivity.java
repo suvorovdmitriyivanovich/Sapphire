@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.adapters.SpinPrioritisAdapter;
 import com.sapphire.adapters.SpinStatusesAdapter;
 import com.sapphire.adapters.SpinStringAdapter;
@@ -84,6 +85,7 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
     private TextView text_nointernet;
     private TextView text_setinternet;
     private boolean setUpdateAll = false;
+    private boolean readonly = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +157,9 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
             @Override
             public void onClick(View v) {
                 hideSoftKeyboard();
+                if (readonly) {
+                    return;
+                }
                 clickSpinner = true;
                 spinnerStatus.performClick();
             }
@@ -191,6 +196,9 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
             @Override
             public void onClick(View v) {
                 hideSoftKeyboard();
+                if (readonly) {
+                    return;
+                }
                 clickSpinner = true;
                 spinnerSeverity.performClick();
             }
@@ -221,6 +229,9 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
             @Override
             public void onClick(View v) {
                 hideSoftKeyboard();
+                if (readonly) {
+                    return;
+                }
                 clickSpinner = true;
                 spinnerPriority.performClick();
             }
@@ -289,6 +300,7 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
             idloc = "";
         }
         if (!workplaceInspectionItemId.equals("") || !idloc.equals("")) {
+            readonly = intent.getBooleanExtra("readonly", false);
             nameOld = intent.getStringExtra("name");
             descriptionOld = intent.getStringExtra("description");
             commentsOld = intent.getStringExtra("comments");
@@ -387,6 +399,17 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
         updateViews();
 
         UpdateBottom();
+
+        if (readonly) {
+            button_ok.setVisibility(View.GONE);
+            name.setFocusable(false);
+            description.setFocusable(false);
+            status.setFocusable(false);
+            severity.setFocusable(false);
+            priority.setFocusable(false);
+            comments.setFocusable(false);
+            recommendedActions.setFocusable(false);
+        }
     }
 
     private void UpdateBottom() {
@@ -510,6 +533,11 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
             } else {
                 Toast.makeText(getBaseContext(), result,
                         Toast.LENGTH_LONG).show();
+                if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         } else {
             if (!workplaceInspectionItemData.getId().equals("")) {
@@ -525,6 +553,11 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             this.workplaceInspectionItemId = workplaceInspectionItemId;
 

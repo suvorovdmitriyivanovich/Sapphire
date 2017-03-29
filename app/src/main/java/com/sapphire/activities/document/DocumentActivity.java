@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.adapters.SpinCategoriesAdapter;
 import com.sapphire.api.DocumentAddAction;
 import com.sapphire.api.UpdateAction;
@@ -76,6 +77,7 @@ public class DocumentActivity extends BaseActivity implements DocumentAddAction.
     private BroadcastReceiver br;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private boolean readonly = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +160,9 @@ public class DocumentActivity extends BaseActivity implements DocumentAddAction.
             @Override
             public void onClick(View v) {
                 hideSoftKeyboard();
+                if (readonly) {
+                    return;
+                }
                 clickSpinner = true;
                 spinnerCategory.performClick();
             }
@@ -187,6 +192,7 @@ public class DocumentActivity extends BaseActivity implements DocumentAddAction.
             id = "";
         }
         if (!id.equals("")) {
+            readonly = intent.getBooleanExtra("readonly", false);
             nameOld = intent.getStringExtra("name");
             dateOld = intent.getLongExtra("date", 0l);
             dateNew = dateOld;
@@ -226,6 +232,10 @@ public class DocumentActivity extends BaseActivity implements DocumentAddAction.
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard();
+                if (readonly) {
+                    return;
+                }
                 choiseDate();
             }
         });
@@ -233,6 +243,7 @@ public class DocumentActivity extends BaseActivity implements DocumentAddAction.
         image_date_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideSoftKeyboard();
                 choiseDate();
             }
         });
@@ -294,6 +305,14 @@ public class DocumentActivity extends BaseActivity implements DocumentAddAction.
         });
 
         UpdateBottom();
+
+        if (readonly) {
+            button_ok.setVisibility(View.GONE);
+            name.setFocusable(false);
+            category.setFocusable(false);
+            date.setFocusable(false);
+            image_date_group.setClickable(false);
+        }
     }
 
     private void UpdateBottom() {
@@ -466,9 +485,13 @@ public class DocumentActivity extends BaseActivity implements DocumentAddAction.
     public void onRequestDocumentAdd(String result) {
         if (!result.equals("OK")) {
             pd.hide();
-
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             finish();
         }
@@ -480,6 +503,11 @@ public class DocumentActivity extends BaseActivity implements DocumentAddAction.
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

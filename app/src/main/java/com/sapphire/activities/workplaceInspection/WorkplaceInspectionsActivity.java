@@ -24,6 +24,7 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.FilesActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.WorkplaceInspectionsAdapter;
@@ -205,8 +206,15 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
 
     @Override
     public void onRootWorkplaceInspectionsClick(int position) {
-        //Intent intent = new Intent(PoliciesActivity.this, PdfActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(WorkplaceInspectionsActivity.this, WorkplaceInspectionActivity.class);
+        WorkplaceInspectionData workplaceInspectionData = workplaceInspectionDatas.get(position);
+        intent.putExtra("readonly", true);
+        intent.putExtra("name", workplaceInspectionData.getName());
+        intent.putExtra("description", workplaceInspectionData.getDescription());
+        intent.putExtra("date", workplaceInspectionData.getDate());
+        intent.putExtra("workplaceInspectionId", workplaceInspectionData.getWorkplaceInspectionId());
+        intent.putExtra("posted", workplaceInspectionData.getPostedOnBoard());
+        startActivity(intent);
     }
 
     @Override
@@ -251,6 +259,11 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -260,6 +273,11 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             new WorkplaceInspectionsAction(WorkplaceInspectionsActivity.this, false).execute();
         }
@@ -283,6 +301,11 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -301,6 +324,11 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -319,6 +347,11 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -335,6 +368,11 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

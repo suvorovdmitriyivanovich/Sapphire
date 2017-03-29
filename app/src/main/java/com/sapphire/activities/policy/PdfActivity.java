@@ -18,6 +18,7 @@ import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
+import com.sapphire.activities.LoginActivity;
 import com.sapphire.api.GetFileAction;
 import com.sapphire.api.PolicyLogAction;
 import com.sapphire.api.UpdateAction;
@@ -199,6 +200,11 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             pdfView.fromFile(new File(file))
                     .defaultPage(0)
@@ -216,6 +222,11 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
         if (needClose) {
             finish();
@@ -307,6 +318,11 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();

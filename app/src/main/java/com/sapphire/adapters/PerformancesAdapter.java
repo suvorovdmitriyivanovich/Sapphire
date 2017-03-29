@@ -63,11 +63,13 @@ public class PerformancesAdapter extends RecyclerView.Adapter<PerformancesAdapte
     private ArrayList<PerformanceData> mData;
     private Context mContext;
     private Typeface typeFace;
+    private boolean edit = false;
 
-    public PerformancesAdapter(Context context) {
+    public PerformancesAdapter(Context context, boolean edit) {
         mContext = context;
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
         mData = new ArrayList<PerformanceData>();
+        this.edit = edit;
     }
 
     @Override
@@ -143,6 +145,12 @@ public class PerformancesAdapter extends RecyclerView.Adapter<PerformancesAdapte
         holder.delete.setVisibility(View.VISIBLE);
         holder.files.setVisibility(View.VISIBLE);
         holder.report.setVisibility(View.GONE);
+
+        if (!edit) {
+            holder.open.setVisibility(View.GONE);
+            holder.delete.setVisibility(View.GONE);
+            holder.files.setVisibility(View.GONE);
+        }
     }
 
     @Override
