@@ -9,6 +9,7 @@ import com.sapphire.models.OrganizationData;
 import com.sapphire.models.OrganizationStructureData;
 import com.sapphire.models.ProfileData;
 import com.sapphire.models.TemplateData;
+import com.sapphire.models.TimeBankData;
 import com.sapphire.models.TimeZoneData;
 import com.sapphire.models.TopicData;
 
@@ -34,6 +35,7 @@ public class UserInfo {
     private int position = -1;
     private ArrayList<CategoryData> docCategoryDatas = new ArrayList<CategoryData>();
     private TimeZoneData timeZone = new TimeZoneData();
+    private ArrayList<TimeBankData> timeBankDatas = new ArrayList<TimeBankData>();
 
     //---------------------Singleton---------------------------
     private static UserInfo userInfo;
@@ -228,5 +230,15 @@ public class UserInfo {
 
     public TimeZoneData getTimeZone() {
         return timeZone;
+    }
+
+    public void setTimeBankDatas(ArrayList<TimeBankData> timeBankDatas) {
+        this.timeBankDatas.clear();
+        this.timeBankDatas.add(new TimeBankData());
+        this.timeBankDatas.addAll(timeBankDatas);
+    }
+
+    public ArrayList<TimeBankData> getTimeBankDatas() {
+        return timeBankDatas;
     }
 }

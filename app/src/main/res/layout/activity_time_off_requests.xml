@@ -38,14 +38,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/text_time_off_requests"
                 android:id="@+id/text_header"
                 android:textColor="#ffffff"
                 android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="61dp"
-                android:layout_marginRight="10dp"
-                android:text="@string/text_my_contacts"
-                android:singleLine="true" />
+                android:layout_toRightOf="@+id/menu"
+                android:layout_toEndOf="@+id/menu"
+                android:layout_marginRight="109dp"
+                android:singleLine="true"
+                android:layout_marginLeft="5dp" />
+
+            <RelativeLayout
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:id="@+id/add"
+                android:background="@drawable/top_button"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/delete"
+                android:layout_toStartOf="@+id/delete">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/add_icon"
+                    android:src="@drawable/add_icon"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="56dp"
@@ -66,101 +85,25 @@
 
         </RelativeLayout>
 
-        <ScrollView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/scrollView"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
             android:layout_below="@+id/top_group"
-            android:layout_above="@+id/nointernet_group">
+            android:layout_above="@+id/nointernet_group"/>
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/scroll_group">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="@string/text_emergency_contacts"
-                    android:id="@+id/text_emergency"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
-                    android:singleLine="true" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:id="@+id/border"
-                    android:background="@color/dark_light_green"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="10dp" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/emergency_group"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/login_input"
-                    android:padding="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="20dp"
-                    android:visibility="gone">
-
-                    <android.support.v7.widget.RecyclerView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/emergencylist"
-                        android:divider="@null"
-                        android:dividerHeight="0dp"
-                        android:nestedScrollingEnabled="false" />
-                </RelativeLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="@string/text_family_members"
-                    android:id="@+id/text_family"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
-                    android:singleLine="true" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:id="@+id/border2"
-                    android:background="@color/dark_light_green"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="10dp" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/family_group"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/login_input"
-                    android:padding="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="20dp"
-                    android:visibility="gone">
-
-                    <android.support.v7.widget.RecyclerView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/familylist"
-                        android:divider="@null"
-                        android:dividerHeight="0dp"
-                        android:nestedScrollingEnabled="false" />
-                </RelativeLayout>
-
-            </LinearLayout>
-        </ScrollView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/text_time_off_request_no"
+            android:id="@+id/text_no"
+            android:layout_below="@+id/top_group"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:visibility="gone" />
 
         <RelativeLayout
             android:layout_width="match_parent"

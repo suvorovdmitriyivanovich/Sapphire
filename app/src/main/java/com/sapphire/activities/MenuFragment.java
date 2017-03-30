@@ -19,6 +19,7 @@ import com.sapphire.activities.meeting.MeetingsActivity;
 import com.sapphire.activities.performance.PerformancesActivity;
 import com.sapphire.activities.policy.PoliciesActivity;
 import com.sapphire.activities.template.TemplatesActivity;
+import com.sapphire.activities.timeOffRequest.TimeOffRequestsActivity;
 import com.sapphire.activities.workplaceInspection.WorkplaceInspectionsActivity;
 import com.sapphire.adapters.MenuAdapter;
 import com.sapphire.db.DBHelper;
@@ -167,6 +168,9 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
             startActivity(intent);
         } else if (urlRoute.equals("/me/my-documents")) {
             Intent intent = new Intent(getActivity(), DocumentsActivity.class);
+            startActivity(intent);
+        } else if (urlRoute.equals("/me/my-time-off-requests")) {
+            Intent intent = new Intent(getActivity(), TimeOffRequestsActivity.class);
             startActivity(intent);
         }
     }
