@@ -26,46 +26,39 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
-import com.sapphire.activities.FilesActivity;
 import com.sapphire.activities.LoginActivity;
+import com.sapphire.activities.MultichoiseDaysActivity;
 import com.sapphire.activities.workplaceInspection.WorkplaceInspectionItemActivity;
-import com.sapphire.adapters.SpinTemplatesAdapter;
+import com.sapphire.adapters.DayItemsAdapter;
+import com.sapphire.adapters.SpinAttendanceCodesAdapter;
 import com.sapphire.adapters.SpinTimeBanksAdapter;
-import com.sapphire.adapters.WorkplaceInspectionItemsAdapter;
-import com.sapphire.api.GetTemplateAction;
 import com.sapphire.api.GetWorkplaceInspectionAction;
 import com.sapphire.api.TimeOffRequestAddAction;
 import com.sapphire.api.UpdateAction;
-import com.sapphire.api.WorkplaceInspectionAddAction;
 import com.sapphire.api.WorkplaceInspectionItemAddAction;
 import com.sapphire.api.WorkplaceInspectionItemDeleteAction;
 import com.sapphire.db.DBHelper;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.UserInfo;
-import com.sapphire.models.TemplateData;
-import com.sapphire.models.TemplateItemData;
+import com.sapphire.models.AttendanceCodeData;
+import com.sapphire.models.DayData;
 import com.sapphire.models.TimeBankData;
 import com.sapphire.models.TimeOffRequestData;
 import com.sapphire.models.WorkplaceInspectionItemData;
 import java.util.ArrayList;
 
-public class TimeOffRequestActivity extends BaseActivity implements GetTemplateAction.RequestTemplate,
-                                                                    GetTemplateAction.RequestTemplateData,
-                                                                    GetWorkplaceInspectionAction.RequestWorkplaceInspection,
-                                                                    WorkplaceInspectionItemsAdapter.OnRootClickListener,
-                                                                    WorkplaceInspectionItemsAdapter.OnOpenClickListener,
-                                                                    WorkplaceInspectionItemsAdapter.OnDeleteClickListener,
-                                                                    WorkplaceInspectionItemsAdapter.OnFilesClickListener,
+public class TimeOffRequestActivity extends BaseActivity implements GetWorkplaceInspectionAction.RequestWorkplaceInspection,
+                                                                    DayItemsAdapter.OnRootClickListener,
+                                                                    DayItemsAdapter.OnDeleteClickListener,
                                                                     WorkplaceInspectionItemDeleteAction.RequestWorkplaceInspectionItemDelete,
                                                                     TimeOffRequestAddAction.RequestTimeOffRequestAdd,
                                                                     WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd,
                                                                     UpdateAction.RequestUpdate{
     private String id = "";
     private ProgressDialog pd;
-    private ArrayList<WorkplaceInspectionItemData> datas = new ArrayList<WorkplaceInspectionItemData>();
     private RecyclerView itemlist;
-    private WorkplaceInspectionItemsAdapter adapter;
+    private DayItemsAdapter adapter;
     private EditText name;
     private View text_name_error;
     private View text_name;
@@ -77,17 +70,17 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
     private Button button_send_save;
     private boolean deleteItem = false;
     private int currentPosition = 0;
-    private EditText template;
-    private Spinner spinnerTemplate;
-    private ArrayList<TemplateData> templates;
-    private SpinTemplatesAdapter adapterTemplate;
+    private EditText attendance;
+    private Spinner spinnerAttendance;
+    private ArrayList<AttendanceCodeData> attendances;
+    private SpinAttendanceCodesAdapter adapterAttendance;
     private EditText timeBank;
     private Spinner spinnerTimeBank;
     private ArrayList<TimeBankData> timeBanks;
     private SpinTimeBanksAdapter adapterTimeBank;
     private boolean clickSpinner = false;
-    private String templateId = "";
-    private View text_template;
+    private String attendanceId = "";
+    private View text_attendance;
     private String timeBankId = "";
     private View text_timeBank;
     private TimeOffRequestData data = new TimeOffRequestData();
@@ -97,12 +90,18 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
     private boolean readonly = false;
+    private UserInfo userInfo;
+    private boolean isCheckDays = false;
+    private View text_days_error;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_time_off_request);
+
+        userInfo = UserInfo.getUserInfo();
+        userInfo.setDays(null);
 
         View back = findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
@@ -159,15 +158,10 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
                 dialog_confirm.dismiss();
                 if (deleteItem) {
                     deleteItem = false;
-                    if (datas.get(currentPosition).getWorkplaceInspectionItemId().equals("")) {
-                        DBHelper.getInstance(Sapphire.getInstance()).deleteWorkplaceInspectionItem(datas.get(currentPosition).getId());
-                        pd.show();
-                        new GetWorkplaceInspectionAction(TimeOffRequestActivity.this, id).execute();
-                    } else {
-                        pd.show();
 
-                        new WorkplaceInspectionItemDeleteAction(TimeOffRequestActivity.this, datas.get(currentPosition).getWorkplaceInspectionItemId()).execute();
-                    }
+                    adapter.remove(currentPosition);
+                    updateVisibility();
+                    updateViews();
                 } else {
                     updateWorkplaceInspection(0);
                 }
@@ -177,12 +171,13 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
         name = (EditText) findViewById(R.id.name);
         text_name_error = findViewById(R.id.text_name_error);
         text_name = findViewById(R.id.text_name);
-        template = (EditText) findViewById(R.id.template);
-        spinnerTemplate = (Spinner) findViewById(R.id.spinnerTemplate);
-        text_template = findViewById(R.id.text_template);
+        attendance = (EditText) findViewById(R.id.attendance);
+        spinnerAttendance = (Spinner) findViewById(R.id.spinnerAttendance);
+        text_attendance = findViewById(R.id.text_attendance);
         timeBank = (EditText) findViewById(R.id.time_bank);
         spinnerTimeBank = (Spinner) findViewById(R.id.spinnerTime_bank);
         text_timeBank = findViewById(R.id.text_time_bank);
+        text_days_error = findViewById(R.id.text_days_error);
 
         Intent intent = getIntent();
         id = intent.getStringExtra("id");
@@ -195,37 +190,37 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
             name.setText(nameOld);
         }
 
-        templates = new ArrayList<>();
-        templates.addAll(UserInfo.getUserInfo().getTemplateDatas());
+        attendances = new ArrayList<>();
+        attendances.addAll(UserInfo.getUserInfo().getAttendanceCodeDatas());
 
-        adapterTemplate = new SpinTemplatesAdapter(this, R.layout.spinner_list_item_black);
-        spinnerTemplate.setAdapter(adapterTemplate);
-        adapterTemplate.setValues(templates);
-        template.setOnClickListener(new View.OnClickListener() {
+        adapterAttendance = new SpinAttendanceCodesAdapter(this, R.layout.spinner_list_item_black);
+        spinnerAttendance.setAdapter(adapterAttendance);
+        adapterAttendance.setValues(attendances);
+        attendance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hideSoftKeyboard();
                 clickSpinner = true;
-                spinnerTemplate.performClick();
+                spinnerAttendance.performClick();
             }
         });
-        spinnerTemplate.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerAttendance.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (!clickSpinner) {
                     return;
                 }
-                template.setText(templates.get(position).getName());
-                templateId = templates.get(position).getTemplateId();
+                attendance.setText(attendances.get(position).getName());
+                attendanceId = attendances.get(position).getAttendanceCodeId();
                 clickSpinner = false;
 
-                if (!templateId.equals("")) {
-                    pd.show();
-                    new GetTemplateAction(TimeOffRequestActivity.this, templateId, getResources().getString(R.string.text_workplace_templates)).execute();
+                if (!attendanceId.equals("")) {
+                    //pd.show();
+                    //new GetTemplateAction(TimeOffRequestActivity.this, attendanceId, getResources().getString(R.string.text_workplace_templates)).execute();
                     //} else if (!workplaceInspectionId.equals("")) {
                     //    new GetWorkplaceInspectionAction(WorkplaceInspectionActivity.this, workplaceInspectionId).execute();
                 } else {
-                    adapter.setListArray(new ArrayList<WorkplaceInspectionItemData>());
+                    adapter.setListArray(new ArrayList<DayData>());
                 }
             }
 
@@ -265,7 +260,7 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
                     return;
                 }
                 timeBank.setText(timeBanks.get(position).getName());
-                timeBankId = timeBanks.get(position).getWorkplaceInspectionItemPriorityId();
+                timeBankId = timeBanks.get(position).getTimeBankAccountId();
                 clickSpinner = false;
             }
 
@@ -307,17 +302,8 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
             public void onClick(View v) {
                 hideSoftKeyboard();
 
-                if (name.getText().toString().equals("")) {
-                    isCheckName = true;
-                    updateViews();
-                    return;
-                }
-
-                if (!nameOld.equals(name.getText().toString())) {
-                    updateWorkplaceInspection(1);
-                } else {
-                    addItem();
-                }
+                Intent intent = new Intent(TimeOffRequestActivity.this, MultichoiseDaysActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -333,7 +319,7 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
         itemlist.setNestedScrollingEnabled(false);
         itemlist.setLayoutManager(new LinearLayoutManager(TimeOffRequestActivity.this));
 
-        adapter = new WorkplaceInspectionItemsAdapter(this, readonly);
+        adapter = new DayItemsAdapter(this);
         itemlist.setAdapter(adapter);
 
         // создаем BroadcastReceiver
@@ -387,7 +373,7 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
     }
 
     public void updateVisibility() {
-        if (datas == null || datas.size() == 0) {
+        if (adapter.getData() == null || adapter.getData().size() == 0) {
             text_no.setVisibility(View.VISIBLE);
             itemlist.setVisibility(View.GONE);
         } else {
@@ -400,8 +386,9 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
         hideSoftKeyboard();
         boolean allOk = true;
 
-        if (name.getText().toString().equals("")) {
+        if (name.getText().toString().equals("") || adapter.getData().size() == 0) {
             isCheckName = true;
+            isCheckDays = true;
             updateViews();
             allOk = false;
         }
@@ -411,7 +398,13 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
 
             pressType = type;
 
-            new WorkplaceInspectionAddAction(TimeOffRequestActivity.this, id, name.getText().toString(), "", 0l, false).execute();
+            TimeOffRequestData timeOffRequestData =  new TimeOffRequestData();
+            timeOffRequestData.setTimeOffRequestId(id);
+            timeOffRequestData.setTimeBank(new TimeBankData(timeBankId));
+            timeOffRequestData.setAttendanceCode(new AttendanceCodeData(attendanceId));
+            timeOffRequestData.setDays(adapter.getData());
+
+            new TimeOffRequestAddAction(TimeOffRequestActivity.this, timeOffRequestData).execute();
         }
     }
 
@@ -438,6 +431,11 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
             text_name_error.setVisibility(View.GONE);
             text_name.setVisibility(View.VISIBLE);
         }
+        if (isCheckDays && adapter.getData().size() == 0) {
+            text_days_error.setVisibility(View.VISIBLE);
+        } else {
+            text_days_error.setVisibility(View.GONE);
+        }
     }
 
     public void hideSoftKeyboard() {
@@ -463,38 +461,6 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
         Intent intent = new Intent(TimeOffRequestActivity.this, WorkplaceInspectionItemActivity.class);
         intent.putExtra("workplaceInspectionId", id);
         startActivity(intent);
-    }
-
-    @Override
-    public void onRequestTemplate(String result) {
-        pd.hide();
-        if (!result.equals("OK")) {
-            Toast.makeText(getBaseContext(), result,
-                    Toast.LENGTH_LONG).show();
-            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        }
-    }
-
-    @Override
-    public void onRequestTemplateData(ArrayList<TemplateItemData> templatesItemDatas) {
-        ArrayList<WorkplaceInspectionItemData> list = new ArrayList<WorkplaceInspectionItemData>();
-        for (TemplateItemData item: templatesItemDatas) {
-            WorkplaceInspectionItemData workplaceInspectionItemData = new WorkplaceInspectionItemData();
-            workplaceInspectionItemData.setDescription(item.getDescription());
-            workplaceInspectionItemData.setName(item.getName());
-            workplaceInspectionItemData.setPriority(item.getPriority());
-            workplaceInspectionItemData.setSeverity(item.getSeverity());
-            workplaceInspectionItemData.setStatus(item.getStatus());
-            list.add(workplaceInspectionItemData);
-        }
-
-        this.datas = list;
-        adapter.setListArray(list);
-        pd.hide();
     }
 
     @Override
@@ -533,22 +499,19 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
             allDatas.add(item);
         }
 
-        this.datas = allDatas;
-        adapter.setListArray(this.datas);
+        //this.datas = allDatas;
+        //adapter.setListArray(this.datas);
         updateVisibility();
 
         pd.hide();
         if (pressType == 2) {
             pressType = 0;
-            openItem(false);
         }
     }
 
     @Override
     public void onRootClick(int position) {
         hideSoftKeyboard();
-        currentPosition = position;
-        openItem(true);
     }
 
     @Override
@@ -562,34 +525,6 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
         button_cancel_save.setText(getResources().getString(R.string.text_cancel));
         button_send_save.setText(getResources().getString(R.string.text_delete));
         dialog_confirm.show();
-    }
-
-    @Override
-    public void onOpenClick(int position) {
-        hideSoftKeyboard();
-        currentPosition = position;
-        if (id.equals("")) {
-            updateWorkplaceInspection(2);
-        } else {
-            openItem(false);
-        }
-    }
-
-    private void openItem(boolean read) {
-        Intent intent = new Intent(TimeOffRequestActivity.this, WorkplaceInspectionItemActivity.class);
-        WorkplaceInspectionItemData workplaceInspectionItemData = datas.get(currentPosition);
-        intent.putExtra("readonly", read);
-        intent.putExtra("idloc", workplaceInspectionItemData.getId());
-        intent.putExtra("name", workplaceInspectionItemData.getName());
-        intent.putExtra("description", workplaceInspectionItemData.getDescription());
-        intent.putExtra("comments", workplaceInspectionItemData.getComments());
-        intent.putExtra("recommendedActions", workplaceInspectionItemData.getRecommendedActions());
-        intent.putExtra("workplaceInspectionItemId", workplaceInspectionItemData.getWorkplaceInspectionItemId());
-        intent.putExtra("workplaceInspectionId", workplaceInspectionItemData.getWorkplaceInspectionId());
-        intent.putExtra("severity", workplaceInspectionItemData.getSeverity());
-        intent.putExtra("workplaceInspectionItemStatusId", workplaceInspectionItemData.getStatus().getWorkplaceInspectionItemStatusId());
-        intent.putExtra("workplaceInspectionItemPriorityId", workplaceInspectionItemData.getPriority().getWorkplaceInspectionItemPriorityId());
-        startActivity(intent);
     }
 
     @Override
@@ -613,24 +548,11 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
     public void onRequestTimeOffRequestAdd(String result, TimeOffRequestData data) {
         this.data = data;
         nameOld = name.getText().toString();
-        if (id.equals("") && datas.size() > 0) {
-           id = data.getWorkplaceInspectionId();
 
-            WorkplaceInspectionItemData workplaceInspectionItemData = new WorkplaceInspectionItemData();
-            workplaceInspectionItemData.setName(datas.get(0).getName());
-            workplaceInspectionItemData.setDescription(datas.get(0).getDescription());
-            workplaceInspectionItemData.setWorkplaceInspectionId(id);
-            workplaceInspectionItemData.setSeverity(datas.get(0).getSeverity());
-            workplaceInspectionItemData.setStatus(datas.get(0).getStatus());
-            workplaceInspectionItemData.setPriority(datas.get(0).getPriority());
+        id = data.getTimeOffRequestId();
 
-            new WorkplaceInspectionItemAddAction(TimeOffRequestActivity.this, workplaceInspectionItemData, datas.size() == 1, 0, "").execute();
-        } else {
-            id = data.getWorkplaceInspectionId();
-
-            pd.hide();
-            requestWorkplaceInspectionAddData();
-        }
+        pd.hide();
+        requestWorkplaceInspectionAddData();
     }
 
     private void requestWorkplaceInspectionAddData() {
@@ -661,29 +583,7 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
             pd.hide();
 
             requestWorkplaceInspectionAddData();
-        } else if (ihms < datas.size()) {
-            WorkplaceInspectionItemData workplaceInspectionItemData = new WorkplaceInspectionItemData();
-            workplaceInspectionItemData.setName(datas.get(ihms).getName());
-            workplaceInspectionItemData.setDescription(datas.get(ihms).getDescription());
-            workplaceInspectionItemData.setWorkplaceInspectionId(id);
-            workplaceInspectionItemData.setSeverity(datas.get(ihms).getSeverity());
-            workplaceInspectionItemData.setStatus(datas.get(ihms).getStatus());
-            workplaceInspectionItemData.setPriority(datas.get(ihms).getPriority());
-
-            new WorkplaceInspectionItemAddAction(TimeOffRequestActivity.this, workplaceInspectionItemData, ihms == datas.size()-1, ihms, "").execute();
         }
-    }
-
-    @Override
-    public void onFilesClick(int position) {
-        Intent intent = new Intent(TimeOffRequestActivity.this, FilesActivity.class);
-        WorkplaceInspectionItemData workplaceInspectionItemData = datas.get(position);
-        intent.putExtra("name", workplaceInspectionItemData.getName());
-        intent.putExtra("id", workplaceInspectionItemData.getWorkplaceInspectionItemId());
-        intent.putExtra("url", Environment.WorkplaceInspectionsItemsFilesURL);
-        intent.putExtra("nameField", "WorkplaceInspectionItemId");
-        UserInfo.getUserInfo().setFileDatas(workplaceInspectionItemData.getFiles());
-        startActivity(intent);
     }
 
     @Override
@@ -714,6 +614,14 @@ public class TimeOffRequestActivity extends BaseActivity implements GetTemplateA
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (userInfo.getDays() != null) {
+            adapter.addDatas(userInfo.getDays());
+            userInfo.setDays(null);
+            isCheckDays = true;
+            updateVisibility();
+            updateViews();
+        }
 
         if (!id.equals("")) {
             pd.show();

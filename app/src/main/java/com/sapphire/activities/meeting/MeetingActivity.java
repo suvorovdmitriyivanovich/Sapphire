@@ -228,6 +228,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             id = "";
         }
         userInfo = UserInfo.getUserInfo();
+        userInfo.setTopic(null);
         if (!id.equals("")) {
             readonly = intent.getBooleanExtra("readonly", false);
             nameOld = intent.getStringExtra("name");

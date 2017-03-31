@@ -8,22 +8,22 @@ import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.UserInfo;
 import com.sapphire.models.ErrorMessageData;
-import com.sapphire.models.TimeBankData;
 import com.sapphire.models.ResponseData;
+import com.sapphire.models.AttendanceCodeData;
 import org.json.JSONArray;
 import org.json.JSONException;
 import java.util.ArrayList;
 
-public class TimeBanksAction extends AsyncTask{
+public class AttendanceCodesAction extends AsyncTask{
 
-    public interface RequestTimeBanks {
-        public void onRequestTimeBanks(String result, ArrayList<TimeBankData> datas);
+    public interface RequestAttendanceCodes {
+        public void onRequestAttendanceCodes(String result, ArrayList<AttendanceCodeData> datas);
     }
 
     private Context mContext;
-    private ArrayList<TimeBankData> datas;
+    private ArrayList<AttendanceCodeData> datas;
 
-    public TimeBanksAction(Context context) {
+    public AttendanceCodesAction(Context context) {
         this.mContext = context;
     }
 
@@ -35,9 +35,10 @@ public class TimeBanksAction extends AsyncTask{
 
         UserInfo userInfo = UserInfo.getUserInfo();
 
-        String filter = "?$filter=ProfileId%20eq%20guid'"+userInfo.getProfile().getProfileId()+"'";
+        //String filter = "?$filter=ProfileId%20eq%20guid'"+userInfo.getProfile().getProfileId()+"'";
+        String filter = "?$filter=IsRequestAvailable%20eq%20true";
 
-        String urlstring = Environment.SERVER + Environment.TimeBanksURL + filter;
+        String urlstring = Environment.SERVER + Environment.AttendanceCodesURL + filter;
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthToken()));
 
@@ -45,10 +46,10 @@ public class TimeBanksAction extends AsyncTask{
 
         if (responseData.getSuccess()) {
             JSONArray data = responseData.getData();
-            datas = new ArrayList<TimeBankData>();
+            datas = new ArrayList<AttendanceCodeData>();
             for (int y=0; y < data.length(); y++) {
                 try {
-                    datas.add(new TimeBankData(data.getJSONObject(y)));
+                    datas.add(new AttendanceCodeData(data.getJSONObject(y)));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -76,7 +77,7 @@ public class TimeBanksAction extends AsyncTask{
     protected void onPostExecute(Object o) {
         String resultData = (String) o;
         if(mContext!=null) {
-            ((RequestTimeBanks) mContext).onRequestTimeBanks(resultData, datas);
+            ((RequestAttendanceCodes) mContext).onRequestAttendanceCodes(resultData, datas);
         }
     }
 }

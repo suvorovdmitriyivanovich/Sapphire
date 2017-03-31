@@ -198,5 +198,7 @@
     <string name="text_time_off_request">My Time Off Request</string>
     <string name="text_days">Days</string>
     <string name="text_day_no">No days</string>
-    <string name="time_bank">Time bank</string>
+    <string name="time_bank">Time Bank</string>
+    <string name="text_attendance">Attendance Code</string>
+    <string name="days_error">Days is required</string>
 </resources>

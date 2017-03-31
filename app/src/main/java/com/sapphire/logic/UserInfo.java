@@ -1,6 +1,8 @@
 package com.sapphire.logic;
 
+import com.sapphire.models.AttendanceCodeData;
 import com.sapphire.models.CategoryData;
+import com.sapphire.models.DayData;
 import com.sapphire.models.FileData;
 import com.sapphire.models.ItemPriorityData;
 import com.sapphire.models.ItemStatusData;
@@ -36,6 +38,8 @@ public class UserInfo {
     private ArrayList<CategoryData> docCategoryDatas = new ArrayList<CategoryData>();
     private TimeZoneData timeZone = new TimeZoneData();
     private ArrayList<TimeBankData> timeBankDatas = new ArrayList<TimeBankData>();
+    private ArrayList<AttendanceCodeData> attendanceCodeDatas = new ArrayList<AttendanceCodeData>();
+    private ArrayList<DayData> days = new ArrayList<DayData>();
 
     //---------------------Singleton---------------------------
     private static UserInfo userInfo;
@@ -240,5 +244,23 @@ public class UserInfo {
 
     public ArrayList<TimeBankData> getTimeBankDatas() {
         return timeBankDatas;
+    }
+
+    public void setAttendanceCodeDatas(ArrayList<AttendanceCodeData> attendanceCodeDatas) {
+        this.attendanceCodeDatas.clear();
+        this.attendanceCodeDatas.add(new AttendanceCodeData());
+        this.attendanceCodeDatas.addAll(attendanceCodeDatas);
+    }
+
+    public ArrayList<AttendanceCodeData> getAttendanceCodeDatas() {
+        return attendanceCodeDatas;
+    }
+
+    public void setDays(ArrayList<DayData> days) {
+        this.days = days;
+    }
+
+    public ArrayList<DayData> getDays() {
+        return days;
     }
 }

@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class TimeBankData {
-    private String workplaceInspectionItemPriorityId = "";
+    private String timeBankAccountId = "";
     private String name = "";
     private String description = "";
 
@@ -12,14 +12,14 @@ public class TimeBankData {
 
     }
 
-    public TimeBankData(String workplaceInspectionItemPriorityId) {
-        this.workplaceInspectionItemPriorityId = workplaceInspectionItemPriorityId;
+    public TimeBankData(String timeBankAccountId) {
+        this.timeBankAccountId = timeBankAccountId;
     }
 
     public TimeBankData(JSONObject data) {
         try {
             if (!data.isNull("WorkplaceInspectionItemPriorityId")) {
-                setWorkplaceInspectionItemPriorityId(data.getString("WorkplaceInspectionItemPriorityId"));
+                setTimeBankAccountId(data.getString("WorkplaceInspectionItemPriorityId"));
             }
             if (!data.isNull("Name")) {
                 setName(data.getString("Name"));
@@ -32,12 +32,12 @@ public class TimeBankData {
         }
     }
 
-    public String getWorkplaceInspectionItemPriorityId() {
-        return workplaceInspectionItemPriorityId;
+    public String getTimeBankAccountId() {
+        return timeBankAccountId;
     }
 
-    public void setWorkplaceInspectionItemPriorityId(String workplaceInspectionItemPriorityId) {
-        this.workplaceInspectionItemPriorityId = workplaceInspectionItemPriorityId;
+    public void setTimeBankAccountId(String timeBankAccountId) {
+        this.timeBankAccountId = timeBankAccountId;
     }
 
     public String getName() {

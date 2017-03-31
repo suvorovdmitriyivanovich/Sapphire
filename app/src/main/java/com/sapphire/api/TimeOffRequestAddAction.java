@@ -7,7 +7,9 @@ import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.UserInfo;
+import com.sapphire.models.DayData;
 import com.sapphire.models.ErrorMessageData;
+import com.sapphire.models.OrganizationStructureData;
 import com.sapphire.models.ResponseData;
 import com.sapphire.models.TimeOffRequestData;
 import com.sapphire.utils.DateOperations;
@@ -23,23 +25,11 @@ public class TimeOffRequestAddAction extends AsyncTask{
     }
 
     private Context mContext;
-    private String id;
-    private String name;
-    private String description;
-    private String date = "";
-    private boolean posted = false;
     private TimeOffRequestData data = new TimeOffRequestData();
 
-    public TimeOffRequestAddAction(Context context, String id, String name, String description, Long dateLong, boolean posted) {
+    public TimeOffRequestAddAction(Context context, TimeOffRequestData data) {
         this.mContext = context;
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.posted = posted;
-
-        if (dateLong != 0l) {
-            this.date = DateOperations.getDateServer(dateLong);
-        }
+        this.data = data;
     }
 
     @Override
@@ -47,30 +37,60 @@ public class TimeOffRequestAddAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.TimeBanksURL;
+
+        UserInfo userInfo = UserInfo.getUserInfo();
+
+        String urlstring = Environment.SERVER + Environment.TimeOffRequestsURL;
 
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
         try {
-            if (!id.equals("")) {
-                jsonObject.put("id", id);
+            if (!data.getTimeOffRequestId().equals("")) {
+                jsonObject.put("TimeoffRequestId", data.getTimeOffRequestId());
             }
-            jsonObject.put("Name", name);
-            jsonObject.put("Description", description);
-            jsonObject.put("Date", date);
-            jsonObject.put("PostedOnBoard", posted);
-            //jsonObject.put("OrganizationId", posted);
+            //jsonObject.put("OrganizationId", userInfo.getCurrentOrganization().getOrganizationId());
+            jsonObject.put("ProfileId", userInfo.getProfile().getProfileId());
+            //jsonObject.put("TimeOffRequestStatusId", "");
+            //jsonObject.put("TimeBankName", data.getTimeBank().getName());
+            jsonObject.put("TimeBankAccountId", data.getTimeBank().getTimeBankAccountId());
+            //jsonObject.put("EmployeeName", "");
+            //jsonObject.put("Department", "");
+            //jsonObject.put("RequestDate", "");
+            jsonObject.put("AttendanceCodeId", data.getAttendanceCode().getAttendanceCodeId());
+
+            JSONArray jsonArrayDays = new JSONArray();
+
+            for (DayData item: data.getDays()) {
+                JSONObject jsonObjectDay = new JSONObject();
+                try {
+                    if (!data.getTimeOffRequestId().equals("")) {
+                        jsonObjectDay.put("TimeoffRequestDayId", data.getTimeOffRequestId());
+                    }
+                    if (item.getDateString().equals("")) {
+                        jsonObjectDay.put("TimeoffRequestId", item.getDateString());
+                    }
+                    jsonObjectDay.put("Date", item.getDateServer());
+                    jsonObjectDay.put("Ammount", 0);
+
+                    jsonArrayDays.put(jsonObjectDay);
+
+                    jsonObject.put("Days", jsonArrayDays);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
             jsonArray.put(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         String method = "POST";
-        if (!id.equals("")) {
+        if (!data.getTimeOffRequestId().equals("")) {
             method = "PUT";
         }
 
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonArray.toString(),0,true,method, UserInfo.getUserInfo().getAuthToken()));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonObject.toString(),0,true,method, UserInfo.getUserInfo().getAuthToken()));
 
         String result = "";
 
@@ -80,7 +100,7 @@ public class TimeOffRequestAddAction extends AsyncTask{
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            if (data.getWorkplaceInspectionId().equals("")) {
+            if (data.getTimeOffRequestId().equals("")) {
                 result = Sapphire.getInstance().getResources().getString(R.string.unknown_error);
             } else {
                 result = "OK";

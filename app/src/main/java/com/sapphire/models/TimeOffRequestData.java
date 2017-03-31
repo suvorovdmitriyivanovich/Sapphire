@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class TimeOffRequestData {
-    private String workplaceInspectionId = "";
+    private String timeOffRequestId = "";
+    private TimeBankData timeBank = new TimeBankData();
+    private AttendanceCodeData attendanceCode = new AttendanceCodeData();
+    private ArrayList<DayData> days = new ArrayList<DayData>();
     private String name = "";
     private String description = "";
     private Long date = 0l;
@@ -28,7 +31,7 @@ public class TimeOffRequestData {
     public TimeOffRequestData(JSONObject data) {
         try {
             if (!data.isNull("WorkplaceInspectionId")) {
-                setWorkplaceInspectionId(data.getString("WorkplaceInspectionId"));
+                setTimeOffRequestId(data.getString("WorkplaceInspectionId"));
             }
             if (!data.isNull("Name")) {
                 setName(data.getString("Name"));
@@ -53,12 +56,36 @@ public class TimeOffRequestData {
         }
     }
 
-    public String getWorkplaceInspectionId() {
-        return workplaceInspectionId;
+    public String getTimeOffRequestId() {
+        return timeOffRequestId;
     }
 
-    public void setWorkplaceInspectionId(String workplaceInspectionId) {
-        this.workplaceInspectionId = workplaceInspectionId;
+    public void setTimeOffRequestId(String timeOffRequestId) {
+        this.timeOffRequestId = timeOffRequestId;
+    }
+
+    public TimeBankData getTimeBank() {
+        return timeBank;
+    }
+
+    public void setTimeBank(TimeBankData timeBank) {
+        this.timeBank = timeBank;
+    }
+
+    public AttendanceCodeData getAttendanceCode() {
+        return attendanceCode;
+    }
+
+    public void setAttendanceCode(AttendanceCodeData attendanceCode) {
+        this.attendanceCode = attendanceCode;
+    }
+
+    public ArrayList<DayData> getDays() {
+        return days;
+    }
+
+    public void setDays(ArrayList<DayData> days) {
+        this.days = days;
     }
 
     public String getName() {

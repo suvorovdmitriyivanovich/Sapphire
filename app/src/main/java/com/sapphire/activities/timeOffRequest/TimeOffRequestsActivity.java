@@ -29,14 +29,14 @@ import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.TimeOffRequestsAdapter;
 import com.sapphire.api.TimeBanksAction;
-import com.sapphire.api.ItemStatusesAction;
+import com.sapphire.api.AttendanceCodesAction;
 import com.sapphire.api.TimeOffRequestsAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.api.TimeOffRequestDeleteAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.UserInfo;
-import com.sapphire.models.ItemStatusData;
+import com.sapphire.models.AttendanceCodeData;
 import com.sapphire.models.TimeBankData;
 import com.sapphire.models.TimeOffRequestData;
 import java.util.ArrayList;
@@ -48,8 +48,7 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
                                                                      TimeOffRequestsAction.RequestTimeOffRequests,
                                                                      TimeOffRequestDeleteAction.RequestTimeOffRequestDelete,
                                                                      TimeBanksAction.RequestTimeBanks,
-                                                                     ItemStatusesAction.RequestItemStatuses,
-                                                                     ItemStatusesAction.RequestItemStatusesData,
+                                                                     AttendanceCodesAction.RequestAttendanceCodes,
                                                                      UpdateAction.RequestUpdate{
     private BroadcastReceiver br;
     private ArrayList<TimeOffRequestData> datas;
@@ -95,7 +94,7 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
 
                 pd.show();
 
-                new TimeOffRequestDeleteAction(TimeOffRequestsActivity.this, datas.get(currentPosition).getWorkplaceInspectionId()).execute();
+                new TimeOffRequestDeleteAction(TimeOffRequestsActivity.this, datas.get(currentPosition).getTimeOffRequestId()).execute();
             }
         });
 
@@ -206,7 +205,7 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
         intent.putExtra("name", data.getName());
         intent.putExtra("description", data.getDescription());
         intent.putExtra("date", data.getDate());
-        intent.putExtra("id", data.getWorkplaceInspectionId());
+        intent.putExtra("id", data.getTimeOffRequestId());
         intent.putExtra("posted", data.getPostedOnBoard());
         startActivity(intent);
     }
@@ -218,7 +217,7 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
         intent.putExtra("name", data.getName());
         intent.putExtra("description", data.getDescription());
         intent.putExtra("date", data.getDate());
-        intent.putExtra("id", data.getWorkplaceInspectionId());
+        intent.putExtra("id", data.getTimeOffRequestId());
         intent.putExtra("posted", data.getPostedOnBoard());
         startActivity(intent);
     }
@@ -238,7 +237,7 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
         Intent intent = new Intent(TimeOffRequestsActivity.this, FilesActivity.class);
         TimeOffRequestData data = datas.get(position);
         intent.putExtra("name", data.getName());
-        intent.putExtra("id", data.getWorkplaceInspectionId());
+        intent.putExtra("id", data.getTimeOffRequestId());
         intent.putExtra("url", Environment.WorkplaceInspectionsFilesURL);
         intent.putExtra("nameField", "data");
 
@@ -300,16 +299,17 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
         } else {
             UserInfo.getUserInfo().setTimeBankDatas(timeBankDatas);
 
-            new ItemStatusesAction(TimeOffRequestsActivity.this).execute();
+            new AttendanceCodesAction(TimeOffRequestsActivity.this).execute();
 
             //pd.hide();
         }
     }
 
     @Override
-    public void onRequestItemStatuses(String result) {
-        pd.hide();
+    public void onRequestAttendanceCodes(String result, ArrayList<AttendanceCodeData> attendanceCodeDatas) {
         if (!result.equals("OK")) {
+            pd.hide();
+
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
@@ -317,14 +317,11 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
                 startActivity(intent);
                 finish();
             }
+        } else {
+            UserInfo.getUserInfo().setAttendanceCodeDatas(attendanceCodeDatas);
+
+            pd.hide();
         }
-    }
-
-    @Override
-    public void onRequestItemStatusesData(ArrayList<ItemStatusData> itemStatusDatas) {
-        UserInfo.getUserInfo().setItemStatusDatas(itemStatusDatas);
-
-        pd.hide();
     }
 
     @Override

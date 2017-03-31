@@ -46,24 +46,6 @@
         <RelativeLayout
             android:layout_width="56dp"
             android:layout_height="match_parent"
-            android:id="@+id/add"
-            android:background="@drawable/top_button"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/ok"
-            android:layout_toStartOf="@+id/ok">
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:id="@+id/add_icon"
-                android:src="@drawable/add_icon"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="56dp"
-            android:layout_height="match_parent"
             android:id="@+id/ok"
             android:background="@drawable/top_button"
             android:layout_alignParentRight="true"
@@ -93,97 +75,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/scroll_group">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <CalendarView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/name"
-                android:id="@+id/text_name"
-                android:layout_marginLeft="10dp"
+                android:id="@+id/calendarView"
                 android:layout_marginTop="10dp" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:id="@+id/name"
-                android:hint="@string/name"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/name_error"
-                android:id="@+id/text_name_error"
-                android:layout_marginLeft="12dp"
-                android:textColor="@color/red"
-                android:layout_marginRight="10dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/text_attendance"
-                android:id="@+id/text_attendance"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:id="@+id/attendance"
-                android:hint="@string/text_attendance"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:drawableRight="@drawable/icon_dropdown"
-                android:focusable="false"/>
-
-            <Spinner
-                style="@style/spinner_eee"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/spinnerAttendance"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_alignLeft="@+id/attendance"
-                android:layout_alignStart="@+id/attendance"
-                android:layout_alignRight="@+id/attendance"
-                android:layout_alignEnd="@+id/attendance" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/time_bank"
-                android:id="@+id/text_time_bank"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:id="@+id/time_bank"
-                android:hint="@string/time_bank"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:drawableRight="@drawable/icon_dropdown"
-                android:focusable="false"/>
-
-            <Spinner
-                style="@style/spinner_eee"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/spinnerTime_bank"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_alignLeft="@+id/time_bank"
-                android:layout_alignStart="@+id/time_bank"
-                android:layout_alignRight="@+id/time_bank"
-                android:layout_alignEnd="@+id/time_bank" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -206,7 +102,7 @@
                     android:layout_height="match_parent"
                     android:id="@+id/itemlist"
                     android:scrollbars="vertical"
-                    android:layout_marginTop="5dp"/>
+                    android:layout_marginTop="5dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -218,20 +114,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:visibility="gone" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="@string/days_error"
-                    android:id="@+id/text_days_error"
-                    android:textColor="@color/red"
-                    android:layout_below="@+id/text_no"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="10dp" />
             </RelativeLayout>
-
         </LinearLayout>
     </ScrollView>
 

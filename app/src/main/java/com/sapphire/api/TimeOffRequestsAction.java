@@ -2,7 +2,6 @@ package com.sapphire.api;
 
 import android.content.Context;
 import android.os.AsyncTask;
-
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
@@ -11,11 +10,8 @@ import com.sapphire.logic.UserInfo;
 import com.sapphire.models.ErrorMessageData;
 import com.sapphire.models.ResponseData;
 import com.sapphire.models.TimeOffRequestData;
-import com.sapphire.models.WorkplaceInspectionData;
-
 import org.json.JSONArray;
 import org.json.JSONException;
-
 import java.util.ArrayList;
 
 public class TimeOffRequestsAction extends AsyncTask{
@@ -36,7 +32,12 @@ public class TimeOffRequestsAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.TimeOffRequestsCurrentURL;
+
+        UserInfo userInfo = UserInfo.getUserInfo();
+
+        String filter = "?$filter=ProfileId%20eq%20guid'"+userInfo.getProfile().getProfileId()+"'";
+
+        String urlstring = Environment.SERVER + Environment.TimeOffRequestsURL + filter;
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthToken()));
 
