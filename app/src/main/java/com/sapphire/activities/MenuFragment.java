@@ -172,6 +172,9 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
         } else if (urlRoute.equals("/me/my-time-off-requests")) {
             Intent intent = new Intent(getActivity(), TimeOffRequestsActivity.class);
             startActivity(intent);
+        } else if (urlRoute.equals("/me/my-time-banks")) {
+            Intent intent = new Intent(getActivity(), TimeBanksActivity.class);
+            startActivity(intent);
         }
     }
 }

@@ -53,7 +53,7 @@ public class UploadFileAction extends AsyncTask{
         if (!file.exists()) {
             return Sapphire.getInstance().getResources().getString(R.string.text_no_file);
         } else {
-            responseData = new ResponseData(UploadFile(urlstring, 120000, file,UserInfo.getUserInfo().getAuthToken()));
+            responseData = new ResponseData(UploadFile(urlstring, 120000, file, UserInfo.getUserInfo().getAuthToken()));
         }
 
         String result = "";

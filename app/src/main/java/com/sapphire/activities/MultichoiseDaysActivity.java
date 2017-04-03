@@ -83,6 +83,7 @@ public class MultichoiseDaysActivity extends BaseActivity implements DaysAdapter
             @Override
             public void onClick(View v) {
                 dialog_confirm.dismiss();
+                UserInfo.getUserInfo().setDays(null);
                 finish();
             }
         });
@@ -102,6 +103,7 @@ public class MultichoiseDaysActivity extends BaseActivity implements DaysAdapter
                 if (adapter.getData().size() > 0) {
                     saveChanged();
                 } else {
+                    UserInfo.getUserInfo().setDays(null);
                     finish();
                 }
             }
@@ -213,6 +215,7 @@ public class MultichoiseDaysActivity extends BaseActivity implements DaysAdapter
             tittle_message.setText(getResources().getString(R.string.text_save_change));
             dialog_confirm.show();
         } else {
+            UserInfo.getUserInfo().setDays(null);
             finish();
         }
     }
@@ -240,6 +243,7 @@ public class MultichoiseDaysActivity extends BaseActivity implements DaysAdapter
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
+                UserInfo.getUserInfo().setDays(null);
                 finish();
             }
         } else {

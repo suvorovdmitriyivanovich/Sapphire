@@ -47,10 +47,13 @@ import com.sapphire.models.TimeBankData;
 import com.sapphire.models.TimeOffRequestData;
 import com.sapphire.models.WorkplaceInspectionItemData;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class TimeOffRequestActivity extends BaseActivity implements GetWorkplaceInspectionAction.RequestWorkplaceInspection,
                                                                     DayItemsAdapter.OnRootClickListener,
                                                                     DayItemsAdapter.OnDeleteClickListener,
+                                                                    DayItemsAdapter.OnChangeClickListener,
                                                                     WorkplaceInspectionItemDeleteAction.RequestWorkplaceInspectionItemDelete,
                                                                     TimeOffRequestAddAction.RequestTimeOffRequestAdd,
                                                                     WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd,
@@ -93,6 +96,7 @@ public class TimeOffRequestActivity extends BaseActivity implements GetWorkplace
     private UserInfo userInfo;
     private boolean isCheckDays = false;
     private View text_days_error;
+    private ArrayList<DayData> datas = new ArrayList<DayData>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +164,11 @@ public class TimeOffRequestActivity extends BaseActivity implements GetWorkplace
                     deleteItem = false;
 
                     adapter.remove(currentPosition);
+                    datas.remove(currentPosition);
+                    //adapter = null;
+                    //adapter = new DayItemsAdapter(TimeOffRequestActivity.this);
+                    //itemlist.setAdapter(adapter);
+                    //adapter.setListArray(datas);
                     updateVisibility();
                     updateViews();
                 } else {
@@ -220,7 +229,7 @@ public class TimeOffRequestActivity extends BaseActivity implements GetWorkplace
                     //} else if (!workplaceInspectionId.equals("")) {
                     //    new GetWorkplaceInspectionAction(WorkplaceInspectionActivity.this, workplaceInspectionId).execute();
                 } else {
-                    adapter.setListArray(new ArrayList<DayData>());
+                    //adapter.setListArray(new ArrayList<DayData>());
                 }
             }
 
@@ -302,6 +311,7 @@ public class TimeOffRequestActivity extends BaseActivity implements GetWorkplace
             public void onClick(View v) {
                 hideSoftKeyboard();
 
+                userInfo.setDays(datas);
                 Intent intent = new Intent(TimeOffRequestActivity.this, MultichoiseDaysActivity.class);
                 startActivity(intent);
             }
@@ -319,8 +329,8 @@ public class TimeOffRequestActivity extends BaseActivity implements GetWorkplace
         itemlist.setNestedScrollingEnabled(false);
         itemlist.setLayoutManager(new LinearLayoutManager(TimeOffRequestActivity.this));
 
-        adapter = new DayItemsAdapter(this);
-        itemlist.setAdapter(adapter);
+        //adapter = new DayItemsAdapter(this);
+        //itemlist.setAdapter(adapter);
 
         // создаем BroadcastReceiver
         br = new BroadcastReceiver() {
@@ -355,6 +365,8 @@ public class TimeOffRequestActivity extends BaseActivity implements GetWorkplace
 
         UpdateBottom();
 
+        updateVisibility();
+
         if (readonly) {
             add.setVisibility(View.GONE);
             button_ok.setVisibility(View.GONE);
@@ -373,7 +385,7 @@ public class TimeOffRequestActivity extends BaseActivity implements GetWorkplace
     }
 
     public void updateVisibility() {
-        if (adapter.getData() == null || adapter.getData().size() == 0) {
+        if (datas == null || datas.size() == 0) {
             text_no.setVisibility(View.VISIBLE);
             itemlist.setVisibility(View.GONE);
         } else {
@@ -386,7 +398,7 @@ public class TimeOffRequestActivity extends BaseActivity implements GetWorkplace
         hideSoftKeyboard();
         boolean allOk = true;
 
-        if (name.getText().toString().equals("") || adapter.getData().size() == 0) {
+        if (name.getText().toString().equals("") || datas.size() == 0) {
             isCheckName = true;
             isCheckDays = true;
             updateViews();
@@ -402,7 +414,7 @@ public class TimeOffRequestActivity extends BaseActivity implements GetWorkplace
             timeOffRequestData.setTimeOffRequestId(id);
             timeOffRequestData.setTimeBank(new TimeBankData(timeBankId));
             timeOffRequestData.setAttendanceCode(new AttendanceCodeData(attendanceId));
-            timeOffRequestData.setDays(adapter.getData());
+            timeOffRequestData.setDays(datas);
 
             new TimeOffRequestAddAction(TimeOffRequestActivity.this, timeOffRequestData).execute();
         }
@@ -431,7 +443,7 @@ public class TimeOffRequestActivity extends BaseActivity implements GetWorkplace
             text_name_error.setVisibility(View.GONE);
             text_name.setVisibility(View.VISIBLE);
         }
-        if (isCheckDays && adapter.getData().size() == 0) {
+        if (isCheckDays && datas.size() == 0) {
             text_days_error.setVisibility(View.VISIBLE);
         } else {
             text_days_error.setVisibility(View.GONE);
@@ -528,6 +540,11 @@ public class TimeOffRequestActivity extends BaseActivity implements GetWorkplace
     }
 
     @Override
+    public void onChangeClick(int position, String text) {
+        datas.get(position).setAmmount(text);
+    }
+
+    @Override
     public void onRequestWorkplaceInspectionItemDelete(String result) {
         dialog_confirm.dismiss();
         if (!result.equals("OK")) {
@@ -611,12 +628,26 @@ public class TimeOffRequestActivity extends BaseActivity implements GetWorkplace
         return (int) (pixels * scale + 0.5f);
     }
 
+    private void sort() {
+        Collections.sort(datas, new Comparator<DayData>() {
+            public int compare(DayData o1, DayData o2) {
+                return o1.getDate().compareTo(o2.getDate());
+            }
+        });
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
         if (userInfo.getDays() != null) {
-            adapter.addDatas(userInfo.getDays());
+            //adapter.addDatas(userInfo.getDays());
+            datas.addAll(userInfo.getDays());
+            sort();
+            adapter = null;
+            adapter = new DayItemsAdapter(this);
+            itemlist.setAdapter(adapter);
+            adapter.setListArray(datas);
             userInfo.setDays(null);
             isCheckDays = true;
             updateVisibility();

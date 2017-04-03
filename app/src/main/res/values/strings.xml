@@ -201,4 +201,7 @@
     <string name="time_bank">Time Bank</string>
     <string name="text_attendance">Attendance Code</string>
     <string name="days_error">Days is required</string>
+    <string name="text_count">count:</string>
+    <string name="text_my_time_banks">My Time Banks</string>
+    <string name="text_timebanks_no">No time banks to display</string>
 </resources>

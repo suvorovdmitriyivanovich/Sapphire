@@ -61,4 +61,12 @@ public class DayData {
     public void setAmmount(Double ammount) {
         this.ammount = ammount;
     }
+
+    public void setAmmount(String ammount) {
+        try {
+            this.ammount = Double.parseDouble(ammount); // Make use of autoboxing.  It's also easier to read.
+        } catch (NumberFormatException e) {
+            this.ammount = 0d;
+        }
+    }
 }

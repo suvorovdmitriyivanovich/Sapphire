@@ -12,8 +12,11 @@ import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
+import com.sapphire.logic.UserInfo;
 import com.sapphire.models.DayData;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.ViewHolder> {
 
@@ -28,9 +31,7 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.ViewHolder> {
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView text_name;
         TextView text_description;
-        Button open;
         Button delete;
-        Button files;
         View border;
         View item;
 
@@ -38,9 +39,7 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.ViewHolder> {
             super(itemView);
             text_name = (TextView) itemView.findViewById(R.id.text_name);
             text_description = (TextView) itemView.findViewById(R.id.text_description);
-            open = (Button) itemView.findViewById(R.id.open);
             delete = (Button) itemView.findViewById(R.id.delete);
-            files = (Button) itemView.findViewById(R.id.files);
             border = itemView.findViewById(R.id.border);
             item = itemView;
         }
@@ -103,6 +102,7 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.ViewHolder> {
     public void setListArray(ArrayList<DayData> list){
         listData.clear();
         listData.addAll(list);
+        sort();
         notifyDataSetChanged();
     }
 
@@ -123,10 +123,27 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.ViewHolder> {
                 break;
             }
         }
+        if (!exist && UserInfo.getUserInfo().getDays() != null) {
+            for (DayData item: UserInfo.getUserInfo().getDays()) {
+                if (item.getDateString().equals(data.getDateString())) {
+                    exist = true;
+                    break;
+                }
+            }
+        }
         if (exist) {
             return;
         }
         listData.add(data);
+        sort();
         notifyDataSetChanged();
+    }
+
+    private void sort() {
+        Collections.sort(listData, new Comparator<DayData>() {
+            public int compare(DayData o1, DayData o2) {
+                return o1.getDate().compareTo(o2.getDate());
+            }
+        });
     }
 }
