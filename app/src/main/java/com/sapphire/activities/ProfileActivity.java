@@ -1,25 +1,38 @@
 package com.sapphire.activities;
 
+import android.Manifest;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.adapters.AdressAdapter;
+import com.sapphire.api.AddAvatarAction;
 import com.sapphire.api.GetContactsAction;
 import com.sapphire.api.GetProfilesAction;
 import com.sapphire.api.UpdateAction;
@@ -27,6 +40,9 @@ import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.ContactData;
 import com.sapphire.models.ProfileData;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRootClickListener,
@@ -35,6 +51,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
                                                              GetProfilesAction.RequestProfilesData,
                                                              GetContactsAction.RequestContacts,
                                                              GetContactsAction.RequestContactsData,
+                                                             AddAvatarAction.RequestAddAvatar,
                                                              UpdateAction.RequestUpdate{
     private ProgressDialog pd;
     private TextView contact;
@@ -49,6 +66,18 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     private BroadcastReceiver br;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private Dialog dialog;
+    private View photo_group;
+    private View mobile_group;
+    private View delete_group;
+    private View cancel_group;
+    private ImageView ico;
+    private final int CAMERA_CAPTURE = 1;
+    private final int PIC_CROP = 2;
+    private final int GALLERY_REQUEST = 3;
+    private Uri picUri;
+    private Bitmap bitmap;
+    private Bitmap bitmapold;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +134,13 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
                         Fragment fragment = new MenuFragment();
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
+                    } catch (Exception e) {
+                    }
+                } else if (putreqwest.equals("updaterightmenu")) {
+                    try {
+                        Fragment fragmentRight = new RightFragment();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
@@ -127,7 +163,209 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             }
         });
 
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        //adb.setTitle(getResources().getString(R.string.text_change_photo));
+        adb.setCancelable(true);
+        LinearLayout view = (LinearLayout) getLayoutInflater()
+                .inflate(R.layout.dialog_photo_profile, null);
+        adb.setView(view);
+        photo_group = view.findViewById(R.id.photo_group);
+        mobile_group = view.findViewById(R.id.mobile_group);
+        delete_group = view.findViewById(R.id.delete_group);
+        cancel_group = view.findViewById(R.id.cancel_group);
+        dialog = adb.create();
+
+        photo_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                        checkSelfPermission(Manifest.permission.CAMERA)
+                                != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
+                } else {
+                    try {
+                        // Намерение для запуска камеры
+                        Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(captureIntent, CAMERA_CAPTURE);
+                    } catch (Exception e) {
+                        Toast toast = Toast
+                                .makeText(getApplicationContext(), getResources().getString(R.string.text_error_camera), Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                }
+
+                dialog.dismiss();
+            }
+        });
+
+        mobile_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
+
+                dialog.dismiss();
+            }
+        });
+
+        delete_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //ico.setImageResource(R.drawable.user);
+
+                deletePhoto();
+
+                dialog.dismiss();
+            }
+        });
+
+        cancel_group.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        ico = (ImageView) findViewById(R.id.ico);
+        ico.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.show();
+            }
+        });
+
+        View button_change = findViewById(R.id.button_change);
+        button_change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.show();
+            }
+        });
+
+        File f = new File(Sapphire.getInstance().getFilesDir().getAbsolutePath() + "/user.png");
+        if (f.exists()) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), options);
+            this.bitmap = bitmap;
+            ico.setImageBitmap(this.bitmap);
+        } else {
+            this.bitmap = null;
+            ico.setImageResource(R.drawable.user);
+        }
+        this.bitmapold = this.bitmap;
+
         UpdateBottom();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        if (requestCode == 100) {
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                try {
+                    // Намерение для запуска камеры
+                    Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(captureIntent, CAMERA_CAPTURE);
+                } catch (Exception e) {
+                    Toast toast = Toast
+                            .makeText(getApplicationContext(), getResources().getString(R.string.text_error_camera), Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            }
+            return;
+        }
+    }
+
+    //Ответ от камеры
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            // Вернулись от приложения Камера
+            if (requestCode == CAMERA_CAPTURE) {
+                // Получим Uri снимка
+                picUri = data.getData();
+
+                if (picUri == null) {
+                    Bitmap thumbnailBitmap = (Bitmap) data.getExtras().get("data");
+                    //ico.setImageBitmap(thumbnailBitmap);
+
+                    savePhoto(thumbnailBitmap);
+                } else {
+                    // кадрируем его
+                    try {
+                        performCrop();
+                    } catch (ActivityNotFoundException anfe) {
+                        Bitmap thumbnailBitmap = (Bitmap) data.getExtras().get("data");
+                        //ico.setImageBitmap(thumbnailBitmap);
+
+                        savePhoto(thumbnailBitmap);
+                    }
+                }
+                // Вернулись из операции кадрирования
+            } else if(requestCode == PIC_CROP){
+                Bundle extras = data.getExtras();
+                Bitmap thePic;
+                try {
+                    // Получим кадрированное изображение
+                    thePic = extras.getParcelable("data");
+                } catch(Exception anfe){
+                    thePic = (Bitmap) extras.get("data");
+                }
+                // передаём его в ImageView
+                //ico.setImageBitmap(thePic);
+
+                savePhoto(thePic);
+            } else if (requestCode == GALLERY_REQUEST) {
+                Bitmap bitmap = null;
+                // Получим Uri снимка
+                picUri = data.getData();
+                // кадрируем его
+                try {
+                    performCrop();
+                } catch(ActivityNotFoundException anfe){
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), picUri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    //ico.setImageBitmap(bitmap);
+
+                    savePhoto(bitmap);
+                }
+            }
+        }
+    }
+
+    private void performCrop(){
+        // Намерение для кадрирования. Не все устройства поддерживают его
+        Intent cropIntent = new Intent("com.android.camera.action.CROP");
+        cropIntent.setDataAndType(picUri, "image/*");
+        cropIntent.putExtra("crop", "true");
+        cropIntent.putExtra("aspectX", 1);
+        cropIntent.putExtra("aspectY", 1);
+        cropIntent.putExtra("outputX", 256);
+        cropIntent.putExtra("outputY", 256);
+        cropIntent.putExtra("return-data", true);
+        startActivityForResult(cropIntent, PIC_CROP);
+    }
+
+    private void savePhoto(Bitmap bitmap) {
+        this.bitmap = bitmap;
+
+        new AddAvatarAction(ProfileActivity.this, this.bitmap).execute();
+    }
+
+    private void deletePhoto() {
+        this.bitmap = null;
+        if (bitmapold == null) {
+            return;
+        }
+
+        new AddAvatarAction(ProfileActivity.this, this.bitmap).execute();
     }
 
     private void UpdateBottom() {
@@ -138,6 +376,57 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         }
         nointernet_group.setLayoutParams(par_nointernet_group);
         nointernet_group.requestLayout();
+    }
+
+    @Override
+    public void onRequestAddAvatar(String result) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+        } else {
+            this.bitmapold = this.bitmap;
+            if (bitmap == null) {
+                ico.setImageResource(R.drawable.user);
+
+                File f = new File(Sapphire.getInstance().getFilesDir().getAbsolutePath() + "/user.png");
+                if (f.exists()) {
+                    try {
+                        f.delete();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                ico.setImageBitmap(bitmap);
+
+                File f = new File(Sapphire.getInstance().getFilesDir().getAbsolutePath() + "/user.png");
+                try {
+                    FileOutputStream outStream = new FileOutputStream(f);
+                    int crat = 1;
+                    //if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB_MR1) {
+                    //    crat = bitmap.getByteCount()/131072;
+                    //    if (crat < 1) {
+                    //        crat = 1;
+                    //    }
+                    //}
+                    //bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90 / crat, outStream);
+                    outStream.flush();
+                    outStream.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            Intent intent = new Intent(Environment.BROADCAST_ACTION);
+            try {
+                intent.putExtra(Environment.PARAM_TASK, "updaterightmenu");
+                Sapphire.getInstance().sendBroadcast(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

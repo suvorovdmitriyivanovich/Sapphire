@@ -140,6 +140,12 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
                     } catch (Exception e) {}
+                } else if (putreqwest.equals("updaterightmenu")) {
+                    try {
+                        Fragment fragmentRight = new RightFragment();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
+                    } catch (Exception e) {}
                 } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
                 }

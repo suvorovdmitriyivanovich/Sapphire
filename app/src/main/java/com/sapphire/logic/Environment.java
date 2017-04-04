@@ -52,6 +52,8 @@ public class Environment {
     public static final String TimeOffRequestsURL = "/v1/WorkforceManagement/TimeoffRequests";
     public static final String TimeBanksURL = "/v1/WorkforceManagement/TimeBankAccounts";
     public static final String AttendanceCodesURL = "/v1/WorkforceManagement/AttendanceCodes";
+    public static final String AddAvatarURL = "/v1/Images/AddAvatar";
+    public static final String DeleteAvatarURL = "/v1/Images/DeleteAvatar";
 
     public static final String PolicyStatusStarted = "1586dc39-979b-3991-c822-a4bcb14d1345";
     public static final String PolicyStatusAcknowledged  = "1586dc39-979b-ab1c-838f-1917fce340de";
