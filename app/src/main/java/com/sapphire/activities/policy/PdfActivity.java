@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
     private BroadcastReceiver br;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private boolean successOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +149,7 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
 
         pd.show();
         new GetFileAction(PdfActivity.this, fileId, "temp.pdf", getFilesDir().getAbsolutePath()).execute();
+        //new GetFileAction(PdfActivity.this, fileId, "temp.pdf", android.os.Environment.getExternalStorageDirectory().getPath()).execute();
 
         nointernet_group = findViewById(R.id.nointernet_group);
         par_nointernet_group = nointernet_group.getLayoutParams();
@@ -182,6 +185,7 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
 
     @Override
     public void loadComplete(int nbPages) {
+        successOpen = true;
         pd.hide();
         if (!acknowledged) {
             if (count <= 0) {
@@ -213,6 +217,17 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
                     .onLoad(this)
                     .scrollHandle(new DefaultScrollHandle(this))
                     .load();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!successOpen) {
+                        pd.hide();
+                        Toast.makeText(getBaseContext(), getResources().getString(R.string.error_open_pdf),
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+            }, 20000);
         }
     }
 
