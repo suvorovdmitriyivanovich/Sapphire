@@ -50,6 +50,7 @@ public class QuizActivity extends BaseActivity implements AnswersAdapter.OnRootC
     private BroadcastReceiver br;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private boolean isPassed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,9 +216,14 @@ public class QuizActivity extends BaseActivity implements AnswersAdapter.OnRootC
         }
         text_header.setText(quizData.getName());
         if (currentQuestion == -1) {
-            questionName.setText(getResources().getString(R.string.text_quiz_will_take) + " " + duration + " " + getResources().getString(R.string.text_to_complete));
+            //questionName.setText(getResources().getString(R.string.text_quiz_will_take) + " " + duration + " " + getResources().getString(R.string.text_to_complete));
+            questionName.setText(getResources().getString(R.string.text_quiz_test));
         } else if (currentQuestion == -2) {
-            questionName.setText(getResources().getString(R.string.text_your_quiz_score) + " " + quizScore + "!");
+            if (isPassed) {
+                questionName.setText(getResources().getString(R.string.text_your_quiz_score) + " " + quizScore + "!");
+            } else {
+                questionName.setText(getResources().getString(R.string.text_quiz_failed));
+            }
         } else {
             QuestionData questionData = quizData.getQuestions().get(currentQuestion);
             questionName.setText(questionData.getName());
@@ -299,6 +305,7 @@ public class QuizActivity extends BaseActivity implements AnswersAdapter.OnRootC
     @Override
     public void onRequestPostQuizzesData(QuizScoreData quizScoreData) {
         quizScore = quizScoreData.getScore();
+        isPassed = quizScoreData.getIsPassed();
         currentQuestion = -2;
         UpdateQuiz();
 

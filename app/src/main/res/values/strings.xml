@@ -204,4 +204,6 @@
     <string name="text_count">count:</string>
     <string name="text_my_time_banks">My Time Banks</string>
     <string name="text_timebanks_no">No time banks to display</string>
+    <string name="text_quiz_failed">Sorry, you did not meet the minimum score. Please try again.</string>
+    <string name="text_quiz_test">Let\'s test your knowledge of the course!</string>
 </resources>

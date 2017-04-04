@@ -276,18 +276,20 @@ public class OpenFileDialog extends AlertDialog.Builder {
         File directory = new File(directoryPath);
         List<File> fileList = new ArrayList<File>();
         fileList.add(new File(".."));
-        fileList.addAll(Arrays.asList(directory.listFiles(filenameFilter)));
-        Collections.sort(fileList, new Comparator<File>() {
-            @Override
-            public int compare(File file, File file2) {
-                if (file.isDirectory() && file2.isFile())
-                    return -1;
-                else if (file.isFile() && file2.isDirectory())
-                    return 1;
-                else
-                    return file.getPath().compareTo(file2.getPath());
-            }
-        });
+        if (directory.listFiles(filenameFilter) != null) {
+            fileList.addAll(Arrays.asList(directory.listFiles(filenameFilter)));
+            Collections.sort(fileList, new Comparator<File>() {
+                @Override
+                public int compare(File file, File file2) {
+                    if (file.isDirectory() && file2.isFile())
+                        return -1;
+                    else if (file.isFile() && file2.isDirectory())
+                        return 1;
+                    else
+                        return file.getPath().compareTo(file2.getPath());
+                }
+            });
+        }
 
         return fileList;
     }
