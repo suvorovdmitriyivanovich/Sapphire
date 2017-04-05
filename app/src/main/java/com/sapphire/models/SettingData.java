@@ -9,6 +9,12 @@ public class SettingData {
     private boolean canDelete = false;
     private boolean canRead = false;
     private boolean canDownload = false;
+    private boolean canHaveChildren = false;
+    private boolean constraintChildren = false;
+    private boolean canEdit = false;
+    private boolean canSubmitProgress = false;
+    private boolean canAssign = false;
+    private boolean canAddChild = false;
 
     public SettingData() {
 
@@ -30,6 +36,24 @@ public class SettingData {
             }
             if (!data.isNull("CanDownload")) {
                 setCanDownload(data.getBoolean("CanDownload"));
+            }
+            if (!data.isNull("CanHaveChildren")) {
+                setCanHaveChildren(data.getBoolean("CanHaveChildren"));
+            }
+            if (!data.isNull("ConstraintChildren")) {
+                setConstraintChildren(data.getBoolean("ConstraintChildren"));
+            }
+            if (!data.isNull("CanEdit")) {
+                setCanEdit(data.getBoolean("CanEdit"));
+            }
+            if (!data.isNull("CanSubmitProgress")) {
+                setCanSubmitProgress(data.getBoolean("CanSubmitProgress"));
+            }
+            if (!data.isNull("CanAssign")) {
+                setCanAssign(data.getBoolean("CanAssign"));
+            }
+            if (!data.isNull("CanAddChild")) {
+                setCanAddChild(data.getBoolean("CanAddChild"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -74,5 +98,53 @@ public class SettingData {
 
     public void setCanDownload(boolean canDownload) {
         this.canDownload = canDownload;
+    }
+
+    public boolean getCanHaveChildren() {
+        return canHaveChildren;
+    }
+
+    public void setCanHaveChildren(boolean canHaveChildren) {
+        this.canHaveChildren = canHaveChildren;
+    }
+
+    public boolean getConstraintChildren() {
+        return constraintChildren;
+    }
+
+    public void setConstraintChildren(boolean constraintChildren) {
+        this.constraintChildren = constraintChildren;
+    }
+
+    public boolean getCanEdit() {
+        return canEdit;
+    }
+
+    public void setCanEdit(boolean canEdit) {
+        this.canEdit = canEdit;
+    }
+
+    public boolean getCanSubmitProgress() {
+        return canSubmitProgress;
+    }
+
+    public void setCanSubmitProgress(boolean canSubmitProgress) {
+        this.canSubmitProgress = canSubmitProgress;
+    }
+
+    public boolean getCanAssign() {
+        return canAssign;
+    }
+
+    public void setCanAssign(boolean canAssign) {
+        this.canAssign = canAssign;
+    }
+
+    public boolean getCanAddChild() {
+        return canAddChild;
+    }
+
+    public void setCanAddChild(boolean canAddChild) {
+        this.canAddChild = canAddChild;
     }
 }

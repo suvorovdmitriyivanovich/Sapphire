@@ -92,6 +92,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
 
+        <activity android:name=".activities.workplaceInspection.AssignActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+
         <activity android:name=".activities.organizationStructure.OrganizationStructureActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>

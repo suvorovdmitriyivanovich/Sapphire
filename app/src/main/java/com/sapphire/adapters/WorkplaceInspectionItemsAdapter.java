@@ -36,6 +36,7 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView text_name;
         TextView text_description;
+        TextView task;
         Button open;
         Button delete;
         Button files;
@@ -46,6 +47,7 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
             super(itemView);
             text_name = (TextView) itemView.findViewById(R.id.text_name);
             text_description = (TextView) itemView.findViewById(R.id.text_description);
+            task = (TextView) itemView.findViewById(R.id.task);
             open = (Button) itemView.findViewById(R.id.open);
             delete = (Button) itemView.findViewById(R.id.delete);
             files = (Button) itemView.findViewById(R.id.files);
@@ -58,17 +60,19 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
     private Context context;
     private Typeface typeFace;
     private boolean readonly = false;
+    private boolean assign = false;
 
-    public WorkplaceInspectionItemsAdapter(Context context, boolean readonly) {
+    public WorkplaceInspectionItemsAdapter(Context context, boolean readonly, boolean assign) {
         this.context = context;
         listData = new ArrayList<WorkplaceInspectionItemData>();
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
         this.readonly = readonly;
+        this.assign = assign;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view_files, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view_workplace_item, parent, false);
         return new WorkplaceInspectionItemsAdapter.ViewHolder(view);
     }
 
@@ -97,6 +101,21 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
         holder.text_description.setTypeface(typeFace);
         holder.text_description.setText(Html.fromHtml(textDescription));
 
+        if (assign && data.getStatus().getWorkplaceInspectionItemStatusId().equals(Environment.StatusFail)) {
+            String textTask = "";
+            if (data.getTask().getTaskId().equals("")) {
+                textTask = textTask + "<big><font color=#cc3300>&#"+Environment.IcoClose+";</font></big>";
+            } else {
+                textTask = textTask + "<big><font color=#16a085>&#"+Environment.IcoOk+";</font></big>";
+            }
+
+            holder.task.setTypeface(typeFace);
+            holder.task.setText(Html.fromHtml(textTask));
+            holder.task.setVisibility(View.VISIBLE);
+        } else {
+            holder.task.setVisibility(View.GONE);
+        }
+
         holder.open.setTypeface(typeFace);
         holder.open.setText(Html.fromHtml("&#"+Environment.IcoEdit+";"));
         holder.open.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +139,15 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
         });
 
         holder.files.setTypeface(typeFace);
-        holder.files.setText(Html.fromHtml("&#"+Environment.IcoFiles+";"));
+        if (assign) {
+            if (data.getTask().getTaskId().equals("")) {
+                holder.files.setText(Html.fromHtml("&#" + Environment.IcoAddTask + ";"));
+            } else {
+                holder.files.setText(Html.fromHtml("&#" + Environment.IcoTask + ";"));
+            }
+        } else {
+            holder.files.setText(Html.fromHtml("&#" + Environment.IcoFiles + ";"));
+        }
         holder.files.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,7 +169,9 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
         if (readonly) {
             holder.open.setVisibility(View.GONE);
             holder.delete.setVisibility(View.GONE);
-            holder.files.setVisibility(View.GONE);
+            if (!assign || !data.getStatus().getWorkplaceInspectionItemStatusId().equals(Environment.StatusFail)) {
+                holder.files.setVisibility(View.GONE);
+            }
         }
     }
 

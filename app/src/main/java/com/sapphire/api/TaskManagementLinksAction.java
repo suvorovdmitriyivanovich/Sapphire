@@ -5,28 +5,29 @@ import android.os.AsyncTask;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
-import com.sapphire.models.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.models.ResponseData;
 import com.sapphire.logic.UserInfo;
+import com.sapphire.models.ErrorMessageData;
+import com.sapphire.models.LinkTaskData;
+import com.sapphire.models.ResponseData;
 import com.sapphire.models.WorkplaceInspectionItemData;
 import org.json.JSONArray;
 import org.json.JSONException;
 import java.util.ArrayList;
 
-public class GetWorkplaceInspectionAction extends AsyncTask{
+public class TaskManagementLinksAction extends AsyncTask{
 
-    public interface RequestWorkplaceInspection {
-        public void onRequestWorkplaceInspection(String result, ArrayList<WorkplaceInspectionItemData> workplaceInspectionItemDatas);
+    public interface RequestTaskManagementLinks {
+        public void onRequestTaskManagementLinks(String result, ArrayList<LinkTaskData> datas);
     }
 
     private Context mContext;
-    private ArrayList<WorkplaceInspectionItemData> workplaceInspectionItemDatas = new ArrayList<WorkplaceInspectionItemData>();
-    private String workplaceInspectionId = "";
+    private ArrayList<LinkTaskData> datas = new ArrayList<LinkTaskData>();
+    private ArrayList<WorkplaceInspectionItemData> itemDatas = new ArrayList<WorkplaceInspectionItemData>();
 
-    public GetWorkplaceInspectionAction(Context context, String workplaceInspectionId) {
+    public TaskManagementLinksAction(Context context, ArrayList<WorkplaceInspectionItemData> itemDatas) {
         this.mContext = context;
-        this.workplaceInspectionId = workplaceInspectionId;
+        this.itemDatas = itemDatas;
     }
 
     @Override
@@ -34,7 +35,23 @@ public class GetWorkplaceInspectionAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.WorkplaceInspectionItemsURL + "?$filter=WorkplaceInspectionId%20eq%20guid'"+workplaceInspectionId+"'&%24orderby=WorkplaceInspectionItemId";
+
+        String models = "";
+        for (WorkplaceInspectionItemData item : itemDatas) {
+            if (item.getWorkplaceInspectionItemId().equals("")) {
+                continue;
+            }
+            if (!models.equals("")) {
+                models = models + "&";
+            }
+            models = models + "model%5B%5D=" + item.getWorkplaceInspectionItemId();
+        }
+
+        if (models.equals("")) {
+            return "OK";
+        }
+
+        String urlstring = Environment.SERVER + Environment.TaskManagementLinksURL + "?" + models;
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthToken()));
 
@@ -42,10 +59,10 @@ public class GetWorkplaceInspectionAction extends AsyncTask{
 
         if (responseData.getSuccess()) {
             JSONArray data = responseData.getData();
-            workplaceInspectionItemDatas = new ArrayList<WorkplaceInspectionItemData>();
+            datas = new ArrayList<LinkTaskData>();
             for (int y=0; y < data.length(); y++) {
                 try {
-                    workplaceInspectionItemDatas.add(new WorkplaceInspectionItemData(data.getJSONObject(y)));
+                    datas.add(new LinkTaskData(data.getJSONObject(y)));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -66,7 +83,6 @@ public class GetWorkplaceInspectionAction extends AsyncTask{
             }
         }
 
-
         return result;
     }
 
@@ -74,7 +90,7 @@ public class GetWorkplaceInspectionAction extends AsyncTask{
     protected void onPostExecute(Object o) {
         String resultData = (String) o;
         if(mContext!=null) {
-            ((RequestWorkplaceInspection) mContext).onRequestWorkplaceInspection(resultData, workplaceInspectionItemDatas);
+            ((RequestTaskManagementLinks) mContext).onRequestTaskManagementLinks(resultData, datas);
         }
     }
 }

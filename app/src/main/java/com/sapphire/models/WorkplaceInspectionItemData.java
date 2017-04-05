@@ -17,6 +17,7 @@ public class WorkplaceInspectionItemData {
     private String recommendedActions = "";
     private String comments = "";
     private ArrayList<FileData> files = new ArrayList<FileData>();
+    private TaskData task = new TaskData();
 
     public WorkplaceInspectionItemData() {
 
@@ -172,5 +173,13 @@ public class WorkplaceInspectionItemData {
             }
         }
         this.files = fileDatas;
+    }
+
+    public TaskData getTask() {
+        return task;
+    }
+
+    public void setTask(TaskData task) {
+        this.task = task;
     }
 }

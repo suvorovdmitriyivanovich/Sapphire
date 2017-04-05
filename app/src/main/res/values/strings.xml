@@ -207,4 +207,7 @@
     <string name="text_quiz_failed">Sorry, you did not meet the minimum score. Please try again.</string>
     <string name="text_quiz_test">Let\'s test your knowledge of the course!</string>
     <string name="error_open_pdf">Error open pdf</string>
+    <string name="text_assign">Assign Tasks And Complete</string>
+    <string name="text_only_failed">Show only failed items</string>
+    <string name="text_assign_b">ASSIGN TASK AND COMPLETE</string>
 </resources>

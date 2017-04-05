@@ -47,6 +47,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
                                                                           WorkplaceInspectionsAdapter.OnOpenWorkplaceInspectionsClickListener,
                                                                           WorkplaceInspectionsAdapter.OnDeleteWorkplaceInspectionsClickListener,
                                                                           WorkplaceInspectionsAdapter.OnFilesWorkplaceInspectionsClickListener,
+                                                                          WorkplaceInspectionsAdapter.OnAssignWorkplaceInspectionsClickListener,
                                                                           TemplatesAction.RequestTemplates,
                                                                           TemplatesAction.RequestTemplatesData,
                                                                           WorkplaceInspectionsAction.RequestWorkplaceInspections,
@@ -255,6 +256,18 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         intent.putExtra("nameField", "WorkplaceInspectionId");
 
         UserInfo.getUserInfo().setFileDatas(workplaceInspectionData.getFiles());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onAssignWorkplaceInspectionsClick(int position) {
+        Intent intent = new Intent(WorkplaceInspectionsActivity.this, AssignActivity.class);
+        WorkplaceInspectionData workplaceInspectionData = workplaceInspectionDatas.get(position);
+        intent.putExtra("name", workplaceInspectionData.getName());
+        intent.putExtra("description", workplaceInspectionData.getDescription());
+        intent.putExtra("date", workplaceInspectionData.getDate());
+        intent.putExtra("workplaceInspectionId", workplaceInspectionData.getWorkplaceInspectionId());
+        intent.putExtra("posted", workplaceInspectionData.getPostedOnBoard());
         startActivity(intent);
     }
 

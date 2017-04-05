@@ -33,6 +33,10 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
         void onFilesWorkplaceInspectionsClick(int position);
     }
 
+    public interface OnAssignWorkplaceInspectionsClickListener{
+        void onAssignWorkplaceInspectionsClick(int position);
+    }
+
     public interface OnReportWorkplaceInspectionsClickListener{
         void onReportWorkplaceInspectionsClick(int position);
     }
@@ -43,6 +47,7 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
         Button open;
         Button delete;
         Button files;
+        Button assign;
         Button report;
         View border;
         View item;
@@ -54,6 +59,7 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
             open = (Button) itemView.findViewById(R.id.open);
             delete = (Button) itemView.findViewById(R.id.delete);
             files = (Button) itemView.findViewById(R.id.files);
+            assign = (Button) itemView.findViewById(R.id.assign);
             report = (Button) itemView.findViewById(R.id.report);
             border = itemView.findViewById(R.id.border);
             item = itemView;
@@ -74,7 +80,7 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view_files_full, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view_workplace, parent, false);
         return new WorkplaceInspectionsAdapter.ViewHolder(view);
     }
 
@@ -121,6 +127,17 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
             public void onClick(View v) {
                 if (mContext instanceof OnFilesWorkplaceInspectionsClickListener) {
                     ((OnFilesWorkplaceInspectionsClickListener) mContext).onFilesWorkplaceInspectionsClick(holder.getAdapterPosition());
+                }
+            }
+        });
+
+        holder.assign.setTypeface(typeFace);
+        holder.assign.setText(Html.fromHtml("&#"+Environment.IcoAssign+";"));
+        holder.assign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mContext instanceof OnAssignWorkplaceInspectionsClickListener) {
+                    ((OnAssignWorkplaceInspectionsClickListener) mContext).onAssignWorkplaceInspectionsClick(holder.getAdapterPosition());
                 }
             }
         });

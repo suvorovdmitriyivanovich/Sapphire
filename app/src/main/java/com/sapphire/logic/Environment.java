@@ -54,6 +54,7 @@ public class Environment {
     public static final String AttendanceCodesURL = "/v1/WorkforceManagement/AttendanceCodes";
     public static final String AddAvatarURL = "/v1/Images/AddAvatar";
     public static final String DeleteAvatarURL = "/v1/Images/DeleteAvatar";
+    public static final String TaskManagementLinksURL = "/v1/TaskManagement/links";
 
     public static final String PolicyStatusStarted = "1586dc39-979b-3991-c822-a4bcb14d1345";
     public static final String PolicyStatusAcknowledged  = "1586dc39-979b-ab1c-838f-1917fce340de";
@@ -62,10 +63,12 @@ public class Environment {
     public static final String AccountCourseFileStatusFinish  = "c9c8db39-2b01-b87e-3632-1589834c115e";
     public static final String EmergencyContactType  = "c9c8db39-2b01-dc72-4427-c51834bbec82";
     public static final String FamilyContactType  = "c9c8db39-2b01-c6c9-27ff-eb9e0a5b0cf0";
+    public static final String StatusFail  = "dadadc39-af79-54ae-7c6f-44b1b8be7d38";
 
     public static final String IcoEdit  = "61504";
     public static final String IcoDelete  = "61944";
     public static final String IcoFiles  = "61678";
+    public static final String IcoAssign  = "61452";
     public static final String IcoReport  = "61889";
     public static final String IcoOk  = "61452";
     public static final String IcoClose  = "61453";
@@ -74,4 +77,6 @@ public class Environment {
     public static final String IcoPlay  = "61515";
     public static final String IcoList  = "61498";
     public static final String IcoDownload  = "61465";
+    public static final String IcoAddTask  = "62065";
+    public static final String IcoTask  = "61747";
 }

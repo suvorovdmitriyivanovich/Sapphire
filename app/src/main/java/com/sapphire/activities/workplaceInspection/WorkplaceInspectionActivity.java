@@ -359,7 +359,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         itemlist.setNestedScrollingEnabled(false);
         itemlist.setLayoutManager(new LinearLayoutManager(WorkplaceInspectionActivity.this));
 
-        adapter = new WorkplaceInspectionItemsAdapter(this, readonly);
+        adapter = new WorkplaceInspectionItemsAdapter(this, readonly, false);
         itemlist.setAdapter(adapter);
 
         // создаем BroadcastReceiver
