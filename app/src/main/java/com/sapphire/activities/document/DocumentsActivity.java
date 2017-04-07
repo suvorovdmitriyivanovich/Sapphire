@@ -250,6 +250,7 @@ public class DocumentsActivity extends BaseActivity implements DocumentsAdapter.
         intent.putExtra("id", data.getDocId());
         intent.putExtra("url", Environment.DocumentsFilesURL);
         intent.putExtra("nameField", "DocId");
+        intent.putExtra("readonly", !edit);
 
         ArrayList<FileData> fileDatas = new ArrayList<FileData>();
         if (!data.getFileId().equals("")) {

@@ -6,10 +6,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -19,8 +25,8 @@ import com.sapphire.api.GetCourseFileAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.models.CoursesData;
 import com.sapphire.logic.UserInfo;
+import com.sapphire.models.CoursesData;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,16 +69,11 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
         //pd.show();
         //new GetCourseFileAction(EventCalendarActivity.this, courseId).execute();
 
-        pd.show();
         webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.addJavascriptInterface(new MyJavaScriptInterface(), "INTERFACE");
         webView.setWebViewClient(new MyWebViewClient());
-
-        Map<String, String> extraHeaders = new HashMap<String, String>();
-        //SharedPreferences sPref = getSharedPreferences("GlobalPreferences", MODE_PRIVATE);
-        //extraHeaders.put("x-yauth", sPref.getString("AUTHTOKEN",""));
-        extraHeaders.put("x-yauth", UserInfo.getUserInfo().getAuthToken());
-        webView.loadUrl("http://portal.dealerpilothr.com/me/my-calendar",extraHeaders);
+        webView.setWebChromeClient(new MyWebChromeClient());
 
         // создаем BroadcastReceiver
         br = new BroadcastReceiver() {
@@ -111,6 +112,102 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
         });
 
         UpdateBottom();
+
+        pd.show();
+        //Map<String, String> extraHeaders = new HashMap<String, String>();
+        //extraHeaders.put("X-YAUTH", UserInfo.getUserInfo().getAuthToken());
+        //webView.loadUrl("http://portal.dealerpilothr.com/me/my-calendar",extraHeaders);
+        //webView.loadUrl("http://portal.dealerpilothr.com");
+        //webView.loadUrl("https://www.google.com.ua");
+        //webView.loadUrl("http://portal.dealerpilothr.com/me/my-calendar");
+        //Map<String, String> extraHeaders = new HashMap<String, String>();
+        //extraHeaders.put("x-yauth", UserInfo.getUserInfo().getAuthToken());
+        //webView.loadUrl("http://portal.dealerpilothr.com/mobile/me/my-calendar");
+
+        //CookieManager cookieManager = CookieManager.getInstance();
+        //cookieManager.setAcceptCookie(true);
+        //
+        //List<Cookie> cookies = WSHelper.cookieStore.getCookies();
+
+        /*
+        List<Cookie> cookies = WSHelper.cookieStore.getCookies();
+
+        cookieManager.removeAllCookie();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().contains("session")){
+                    String cookieString = cookie.getName() + "=" + cookie.getValue() + "; Domain=" + cookie.getDomain();
+                    cookieManager.setCookie(cookie.getDomain(), cookieString);
+                    Log.d("CookieUrl",cookieString + " ");
+                }
+            }
+        }
+        */
+        //webView.getSettings().setAppCacheEnabled(true);
+
+        //webView.loadUrl("http://portal.dealerpilothr.com");
+
+        //Map<String, String> extraHeaders = new HashMap<String, String>();
+        //extraHeaders.put("x-yauth", UserInfo.getUserInfo().getAuthToken());
+        //webView.loadUrl("http://portal.dealerpilothr.com",extraHeaders);
+
+        /*
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setSaveFormData(false);
+        webView.getSettings().setDomStorageEnabled(true);
+
+        CookieSyncManager.createInstance(this);
+        CookieSyncManager.getInstance().startSync();
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
+        }
+
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("x-yauth", UserInfo.getUserInfo().getAuthToken());
+
+        webView.getSettings().setAppCacheEnabled(true);
+        webView.setWebViewClient(new WebViewClient() {
+            public boolean shouldOverrideUrlLoading(WebView view,String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
+        webView.loadUrl("http://portal.dealerpilothr.com?auth="+UserInfo.getUserInfo().getAuthToken(), map);
+        */
+
+        /*
+        webView.getSettings().setSaveFormData(false);
+        webView.getSettings().setDomStorageEnabled(true);
+        //webView.getSettings().setDatabaseEnabled(true);
+        //String databasePath = this.getApplicationContext().getDir("database", Context.MODE_PRIVATE).getPath();
+        //webView.getSettings().setDatabasePath(databasePath);
+
+        CookieSyncManager.createInstance(this);
+        CookieSyncManager.getInstance().startSync();
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
+        }
+        webView.getSettings().setAppCacheEnabled(true);
+        cookieManager.setCookie("name", "_ya");
+        cookieManager.setCookie("value", UserInfo.getUserInfo().getAuthToken());
+        cookieManager.setCookie("domain", "dealerpilothr.com");
+        cookieManager.setCookie("path", "/");
+        */
+        //cookieManager.setCookie("expires", System.currentTimeMillis() + );
+        //webView.loadUrl("http://portal.dealerpilothr.com?auth="+UserInfo.getUserInfo().getAuthToken());
+        //webView.loadUrl("http://portal.dealerpilothr.com/mobile/me/my-calendar?auth="+UserInfo.getUserInfo().getAuthToken());
+
+        webView.getSettings().setDomStorageEnabled(true);
+
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("x-yauth", UserInfo.getUserInfo().getAuthToken());
+        //webView.loadUrl("javascript:localStorage.setItem('accountSession', " + UserInfo.getUserInfo().getAccountSession() + ");");
+        webView.loadUrl("http://portal.dealerpilothr.com/mobile/me/my-calendar", map);
     }
 
     private void UpdateBottom() {
@@ -123,10 +220,22 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
         nointernet_group.requestLayout();
     }
 
+    private class MyJavaScriptInterface {
+        @SuppressWarnings("unused")
+        @JavascriptInterface
+        public void processContent(final String aContent) {
+            int i = 0;
+            if (i == 0) {
+                i = 1;
+            }
+        }
+    }
+
     private class MyWebViewClient extends WebViewClient {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
+            //view.loadUrl("javascript:localStorage.setItem('accountSession', " + UserInfo.getUserInfo().getAccountSession() + ");");
         }
 
         @Override
@@ -138,7 +247,15 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
+            //view.loadUrl("javascript:window.INTERFACE.processContent(document.getElementsByTagName('body')[0].innerText);");
             pd.hide();
+        }
+    }
+
+    private class MyWebChromeClient extends WebChromeClient {
+        @Override
+        public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+            return super.onJsAlert(view, url, message, result);
         }
     }
 

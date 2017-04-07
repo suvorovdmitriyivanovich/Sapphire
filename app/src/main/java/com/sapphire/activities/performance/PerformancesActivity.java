@@ -247,6 +247,7 @@ public class PerformancesActivity extends BaseActivity implements PerformancesAd
         intent.putExtra("id", data.getPerformanceEvaluationId());
         intent.putExtra("url", Environment.PerformanceEvaluationsFilesURL);
         intent.putExtra("nameField", "PerformanceEvaluationId");
+        intent.putExtra("readonly", !edit);
 
         ArrayList<FileData> fileDatas = new ArrayList<FileData>();
         if (!data.getFileId().equals("")) {

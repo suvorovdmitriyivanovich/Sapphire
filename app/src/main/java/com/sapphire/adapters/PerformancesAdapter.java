@@ -149,7 +149,6 @@ public class PerformancesAdapter extends RecyclerView.Adapter<PerformancesAdapte
         if (!edit) {
             holder.open.setVisibility(View.GONE);
             holder.delete.setVisibility(View.GONE);
-            holder.files.setVisibility(View.GONE);
         }
     }
 

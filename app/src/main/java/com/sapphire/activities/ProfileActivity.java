@@ -384,6 +384,11 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             this.bitmapold = this.bitmap;
             if (bitmap == null) {
@@ -482,19 +487,19 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         String employeeStr = "";
         employeeStr = employeeStr + "<b>" + getResources().getString(R.string.text_hire_date) + "</b>: " + profileData.getHireDateString();
         employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_probation) + "</b>: " + profileData.getProbationEndDateString();
-        employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_hire_type) + "</b>: " + profileData.getHireType();
+        employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_hire_type) + "</b>: " + profileData.getHireType().getName();
         employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_manager) + "</b>: " + "";
         employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_secondary_manager) + "</b>: " + "";
         employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_termination) + "</b>: " + profileData.getTerminationDateString();
         employee.setText(Html.fromHtml(employeeStr));
 
         String payrollStr = "";
-        payrollStr = payrollStr + "<b>" + getResources().getString(R.string.text_number) + "</b>: " + profileData.getPayrollInformation();
-        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_punch_number) + "</b>: " + "";
-        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_pay_frequency) + "</b>: " + "";
-        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_hours_per_day) + "</b>: " + "";
-        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_salary) + "</b>: " + "";
-        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_hourly_rate) + "</b>: " + "";
+        payrollStr = payrollStr + "<b>" + getResources().getString(R.string.text_number) + "</b>: " + profileData.getPayrollInformation().getEmployeeNumber();
+        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_punch_number) + "</b>: " + profileData.getPayrollInformation().getPunchClockNumber();
+        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_pay_frequency) + "</b>: " + profileData.getPayrollInformation().getPayFrequency();
+        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_hours_per_day) + "</b>: " + profileData.getPayrollInformation().getHoursPerDay();
+        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_salary) + "</b>: " + profileData.getPayrollInformation().getSalary();
+        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_hourly_rate) + "</b>: " + profileData.getPayrollInformation().getPayRate();
         payroll.setText(Html.fromHtml(payrollStr));
 
         String additionalworkStr = "";

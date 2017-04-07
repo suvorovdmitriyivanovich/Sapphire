@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -26,7 +25,10 @@ import com.sapphire.api.UpdateAction;
 import com.sapphire.db.DBHelper;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
+import com.sapphire.logic.UserInfo;
 import com.sapphire.models.LinkTaskData;
+import com.sapphire.models.ProfileData;
+import com.sapphire.models.TaskData;
 import com.sapphire.models.WorkplaceInspectionData;
 import com.sapphire.models.WorkplaceInspectionItemData;
 import java.util.ArrayList;
@@ -43,7 +45,6 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
     private RecyclerView itemlist;
     private WorkplaceInspectionItemsAdapter adapter;
     private CheckBox onlyfailed;
-    private int currentPosition = 0;
     private WorkplaceInspectionData workplaceInspectionData = new WorkplaceInspectionData();
     private View text_no;
     private BroadcastReceiver br;
@@ -52,6 +53,7 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
     private Button assign;
     private boolean existFail = false;
     private boolean existAllTask = false;
+    private String linkId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +65,6 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideSoftKeyboard();
                 finish();
             }
         });
@@ -102,7 +103,7 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
         root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideSoftKeyboard();
+
             }
         });
 
@@ -199,13 +200,6 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
         }
     }
 
-    public void hideSoftKeyboard() {
-        if (getCurrentFocus() != null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-        }
-    }
-
     @Override
     public void onRequestWorkplaceInspection(String result, ArrayList<WorkplaceInspectionItemData> workplaceInspectionItemDatas) {
         if (!result.equals("OK") && !result.equals(getResources().getString(R.string.text_need_internet))) {
@@ -252,7 +246,7 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
 
         this.allsDatas = allDatas;
 
-        new TaskManagementLinksAction(AssignActivity.this, this.allsDatas).execute();
+        new TaskManagementLinksAction(AssignActivity.this, this.allsDatas, workplaceInspectionId).execute();
 
         //updateOnlyFailed(onlyfailed.isChecked());
         //
@@ -260,7 +254,7 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
     }
 
     @Override
-    public void onRequestTaskManagementLinks(String result, ArrayList<LinkTaskData> datas) {
+    public void onRequestTaskManagementLinks(String result, ArrayList<LinkTaskData> datas, String linkId) {
         if (!result.equals("OK")) {
             existAllTask = false;
             allsDatas.clear();
@@ -269,8 +263,14 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
 
         } else {
+            this.linkId = linkId;
             for (LinkTaskData item: datas) {
                 for (WorkplaceInspectionItemData item2: allsDatas) {
                     if (item2.getWorkplaceInspectionItemId().equals(item.getLinkId())) {
@@ -295,20 +295,10 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
 
     @Override
     public void onRootClick(int position) {
-        hideSoftKeyboard();
-        //currentPosition = position;
-        //openItem(true);
-    }
-
-    @Override
-    public void onFilesClick(int position) {
-        hideSoftKeyboard();
-    }
-
-    private void openItem(boolean read) {
+        /*
         Intent intent = new Intent(AssignActivity.this, WorkplaceInspectionItemActivity.class);
-        WorkplaceInspectionItemData workplaceInspectionItemData = datas.get(currentPosition);
-        intent.putExtra("readonly", read);
+        WorkplaceInspectionItemData workplaceInspectionItemData = datas.get(position);
+        intent.putExtra("readonly", true);
         intent.putExtra("idloc", workplaceInspectionItemData.getId());
         intent.putExtra("name", workplaceInspectionItemData.getName());
         intent.putExtra("description", workplaceInspectionItemData.getDescription());
@@ -319,6 +309,49 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
         intent.putExtra("severity", workplaceInspectionItemData.getSeverity());
         intent.putExtra("workplaceInspectionItemStatusId", workplaceInspectionItemData.getStatus().getWorkplaceInspectionItemStatusId());
         intent.putExtra("workplaceInspectionItemPriorityId", workplaceInspectionItemData.getPriority().getWorkplaceInspectionItemPriorityId());
+        startActivity(intent);
+        */
+    }
+
+    @Override
+    public void onFilesClick(int position) {
+        Intent intent = new Intent(AssignActivity.this, TaskActivity.class);
+        WorkplaceInspectionItemData workplaceInspectionItemData = datas.get(position);
+        intent.putExtra("readonly", false);
+        intent.putExtra("idloc", workplaceInspectionItemData.getId());
+        intent.putExtra("parentId", linkId);
+
+        if (!workplaceInspectionItemData.getTask().getTaskId().equals("")) {
+            TaskData taskData = workplaceInspectionItemData.getTask();
+            intent.putExtra("taskId", taskData.getTaskId());
+            intent.putExtra("taskTypeId", taskData.getTaskTypeId());
+            intent.putExtra("percentComplete", taskData.getPercentComplete());
+            intent.putExtra("name", taskData.getName());
+            intent.putExtra("description", taskData.getDescription());
+            intent.putExtra("categoryId", taskData.getTaskCategoryId());
+            intent.putExtra("priorityId", taskData.getPriority());
+            intent.putExtra("date", taskData.getPlannedStartDate());
+            intent.putExtra("dateend", taskData.getPlannedFinishDate());
+
+            UserInfo userInfo = UserInfo.getUserInfo();
+
+            ArrayList<ProfileData> profileDatas = new ArrayList<ProfileData>();
+
+            for (ProfileData item: userInfo.getAllAssignedProfiles()) {
+                profileDatas.add(new ProfileData(item.getProfileId(), item.getName(), item.getPresence()));
+            }
+
+            for (ProfileData item: profileDatas) {
+                for (ProfileData item2: taskData.getAssignedProfiles()) {
+                    if (item2.getProfileId().equals(item.getProfileId())) {
+                        item.setPresence(true);
+                        break;
+                    }
+                }
+            }
+
+            userInfo.setAssignedProfiles(profileDatas);
+        }
         startActivity(intent);
     }
 

@@ -55,6 +55,9 @@ public class Environment {
     public static final String AddAvatarURL = "/v1/Images/AddAvatar";
     public static final String DeleteAvatarURL = "/v1/Images/DeleteAvatar";
     public static final String TaskManagementLinksURL = "/v1/TaskManagement/links";
+    public static final String TaskManagementParametersURL = "/v1/TaskManagement/Parameters";
+    public static final String TasksURL = "/v1/TaskManagement/Tasks";
+    public static final String AssignURL = "/v1/TaskManagement/Assign";
 
     public static final String PolicyStatusStarted = "1586dc39-979b-3991-c822-a4bcb14d1345";
     public static final String PolicyStatusAcknowledged  = "1586dc39-979b-ab1c-838f-1917fce340de";
@@ -64,6 +67,7 @@ public class Environment {
     public static final String EmergencyContactType  = "c9c8db39-2b01-dc72-4427-c51834bbec82";
     public static final String FamilyContactType  = "c9c8db39-2b01-c6c9-27ff-eb9e0a5b0cf0";
     public static final String StatusFail  = "dadadc39-af79-54ae-7c6f-44b1b8be7d38";
+    public static final String TaskTypeId  = "14eddc39-49f6-16c5-ecb5-550eb6e2083a";
 
     public static final String IcoEdit  = "61504";
     public static final String IcoDelete  = "61944";

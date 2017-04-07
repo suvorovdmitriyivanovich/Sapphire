@@ -210,4 +210,18 @@
     <string name="text_assign">Assign Tasks And Complete</string>
     <string name="text_only_failed">Show only failed items</string>
     <string name="text_assign_b">ASSIGN TASK AND COMPLETE</string>
+    <string name="text_task">Task</string>
+    <string name="text_start_date">Start Date</string>
+    <string name="text_assignments">Assignments</string>
+    <string name="text_assignments_no">No assignments to display</string>
+    <string name="text_due_date">Due Date</string>
+    <string name="text_due_time">Due Time</string>
+    <string name="punch_in">PUNCH IN</string>
+    <string name="punch_out">PUNCH OUT</string>
+    <string name="lunch_in">LUNCH IN</string>
+    <string name="lunch_out">LUNCH OUT</string>
+    <string name="break_in">BREAK IN</string>
+    <string name="break_out">BREAK OUT</string>
+    <string name="status_in">STATUS IN</string>
+    <string name="status_out">STATUS OUT</string>
 </resources>

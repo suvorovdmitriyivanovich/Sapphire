@@ -30,6 +30,8 @@ import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.WorkplaceInspectionsAdapter;
 import com.sapphire.api.ItemPrioritiesAction;
 import com.sapphire.api.ItemStatusesAction;
+import com.sapphire.api.MembersAction;
+import com.sapphire.api.TaskManagementParametersAction;
 import com.sapphire.api.TemplatesAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.api.WorkplaceInspectionDeleteAction;
@@ -38,6 +40,8 @@ import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.ItemPriorityData;
 import com.sapphire.models.ItemStatusData;
+import com.sapphire.models.ParameterData;
+import com.sapphire.models.ProfileData;
 import com.sapphire.models.TemplateData;
 import com.sapphire.logic.UserInfo;
 import com.sapphire.models.WorkplaceInspectionData;
@@ -57,6 +61,8 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
                                                                           ItemPrioritiesAction.RequestItemPrioritiesData,
                                                                           ItemStatusesAction.RequestItemStatuses,
                                                                           ItemStatusesAction.RequestItemStatusesData,
+                                                                          TaskManagementParametersAction.RequestTaskManagementParameters,
+                                                                          MembersAction.RequestMembers,
                                                                           UpdateAction.RequestUpdate{
     private BroadcastReceiver br;
     private ArrayList<WorkplaceInspectionData> workplaceInspectionDatas;
@@ -378,7 +384,44 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
     public void onRequestItemStatusesData(ArrayList<ItemStatusData> itemStatusDatas) {
         UserInfo.getUserInfo().setItemStatusDatas(itemStatusDatas);
 
+        new TaskManagementParametersAction(WorkplaceInspectionsActivity.this).execute();
+
+        //pd.hide();
+    }
+
+    @Override
+    public void onRequestTaskManagementParameters(String result, ArrayList<ParameterData> parameterDatas) {
+        if (!result.equals("OK")) {
+            pd.hide();
+
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        } else {
+            UserInfo.getUserInfo().setParameterDatas(parameterDatas);
+
+            new MembersAction(WorkplaceInspectionsActivity.this).execute();
+        }
+    }
+
+    @Override
+    public void onRequestMembers(String result, ArrayList<ProfileData> profilesDatas) {
         pd.hide();
+        if (!result.equals("OK")) {
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        } else {
+            UserInfo.getUserInfo().setAllAssignedProfiles(profilesDatas);
+        }
     }
 
     @Override

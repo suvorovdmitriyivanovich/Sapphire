@@ -78,8 +78,7 @@
             <CalendarView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/calendarView"
-                android:layout_marginTop="10dp" />
+                android:id="@+id/calendarView" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -88,7 +87,6 @@
                 android:text="@string/text_days"
                 android:id="@+id/text_items"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black" />
 

@@ -310,6 +310,10 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
         });
 
         UpdateBottom();
+
+        if (readonly) {
+            add.setVisibility(View.GONE);
+        }
     }
 
     private void UpdateBottom() {

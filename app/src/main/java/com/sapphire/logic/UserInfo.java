@@ -9,14 +9,13 @@ import com.sapphire.models.ItemStatusData;
 import com.sapphire.models.MemberData;
 import com.sapphire.models.OrganizationData;
 import com.sapphire.models.OrganizationStructureData;
+import com.sapphire.models.ParameterData;
 import com.sapphire.models.ProfileData;
 import com.sapphire.models.TemplateData;
 import com.sapphire.models.TimeBankData;
 import com.sapphire.models.TimeZoneData;
 import com.sapphire.models.TopicData;
-
 import java.util.ArrayList;
-import java.util.TimeZone;
 
 public class UserInfo {
     private String authToken = "";
@@ -40,6 +39,10 @@ public class UserInfo {
     private ArrayList<TimeBankData> timeBankDatas = new ArrayList<TimeBankData>();
     private ArrayList<AttendanceCodeData> attendanceCodeDatas = new ArrayList<AttendanceCodeData>();
     private ArrayList<DayData> days = new ArrayList<DayData>();
+    private ArrayList<ProfileData> assignedProfiles = new ArrayList<ProfileData>();
+    private ArrayList<ProfileData> allAssignedProfiles = new ArrayList<ProfileData>();
+    private ArrayList<ParameterData> parameterDatas = new ArrayList<ParameterData>();
+    private String accountSession = "";
 
     //---------------------Singleton---------------------------
     private static UserInfo userInfo;
@@ -262,5 +265,45 @@ public class UserInfo {
 
     public ArrayList<DayData> getDays() {
         return days;
+    }
+
+    public void setAssignedProfiles(ArrayList<ProfileData> assignedProfiles) {
+        this.assignedProfiles = assignedProfiles;
+    }
+
+    public ArrayList<ProfileData> getAssignedProfiles() {
+        return assignedProfiles;
+    }
+
+    public void setParameterDatas(ArrayList<ParameterData> parameterDatas) {
+        this.parameterDatas = parameterDatas;
+    }
+
+    public ArrayList<ParameterData> geParameterDatas() {
+        return parameterDatas;
+    }
+
+    public ArrayList<CategoryData> geParameterCategoryDatas() {
+        if (parameterDatas.size() == 0) {
+            return new ArrayList<CategoryData>();
+        } else {
+            return parameterDatas.get(0).getCategories();
+        }
+    }
+
+    public ArrayList<ProfileData> getAllAssignedProfiles() {
+        return allAssignedProfiles;
+    }
+
+    public void setAllAssignedProfiles(ArrayList<ProfileData> allAssignedProfiles) {
+        this.allAssignedProfiles = allAssignedProfiles;
+    }
+
+    public String getAccountSession() {
+        return accountSession;
+    }
+
+    public void setAccountSession(String accountSession) {
+        this.accountSession = accountSession;
     }
 }

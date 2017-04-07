@@ -21,11 +21,11 @@ public class ProfileData {
     private Long hireDate = 0l;
     private Long probationEndDate = 0l;
     private Long terminationDate = 0l;
-    private String hireType = "";
+    private HireTypeData hireType = new HireTypeData();
     private String customField1 = "";
     private String customField2 = "";
     private ContactData contact = new ContactData();
-    private String payrollInformation = "";
+    private PayrollInformationData payrollInformation = new PayrollInformationData();
     private String accountId = "";
     private String organizationId = "";
     private String firstName = "";
@@ -38,9 +38,16 @@ public class ProfileData {
     private String email = "";
     private boolean isCPRCertified = false;
     private boolean isFirstAidCertified = false;
+    private boolean presence = false;
 
     public ProfileData() {
 
+    }
+
+    public ProfileData(String profileId, String name, boolean presence) {
+        this.profileId = profileId;
+        this.name = name;
+        this.presence = presence;
     }
 
     public ProfileData(JSONObject data) {
@@ -91,7 +98,7 @@ public class ProfileData {
                 setTerminationDate(data.getString("TerminationDate"));
             }
             if (!data.isNull("HireType")) {
-                setHireType(data.getString("HireType"));
+                setHireType(data.getJSONObject("HireType"));
             }
             if (!data.isNull("CustomField1")) {
                 setCustomField1(data.getString("CustomField1"));
@@ -103,7 +110,7 @@ public class ProfileData {
                 setContact(data.getJSONObject("Contact"));
             }
             if (!data.isNull("PayrollInformation")) {
-                setPayrollInformation(data.getString("PayrollInformation"));
+                setPayrollInformation(data.getJSONObject("PayrollInformation"));
             }
             if (!data.isNull("AccountId")) {
                 setAccountId(data.getString("AccountId"));
@@ -333,11 +340,11 @@ public class ProfileData {
         return dateString;
     }
 
-    public void setHireType(String hireType) {
-        this.hireType = hireType;
+    public void setHireType(JSONObject hireType) {
+        this.hireType = new HireTypeData(hireType);
     }
 
-    public String getHireType() {
+    public HireTypeData getHireType() {
         return hireType;
     }
 
@@ -365,11 +372,11 @@ public class ProfileData {
         return contact;
     }
 
-    public void setPayrollInformation(String payrollInformation) {
-        this.payrollInformation = payrollInformation;
+    public void setPayrollInformation(JSONObject payrollInformation) {
+        this.payrollInformation = new PayrollInformationData(payrollInformation);
     }
 
-    public String getPayrollInformation() {
+    public PayrollInformationData getPayrollInformation() {
         return payrollInformation;
     }
 
@@ -474,5 +481,13 @@ public class ProfileData {
 
     public boolean getIsFirstAidCertified() {
         return isFirstAidCertified;
+    }
+
+    public void setPresence(boolean presence) {
+        this.presence = presence;
+    }
+
+    public boolean getPresence() {
+        return presence;
     }
 }

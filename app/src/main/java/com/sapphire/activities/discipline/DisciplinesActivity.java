@@ -247,6 +247,7 @@ public class DisciplinesActivity extends BaseActivity implements DisciplinesAdap
         intent.putExtra("id", data.getDisciplineId());
         intent.putExtra("url", Environment.DisciplinesFilesURL);
         intent.putExtra("nameField", "DisciplineId");
+        intent.putExtra("readonly", !edit);
 
         ArrayList<FileData> fileDatas = new ArrayList<FileData>();
         if (!data.getFileId().equals("")) {

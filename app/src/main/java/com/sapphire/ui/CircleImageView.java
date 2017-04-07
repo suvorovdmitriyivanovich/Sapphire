@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 public class CircleImageView extends ImageView {
-    public static float radius = 120.0f;
+    public static float radius = 270.0f;
 
     public CircleImageView(Context context) {
         super(context);

@@ -150,7 +150,6 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.View
         if (!edit) {
             holder.open.setVisibility(View.GONE);
             holder.delete.setVisibility(View.GONE);
-            holder.files.setVisibility(View.GONE);
         }
     }
 

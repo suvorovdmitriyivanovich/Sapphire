@@ -70,8 +70,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/logout_group"
         android:layout_below="@+id/header_root"
-        android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
         android:background="@drawable/button_selector_transparent"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -95,6 +95,130 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_marginLeft="10dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logout_group"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/punch_group"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:id="@+id/punchin"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:background="@drawable/button_selector"
+            android:textColor="@color/white"
+            android:text="@string/punch_in"
+            android:layout_marginRight="5dp" />
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:id="@+id/punchout"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:background="@drawable/button_selector"
+            android:textColor="@color/white"
+            android:text="@string/punch_out"
+            android:layout_marginLeft="5dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/punch_group"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/lunch_group"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:id="@+id/lunchout"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:background="@drawable/button_selector_red"
+            android:textColor="@color/white"
+            android:text="@string/lunch_out"
+            android:layout_marginRight="5dp" />
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:id="@+id/lunchin"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:background="@drawable/button_selector_red"
+            android:textColor="@color/white"
+            android:text="@string/lunch_in"
+            android:layout_marginLeft="5dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lunch_group"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/break_group"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:id="@+id/breakout"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:background="@drawable/button_selector_dark"
+            android:textColor="@color/white"
+            android:text="@string/break_out"
+            android:layout_marginRight="5dp" />
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:id="@+id/breakin"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:background="@drawable/button_selector_dark"
+            android:textColor="@color/white"
+            android:text="@string/break_in"
+            android:layout_marginLeft="5dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/break_group"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/status_group"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:id="@+id/statusout"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:background="@drawable/button_selector_dark"
+            android:textColor="@color/white"
+            android:text="@string/status_out"
+            android:layout_marginRight="5dp" />
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:id="@+id/statusin"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:background="@drawable/button_selector_dark"
+            android:textColor="@color/white"
+            android:text="@string/status_in"
+            android:layout_marginLeft="5dp" />
+
     </LinearLayout>
 
     <TextView

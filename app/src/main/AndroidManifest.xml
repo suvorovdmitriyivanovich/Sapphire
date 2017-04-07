@@ -184,6 +184,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
 
+        <activity android:name=".activities.workplaceInspection.TaskActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+
         <receiver android:name=".logic.NetworkStateReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

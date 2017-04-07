@@ -69,10 +69,13 @@ public class AuthenticationsAction extends AsyncTask{
             ed.putBoolean("INSUCCESS", true);
             ed.apply();
 
+            String accountSession = "";
+
             JSONArray data = responseData.getData();
             ArrayList<AccountData> accountDatas = new ArrayList<AccountData>();
             for (int y=0; y < data.length(); y++) {
                 try {
+                    accountSession = data.getJSONObject(y).toString();
                     accountDatas.add(new AccountData(data.getJSONObject(y)));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -93,6 +96,7 @@ public class AuthenticationsAction extends AsyncTask{
                 userInfo.setProfile(accountDatas.get(0).getCurrentProfile());
                 userInfo.setOrganizations(accountDatas.get(0).getOrganizations());
                 userInfo.setCurrentOrganization(accountDatas.get(0).getCurrentOrganization());
+                userInfo.setAccountSession(accountSession);
                 //ed.putString("AUTHTOKEN", accountDatas.get(0).getAuthToken());
                 //ed.putString("ACCOUNTID", accountDatas.get(0).getAccountId());
                 //ed.apply();

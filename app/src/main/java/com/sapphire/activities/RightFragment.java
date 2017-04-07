@@ -106,6 +106,70 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             }
         });
 
+        View punchin = rootView.findViewById(R.id.punchin);
+        punchin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        View punchout = rootView.findViewById(R.id.punchout);
+        punchout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        View lunchout = rootView.findViewById(R.id.lunchout);
+        lunchout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        View lunchin = rootView.findViewById(R.id.lunchin);
+        lunchin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        View breakout = rootView.findViewById(R.id.breakout);
+        breakout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        View breakin = rootView.findViewById(R.id.breakin);
+        breakin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        View statusout = rootView.findViewById(R.id.statusout);
+        statusout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        View statusin = rootView.findViewById(R.id.statusin);
+        statusin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         return rootView;
     }
 

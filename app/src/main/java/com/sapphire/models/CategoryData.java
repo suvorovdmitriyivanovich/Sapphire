@@ -22,6 +22,8 @@ public class CategoryData {
                 setId(data.getString("QuestionCategoryId"));
             } else if (!data.isNull("DocCategoryId")) {
                 setId(data.getString("DocCategoryId"));
+            } else if (!data.isNull("TaskCategoryId")) {
+                setId(data.getString("TaskCategoryId"));
             }
             if (!data.isNull("Name")) {
                 setName(data.getString("Name"));

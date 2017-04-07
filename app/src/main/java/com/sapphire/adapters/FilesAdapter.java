@@ -9,12 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
 import com.sapphire.models.FileData;
-
 import java.util.ArrayList;
 
 public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> {
@@ -90,7 +88,7 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
         });
 
         holder.delete.setTypeface(typeFace);
-        holder.delete.setText(Html.fromHtml("&#"+Environment.IcoDelete+";"));
+        holder.delete.setText(Html.fromHtml("&#" + Environment.IcoDelete + ";"));
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,7 +108,6 @@ public class FilesAdapter extends RecyclerView.Adapter<FilesAdapter.ViewHolder> 
         });
 
         if (readonly) {
-            holder.download.setVisibility(View.GONE);
             holder.delete.setVisibility(View.GONE);
         }
     }

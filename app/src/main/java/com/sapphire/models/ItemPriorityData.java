@@ -16,6 +16,11 @@ public class ItemPriorityData {
         this.workplaceInspectionItemPriorityId = workplaceInspectionItemPriorityId;
     }
 
+    public ItemPriorityData(String workplaceInspectionItemPriorityId, String name) {
+        this.workplaceInspectionItemPriorityId = workplaceInspectionItemPriorityId;
+        this.name = name;
+    }
+
     public ItemPriorityData(JSONObject data) {
         try {
             if (!data.isNull("WorkplaceInspectionItemPriorityId")) {
