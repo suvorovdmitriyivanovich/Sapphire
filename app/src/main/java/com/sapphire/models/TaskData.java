@@ -20,7 +20,7 @@ public class TaskData {
     private Long plannedStartDate = 0l;
     private Long plannedFinishDate = 0l;
     private Double percentComplete = 0d;
-    private String priority = "";
+    private int priority = 0;
     private SettingData properties = new SettingData();
     private SettingData editRight = new SettingData();
 
@@ -68,7 +68,7 @@ public class TaskData {
                 setPercentComplete(data.getDouble("PercentComplete"));
             }
             if (!data.isNull("Priority")) {
-                setPriority(data.getString("Priority"));
+                setPriority(data.getInt("Priority"));
             }
             if (!data.isNull("Properties")) {
                 setProperties(data.getJSONObject("Properties"));
@@ -215,11 +215,11 @@ public class TaskData {
         this.percentComplete = percentComplete;
     }
 
-    public String getPriority() {
+    public int getPriority() {
         return priority;
     }
 
-    public void setPriority(String priority) {
+    public void setPriority(int priority) {
         this.priority = priority;
     }
 

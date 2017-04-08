@@ -18,12 +18,13 @@ import java.util.ArrayList;
 public class TaskAddAction extends AsyncTask{
 
     public interface RequestTaskAdd {
-        public void onRequestTaskAdd(String result, String id);
+        public void onRequestTaskAdd(String result, String id, String method);
     }
 
     private Context mContext;
     private TaskData data = new TaskData();
     private String id = "";
+    private String method = "";
 
     public TaskAddAction(Context context, TaskData data) {
         this.mContext = context;
@@ -45,7 +46,9 @@ public class TaskAddAction extends AsyncTask{
             if (!data.getTaskId().equals("")) {
                 jsonObject.put("TaskId", data.getTaskId());
             }
-            jsonObject.put("ParentId", data.getParentId());
+            if (!data.getParentId().equals("")) {
+                jsonObject.put("ParentId", data.getParentId());
+            }
             jsonObject.put("TaskTypeId", data.getTaskTypeId());
             jsonObject.put("TaskCategoryId", data.getTaskCategoryId());
             jsonObject.put("Name", data.getName());
@@ -62,14 +65,29 @@ public class TaskAddAction extends AsyncTask{
             e.printStackTrace();
         }
 
-        String method = "POST";
+        method = "POST";
         if (!data.getTaskId().equals("")) {
             method = "PUT";
         }
 
         /*
-        [{"ParentId":"b54ade39-18b2-4617-6cb6-6803c0b80698","TaskTypeId":"14eddc39-49f6-16c5-ecb5-550eb6e2083a","TaskCategoryId":"14eddc39-49f6-bba3-c245-905f49be780f","Name":"2","Description":"2","PlannedStartDate":"2017-04-08T00:15:00.681Z","PlannedFinishDate":"2017-04-10T05:00:00.000Z","Priority":4}]
-        */
+        [{"TaskTypeId":"c5b2dd39-03b1-c9b8-fb19-feaf9c6e0d36",
+        "TaskCategoryId":"14eddc39-49f6-3b9e-f38a-fef408856a6b",
+        "Name":"new",
+        "Description":null,
+        "PlannedStartDate":"2017-04-08T16:23:40.391Z",
+        "PlannedFinishDate":"2017-04-08T16:23:40.391Z",
+        "Priority":0}]
+
+        [{"ParentId":"",
+        "TaskTypeId":"c5b2dd39-03b1-c9b8-fb19-feaf9c6e0d36",
+        "TaskCategoryId":"c5b2dd39-03b1-c9b8-fb19-feaf9c6e0d36",
+        "Name":"new1",
+        "Description":"",
+                "PlannedStartDate":"2017-04-08T05:00:00.000Z",
+                "PlannedFinishDate":"2017-04-08T05:00:00.000Z",
+                "Priority":"0"}]
+                */
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonArray.toString(),0,true,method, userInfo.getAuthToken()));
 
@@ -104,7 +122,7 @@ public class TaskAddAction extends AsyncTask{
     protected void onPostExecute(Object o) {
         String resultData = (String) o;
         if(mContext!=null) {
-            ((RequestTaskAdd) mContext).onRequestTaskAdd(resultData, id);
+            ((RequestTaskAdd) mContext).onRequestTaskAdd(resultData, id, method);
         }
     }
 }

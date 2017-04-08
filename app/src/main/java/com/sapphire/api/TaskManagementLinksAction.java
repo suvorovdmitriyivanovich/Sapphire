@@ -18,19 +18,21 @@ import java.util.ArrayList;
 public class TaskManagementLinksAction extends AsyncTask{
 
     public interface RequestTaskManagementLinks {
-        public void onRequestTaskManagementLinks(String result, ArrayList<LinkTaskData> datas, String linkId);
+        public void onRequestTaskManagementLinks(String result, ArrayList<LinkTaskData> datas, String parentId, int type);
     }
 
     private Context mContext;
     private ArrayList<LinkTaskData> datas = new ArrayList<LinkTaskData>();
     private ArrayList<WorkplaceInspectionItemData> itemDatas = new ArrayList<WorkplaceInspectionItemData>();
     private String id = "";
-    private String linkId = "";
+    private String parentId = "";
+    private int type = 0;
 
-    public TaskManagementLinksAction(Context context, ArrayList<WorkplaceInspectionItemData> itemDatas, String id) {
+    public TaskManagementLinksAction(Context context, ArrayList<WorkplaceInspectionItemData> itemDatas, String id, int type) {
         this.mContext = context;
         this.itemDatas = itemDatas;
         this.id = id;
+        this.type = type;
     }
 
     @Override
@@ -39,83 +41,84 @@ public class TaskManagementLinksAction extends AsyncTask{
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
 
-        String urlstring = Environment.SERVER + Environment.TaskManagementLinksURL + "?model%5B%5D=" + id;
-
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthToken()));
-
         String result = "";
+        String urlstring = "";
+        ResponseData responseData = null;
 
-        if (responseData.getSuccess()) {
-            JSONArray data = responseData.getData();
-            datas = new ArrayList<LinkTaskData>();
-            for (int y=0; y < data.length(); y++) {
-                try {
-                    LinkTaskData linkTaskData = new LinkTaskData(data.getJSONObject(y));
-                    datas.add(linkTaskData);
-                    linkId = linkTaskData.getLinkId();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        if (type == 1) {
+            urlstring = Environment.SERVER + Environment.TaskManagementLinksURL + "?model%5B%5D=" + id;
+
+            responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring, "", 0, true, "GET", UserInfo.getUserInfo().getAuthToken()));
+
+            if (responseData.getSuccess()) {
+                JSONArray data = responseData.getData();
+                //datas = new ArrayList<LinkTaskData>();
+                for (int y = 0; y < data.length(); y++) {
+                    try {
+                        LinkTaskData linkTaskData = new LinkTaskData(data.getJSONObject(y));
+                        //datas.add(linkTaskData);
+                        parentId = linkTaskData.getTask().getTaskId();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                result = "OK";
+            } else {
+                ArrayList<ErrorMessageData> errorMessageDatas = responseData.getErrorMessages();
+                if (errorMessageDatas == null || errorMessageDatas.size() == 0) {
+                    result = responseData.getHttpStatusMessage();
+                } else {
+                    for (int y = 0; y < errorMessageDatas.size(); y++) {
+                        if (!result.equals("")) {
+                            result = result + ". ";
+                        }
+                        result = errorMessageDatas.get(y).getName();
+                    }
                 }
             }
         } else {
-            ArrayList<ErrorMessageData> errorMessageDatas = responseData.getErrorMessages();
-            if (errorMessageDatas == null || errorMessageDatas.size() == 0) {
-                result = responseData.getHttpStatusMessage();
-            } else {
-                for (int y=0; y < errorMessageDatas.size(); y++) {
-                    if (!result.equals("")) {
-                        result = result + ". ";
-                    }
-                    result = errorMessageDatas.get(y).getName();
+            String models = "";
+            for (WorkplaceInspectionItemData item : itemDatas) {
+                if (item.getWorkplaceInspectionItemId().equals("")) {
+                    continue;
                 }
-            }
-        }
-
-        if (linkId.equals("")) {
-            return "OK";
-        }
-
-        String models = "";
-        for (WorkplaceInspectionItemData item : itemDatas) {
-            if (item.getWorkplaceInspectionItemId().equals("")) {
-                continue;
-            }
-            if (!models.equals("")) {
-                models = models + "&";
-            }
-            models = models + "model%5B%5D=" + item.getWorkplaceInspectionItemId();
-        }
-
-        if (models.equals("")) {
-            return "OK";
-        }
-
-        urlstring = Environment.SERVER + Environment.TaskManagementLinksURL + "?" + models;
-
-        responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthToken()));
-
-        if (responseData.getSuccess()) {
-            JSONArray data = responseData.getData();
-            datas = new ArrayList<LinkTaskData>();
-            for (int y=0; y < data.length(); y++) {
-                try {
-                    datas.add(new LinkTaskData(data.getJSONObject(y)));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (!models.equals("")) {
+                    models = models + "&";
                 }
+                models = models + "model%5B%5D=" + item.getWorkplaceInspectionItemId();
             }
 
-            result = "OK";
-        } else {
-            ArrayList<ErrorMessageData> errorMessageDatas = responseData.getErrorMessages();
-            if (errorMessageDatas == null || errorMessageDatas.size() == 0) {
-                result = responseData.getHttpStatusMessage();
-            } else {
-                for (int y=0; y < errorMessageDatas.size(); y++) {
-                    if (!result.equals("")) {
-                        result = result + ". ";
+            if (models.equals("")) {
+                return "OK";
+            }
+
+            urlstring = Environment.SERVER + Environment.TaskManagementLinksURL + "?" + models;
+
+            responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring, "", 0, true, "GET", UserInfo.getUserInfo().getAuthToken()));
+
+            if (responseData.getSuccess()) {
+                JSONArray data = responseData.getData();
+                datas = new ArrayList<LinkTaskData>();
+                for (int y = 0; y < data.length(); y++) {
+                    try {
+                        datas.add(new LinkTaskData(data.getJSONObject(y)));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    result = errorMessageDatas.get(y).getName();
+                }
+
+                result = "OK";
+            } else {
+                ArrayList<ErrorMessageData> errorMessageDatas = responseData.getErrorMessages();
+                if (errorMessageDatas == null || errorMessageDatas.size() == 0) {
+                    result = responseData.getHttpStatusMessage();
+                } else {
+                    for (int y = 0; y < errorMessageDatas.size(); y++) {
+                        if (!result.equals("")) {
+                            result = result + ". ";
+                        }
+                        result = errorMessageDatas.get(y).getName();
+                    }
                 }
             }
         }
@@ -127,7 +130,7 @@ public class TaskManagementLinksAction extends AsyncTask{
     protected void onPostExecute(Object o) {
         String resultData = (String) o;
         if(mContext!=null) {
-            ((RequestTaskManagementLinks) mContext).onRequestTaskManagementLinks(resultData, datas, linkId);
+            ((RequestTaskManagementLinks) mContext).onRequestTaskManagementLinks(resultData, datas, parentId, type);
         }
     }
 }

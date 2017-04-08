@@ -35,6 +35,7 @@ import com.sapphire.activities.LoginActivity;
 import com.sapphire.adapters.AssignmentsAdapter;
 import com.sapphire.adapters.SpinCategoriesAdapter;
 import com.sapphire.adapters.SpinPrioritisAdapter;
+import com.sapphire.api.LinkAddAction;
 import com.sapphire.api.TaskAddAction;
 import com.sapphire.api.AssignAddAction;
 import com.sapphire.api.UpdateAction;
@@ -53,6 +54,7 @@ import java.util.Date;
 
 public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnRootAssignmentsClickListener,
                                                           TaskAddAction.RequestTaskAdd,
+                                                          LinkAddAction.RequestLinkAdd,
                                                           AssignAddAction.RequestAssignAdd,
                                                           UpdateAction.RequestUpdate{
     private String id = "";
@@ -119,6 +121,7 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
     private ViewGroup.LayoutParams par_nointernet_group;
     private boolean readonly = false;
     private Double percentComplete = 0d;
+    private String linkId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -305,6 +308,10 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
         if (parentId == null) {
             parentId = "";
         }
+        linkId = intent.getStringExtra("linkId");
+        if (linkId == null) {
+            linkId = "";
+        }
         if (!id.equals("")) {
             readonly = intent.getBooleanExtra("readonly", false);
             nameOld = intent.getStringExtra("name");
@@ -392,7 +399,7 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
                 }
             }
         } else {
-            taskTypeId = Environment.TaskTypeId;
+            taskTypeId = Environment.TaskTypeItemId;
             datas.clear();
             for (ProfileData item: userInfo.getAllAssignedProfiles()) {
                 datas.add(new ProfileData(item.getProfileId(), item.getName(), item.getPresence()));
@@ -877,7 +884,11 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
             taskData.setPlannedStartDate(dateNew);
             taskData.setPlannedFinishDate(dateendNew);
             taskData.setPercentComplete(percentComplete);
-            taskData.setPriority(priorityId);
+            try {
+                taskData.setPriority(Integer.valueOf(priorityId));
+            } catch (Exception e) {
+                taskData.setPriority(0);
+            }
 
             new TaskAddAction(TaskActivity.this, taskData).execute();
         }
@@ -948,7 +959,7 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
     }
 
     @Override
-    public void onRequestTaskAdd(String result, String id) {
+    public void onRequestTaskAdd(String result, String id, String method) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,
@@ -959,26 +970,50 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
                 finish();
             }
         } else {
-            boolean existPresence = false;
-
-            for (ProfileData item: datas) {
-                if (item.getPresence()) {
-                    existPresence = true;
-                    break;
-                }
-            }
-
-            if (existPresence) {
-                if (this.id.equals("")) {
-                    this.id = id;
-                }
-
-                new AssignAddAction(TaskActivity.this, id, datas).execute();
+            this.id = id;
+            if (method.equals("POST")) {
+                new LinkAddAction(TaskActivity.this, id, linkId, Environment.TaskTypeAddItemId).execute();
             } else {
-                pd.hide();
+                assignAddAction();
+            }
+        }
+    }
 
+    private void assignAddAction() {
+        /*
+        boolean existPresence = false;
+
+        for (ProfileData item: datas) {
+            if (item.getPresence()) {
+                existPresence = true;
+                break;
+            }
+        }
+
+        if (existPresence) {
+            new AssignAddAction(TaskActivity.this, id, datas).execute();
+        } else {
+            pd.hide();
+
+            finish();
+        }
+        */
+        new AssignAddAction(TaskActivity.this, id, datas).execute();
+    }
+
+    @Override
+    public void onRequestLinkAdd(String result) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
                 finish();
             }
+        } else {
+            assignAddAction();
         }
     }
 

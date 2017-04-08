@@ -20,6 +20,8 @@ import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.LoginActivity;
 import com.sapphire.adapters.WorkplaceInspectionItemsAdapter;
 import com.sapphire.api.GetWorkplaceInspectionAction;
+import com.sapphire.api.LinkAddAction;
+import com.sapphire.api.TaskAddAction;
 import com.sapphire.api.TaskManagementLinksAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.db.DBHelper;
@@ -37,6 +39,8 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
                                                             TaskManagementLinksAction.RequestTaskManagementLinks,
                                                             WorkplaceInspectionItemsAdapter.OnRootClickListener,
                                                             WorkplaceInspectionItemsAdapter.OnFilesClickListener,
+                                                            TaskAddAction.RequestTaskAdd,
+                                                            LinkAddAction.RequestLinkAdd,
                                                             UpdateAction.RequestUpdate{
     private String workplaceInspectionId = "";
     private ProgressDialog pd;
@@ -52,8 +56,12 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
     private ViewGroup.LayoutParams par_nointernet_group;
     private Button assign;
     private boolean existFail = false;
+    private boolean existOther = false;
     private boolean existAllTask = false;
-    private String linkId = "";
+    private String parentId = "";
+    private String name = "";
+    private String description = "";
+    private Long date = 0l;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +105,18 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
         workplaceInspectionId = intent.getStringExtra("workplaceInspectionId");
         if (workplaceInspectionId == null) {
             workplaceInspectionId = "";
+        }
+        name = intent.getStringExtra("name");
+        if (name == null) {
+            name = "";
+        }
+        description = intent.getStringExtra("description");
+        if (description == null) {
+            description = "";
+        }
+        date = intent.getLongExtra("date", 0l);
+        if (date == 0l) {
+            date = System.currentTimeMillis();
         }
 
         View root = findViewById(R.id.rootLayout);
@@ -193,6 +213,11 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
         } else {
             assign.setVisibility(View.GONE);
         }
+        if (existOther) {
+            onlyfailed.setVisibility(View.VISIBLE);
+        } else {
+            onlyfailed.setVisibility(View.GONE);
+        }
         if (existAllTask) {
             assign.setEnabled(true);
         } else {
@@ -219,10 +244,13 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
         ArrayList<WorkplaceInspectionItemData> datas = DBHelper.getInstance(Sapphire.getInstance()).getWorkplaceInspectionItems(workplaceInspectionId);
 
         existFail = false;
+        existOther = false;
         boolean isExist = false;
         for (WorkplaceInspectionItemData item: workplaceInspectionItemDatas) {
             if (item.getStatus().getWorkplaceInspectionItemStatusId().equals(Environment.StatusFail)) {
                 existFail = true;
+            } else {
+                existOther = true;
             }
 
             isExist = false;
@@ -239,6 +267,8 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
         for (WorkplaceInspectionItemData item: datas) {
             if (item.getStatus().getWorkplaceInspectionItemStatusId().equals(Environment.StatusFail)) {
                 existFail = true;
+            } else {
+                existOther = true;
             }
 
             allDatas.add(item);
@@ -246,7 +276,7 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
 
         this.allsDatas = allDatas;
 
-        new TaskManagementLinksAction(AssignActivity.this, this.allsDatas, workplaceInspectionId).execute();
+        new TaskManagementLinksAction(AssignActivity.this, this.allsDatas, workplaceInspectionId, 1).execute();
 
         //updateOnlyFailed(onlyfailed.isChecked());
         //
@@ -254,7 +284,7 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
     }
 
     @Override
-    public void onRequestTaskManagementLinks(String result, ArrayList<LinkTaskData> datas, String linkId) {
+    public void onRequestTaskManagementLinks(String result, ArrayList<LinkTaskData> datas, String parentId, int type) {
         if (!result.equals("OK")) {
             existAllTask = false;
             allsDatas.clear();
@@ -270,26 +300,78 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
             }
 
         } else {
-            this.linkId = linkId;
-            for (LinkTaskData item: datas) {
-                for (WorkplaceInspectionItemData item2: allsDatas) {
-                    if (item2.getWorkplaceInspectionItemId().equals(item.getLinkId())) {
-                        item2.setTask(item.getTask());
+            if (type == 1) {
+                this.parentId = parentId;
+                if (parentId.equals("")) {
+                    TaskData taskData = new TaskData();
+                    taskData.setTaskId("");
+                    taskData.setParentId(parentId);
+                    taskData.setTaskTypeId(Environment.TaskTypeWorkplaceId);
+                    taskData.setTaskCategoryId(Environment.CategoryAddId);
+                    taskData.setName(name);
+                    taskData.setDescription(description);
+                    taskData.setPlannedStartDate(date);
+                    taskData.setPlannedFinishDate(date);
+                    taskData.setPercentComplete(0d);
+                    taskData.setPriority(0);
+
+                    new TaskAddAction(AssignActivity.this, taskData).execute();
+                } else {
+                    new TaskManagementLinksAction(AssignActivity.this, this.allsDatas, workplaceInspectionId, 2).execute();
+                }
+            } else {
+                for (LinkTaskData item : datas) {
+                    for (WorkplaceInspectionItemData item2 : allsDatas) {
+                        if (item2.getWorkplaceInspectionItemId().equals(item.getLinkId())) {
+                            item2.setTask(item.getTask());
+                            break;
+                        }
+                    }
+                }
+                existAllTask = true;
+                for (WorkplaceInspectionItemData item : allsDatas) {
+                    if (item.getStatus().getWorkplaceInspectionItemStatusId().equals(Environment.StatusFail) && item.getTask().getTaskId().equals("")) {
+                        existAllTask = false;
                         break;
                     }
                 }
-            }
-            existAllTask = true;
-            for (WorkplaceInspectionItemData item: allsDatas) {
-                if (item.getStatus().getWorkplaceInspectionItemStatusId().equals(Environment.StatusFail) && item.getTask().getTaskId().equals("")) {
-                    existAllTask = false;
-                    break;
-                }
-            }
 
-            updateOnlyFailed(onlyfailed.isChecked());
+                updateOnlyFailed(onlyfailed.isChecked());
 
+                pd.hide();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestTaskAdd(String result, String id, String method) {
+        if (!result.equals("OK")) {
             pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        } else {
+            new LinkAddAction(AssignActivity.this, id, workplaceInspectionId, Environment.TaskTypeAddWorkplaceId).execute();
+        }
+    }
+
+    @Override
+    public void onRequestLinkAdd(String result) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        } else {
+            new TaskManagementLinksAction(AssignActivity.this, this.allsDatas, workplaceInspectionId, 2).execute();
         }
     }
 
@@ -319,7 +401,8 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
         WorkplaceInspectionItemData workplaceInspectionItemData = datas.get(position);
         intent.putExtra("readonly", false);
         intent.putExtra("idloc", workplaceInspectionItemData.getId());
-        intent.putExtra("parentId", linkId);
+        intent.putExtra("parentId", parentId);
+        intent.putExtra("linkId", workplaceInspectionItemData.getWorkplaceInspectionItemId());
 
         if (!workplaceInspectionItemData.getTask().getTaskId().equals("")) {
             TaskData taskData = workplaceInspectionItemData.getTask();
@@ -329,7 +412,7 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
             intent.putExtra("name", taskData.getName());
             intent.putExtra("description", taskData.getDescription());
             intent.putExtra("categoryId", taskData.getTaskCategoryId());
-            intent.putExtra("priorityId", taskData.getPriority());
+            intent.putExtra("priorityId", String.valueOf(taskData.getPriority()));
             intent.putExtra("date", taskData.getPlannedStartDate());
             intent.putExtra("dateend", taskData.getPlannedFinishDate());
 

@@ -67,7 +67,11 @@ public class Environment {
     public static final String EmergencyContactType  = "c9c8db39-2b01-dc72-4427-c51834bbec82";
     public static final String FamilyContactType  = "c9c8db39-2b01-c6c9-27ff-eb9e0a5b0cf0";
     public static final String StatusFail  = "dadadc39-af79-54ae-7c6f-44b1b8be7d38";
-    public static final String TaskTypeId  = "14eddc39-49f6-16c5-ecb5-550eb6e2083a";
+    public static final String TaskTypeItemId  = "14eddc39-49f6-16c5-ecb5-550eb6e2083a";
+    public static final String TaskTypeWorkplaceId  = "c5b2dd39-03b1-c9b8-fb19-feaf9c6e0d36";
+    public static final String TaskTypeAddItemId  = "14eddc39-49f6-2186-f336-2a6a5de14644";
+    public static final String TaskTypeAddWorkplaceId  = "14eddc39-49f6-3e64-08b6-5daab5b7268e";
+    public static final String CategoryAddId  = "14eddc39-49f6-3b9e-f38a-fef408856a6b";
 
     public static final String IcoEdit  = "61504";
     public static final String IcoDelete  = "61944";
