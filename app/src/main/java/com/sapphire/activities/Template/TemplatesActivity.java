@@ -31,6 +31,7 @@ import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.SpinTypesAdapter;
 import com.sapphire.adapters.TemplatesAdapter;
+import com.sapphire.api.PunchesAddAction;
 import com.sapphire.api.TemplateDeleteAction;
 import com.sapphire.api.TemplatesAction;
 import com.sapphire.api.UpdateAction;
@@ -45,7 +46,9 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
                                                                TemplatesAction.RequestTemplates,
                                                                TemplatesAction.RequestTemplatesData,
                                                                TemplateDeleteAction.RequestTemplateDelete,
-                                                               UpdateAction.RequestUpdate{
+                                                               UpdateAction.RequestUpdate,
+                                                               PunchesAddAction.RequestPunchesAdd{
+
     private BroadcastReceiver br;
     private ArrayList<TemplateData> templatesDatas;
     private TemplatesAdapter adapter;
@@ -65,6 +68,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
     private String typeId;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +146,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updaterightmenu")) {
                     try {
-                        Fragment fragmentRight = new RightFragment();
+                        Fragment fragmentRight = new RightFragment(pd);
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
                     } catch (Exception e) {}
@@ -162,6 +166,8 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
         //диалог который нельзя закрыть пользователем
         pd.setCancelable(false);
         pd.setCanceledOnTouchOutside(false);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
         templateslist = (RecyclerView) findViewById(R.id.templateslist);
         templateslist.setNestedScrollingEnabled(false);
@@ -285,8 +291,15 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         }
@@ -299,8 +312,15 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         } else {
@@ -332,14 +352,44 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();
             pd.hide();
+        }
+    }
+
+    @Override
+    public void onRequestPunchesAdd(String result) {
+        pd.hide();
+        if (!result.equals("OK")) {
+            Toast.makeText(Sapphire.getInstance(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+            }
+        } else {
+            drawerLayout.closeDrawers();
         }
     }
 
@@ -352,7 +402,7 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
 
-            Fragment fragmentRight = new RightFragment();
+            Fragment fragmentRight = new RightFragment(pd);
             fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
         } catch (Exception e) {}
 

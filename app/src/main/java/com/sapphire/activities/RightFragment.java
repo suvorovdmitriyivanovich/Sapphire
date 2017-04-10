@@ -1,5 +1,7 @@
 package com.sapphire.activities;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -17,22 +19,29 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
+import com.sapphire.activities.course.CoursesActivity;
 import com.sapphire.adapters.LanguagesAdapter;
 import com.sapphire.api.AuthenticationsDeleteAction;
+import com.sapphire.api.PunchesAddAction;
 import com.sapphire.models.LanguageData;
 import com.sapphire.logic.UserInfo;
 import java.io.File;
 import java.util.ArrayList;
 
-public class RightFragment extends Fragment implements LanguagesAdapter.OnRootClickListener {
+@SuppressLint("ValidFragment")
+public class RightFragment extends Fragment implements LanguagesAdapter.OnRootClickListener{
     private View rootView;
     private DrawerLayout drawerLayout;
     private ArrayList<LanguageData> languageDatas;
     private LanguagesAdapter adapter;
     private SharedPreferences sPref;
     private SharedPreferences.Editor ed;
+    private ProgressDialog pd;
 
-    public RightFragment(){}
+    @SuppressLint("ValidFragment")
+    public RightFragment(ProgressDialog pd){
+        this.pd = pd;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,7 +119,9 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
         punchin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pd.show();
 
+                new PunchesAddAction(getActivity(), "punchOut").execute();
             }
         });
 
@@ -118,7 +129,9 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
         punchout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pd.show();
 
+                new PunchesAddAction(getActivity(), "punchOut").execute();
             }
         });
 
@@ -126,7 +139,9 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
         lunchout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pd.show();
 
+                new PunchesAddAction(getActivity(), "lunchOut").execute();
             }
         });
 
@@ -134,7 +149,9 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
         lunchin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pd.show();
 
+                new PunchesAddAction(getActivity(), "lunchIn").execute();
             }
         });
 
@@ -142,7 +159,9 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
         breakout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pd.show();
 
+                new PunchesAddAction(getActivity(), "breakOut").execute();
             }
         });
 
@@ -150,7 +169,9 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
         breakin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pd.show();
 
+                new PunchesAddAction(getActivity(), "breakIn").execute();
             }
         });
 
@@ -158,7 +179,9 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
         statusout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pd.show();
 
+                new PunchesAddAction(getActivity(), "statusOut").execute();
             }
         });
 
@@ -166,7 +189,9 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
         statusin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pd.show();
 
+                new PunchesAddAction(getActivity(), "statusIn").execute();
             }
         });
 

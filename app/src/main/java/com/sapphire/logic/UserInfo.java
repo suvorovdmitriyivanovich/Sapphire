@@ -11,6 +11,7 @@ import com.sapphire.models.OrganizationData;
 import com.sapphire.models.OrganizationStructureData;
 import com.sapphire.models.ParameterData;
 import com.sapphire.models.ProfileData;
+import com.sapphire.models.PunchesCategoryData;
 import com.sapphire.models.TemplateData;
 import com.sapphire.models.TimeBankData;
 import com.sapphire.models.TimeZoneData;
@@ -43,6 +44,7 @@ public class UserInfo {
     private ArrayList<ProfileData> allAssignedProfiles = new ArrayList<ProfileData>();
     private ArrayList<ParameterData> parameterDatas = new ArrayList<ParameterData>();
     private String accountSession = "";
+    private ArrayList<PunchesCategoryData> punchesCategories = new ArrayList<PunchesCategoryData>();
 
     //---------------------Singleton---------------------------
     private static UserInfo userInfo;
@@ -305,5 +307,13 @@ public class UserInfo {
 
     public void setAccountSession(String accountSession) {
         this.accountSession = accountSession;
+    }
+
+    public void setPunchesCategories(ArrayList<PunchesCategoryData> punchesCategories) {
+        this.punchesCategories = punchesCategories;
+    }
+
+    public ArrayList<PunchesCategoryData> gePunchesCategories() {
+        return punchesCategories;
     }
 }

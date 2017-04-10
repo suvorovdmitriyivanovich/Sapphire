@@ -965,8 +965,15 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         } else {
@@ -1008,8 +1015,15 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         } else {
@@ -1024,8 +1038,15 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         } else {
@@ -1040,8 +1061,15 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         } else {

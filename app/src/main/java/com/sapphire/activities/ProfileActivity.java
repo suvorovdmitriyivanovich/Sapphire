@@ -35,6 +35,7 @@ import com.sapphire.adapters.AdressAdapter;
 import com.sapphire.api.AddAvatarAction;
 import com.sapphire.api.GetContactsAction;
 import com.sapphire.api.GetProfilesAction;
+import com.sapphire.api.PunchesAddAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
@@ -52,7 +53,9 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
                                                              GetContactsAction.RequestContacts,
                                                              GetContactsAction.RequestContactsData,
                                                              AddAvatarAction.RequestAddAvatar,
-                                                             UpdateAction.RequestUpdate{
+                                                             UpdateAction.RequestUpdate,
+                                                             PunchesAddAction.RequestPunchesAdd{
+
     private ProgressDialog pd;
     private TextView contact;
     private TextView additional;
@@ -78,6 +81,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     private Uri picUri;
     private Bitmap bitmap;
     private Bitmap bitmapold;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +142,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
                     }
                 } else if (putreqwest.equals("updaterightmenu")) {
                     try {
-                        Fragment fragmentRight = new RightFragment();
+                        Fragment fragmentRight = new RightFragment(pd);
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
                     } catch (Exception e) {}
@@ -226,6 +230,8 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
                 dialog.dismiss();
             }
         });
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
         ico = (ImageView) findViewById(R.id.ico);
         ico.setOnClickListener(new View.OnClickListener() {
@@ -385,8 +391,15 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         } else {
@@ -441,8 +454,15 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         }
@@ -528,8 +548,15 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         }
@@ -564,14 +591,44 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();
             pd.hide();
+        }
+    }
+
+    @Override
+    public void onRequestPunchesAdd(String result) {
+        pd.hide();
+        if (!result.equals("OK")) {
+            Toast.makeText(Sapphire.getInstance(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+            }
+        } else {
+            drawerLayout.closeDrawers();
         }
     }
 
@@ -591,7 +648,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
 
-            Fragment fragmentRight = new RightFragment();
+            Fragment fragmentRight = new RightFragment(pd);
             fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
         } catch (Exception e) {}
 

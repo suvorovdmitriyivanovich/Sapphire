@@ -23,6 +23,7 @@ import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.organizationStructure.OrganizationStructureAdapter;
 import com.sapphire.api.OrganizationStructureAction;
+import com.sapphire.api.PunchesAddAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
@@ -34,13 +35,15 @@ public class OrganizationStructureActivity extends BaseActivity implements Organ
                                                                            OrganizationStructureAdapter.OnAddClickListener,
                                                                            OrganizationStructureAction.RequestOrganizationStructures,
                                                                            OrganizationStructureAction.RequestOrganizationStructuresData,
-                                                                           UpdateAction.RequestUpdate{
+                                                                           UpdateAction.RequestUpdate,
+                                                                           PunchesAddAction.RequestPunchesAdd{
 
     private BroadcastReceiver br;
     private ProgressDialog pd;
     private OrganizationStructureAdapter adapter;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +65,7 @@ public class OrganizationStructureActivity extends BaseActivity implements Organ
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updaterightmenu")) {
                     try {
-                        Fragment fragmentRight = new RightFragment();
+                        Fragment fragmentRight = new RightFragment(pd);
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
                     } catch (Exception e) {}
@@ -108,6 +111,8 @@ public class OrganizationStructureActivity extends BaseActivity implements Organ
         adapter = new OrganizationStructureAdapter(OrganizationStructureActivity.this);
         organizations.setAdapter(adapter);
 
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+
         new OrganizationStructureAction(OrganizationStructureActivity.this).execute();
 
         nointernet_group = findViewById(R.id.nointernet_group);
@@ -141,8 +146,15 @@ public class OrganizationStructureActivity extends BaseActivity implements Organ
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         }
@@ -180,14 +192,44 @@ public class OrganizationStructureActivity extends BaseActivity implements Organ
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();
             pd.hide();
+        }
+    }
+
+    @Override
+    public void onRequestPunchesAdd(String result) {
+        pd.hide();
+        if (!result.equals("OK")) {
+            Toast.makeText(Sapphire.getInstance(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+            }
+        } else {
+            drawerLayout.closeDrawers();
         }
     }
 
@@ -207,7 +249,7 @@ public class OrganizationStructureActivity extends BaseActivity implements Organ
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
 
-            Fragment fragmentRight = new RightFragment();
+            Fragment fragmentRight = new RightFragment(pd);
             fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
         } catch (Exception e) {}
     }

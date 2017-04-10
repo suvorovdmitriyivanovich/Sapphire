@@ -31,6 +31,7 @@ import com.sapphire.adapters.WorkplaceInspectionsAdapter;
 import com.sapphire.api.ItemPrioritiesAction;
 import com.sapphire.api.ItemStatusesAction;
 import com.sapphire.api.MembersAction;
+import com.sapphire.api.PunchesAddAction;
 import com.sapphire.api.TaskManagementParametersAction;
 import com.sapphire.api.TemplatesAction;
 import com.sapphire.api.UpdateAction;
@@ -63,7 +64,9 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
                                                                           ItemStatusesAction.RequestItemStatusesData,
                                                                           TaskManagementParametersAction.RequestTaskManagementParameters,
                                                                           MembersAction.RequestMembers,
-                                                                          UpdateAction.RequestUpdate{
+                                                                          UpdateAction.RequestUpdate,
+                                                                          PunchesAddAction.RequestPunchesAdd{
+
     private BroadcastReceiver br;
     private ArrayList<WorkplaceInspectionData> workplaceInspectionDatas;
     private WorkplaceInspectionsAdapter adapter;
@@ -77,6 +80,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
     private View text_workplace_no;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,7 +157,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updaterightmenu")) {
                     try {
-                        Fragment fragmentRight = new RightFragment();
+                        Fragment fragmentRight = new RightFragment(pd);
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
                     } catch (Exception e) {}
@@ -182,6 +186,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         workplaceinspectionslist.setAdapter(adapter);
 
         text_workplace_no = findViewById(R.id.text_workplace_no);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
         nointernet_group = findViewById(R.id.nointernet_group);
         par_nointernet_group = nointernet_group.getLayoutParams();
@@ -285,8 +290,15 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         }
@@ -299,8 +311,15 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         } else {
@@ -327,8 +346,15 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         }
@@ -350,8 +376,15 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         }
@@ -373,8 +406,15 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         }
@@ -397,8 +437,15 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         } else {
@@ -415,8 +462,15 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         } else {
@@ -431,14 +485,44 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();
             pd.hide();
+        }
+    }
+
+    @Override
+    public void onRequestPunchesAdd(String result) {
+        pd.hide();
+        if (!result.equals("OK")) {
+            Toast.makeText(Sapphire.getInstance(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+            }
+        } else {
+            drawerLayout.closeDrawers();
         }
     }
 
@@ -458,7 +542,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
 
-            Fragment fragmentRight = new RightFragment();
+            Fragment fragmentRight = new RightFragment(pd);
             fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
         } catch (Exception e) {}
 

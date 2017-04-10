@@ -42,6 +42,8 @@ import com.sapphire.api.MeetingDeleteAction;
 import com.sapphire.api.MeetingsAction;
 import com.sapphire.api.MembersAction;
 import com.sapphire.api.PoliciesAction;
+import com.sapphire.api.PunchesAddAction;
+import com.sapphire.api.PunchesCategoriesAction;
 import com.sapphire.api.TemplatesAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.api.WorkplaceInspectionDeleteAction;
@@ -55,6 +57,7 @@ import com.sapphire.models.MeetingData;
 import com.sapphire.models.MemberData;
 import com.sapphire.models.PolicyData;
 import com.sapphire.models.ProfileData;
+import com.sapphire.models.PunchesCategoryData;
 import com.sapphire.models.TemplateData;
 import com.sapphire.logic.UserInfo;
 import com.sapphire.models.WorkplaceInspectionData;
@@ -88,8 +91,10 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
                                                           MeetingsAction.RequestMeetings,
                                                           MeetingDeleteAction.RequestMeetingDelete,
                                                           MembersAction.RequestMembers,
+                                                          PunchesCategoriesAction.RequestPunchesCategories,
                                                           MembersAdapter.OnRootMembersClickListener,
-                                                          UpdateAction.RequestUpdate{
+                                                          UpdateAction.RequestUpdate,
+                                                          PunchesAddAction.RequestPunchesAdd{
     private static long back_pressed;
     private SharedPreferences sPref;
     private SharedPreferences.Editor ed;
@@ -123,6 +128,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
     private boolean thisWorkplace = false;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,12 +171,16 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updaterightmenu")) {
                     try {
-                        Fragment fragmentRight = new RightFragment();
+                        Fragment fragmentRight = new RightFragment(pd);
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
+                } else if (putreqwest.equals("unauthorized")) {
+                    Intent intnt = new Intent(Sapphire.getInstance(), LoginActivity.class);
+                    startActivity(intnt);
+                    finish();
                 }
             }
         };
@@ -261,6 +271,8 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
         text_workplace_no = findViewById(R.id.text_workplace_no);
         text_meetings_no = findViewById(R.id.text_meetings_no);
         text_members_no = findViewById(R.id.text_members_no);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
         nointernet_group = findViewById(R.id.nointernet_group);
         par_nointernet_group = nointernet_group.getLayoutParams();
@@ -716,8 +728,8 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
 
     @Override
     public void onRequestMembers(String result, ArrayList<ProfileData> datas) {
-        pd.hide();
         if (!result.equals("OK")) {
+            pd.hide();
             updateVisibility();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
@@ -740,6 +752,26 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
                 datasMembers.add(memberData);
             }
             UserInfo.getUserInfo().setAllMembers(datasMembers);
+
+            new PunchesCategoriesAction(MainActivity.this).execute();
+            //pd.hide();
+        }
+    }
+
+    @Override
+    public void onRequestPunchesCategories(String result, ArrayList<PunchesCategoryData> datas) {
+        pd.hide();
+        if (!result.equals("OK")) {
+            updateVisibility();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        } else {
+            UserInfo.getUserInfo().setPunchesCategories(datas);
         }
     }
 
@@ -806,6 +838,22 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
         }
     }
 
+    @Override
+    public void onRequestPunchesAdd(String result) {
+        pd.hide();
+        if (!result.equals("OK")) {
+            Toast.makeText(Sapphire.getInstance(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        } else {
+            drawerLayout.closeDrawers();
+        }
+    }
+
     public int GetPixelFromDips(float pixels) {
         // Get the screen's density scale
         final float scale = getResources().getDisplayMetrics().density;
@@ -822,7 +870,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
 
-            Fragment fragmentRight = new RightFragment();
+            Fragment fragmentRight = new RightFragment(pd);
             fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
         } catch (Exception e) {}
 
