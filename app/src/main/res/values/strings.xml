@@ -224,4 +224,6 @@
     <string name="break_out">BREAK OUT</string>
     <string name="status_in">STATUS IN</string>
     <string name="status_out">STATUS OUT</string>
+    <string name="text_attendances">My Attendances</string>
+    <string name="text_attendances_no">No attendances to display</string>
 </resources>

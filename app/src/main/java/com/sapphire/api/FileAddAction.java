@@ -8,7 +8,6 @@ import com.sapphire.logic.Environment;
 import com.sapphire.models.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.ResponseData;
-import com.sapphire.models.TemplateData;
 import com.sapphire.logic.UserInfo;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,7 +25,6 @@ public class FileAddAction extends AsyncTask{
     private String id;
     private String url;
     private String nameField;
-    private TemplateData templateData = new TemplateData();
 
     public FileAddAction(Context context, String fileId, String id, String url, String nameField) {
         this.mContext = context;

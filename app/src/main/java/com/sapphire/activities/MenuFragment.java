@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
+import com.sapphire.activities.attendance.AttendancesActivity;
 import com.sapphire.activities.course.CoursesActivity;
 import com.sapphire.activities.discipline.DisciplinesActivity;
 import com.sapphire.activities.document.DocumentsActivity;
@@ -174,6 +175,9 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
             startActivity(intent);
         } else if (urlRoute.equals("/me/my-time-banks")) {
             Intent intent = new Intent(getActivity(), TimeBanksActivity.class);
+            startActivity(intent);
+        } else if (urlRoute.equals("/me/my-attendance")) {
+            Intent intent = new Intent(getActivity(), AttendancesActivity.class);
             startActivity(intent);
         }
     }
