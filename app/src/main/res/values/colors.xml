@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303030</color>
     <color name="colorAccent">#4d4d4d</color>
     <color name="pressed_color">#7cabaaaa</color>
+    <color name="grey_light">#dadada</color>
     <color name="grey">#bcbcbc</color>
     <color name="normal_color">#00FFFFFF</color>
     <color name="light_green">#6fb38d</color>

@@ -10,6 +10,6 @@
         android:layout_centerVertical="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/text_name"
-        android:textColor="#333333" />
+        android:textColor="@color/black" />
 
 </RelativeLayout>

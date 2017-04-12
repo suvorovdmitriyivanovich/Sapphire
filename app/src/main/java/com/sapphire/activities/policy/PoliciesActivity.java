@@ -113,7 +113,7 @@ public class PoliciesActivity extends BaseActivity implements PoliciesAdapter.On
         int width = dm.widthPixels;
         policieslist.setIndicatorBounds((width - GetPixelFromDips(50)), (width - GetPixelFromDips(20)));
 
-        adapter = new PoliciesAdapter(this);
+        adapter = new PoliciesAdapter(this, false);
         policieslist.setAdapter(adapter);
 
         text_policies_no = findViewById(R.id.text_policies_no);

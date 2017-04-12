@@ -17,6 +17,10 @@ import java.util.ArrayList;
 
 public class PoliciesAdapter extends BaseExpandableListAdapter {
 
+    public interface OnGroupPoliciesClickListener{
+        void onGroupPoliciesClick(int groupPosition, boolean isExpanded);
+    }
+
     public interface OnRootPoliciesClickListener{
         void onRootPoliciesClick(int groupPosition, int childPosition);
     }
@@ -28,11 +32,13 @@ public class PoliciesAdapter extends BaseExpandableListAdapter {
     private ArrayList<PolicyData> mGroups;
     private Context mContext;
     private Typeface typeFace;
+    private boolean isDashboard;
 
-    public PoliciesAdapter(Context context) {
+    public PoliciesAdapter(Context context, boolean isDashboard) {
         mContext = context;
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
         mGroups = new ArrayList<PolicyData>();
+        this.isDashboard = isDashboard;
     }
 
     @Override
@@ -71,12 +77,16 @@ public class PoliciesAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
+    public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView,
                              ViewGroup parent) {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.group_view, null);
+            if (isDashboard) {
+                convertView = inflater.inflate(R.layout.group_view_fiksed, null);
+            } else {
+                convertView = inflater.inflate(R.layout.group_view, null);
+            }
         }
 
         if (isExpanded){
@@ -89,6 +99,16 @@ public class PoliciesAdapter extends BaseExpandableListAdapter {
         TextView name = (TextView) convertView.findViewById(R.id.text_name);
         name.setText(mGroups.get(groupPosition).getName());
 
+        if (isDashboard) {
+            View root = convertView.findViewById(R.id.root);
+            root.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((OnGroupPoliciesClickListener) mContext).onGroupPoliciesClick(groupPosition, isExpanded);
+                }
+            });
+        }
+
         return convertView;
 
     }
@@ -98,7 +118,11 @@ public class PoliciesAdapter extends BaseExpandableListAdapter {
                              View convertView, ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.child_policies_view, null);
+            if (isDashboard) {
+                convertView = inflater.inflate(R.layout.child_policies_view_fiksed, null);
+            } else {
+                convertView = inflater.inflate(R.layout.child_policies_view, null);
+            }
         }
 
         PolicyData data = mGroups.get(groupPosition).getSubPolicies().get(childPosition);

@@ -63,11 +63,13 @@ import com.sapphire.logic.UserInfo;
 import com.sapphire.models.WorkplaceInspectionData;
 import java.util.ArrayList;
 
-public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootCoursesClickListener,
+public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroupCoursesClickListener,
+                                                          CoursesAdapter.OnRootCoursesClickListener,
                                                           CoursesAdapter.OnOpenCoursesClickListener,
                                                           CoursesAdapter.OnListCoursesClickListener,
                                                           CoursesAction.RequestCourses,
                                                           CoursesAction.RequestCoursesData,
+                                                          PoliciesAdapter.OnGroupPoliciesClickListener,
                                                           PoliciesAdapter.OnRootPoliciesClickListener,
                                                           PoliciesAdapter.OnOpenPoliciesClickListener,
                                                           PoliciesAction.RequestPolicies,
@@ -203,14 +205,14 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
         int width = dm.widthPixels;
         courseslist.setIndicatorBounds((width - GetPixelFromDips(80)), (width - GetPixelFromDips(50)));
 
-        adapterCourses = new CoursesAdapter(this);
+        adapterCourses = new CoursesAdapter(this, true);
         courseslist.setAdapter(adapterCourses);
 
         policieslist = (ExpandableListView) findViewById(R.id.policieslist);
 
         policieslist.setIndicatorBounds((width - GetPixelFromDips(80)), (width - GetPixelFromDips(50)));
 
-        adapterPolicies = new PoliciesAdapter(this);
+        adapterPolicies = new PoliciesAdapter(this, true);
         policieslist.setAdapter(adapterPolicies);
 
         AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
@@ -342,6 +344,51 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
         if (adapterCourses == null) {
             return;
         }
+        int totalHeight = GetPixelFromDips(coursesDatas.size() * 40);
+        for (int i = 0; i < coursesDatas.size(); i++) {
+            if (courseslist.isGroupExpanded(i)) {
+                totalHeight += GetPixelFromDips(coursesDatas.get(i).getSubCourses().size() * 120);
+            }
+        }
+
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+
+        ViewGroup.LayoutParams par = listView.getLayoutParams();
+        par.height = totalHeight;
+
+        listView.setLayoutParams(par);
+        listView.requestLayout();
+    }
+
+    // Метод установки размера списка по высоте относительно экрана, нужен для правильного отображения списков
+    public void justifyListViewHeightBasedOnChildrenPolicies(ExpandableListView listView) {
+        if (adapterPolicies == null) {
+            return;
+        }
+        int totalHeight = GetPixelFromDips(policiesDatas.size() * 40);
+        for (int i = 0; i < policiesDatas.size(); i++) {
+            if (policieslist.isGroupExpanded(i)) {
+                totalHeight += GetPixelFromDips(policiesDatas.get(i).getSubPolicies().size() * 80);
+            }
+        }
+
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+
+        ViewGroup.LayoutParams par = listView.getLayoutParams();
+        par.height = totalHeight;
+
+        listView.setLayoutParams(par);
+        listView.requestLayout();
+    }
+
+    /*
+    // Метод установки размера списка по высоте относительно экрана, нужен для правильного отображения списков
+    public void justifyListViewHeightBasedOnChildrenCourses(ExpandableListView listView) {
+        if (adapterCourses == null) {
+            return;
+        }
         int totalHeight = 0;
         for (int i = 0; i < adapterCourses.getGroupCount(); i++) {
             View listItem = adapterCourses.getGroupView(i, false, null, listView);
@@ -392,6 +439,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
         listView.setLayoutParams(par);
         listView.requestLayout();
     }
+    */
 
     @Override
     public void onRootMembersClick(int position) {
@@ -482,6 +530,16 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
     }
 
     @Override
+    public void onGroupCoursesClick(int groupPosition, boolean isExpanded) {
+        if (!isExpanded) {
+            courseslist.expandGroup(groupPosition);
+        } else {
+            courseslist.collapseGroup(groupPosition);
+        }
+        justifyListViewHeightBasedOnChildrenCourses(courseslist);
+    }
+
+    @Override
     public void onRootCoursesClick(int groupPosition, int childPosition) {
         //Intent intent = new Intent(PoliciesActivity.this, PdfActivity.class);
         //startActivity(intent);
@@ -547,6 +605,16 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnRootC
 
         //pd.hide();
         new PoliciesAction(MainActivity.this, true).execute();
+    }
+
+    @Override
+    public void onGroupPoliciesClick(int groupPosition, boolean isExpanded) {
+        if (!isExpanded) {
+            policieslist.expandGroup(groupPosition);
+        } else {
+            policieslist.collapseGroup(groupPosition);
+        }
+        justifyListViewHeightBasedOnChildrenPolicies(policieslist);
     }
 
     @Override

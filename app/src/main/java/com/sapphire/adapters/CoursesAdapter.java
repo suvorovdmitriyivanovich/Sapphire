@@ -17,6 +17,10 @@ import java.util.ArrayList;
 
 public class CoursesAdapter extends BaseExpandableListAdapter {
 
+    public interface OnGroupCoursesClickListener{
+        void onGroupCoursesClick(int groupPosition, boolean isExpanded);
+    }
+
     public interface OnRootCoursesClickListener{
         void onRootCoursesClick(int groupPosition, int childPosition);
     }
@@ -32,11 +36,13 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
     private ArrayList<CoursesData> mGroups;
     private Context mContext;
     private Typeface typeFace;
+    private boolean isDashboard = false;
 
-    public CoursesAdapter(Context context) {
+    public CoursesAdapter(Context context, boolean isDashboard) {
         mContext = context;
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
         mGroups = new ArrayList<CoursesData>();
+        this.isDashboard = isDashboard;
     }
 
     @Override
@@ -75,23 +81,38 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
+    public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView,
                              ViewGroup parent) {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.group_view, null);
+            if (isDashboard) {
+                convertView = inflater.inflate(R.layout.group_view_fiksed, null);
+            } else {
+                convertView = inflater.inflate(R.layout.group_view, null);
+            }
         }
 
         if (isExpanded){
             //Изменяем что-нибудь, если текущая Group раскрыта
-        }
-        else{
+            //((OnGroupCoursesClickListener)mContext).onGroupCoursesClick(groupPosition, isExpanded);
+        } else{
             //Изменяем что-нибудь, если текущая Group скрыта
+            //((OnGroupCoursesClickListener)mContext).onGroupCoursesClick(groupPosition, isExpanded);
         }
 
         TextView name = (TextView) convertView.findViewById(R.id.text_name);
         name.setText(mGroups.get(groupPosition).getName());
+
+        if (isDashboard) {
+            View root = convertView.findViewById(R.id.root);
+            root.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((OnGroupCoursesClickListener) mContext).onGroupCoursesClick(groupPosition, isExpanded);
+                }
+            });
+        }
 
         return convertView;
 
@@ -102,7 +123,11 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
                              View convertView, ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.child_courses_view, null);
+            if (isDashboard) {
+                convertView = inflater.inflate(R.layout.child_courses_view_fiksed, null);
+            } else {
+                convertView = inflater.inflate(R.layout.child_courses_view, null);
+            }
         }
 
         CoursesData coursesData = mGroups.get(groupPosition).getSubCourses().get(childPosition);

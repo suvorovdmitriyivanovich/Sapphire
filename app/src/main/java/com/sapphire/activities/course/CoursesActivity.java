@@ -113,7 +113,7 @@ public class CoursesActivity extends BaseActivity implements CoursesAdapter.OnRo
         int width = dm.widthPixels;
         courseslist.setIndicatorBounds((width - GetPixelFromDips(50)), (width - GetPixelFromDips(20)));
 
-        adapter = new CoursesAdapter(this);
+        adapter = new CoursesAdapter(this, false);
         courseslist.setAdapter(adapter);
 
         text_courses_no = findViewById(R.id.text_courses_no);
