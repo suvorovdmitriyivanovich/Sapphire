@@ -23,8 +23,6 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
-import com.sapphire.activities.FilesActivity;
-import com.sapphire.activities.LoginActivity;
 import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.TimeOffRequestsAdapter;
@@ -45,7 +43,6 @@ import java.util.ArrayList;
 public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequestsAdapter.OnRootTimeOffRequestsClickListener,
                                                                      TimeOffRequestsAdapter.OnOpenTimeOffRequestsClickListener,
                                                                      TimeOffRequestsAdapter.OnDeleteTimeOffRequestsClickListener,
-                                                                     TimeOffRequestsAdapter.OnFilesTimeOffRequestsClickListener,
                                                                      TimeOffRequestsAction.RequestTimeOffRequests,
                                                                      TimeOffRequestDeleteAction.RequestTimeOffRequestDelete,
                                                                      TimeBanksAction.RequestTimeBanks,
@@ -67,12 +64,18 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
     private DrawerLayout drawerLayout;
+    private boolean edit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_time_off_requests);
+
+        UserInfo.getUserInfo().setAllDays(null);
+
+        Intent intent = getIntent();
+        edit = intent.getBooleanExtra("edit", false);
 
         AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
         adb_save.setCancelable(true);
@@ -98,7 +101,7 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
 
                 pd.show();
 
-                new TimeOffRequestDeleteAction(TimeOffRequestsActivity.this, datas.get(currentPosition).getTimeOffRequestId()).execute();
+                new TimeOffRequestDeleteAction(TimeOffRequestsActivity.this, datas.get(currentPosition).getTimeoffRequestId()).execute();
             }
         });
 
@@ -125,6 +128,9 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TimeOffRequestsActivity.this, TimeOffRequestActivity.class);
+
+                UserInfo.getUserInfo().setDays(null);
+
                 startActivity(intent);
             }
         });
@@ -168,7 +174,7 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
         list.setNestedScrollingEnabled(false);
         list.setLayoutManager(new LinearLayoutManager(TimeOffRequestsActivity.this));
 
-        adapter = new TimeOffRequestsAdapter(this);
+        adapter = new TimeOffRequestsAdapter(this, edit);
         list.setAdapter(adapter);
 
         text_no = findViewById(R.id.text_no);
@@ -186,6 +192,10 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
         });
 
         UpdateBottom();
+
+        if (!edit) {
+            add.setVisibility(View.GONE);
+        }
     }
 
     private void UpdateBottom() {
@@ -213,11 +223,12 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
         Intent intent = new Intent(TimeOffRequestsActivity.this, TimeOffRequestActivity.class);
         TimeOffRequestData data = datas.get(position);
         intent.putExtra("readonly", true);
-        intent.putExtra("name", data.getName());
-        intent.putExtra("description", data.getDescription());
-        intent.putExtra("date", data.getDate());
-        intent.putExtra("id", data.getTimeOffRequestId());
-        intent.putExtra("posted", data.getPostedOnBoard());
+        intent.putExtra("attendanceCodeId", data.getAttendanceCodeId());
+        intent.putExtra("id", data.getTimeoffRequestId());
+        intent.putExtra("statusId", data.getTimeoffRequestStatusId());
+
+        UserInfo.getUserInfo().setAllDays(data.getDays());
+
         startActivity(intent);
     }
 
@@ -225,11 +236,12 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
     public void onOpenTimeOffRequestsClick(int position) {
         Intent intent = new Intent(TimeOffRequestsActivity.this, TimeOffRequestActivity.class);
         TimeOffRequestData data = datas.get(position);
-        intent.putExtra("name", data.getName());
-        intent.putExtra("description", data.getDescription());
-        intent.putExtra("date", data.getDate());
-        intent.putExtra("id", data.getTimeOffRequestId());
-        intent.putExtra("posted", data.getPostedOnBoard());
+        intent.putExtra("attendanceCodeId", data.getAttendanceCodeId());
+        intent.putExtra("id", data.getTimeoffRequestId());
+        intent.putExtra("statusId", data.getTimeoffRequestStatusId());
+
+        UserInfo.getUserInfo().setAllDays(data.getDays());
+
         startActivity(intent);
     }
 
@@ -241,19 +253,6 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
         button_cancel_save.setText(getResources().getString(R.string.text_cancel));
         button_send_save.setText(getResources().getString(R.string.text_delete));
         dialog_confirm.show();
-    }
-
-    @Override
-    public void onFilesTimeOffRequestsClick(int position) {
-        Intent intent = new Intent(TimeOffRequestsActivity.this, FilesActivity.class);
-        TimeOffRequestData data = datas.get(position);
-        intent.putExtra("name", data.getName());
-        intent.putExtra("id", data.getTimeOffRequestId());
-        intent.putExtra("url", Environment.WorkplaceInspectionsFilesURL);
-        intent.putExtra("nameField", "data");
-
-        UserInfo.getUserInfo().setFileDatas(data.getFiles());
-        startActivity(intent);
     }
 
     @Override
@@ -331,9 +330,7 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
         } else {
             UserInfo.getUserInfo().setTimeBankDatas(timeBankDatas);
 
-            new AttendanceCodesAction(TimeOffRequestsActivity.this).execute();
-
-            //pd.hide();
+            pd.hide();
         }
     }
 
@@ -359,7 +356,9 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
         } else {
             UserInfo.getUserInfo().setAttendanceCodeDatas(attendanceCodeDatas);
 
-            pd.hide();
+            new TimeOffRequestsAction(TimeOffRequestsActivity.this).execute();
+
+            //pd.hide();
         }
     }
 
@@ -432,7 +431,7 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
         } catch (Exception e) {}
 
         pd.show();
-        new TimeOffRequestsAction(TimeOffRequestsActivity.this).execute();
+        new AttendanceCodesAction(TimeOffRequestsActivity.this).execute();
     }
 
     @Override

@@ -31,7 +31,6 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.FilesActivity;
-import com.sapphire.activities.LoginActivity;
 import com.sapphire.adapters.SpinTemplatesAdapter;
 import com.sapphire.adapters.WorkplaceInspectionItemsAdapter;
 import com.sapphire.api.GetTemplateAction;

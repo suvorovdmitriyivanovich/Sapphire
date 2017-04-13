@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
-import com.sapphire.activities.LoginActivity;
 import com.sapphire.adapters.SpinPrioritisAdapter;
 import com.sapphire.adapters.SpinStatusesAdapter;
 import com.sapphire.adapters.SpinStringAdapter;

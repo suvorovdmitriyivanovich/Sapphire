@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
-import com.sapphire.activities.LoginActivity;
 import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
 import com.sapphire.adapters.PoliciesAdapter;

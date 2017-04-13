@@ -56,11 +56,13 @@ public class DayItemsAdapter extends RecyclerView.Adapter<DayItemsAdapter.ViewHo
     private Typeface typeFace;
     private boolean notchange = false;
     private ArrayList<Integer> textWatchers = new ArrayList<Integer>();
+    private boolean edit = false;
 
-    public DayItemsAdapter(Context context) {
+    public DayItemsAdapter(Context context, boolean edit) {
         this.context = context;
         listData = new ArrayList<DayData>();
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
+        this.edit = edit;
     }
 
     @Override
@@ -76,7 +78,7 @@ public class DayItemsAdapter extends RecyclerView.Adapter<DayItemsAdapter.ViewHo
 
         holder.border.setVisibility(View.VISIBLE);
 
-        if (textWatchers.indexOf(position) == -1) {
+        if (edit && textWatchers.indexOf(position) == -1) {
             TextWatcher inputTextWatcher = new TextWatch(position);
             holder.count.addTextChangedListener(inputTextWatcher);
             textWatchers.add(position);
@@ -129,6 +131,11 @@ public class DayItemsAdapter extends RecyclerView.Adapter<DayItemsAdapter.ViewHo
                 }
             }
         });
+
+        if (!edit) {
+            holder.delete.setVisibility(View.GONE);
+            holder.count.setFocusable(false);
+        }
     }
 
     private class TextWatch implements TextWatcher {

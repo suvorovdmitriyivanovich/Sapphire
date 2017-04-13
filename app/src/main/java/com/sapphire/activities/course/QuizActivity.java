@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
-import com.sapphire.activities.LoginActivity;
 import com.sapphire.adapters.AnswersAdapter;
 import com.sapphire.api.GetQuizAction;
 import com.sapphire.api.PostQuizzesAction;

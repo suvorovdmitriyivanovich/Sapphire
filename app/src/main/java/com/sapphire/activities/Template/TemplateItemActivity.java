@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
-import com.sapphire.activities.LoginActivity;
 import com.sapphire.api.TemplateItemAddAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;

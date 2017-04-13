@@ -7,6 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DayData {
+
+    private String timeoffRequestDayId = "";
+    private String timeoffRequestId = "";
     private Long date = 0l;
     private Double ammount = 0.0;
 
@@ -20,8 +23,14 @@ public class DayData {
 
     public DayData(JSONObject data) {
         try {
+            if (!data.isNull("TimeoffRequestDayId")) {
+                setTimeoffRequestDayId(data.getString("TimeoffRequestDayId"));
+            }
+            if (!data.isNull("TimeoffRequestId")) {
+                setTimeoffRequestId(data.getString("TimeoffRequestId"));
+            }
             if (!data.isNull("Date")) {
-                setDate(data.getLong("Date"));
+                setDate(data.getString("Date"));
             }
             if (!data.isNull("Ammount")) {
                 setAmmount(data.getDouble("Ammount"));
@@ -31,8 +40,28 @@ public class DayData {
         }
     }
 
+    public String getTimeoffRequestDayId() {
+        return timeoffRequestDayId;
+    }
+
+    public void setTimeoffRequestDayId(String timeoffRequestDayId) {
+        this.timeoffRequestDayId = timeoffRequestDayId;
+    }
+
+    public String getTimeoffRequestId() {
+        return timeoffRequestId;
+    }
+
+    public void setTimeoffRequestId(String timeoffRequestId) {
+        this.timeoffRequestId = timeoffRequestId;
+    }
+
     public void setDate(Long date) {
         this.date = date;
+    }
+
+    public void setDate(String date) {
+        this.date = DateOperations.getDate(date);
     }
 
     public Long getDate() {

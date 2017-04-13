@@ -33,7 +33,6 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
-import com.sapphire.activities.LoginActivity;
 import com.sapphire.adapters.TopicsAdapter;
 import com.sapphire.adapters.MeetingMembersAdapter;
 import com.sapphire.adapters.SpinTemplatesAdapter;

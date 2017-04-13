@@ -74,6 +74,7 @@ public class Environment {
     public static final String TaskTypeAddItemId  = "14eddc39-49f6-2186-f336-2a6a5de14644";
     public static final String TaskTypeAddWorkplaceId  = "14eddc39-49f6-3e64-08b6-5daab5b7268e";
     public static final String CategoryAddId  = "14eddc39-49f6-3b9e-f38a-fef408856a6b";
+    public static final String TimeOffRequestAddId  = "7512de39-ee8b-007c-8da3-05343f1a6bcb";
 
     public static final String IcoEdit  = "61504";
     public static final String IcoDelete  = "61944";

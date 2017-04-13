@@ -9,75 +9,120 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class TimeOffRequestData {
-    private String timeOffRequestId = "";
-    private TimeBankData timeBank = new TimeBankData();
-    private AttendanceCodeData attendanceCode = new AttendanceCodeData();
+    private String timeoffRequestId = "";
+    private String organizationId = "";
+    private String profileId = "";
+    private String timeoffRequestStatusId = "";
+    private String timeBankName = "";
+    private String attendanceCodeId = "";
+    private String employeeName = "";
+    private String department = "";
+    private Long requestDate = 0l;
     private ArrayList<DayData> days = new ArrayList<DayData>();
-    private String name = "";
-    private String description = "";
-    private Long date = 0l;
-    private boolean completed = false;
-    private boolean postedOnBoard = false;
-    private ArrayList<FileData> files = new ArrayList<FileData>();
 
     public TimeOffRequestData() {
 
     }
 
-    public TimeOffRequestData(String name) {
-        setName(name);
-    }
-
     public TimeOffRequestData(JSONObject data) {
         try {
-            if (!data.isNull("WorkplaceInspectionId")) {
-                setTimeOffRequestId(data.getString("WorkplaceInspectionId"));
+            if (!data.isNull("TimeoffRequestId")) {
+                setTimeoffRequestId(data.getString("TimeoffRequestId"));
             }
-            if (!data.isNull("Name")) {
-                setName(data.getString("Name"));
+            if (!data.isNull("OrganizationId")) {
+                setOrganizationId(data.getString("OrganizationId"));
             }
-            if (!data.isNull("Description")) {
-                setDescription(data.getString("Description"));
+            if (!data.isNull("ProfileId")) {
+                setProfileId(data.getString("ProfileId"));
             }
-            if (!data.isNull("Date")) {
-                setDate(data.getString("Date"));
+            if (!data.isNull("TimeoffRequestStatusId")) {
+                setTimeoffRequestStatusId(data.getString("TimeoffRequestStatusId"));
             }
-            if (!data.isNull("Completed")) {
-                setCompleted(data.getBoolean("Completed"));
+            if (!data.isNull("TimeBankName")) {
+                setTimeBankName(data.getString("TimeBankName"));
             }
-            if (!data.isNull("PostedOnBoard")) {
-                setPostedOnBoard(data.getBoolean("PostedOnBoard"));
+            if (!data.isNull("AttendanceCodeId")) {
+                setAttendanceCodeId(data.getString("AttendanceCodeId"));
             }
-            if (!data.isNull("Files")) {
-                setFiles(data.getJSONArray("Files"));
+            if (!data.isNull("EmployeeName")) {
+                setEmployeeName(data.getString("EmployeeName"));
+            }
+            if (!data.isNull("Department")) {
+                setDepartment(data.getString("Department"));
+            }
+            if (!data.isNull("RequestDate")) {
+                setRequestDate(data.getString("RequestDate"));
+            }
+            if (!data.isNull("Days")) {
+                setDays(data.getJSONArray("Days"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public String getTimeOffRequestId() {
-        return timeOffRequestId;
+    public String getTimeoffRequestId() {
+        return timeoffRequestId;
     }
 
-    public void setTimeOffRequestId(String timeOffRequestId) {
-        this.timeOffRequestId = timeOffRequestId;
+    public void setTimeoffRequestId(String timeoffRequestId) {
+        this.timeoffRequestId = timeoffRequestId;
     }
 
-    public TimeBankData getTimeBank() {
-        return timeBank;
+    public String getOrganizationId() {
+        return organizationId;
     }
 
-    public void setTimeBank(TimeBankData timeBank) {
-        this.timeBank = timeBank;
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
     }
 
-    public AttendanceCodeData getAttendanceCode() {
-        return attendanceCode;
+    public String getProfileId() {
+        return profileId;
     }
 
-    public void setAttendanceCode(AttendanceCodeData attendanceCode) {
-        this.attendanceCode = attendanceCode;
+    public void setProfileId(String profileId) {
+        this.profileId = profileId;
+    }
+
+    public String getTimeoffRequestStatusId() {
+        return timeoffRequestStatusId;
+    }
+
+    public void setTimeoffRequestStatusId(String timeoffRequestStatusId) {
+        this.timeoffRequestStatusId = timeoffRequestStatusId;
+    }
+
+    public String getTimeBankName() {
+        return timeBankName;
+    }
+
+    public void setTimeBankName(String timeBankName) {
+        this.timeBankName = timeBankName;
+    }
+
+    public String getAttendanceCodeId() {
+        return attendanceCodeId;
+    }
+
+    public void setAttendanceCodeId(String attendanceCodeId) {
+        this.attendanceCodeId = attendanceCodeId;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     public ArrayList<DayData> getDays() {
@@ -88,70 +133,34 @@ public class TimeOffRequestData {
         this.days = days;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Long getDate() {
-        return date;
-    }
-
-    public String getDateString() {
-        String dateString = "";
-        if (date != 0l) {
-            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date dateT = new Date();
-            dateT.setTime(date);
-            dateString = format.format(date);
-        }
-        return dateString;
-    }
-
-    public void setDate(String date) {
-        this.date = DateOperations.getDate(date);
-    }
-
-    public boolean getCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
-
-    public boolean getPostedOnBoard() {
-        return postedOnBoard;
-    }
-
-    public void setPostedOnBoard(boolean postedOnBoard) {
-        this.postedOnBoard = postedOnBoard;
-    }
-
-    public ArrayList<FileData> getFiles() {
-        return files;
-    }
-
-    public void setFiles(JSONArray files) {
-        ArrayList<FileData> fileDatas = new ArrayList<FileData>();
-        for (int y=0; y < files.length(); y++) {
+    public void setDays(JSONArray days) {
+        ArrayList<DayData> dayDatas = new ArrayList<DayData>();
+        for (int y=0; y < days.length(); y++) {
             try {
-                fileDatas.add(new FileData(files.getJSONObject(y)));
+                dayDatas.add(new DayData(days.getJSONObject(y)));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        this.files = fileDatas;
+        this.days = dayDatas;
+    }
+
+    public Long getRequestDate() {
+        return requestDate;
+    }
+
+    public String getRequestDateString() {
+        String dateString = "";
+        if (requestDate != 0l) {
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+            Date dateT = new Date();
+            dateT.setTime(requestDate);
+            dateString = format.format(dateT);
+        }
+        return dateString;
+    }
+
+    public void setRequestDate(String requestDate) {
+        this.requestDate = DateOperations.getDate(requestDate);
     }
 }

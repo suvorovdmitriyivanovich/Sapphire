@@ -40,6 +40,7 @@ public class UserInfo {
     private ArrayList<TimeBankData> timeBankDatas = new ArrayList<TimeBankData>();
     private ArrayList<AttendanceCodeData> attendanceCodeDatas = new ArrayList<AttendanceCodeData>();
     private ArrayList<DayData> days = new ArrayList<DayData>();
+    private ArrayList<DayData> allDays = new ArrayList<DayData>();
     private ArrayList<ProfileData> assignedProfiles = new ArrayList<ProfileData>();
     private ArrayList<ProfileData> allAssignedProfiles = new ArrayList<ProfileData>();
     private ArrayList<ParameterData> parameterDatas = new ArrayList<ParameterData>();
@@ -261,12 +262,31 @@ public class UserInfo {
         return attendanceCodeDatas;
     }
 
+    public String getAttendanceCodeName(String id) {
+        String attendanceCodeName = "";
+        for (AttendanceCodeData item: attendanceCodeDatas) {
+            if (item.getAttendanceCodeId().equals(id)) {
+                attendanceCodeName = item.getName();
+                break;
+            }
+        }
+        return attendanceCodeName;
+    }
+
     public void setDays(ArrayList<DayData> days) {
         this.days = days;
     }
 
     public ArrayList<DayData> getDays() {
         return days;
+    }
+
+    public void setAllDays(ArrayList<DayData> allDays) {
+        this.allDays = allDays;
+    }
+
+    public ArrayList<DayData> getAllDays() {
+        return allDays;
     }
 
     public void setAssignedProfiles(ArrayList<ProfileData> assignedProfiles) {

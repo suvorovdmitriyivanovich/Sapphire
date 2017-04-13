@@ -28,7 +28,6 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.FilesActivity;
-import com.sapphire.activities.LoginActivity;
 import com.sapphire.adapters.InvestigationItemsAdapter;
 import com.sapphire.api.GetInvestigationAction;
 import com.sapphire.api.InvestigationAddAction;
