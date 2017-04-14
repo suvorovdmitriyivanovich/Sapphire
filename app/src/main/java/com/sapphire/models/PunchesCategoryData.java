@@ -4,24 +4,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PunchesCategoryData {
-    private String fileTypeId = "";
+    private String punchCategoryId = "";
     private String name = "";
     private String description = "";
-    private String contentType = "";
-    private String extension = "";
 
     public PunchesCategoryData() {
 
     }
 
-    public PunchesCategoryData(String fileTypeId) {
-        this.fileTypeId = fileTypeId;
-    }
-
     public PunchesCategoryData(JSONObject data) {
         try {
-            if (!data.isNull("FileTypeId")) {
-                setFileTypeId(data.getString("FileTypeId"));
+            if (!data.isNull("PunchCategoryId")) {
+                setPunchCategoryId(data.getString("PunchCategoryId"));
             }
             if (!data.isNull("Name")) {
                 setName(data.getString("Name"));
@@ -29,23 +23,17 @@ public class PunchesCategoryData {
             if (!data.isNull("Description")) {
                 setDescription(data.getString("Description"));
             }
-            if (!data.isNull("ContentType")) {
-                setContentType(data.getString("ContentType"));
-            }
-            if (!data.isNull("Extension")) {
-                setExtension(data.getString("Extension"));
-            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public String getFileTypeId() {
-        return fileTypeId;
+    public String getPunchCategoryId() {
+        return punchCategoryId;
     }
 
-    public void setFileTypeId(String fileTypeId) {
-        this.fileTypeId = fileTypeId;
+    public void setPunchCategoryId(String punchCategoryId) {
+        this.punchCategoryId = punchCategoryId;
     }
 
     public String getName() {
@@ -62,21 +50,5 @@ public class PunchesCategoryData {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
-    public String getExtension() {
-        return extension;
-    }
-
-    public void setExtension(String extension) {
-        this.extension = extension;
     }
 }

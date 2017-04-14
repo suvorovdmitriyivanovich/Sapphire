@@ -34,7 +34,7 @@ public class DocumentAddAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.Documents;
+        String urlstring = Environment.SERVER + Environment.DocumentsURL;
 
         UserInfo userInfo = UserInfo.getUserInfo();
 

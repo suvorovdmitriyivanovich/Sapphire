@@ -32,7 +32,7 @@ public class PerformanceDeleteAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.PerformanceEvaluations + "?model%5B%5D="+id;
+        String urlstring = Environment.SERVER + Environment.PerformanceEvaluationsURL + "?model%5B%5D="+id;
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"DELETE", UserInfo.getUserInfo().getAuthToken()));
 

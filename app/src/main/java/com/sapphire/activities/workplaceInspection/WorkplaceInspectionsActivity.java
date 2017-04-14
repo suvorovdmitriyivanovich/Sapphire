@@ -277,7 +277,10 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         intent.putExtra("description", workplaceInspectionData.getDescription());
         intent.putExtra("date", workplaceInspectionData.getDate());
         intent.putExtra("workplaceInspectionId", workplaceInspectionData.getWorkplaceInspectionId());
-        intent.putExtra("posted", workplaceInspectionData.getPostedOnBoard());
+        intent.putExtra("inspected", workplaceInspectionData.getInspected());
+
+        UserInfo.getUserInfo().setWorkplaceInspection(workplaceInspectionData);
+
         startActivity(intent);
     }
 

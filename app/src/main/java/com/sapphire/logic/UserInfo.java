@@ -16,6 +16,8 @@ import com.sapphire.models.TemplateData;
 import com.sapphire.models.TimeBankData;
 import com.sapphire.models.TimeZoneData;
 import com.sapphire.models.TopicData;
+import com.sapphire.models.WorkplaceInspectionData;
+
 import java.util.ArrayList;
 
 public class UserInfo {
@@ -46,6 +48,7 @@ public class UserInfo {
     private ArrayList<ParameterData> parameterDatas = new ArrayList<ParameterData>();
     private String accountSession = "";
     private ArrayList<PunchesCategoryData> punchesCategories = new ArrayList<PunchesCategoryData>();
+    private WorkplaceInspectionData workplaceInspection = new WorkplaceInspectionData();
 
     //---------------------Singleton---------------------------
     private static UserInfo userInfo;
@@ -335,5 +338,24 @@ public class UserInfo {
 
     public ArrayList<PunchesCategoryData> gePunchesCategories() {
         return punchesCategories;
+    }
+
+    public String getPunchesCategoryId(String name) {
+        String punchesCategoryId = "";
+        for (PunchesCategoryData item: punchesCategories) {
+            if (item.getName().equals(name)) {
+                punchesCategoryId = item.getPunchCategoryId();
+                break;
+            }
+        }
+        return punchesCategoryId;
+    }
+
+    public WorkplaceInspectionData getWorkplaceInspection() {
+        return workplaceInspection;
+    }
+
+    public void setWorkplaceInspection(WorkplaceInspectionData workplaceInspection) {
+        this.workplaceInspection = workplaceInspection;
     }
 }

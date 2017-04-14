@@ -37,7 +37,7 @@ public class DocumentsAction extends AsyncTask{
 
         String filter = "?$filter=ProfileId%20eq%20guid'"+userInfo.getProfile().getProfileId()+"'";
 
-        String urlstring = Environment.SERVER + Environment.Documents + filter;
+        String urlstring = Environment.SERVER + Environment.DocumentsURL + filter;
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", userInfo.getAuthToken()));
 

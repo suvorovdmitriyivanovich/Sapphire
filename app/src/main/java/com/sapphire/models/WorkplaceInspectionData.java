@@ -17,6 +17,11 @@ public class WorkplaceInspectionData {
     private boolean completed = false;
     private boolean postedOnBoard = false;
     private ArrayList<FileData> files = new ArrayList<FileData>();
+    private JSONArray filesJson = new JSONArray();
+    private String organizationId = "";
+    private JSONArray itemsJson = new JSONArray();
+    private JSONObject taskJson = new JSONObject();
+    private boolean inspected = false;
 
     public WorkplaceInspectionData() {
 
@@ -48,6 +53,19 @@ public class WorkplaceInspectionData {
             }
             if (!data.isNull("Files")) {
                 setFiles(data.getJSONArray("Files"));
+                setFilesJson(data.getJSONArray("Files"));
+            }
+            if (!data.isNull("OrganizationId")) {
+                setOrganizationId(data.getString("OrganizationId"));
+            }
+            if (!data.isNull("Items")) {
+                setItemsJson(data.getJSONArray("Items"));
+            }
+            if (!data.isNull("Task")) {
+                setTaskJson(data.getJSONObject("Task"));
+            }
+            if (!data.isNull("Inspected")) {
+                setInspected(data.getBoolean("Inspected"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -127,5 +145,45 @@ public class WorkplaceInspectionData {
             }
         }
         this.files = fileDatas;
+    }
+
+    public JSONArray getFilesJson() {
+        return filesJson;
+    }
+
+    public void setFilesJson(JSONArray filesJson) {
+        this.filesJson = filesJson;
+    }
+
+    public String getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
+    }
+
+    public JSONArray getItemsJson() {
+        return itemsJson;
+    }
+
+    public void setItemsJson(JSONArray itemsJson) {
+        this.itemsJson = itemsJson;
+    }
+
+    public JSONObject getTaskJson() {
+        return taskJson;
+    }
+
+    public void setTaskJson(JSONObject taskJson) {
+        this.taskJson = taskJson;
+    }
+
+    public boolean getInspected() {
+        return inspected;
+    }
+
+    public void setInspected(boolean inspected) {
+        this.inspected = inspected;
     }
 }

@@ -18,6 +18,7 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.adapters.WorkplaceInspectionItemsAdapter;
+import com.sapphire.api.AssignTasksAction;
 import com.sapphire.api.GetWorkplaceInspectionAction;
 import com.sapphire.api.LinkAddAction;
 import com.sapphire.api.TaskAddAction;
@@ -40,6 +41,7 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
                                                             WorkplaceInspectionItemsAdapter.OnFilesClickListener,
                                                             TaskAddAction.RequestTaskAdd,
                                                             LinkAddAction.RequestLinkAdd,
+                                                            AssignTasksAction.RequestAssignTasks,
                                                             UpdateAction.RequestUpdate{
     private String workplaceInspectionId = "";
     private ProgressDialog pd;
@@ -61,6 +63,7 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
     private String name = "";
     private String description = "";
     private Long date = 0l;
+    private boolean inspected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +99,8 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
         assign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                pd.show();
+                new AssignTasksAction(AssignActivity.this).execute();
             }
         });
 
@@ -117,6 +121,7 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
         if (date == 0l) {
             date = System.currentTimeMillis();
         }
+        inspected = intent.getBooleanExtra("inspected", false);
 
         View root = findViewById(R.id.rootLayout);
         root.setOnClickListener(new View.OnClickListener() {
@@ -207,7 +212,7 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
         } else {
             onlyfailed.setVisibility(View.VISIBLE);
         }
-        if (existFail) {
+        if (existFail && !inspected) {
             assign.setVisibility(View.VISIBLE);
         } else {
             assign.setVisibility(View.GONE);
@@ -486,6 +491,31 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();
+            pd.hide();
+        }
+    }
+
+    @Override
+    public void onRequestAssignTasks(String result, WorkplaceInspectionData workplaceInspectionData) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+            }
+        } else {
+            inspected = true;
+            assign.setVisibility(View.GONE);
             pd.hide();
         }
     }

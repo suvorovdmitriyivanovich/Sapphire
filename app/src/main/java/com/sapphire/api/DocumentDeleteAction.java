@@ -32,7 +32,7 @@ public class DocumentDeleteAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.Documents + "?model%5B%5D="+id;
+        String urlstring = Environment.SERVER + Environment.DocumentsURL + "?model%5B%5D="+id;
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"DELETE", UserInfo.getUserInfo().getAuthToken()));
 

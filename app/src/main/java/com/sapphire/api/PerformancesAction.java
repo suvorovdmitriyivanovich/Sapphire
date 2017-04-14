@@ -40,7 +40,7 @@ public class PerformancesAction extends AsyncTask{
 
         String filter = "?$filter=ProfileId%20eq%20guid'"+userInfo.getProfile().getProfileId()+"'";
 
-        String urlstring = Environment.SERVER + Environment.PerformanceEvaluations + filter;
+        String urlstring = Environment.SERVER + Environment.PerformanceEvaluationsURL + filter;
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", userInfo.getAuthToken()));
 

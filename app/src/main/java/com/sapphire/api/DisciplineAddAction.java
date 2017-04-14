@@ -34,7 +34,7 @@ public class DisciplineAddAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.Disciplines;
+        String urlstring = Environment.SERVER + Environment.DisciplinesURL;
 
         UserInfo userInfo = UserInfo.getUserInfo();
 

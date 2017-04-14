@@ -34,7 +34,7 @@ public class PerformanceAddAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
-        String urlstring = Environment.SERVER + Environment.PerformanceEvaluations;
+        String urlstring = Environment.SERVER + Environment.PerformanceEvaluationsURL;
 
         UserInfo userInfo = UserInfo.getUserInfo();
 

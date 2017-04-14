@@ -42,11 +42,11 @@ public class Environment {
     public static final String TopicTemplateItemsURL = "/v1/HealthAndSafety/TopicTemplates/Items";
     public static final String MembersURL = "/v1/HealthAndSafety/Members";
     public static final String MeetingsURL = "/v1/HealthAndSafety/Meetings";
-    public static final String PerformanceEvaluations = "/v1/PerformanceEvaluations";
+    public static final String PerformanceEvaluationsURL = "/v1/PerformanceEvaluations";
     public static final String PerformanceEvaluationsFilesURL = "/v1/PerformanceEvaluations/AttachFile";
-    public static final String Disciplines = "/v1/Disciplines";
+    public static final String DisciplinesURL = "/v1/Disciplines";
     public static final String DisciplinesFilesURL = "/v1/Disciplines/AttachFile";
-    public static final String Documents = "/v1/Docs";
+    public static final String DocumentsURL = "/v1/Docs";
     public static final String DocumentsFilesURL = "/v1/Docs/AttachFile";
     public static final String DocCategoriesURL = "/v1/Docs/Categories";
     public static final String TimeOffRequestsURL = "/v1/WorkforceManagement/TimeoffRequests";
@@ -60,6 +60,7 @@ public class Environment {
     public static final String AssignURL = "/v1/TaskManagement/Assign";
     public static final String PunchesCategoriesURL = "/v1/Punches/Categories";
     public static final String PunchesURL = "/v1/Punches";
+    public static final String AttendancesURL = "/v1/WorkforceManagement/Attendances";
 
     public static final String PolicyStatusStarted = "1586dc39-979b-3991-c822-a4bcb14d1345";
     public static final String PolicyStatusAcknowledged  = "1586dc39-979b-ab1c-838f-1917fce340de";

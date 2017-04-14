@@ -42,7 +42,7 @@ public class PunchesAddAction extends AsyncTask{
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("ProfileId", UserInfo.getUserInfo().getProfile().getProfileId());
-            jsonObject.put("PunchTypeId", punchCategoryId);
+            jsonObject.put("PunchTypeId", UserInfo.getUserInfo().getPunchesCategoryId(punchCategoryId));
             jsonArray.put(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();

@@ -121,7 +121,7 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             public void onClick(View v) {
                 pd.show();
 
-                new PunchesAddAction(getActivity(), "punchOut").execute();
+                new PunchesAddAction(getActivity(), "Punch In").execute();
             }
         });
 
@@ -131,7 +131,7 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             public void onClick(View v) {
                 pd.show();
 
-                new PunchesAddAction(getActivity(), "punchOut").execute();
+                new PunchesAddAction(getActivity(), "Punch Out").execute();
             }
         });
 
@@ -141,7 +141,7 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             public void onClick(View v) {
                 pd.show();
 
-                new PunchesAddAction(getActivity(), "lunchOut").execute();
+                new PunchesAddAction(getActivity(), "Lunch Out").execute();
             }
         });
 
@@ -151,7 +151,7 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             public void onClick(View v) {
                 pd.show();
 
-                new PunchesAddAction(getActivity(), "lunchIn").execute();
+                new PunchesAddAction(getActivity(), "Lunch In").execute();
             }
         });
 
@@ -161,7 +161,7 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             public void onClick(View v) {
                 pd.show();
 
-                new PunchesAddAction(getActivity(), "breakOut").execute();
+                new PunchesAddAction(getActivity(), "Break Out").execute();
             }
         });
 
@@ -171,7 +171,7 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             public void onClick(View v) {
                 pd.show();
 
-                new PunchesAddAction(getActivity(), "breakIn").execute();
+                new PunchesAddAction(getActivity(), "Break In").execute();
             }
         });
 
@@ -181,7 +181,7 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             public void onClick(View v) {
                 pd.show();
 
-                new PunchesAddAction(getActivity(), "statusOut").execute();
+                new PunchesAddAction(getActivity(), "Status Out").execute();
             }
         });
 
@@ -191,7 +191,7 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             public void onClick(View v) {
                 pd.show();
 
-                new PunchesAddAction(getActivity(), "statusIn").execute();
+                new PunchesAddAction(getActivity(), "Status In").execute();
             }
         });
 
