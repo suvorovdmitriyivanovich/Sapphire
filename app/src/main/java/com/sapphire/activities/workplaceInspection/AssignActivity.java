@@ -185,6 +185,9 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
             this.datas = allsDatas;
         }
 
+        adapter = null;
+        adapter = new WorkplaceInspectionItemsAdapter(this, true, true);
+        itemlist.setAdapter(adapter);
         adapter.setListArray(this.datas);
         updateVisibility();
     }
