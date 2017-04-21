@@ -93,25 +93,42 @@
             android:layout_height="wrap_content"
             android:id="@+id/scroll_group">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_below="@+id/top_group"
-                android:text="@string/name"
-                android:id="@+id/text_name"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp" />
-
-            <EditText
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/text_name"
-                android:inputType="text"
-                android:id="@+id/name"
-                android:hint="@string/name"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_marginTop="10dp"
+                android:id="@+id/name_group"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/name"
+                    android:id="@+id/text_name"
+                    android:textColor="@color/grey_dark"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/name"
+                    android:id="@+id/text_name_hint"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_below="@+id/text_name"
+                    android:textColor="@color/grey_dark" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_name"
+                    android:inputType="text"
+                    android:id="@+id/name"/>
+
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -122,27 +139,45 @@
                 android:id="@+id/text_name_error"
                 android:layout_marginLeft="12dp"
                 android:textColor="@color/red"
-                android:layout_marginRight="10dp" />
+                android:layout_marginRight="10dp"
+                android:visibility="invisible" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_below="@+id/text_name_error"
-                android:text="@string/text_description"
-                android:id="@+id/text_description"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp" />
-
-            <EditText
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/text_description"
-                android:inputType="text"
-                android:id="@+id/description"
-                android:hint="@string/text_description"
+                android:id="@+id/description_group"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/text_description"
+                    android:id="@+id/text_description"
+                    android:textColor="@color/grey_dark"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/text_description"
+                    android:id="@+id/text_description_hint"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_below="@+id/text_description"
+                    android:textColor="@color/grey_dark" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_description"
+                    android:inputType="text"
+                    android:id="@+id/description" />
+
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -152,7 +187,7 @@
                 android:text="@string/text_items"
                 android:id="@+id/text_items"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black" />
 

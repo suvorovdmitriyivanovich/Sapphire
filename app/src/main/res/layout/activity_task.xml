@@ -391,7 +391,7 @@
                 android:text="@string/text_assignments"
                 android:id="@+id/text_assignments"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black" />
 

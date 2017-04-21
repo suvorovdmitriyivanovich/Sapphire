@@ -68,8 +68,8 @@ public class NetRequests {
                 in.close();
 
                 rez = response.toString();
-            } else if (responseCode == 400) {
-                rez = "400";
+            //} else if (responseCode == 400) {
+            //    rez = "400";
             } else if (responseCode == 401) {
                 rez = Sapphire.getInstance().getResources().getString(R.string.text_unauthorized);
             } else {

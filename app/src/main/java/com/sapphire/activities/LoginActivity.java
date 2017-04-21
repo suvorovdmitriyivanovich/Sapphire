@@ -3,7 +3,9 @@ package com.sapphire.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -30,12 +32,12 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
     private EditText organization;
     private EditText name;
     private EditText pass;
-    private TextView text_organization_error;
+    private View text_organization_error;
     private View text_name_error;
     private TextView text_pass_error;
-    private View text_organization;
-    private View text_name;
-    private View text_pass;
+    private TextView text_organization;
+    private TextView text_name;
+    private TextView text_pass;
     private TextView text_error;
     private boolean isCheckOrganization = false;
     private boolean isCheckName = false;
@@ -43,11 +45,18 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
     private Animation animationErrorDown;
     private Animation animationErrorUpOrganization;
     private Animation animationErrorUpName;
-    private Animation animationErrorUpPassword;
+    private Animation animationErrorUpPass;
     private boolean showErrorOrganization = false;
     private boolean showErrorName = false;
-    private boolean showErrorPassword = false;
+    private boolean showErrorPass = false;
+    private Animation animationUp;
     private Animation animationDown;
+    private boolean showOrganization = true;
+    private boolean showName = true;
+    private boolean showPass = true;
+    private TextView text_organization_hint;
+    private TextView text_name_hint;
+    private TextView text_pass_hint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,24 +70,28 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
         organization = (EditText) findViewById(R.id.organization);
         name = (EditText) findViewById(R.id.name);
         pass = (EditText) findViewById(R.id.password);
-        text_organization_error = (TextView) findViewById(R.id.text_organization_error);
+        text_organization_error = findViewById(R.id.text_organization_error);
+        text_organization_hint = (TextView) findViewById(R.id.text_organization_hint);
         text_name_error = findViewById(R.id.text_name_error);
+        text_name_hint = (TextView) findViewById(R.id.text_name_hint);
         text_pass_error = (TextView) findViewById(R.id.text_password_error);
-        text_organization = findViewById(R.id.text_organization);
-        text_name = findViewById(R.id.text_name);
-        text_pass = findViewById(R.id.text_password);
+        text_pass_hint = (TextView) findViewById(R.id.text_pass_hint);
+        text_organization = (TextView) findViewById(R.id.text_organization);
+        text_name = (TextView) findViewById(R.id.text_name);
+        text_pass = (TextView) findViewById(R.id.text_password);
         text_error = (TextView) findViewById(R.id.text_error);
 
         animationErrorDown = AnimationUtils.loadAnimation(this, R.anim.translate_down);
         animationErrorUpOrganization = AnimationUtils.loadAnimation(this, R.anim.translate_up);
         animationErrorUpName = AnimationUtils.loadAnimation(this, R.anim.translate_up);
-        animationErrorUpPassword = AnimationUtils.loadAnimation(this, R.anim.translate_up);
+        animationErrorUpPass = AnimationUtils.loadAnimation(this, R.anim.translate_up);
 
         animationErrorUpOrganization.setAnimationListener(animationErrorUpOrganizationListener);
         animationErrorUpName.setAnimationListener(animationErrorUpNameListener);
-        animationErrorUpPassword.setAnimationListener(animationErrorUpPasswordListener);
+        animationErrorUpPass.setAnimationListener(animationErrorUpPasswordListener);
 
-        animationDown = AnimationUtils.loadAnimation(this, R.anim.translate_down);
+        animationUp = AnimationUtils.loadAnimation(this, R.anim.translate_scale_up);
+        animationDown = AnimationUtils.loadAnimation(this, R.anim.translate_scale_down);
 
         TextWatcher inputTextWatcher = new TextWatch(1);
         organization.addTextChangedListener(inputTextWatcher);
@@ -89,12 +102,15 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
 
         if (!sPref.getString(ORGANIZATION, "").equals("")) {
             organization.setText(sPref.getString(ORGANIZATION, ""));
+            showOrganization = false;
         }
         if (!sPref.getString(USER, "").equals("")) {
             name.setText(sPref.getString(USER, ""));
+            showName = false;
         }
         if (!sPref.getString(PASS, "").equals("")) {
             pass.setText(sPref.getString(PASS, ""));
+            showPass = false;
         }
 
         userInfo = UserInfo.getUserInfo();
@@ -149,6 +165,57 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
             @Override
             public void onClick(View v) {
                 hideSoftKeyboard();
+            }
+        });
+
+        organization.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus && organization.getText().length() == 0 && showOrganization) {
+                    text_organization_hint.setVisibility(View.GONE);
+                    text_organization.setVisibility(View.VISIBLE);
+                    showOrganization = false;
+                    text_organization.startAnimation(animationUp);
+                } else if (!hasFocus && organization.getText().length() == 0 && !showOrganization) {
+                    text_organization.setVisibility(View.INVISIBLE);
+                    showOrganization = true;
+                    text_organization_hint.setVisibility(View.VISIBLE);
+                    text_organization_hint.startAnimation(animationDown);
+                }
+            }
+        });
+
+        name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus && name.getText().length() == 0 && showName) {
+                    text_name_hint.setVisibility(View.GONE);
+                    text_name.setVisibility(View.VISIBLE);
+                    showName = false;
+                    text_name.startAnimation(animationUp);
+                } else if (!hasFocus && name.getText().length() == 0 && !showName) {
+                    text_name.setVisibility(View.INVISIBLE);
+                    showName = true;
+                    text_name_hint.setVisibility(View.VISIBLE);
+                    text_name_hint.startAnimation(animationDown);
+                }
+            }
+        });
+
+        pass.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus && pass.getText().length() == 0 && showPass) {
+                    text_pass_hint.setVisibility(View.GONE);
+                    text_pass.setVisibility(View.VISIBLE);
+                    showPass = false;
+                    text_pass.startAnimation(animationUp);
+                } else if (!hasFocus && pass.getText().length() == 0 && !showPass) {
+                    text_pass.setVisibility(View.INVISIBLE);
+                    showPass = true;
+                    text_pass_hint.setVisibility(View.VISIBLE);
+                    text_pass_hint.startAnimation(animationDown);
+                }
             }
         });
 
@@ -224,15 +291,19 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
     private void updateViews() {
         if (isCheckOrganization && organization.getText().toString().equals("")) {
             text_organization_error.setVisibility(View.VISIBLE);
-            text_organization.setVisibility(View.INVISIBLE);
-            //text_organization.startAnimation(animationDown);
+            organization.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.red), PorterDuff.Mode.SRC_ATOP);
+            text_organization.setTextColor(ContextCompat.getColor(this, R.color.red));
+            text_organization_hint.setTextColor(ContextCompat.getColor(this, R.color.red));
             if (!showErrorOrganization) {
                 showErrorOrganization = true;
                 text_organization_error.startAnimation(animationErrorDown);
             }
-        } else {
-            //text_organization_error.setVisibility(View.GONE);
+        } else if (!organization.getText().toString().equals("")) {
             text_organization.setVisibility(View.VISIBLE);
+            organization.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+            text_organization.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_organization_hint.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_organization_hint.setVisibility(View.GONE);
             if (showErrorOrganization) {
                 showErrorOrganization = false;
                 text_organization_error.startAnimation(animationErrorUpOrganization);
@@ -240,14 +311,19 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
         }
         if (isCheckName && name.getText().toString().equals("")) {
             text_name_error.setVisibility(View.VISIBLE);
-            //text_name.setVisibility(View.GONE);
+            name.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.red), PorterDuff.Mode.SRC_ATOP);
+            text_name.setTextColor(ContextCompat.getColor(this, R.color.red));
+            text_name_hint.setTextColor(ContextCompat.getColor(this, R.color.red));
             if (!showErrorName) {
                 showErrorName = true;
                 text_name_error.startAnimation(animationErrorDown);
             }
-        } else {
-            //text_name_error.setVisibility(View.GONE);
-            //text_name.setVisibility(View.VISIBLE);
+        } else if (!name.getText().toString().equals("")) {
+            text_name.setVisibility(View.VISIBLE);
+            name.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+            text_name.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_name_hint.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_name_hint.setVisibility(View.GONE);
             if (showErrorName) {
                 showErrorName = false;
                 text_name_error.startAnimation(animationErrorUpName);
@@ -255,21 +331,27 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
         }
         if (isCheckPass && (pass.getText().toString().equals("") || pass.getText().length() < 6)) {
             text_pass_error.setVisibility(View.VISIBLE);
-            if (!showErrorPassword) {
-                showErrorPassword = true;
+            pass.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.red), PorterDuff.Mode.SRC_ATOP);
+            pass.setTextColor(ContextCompat.getColor(this, R.color.red));
+            text_pass.setTextColor(ContextCompat.getColor(this, R.color.red));
+            text_pass_hint.setTextColor(ContextCompat.getColor(this, R.color.red));
+            if (!showErrorPass) {
+                showErrorPass = true;
                 text_pass_error.startAnimation(animationErrorDown);
             }
-        } else {
-            //text_pass_error.setVisibility(View.GONE);
-            if (showErrorPassword) {
-                showErrorPassword = false;
-                text_pass_error.startAnimation(animationErrorUpPassword);
+        } else if (!pass.getText().toString().equals("")) {
+            pass.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+            pass.setTextColor(ContextCompat.getColor(this, R.color.black));
+            text_pass.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_pass_hint.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_pass_hint.setVisibility(View.GONE);
+            if (showErrorPass) {
+                showErrorPass = false;
+                text_pass_error.startAnimation(animationErrorUpPass);
             }
         }
-        if (isCheckPass && pass.getText().toString().equals("")) {
-            //text_pass.setVisibility(View.GONE);
-        } else {
-            //text_pass.setVisibility(View.VISIBLE);
+        if (!pass.getText().toString().equals("")) {
+            text_pass.setVisibility(View.VISIBLE);
         }
         if (!pass.getText().toString().equals("") && pass.getText().length() < 6) {
             text_pass_error.setText(getResources().getString(R.string.text_password_error_lenght));
