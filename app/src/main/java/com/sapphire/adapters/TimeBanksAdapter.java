@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.sapphire.R;
-import com.sapphire.models.TimeBankData;
+import com.sapphire.models.TimeBankAccountData;
 import java.util.ArrayList;
 
 public class TimeBanksAdapter extends RecyclerView.Adapter<TimeBanksAdapter.ViewHolder> {
@@ -31,12 +31,12 @@ public class TimeBanksAdapter extends RecyclerView.Adapter<TimeBanksAdapter.View
         }
     }
 
-    private ArrayList<TimeBankData> mData;
+    private ArrayList<TimeBankAccountData> mData;
     private Context mContext;
 
     public TimeBanksAdapter(Context context) {
         mContext = context;
-        mData = new ArrayList<TimeBankData>();
+        mData = new ArrayList<TimeBankAccountData>();
     }
 
     @Override
@@ -48,12 +48,12 @@ public class TimeBanksAdapter extends RecyclerView.Adapter<TimeBanksAdapter.View
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        TimeBankData data = mData.get(position);
+        TimeBankAccountData data = mData.get(position);
 
         holder.border.setVisibility(View.VISIBLE);
 
         holder.text_name.setText(data.getName());
-        holder.text_description.setText(data.getTimeBank());
+        holder.text_description.setText(data.getTimeBank().getName());
 
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,13 +73,13 @@ public class TimeBanksAdapter extends RecyclerView.Adapter<TimeBanksAdapter.View
             return 0;
     }
 
-    public void setData(ArrayList<TimeBankData> list) {
+    public void setData(ArrayList<TimeBankAccountData> list) {
         mData.clear();
         mData.addAll(list);
         notifyDataSetChanged();
     }
 
-    public TimeBankData getDataItem(int position) {
+    public TimeBankAccountData getDataItem(int position) {
         return mData.get(position);
     }
 }

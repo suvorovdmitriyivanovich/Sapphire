@@ -5,19 +5,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import com.sapphire.models.TimeBankData;
+import com.sapphire.models.TimeBankAccountData;
 import java.util.ArrayList;
 
 public class SpinTimeBanksAdapter extends ArrayAdapter<String> {
 
     private Context context;
-    private ArrayList<TimeBankData> values;
+    private ArrayList<TimeBankAccountData> values;
     private int textViewResourceId;
 
     public SpinTimeBanksAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
         this.context = context;
-        this.values = new ArrayList<TimeBankData>();
+        this.values = new ArrayList<TimeBankAccountData>();
         this.textViewResourceId = textViewResourceId;
     }
 
@@ -52,7 +52,7 @@ public class SpinTimeBanksAdapter extends ArrayAdapter<String> {
         return convertView;
     }
 
-    public void setValues(ArrayList<TimeBankData> values) {
+    public void setValues(ArrayList<TimeBankAccountData> values) {
         this.values.clear();
         this.values.addAll(values);
         this.notifyDataSetChanged();

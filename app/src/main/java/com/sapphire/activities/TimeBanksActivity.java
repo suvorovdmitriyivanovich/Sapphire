@@ -23,7 +23,7 @@ import com.sapphire.api.TimeBanksAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
-import com.sapphire.models.TimeBankData;
+import com.sapphire.models.TimeBankAccountData;
 import java.util.ArrayList;
 
 public class TimeBanksActivity extends BaseActivity implements TimeBanksAdapter.OnRootTimeBanksClickListener,
@@ -32,7 +32,7 @@ public class TimeBanksActivity extends BaseActivity implements TimeBanksAdapter.
                                                                PunchesAddAction.RequestPunchesAdd{
 
     private BroadcastReceiver br;
-    private ArrayList<TimeBankData> datas;
+    private ArrayList<TimeBankAccountData> datas;
     private TimeBanksAdapter adapter;
     private ProgressDialog pd;
     private RecyclerView list;
@@ -151,7 +151,7 @@ public class TimeBanksActivity extends BaseActivity implements TimeBanksAdapter.
     }
 
     @Override
-    public void onRequestTimeBanks(String result, ArrayList<TimeBankData> datas) {
+    public void onRequestTimeBanks(String result, ArrayList<TimeBankAccountData> datas) {
         if (!result.equals("OK")) {
             updateVisibility();
             pd.hide();

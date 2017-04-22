@@ -516,6 +516,14 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
             }
         });
 
+        name.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+        description.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+        status.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+        severity.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+        priority.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+        comments.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+        recommendedActions.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+
         updateViews();
 
         UpdateBottom();
@@ -757,8 +765,23 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        text_name.clearAnimation();
+        text_description.clearAnimation();
+        text_comments.clearAnimation();
+        text_recommended_actions.clearAnimation();
+        text_name_error.clearAnimation();
+        text_name_hint.clearAnimation();
+        text_description_hint.clearAnimation();
+        text_comments_hint.clearAnimation();
+        text_recommended_actions_hint.clearAnimation();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
+        name.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
         unregisterReceiver(br);
     }
 }

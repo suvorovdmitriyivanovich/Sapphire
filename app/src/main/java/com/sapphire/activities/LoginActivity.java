@@ -398,6 +398,15 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
     @Override
     protected void onPause() {
         super.onPause();
+        text_organization.clearAnimation();
+        text_name.clearAnimation();
+        text_pass.clearAnimation();
+        text_organization_error.clearAnimation();
+        text_name_error.clearAnimation();
+        text_pass_error.clearAnimation();
+        text_organization_hint.clearAnimation();
+        text_name_hint.clearAnimation();
+        text_pass_hint.clearAnimation();
     }
 
     @Override
@@ -415,5 +424,8 @@ public class LoginActivity extends BaseActivity implements AuthenticationsAction
     @Override
     public void onDestroy() {
         super.onDestroy();
+        organization.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+        name.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+        pass.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
     }
 }

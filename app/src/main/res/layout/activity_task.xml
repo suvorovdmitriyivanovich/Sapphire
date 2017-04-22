@@ -72,23 +72,42 @@
             android:layout_height="wrap_content"
             android:id="@+id/scroll_group">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/name"
-                android:id="@+id/text_name"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp" />
-
-            <EditText
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:id="@+id/name"
-                android:hint="@string/name"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_marginTop="10dp"
+                android:id="@+id/name_group"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/name"
+                    android:id="@+id/text_name"
+                    android:textColor="@color/grey_dark"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/name"
+                    android:id="@+id/text_name_hint"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_below="@+id/text_name"
+                    android:textColor="@color/grey_dark" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_name"
+                    android:inputType="text"
+                    android:id="@+id/name"/>
+
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -98,25 +117,45 @@
                 android:id="@+id/text_name_error"
                 android:layout_marginLeft="12dp"
                 android:textColor="@color/red"
-                android:layout_marginRight="10dp" />
+                android:layout_marginRight="10dp"
+                android:visibility="invisible" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/text_description"
-                android:id="@+id/text_description"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp" />
-
-            <EditText
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:id="@+id/description"
-                android:hint="@string/text_description"
+                android:id="@+id/description_group"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/text_description"
+                    android:id="@+id/text_description"
+                    android:textColor="@color/grey_dark"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/text_description"
+                    android:id="@+id/text_description_hint"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_below="@+id/text_description"
+                    android:textColor="@color/grey_dark" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_description"
+                    android:inputType="text"
+                    android:id="@+id/description" />
+
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -148,7 +187,9 @@
                 android:layout_alignLeft="@+id/template"
                 android:layout_alignStart="@+id/template"
                 android:layout_alignRight="@+id/template"
-                android:layout_alignEnd="@+id/template" />
+                android:layout_alignEnd="@+id/template"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -177,16 +218,14 @@
                 android:id="@+id/spinnerPriority"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:layout_alignLeft="@+id/priority"
-                android:layout_alignStart="@+id/priority"
-                android:layout_alignRight="@+id/priority"
-                android:layout_alignEnd="@+id/priority" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/date_text_group"
                 android:layout_marginLeft="10dp"
+                android:id="@+id/date_grup"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp">
 
@@ -195,7 +234,8 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/text_start_date"
-                    android:id="@+id/text_date" />
+                    android:id="@+id/text_date"
+                    android:visibility="invisible" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -203,74 +243,93 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/text_start_time"
                     android:id="@+id/text_start_time"
-                    android:layout_marginLeft="145dp" />
+                    android:layout_marginLeft="145dp"
+                    android:visibility="invisible" />
 
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/date_group"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp">
-
-                <EditText
-                    android:layout_width="105dp"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:hint="@string/text_start_date"
-                    android:id="@+id/date"
-                    android:focusable="false" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/text_start_date"
+                    android:id="@+id/text_date_hint"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_below="@+id/text_date"
+                    android:textColor="@color/grey_dark" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/text_start_time"
+                    android:id="@+id/text_time_hint"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="149dp"
+                    android:layout_below="@+id/text_date"
+                    android:textColor="@color/grey_dark" />
 
                 <RelativeLayout
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:id="@+id/image_date_group"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/date"
-                    android:layout_toEndOf="@+id/date"
-                    android:background="@drawable/dialog_button">
-
-                    <ImageView
-                        android:layout_width="23dp"
-                        android:layout_height="23dp"
-                        android:id="@+id/image_date"
-                        android:layout_centerVertical="true"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/date"/>
-                </RelativeLayout>
-
-                <EditText
-                    android:layout_width="95dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/time"
-                    android:hint="@string/text_start_time"
-                    android:focusable="false"
-                    android:layout_alignParentTop="true"
-                    android:layout_toRightOf="@+id/image_date_group"
-                    android:layout_toEndOf="@+id/image_date_group"
-                    android:layout_marginLeft="10dp" />
+                    android:id="@+id/date_group"
+                    android:layout_below="@+id/text_date">
 
-                <RelativeLayout
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:id="@+id/image_time_group"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/time"
-                    android:layout_toEndOf="@+id/time"
-                    android:background="@drawable/dialog_button">
-
-                    <ImageView
-                        android:layout_width="23dp"
-                        android:layout_height="23dp"
-                        android:id="@+id/image_time"
+                    <EditText
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/time"/>
-                </RelativeLayout>
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:id="@+id/date"
+                        android:focusable="false" />
 
+                    <RelativeLayout
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/image_date_group"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/date"
+                        android:layout_toEndOf="@+id/date"
+                        android:background="@drawable/dialog_button">
+
+                        <ImageView
+                            android:layout_width="23dp"
+                            android:layout_height="23dp"
+                            android:id="@+id/image_date"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/date"/>
+                    </RelativeLayout>
+
+                    <EditText
+                        android:layout_width="95dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/time"
+                        android:focusable="false"
+                        android:layout_alignParentTop="true"
+                        android:layout_toRightOf="@+id/image_date_group"
+                        android:layout_toEndOf="@+id/image_date_group"
+                        android:layout_marginLeft="10dp" />
+
+                    <RelativeLayout
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/image_time_group"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/time"
+                        android:layout_toEndOf="@+id/time"
+                        android:background="@drawable/dialog_button">
+
+                        <ImageView
+                            android:layout_width="23dp"
+                            android:layout_height="23dp"
+                            android:id="@+id/image_time"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/time"/>
+                    </RelativeLayout>
+
+                </RelativeLayout>
             </RelativeLayout>
 
             <TextView
@@ -281,13 +340,14 @@
                 android:id="@+id/text_date_error"
                 android:layout_marginLeft="12dp"
                 android:textColor="@color/red"
-                android:layout_marginRight="10dp" />
+                android:layout_marginRight="10dp"
+                android:visibility="invisible" />
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/dateend_text_group"
                 android:layout_marginLeft="10dp"
+                android:id="@+id/dateend_grup"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp">
 
@@ -296,7 +356,8 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/text_due_date"
-                    android:id="@+id/text_end" />
+                    android:id="@+id/text_end"
+                    android:visibility="invisible" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -304,74 +365,93 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/text_due_time"
                     android:id="@+id/text_end_time"
-                    android:layout_marginLeft="145dp" />
+                    android:layout_marginLeft="145dp"
+                    android:visibility="invisible" />
 
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/dateend_group"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp">
-
-                <EditText
-                    android:layout_width="105dp"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:hint="@string/text_due_date"
-                    android:id="@+id/dateend"
-                    android:focusable="false" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/text_due_date"
+                    android:id="@+id/text_dateend_hint"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_below="@+id/text_end"
+                    android:textColor="@color/grey_dark" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/text_due_time"
+                    android:id="@+id/text_timeend_hint"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="149dp"
+                    android:layout_below="@+id/text_end"
+                    android:textColor="@color/grey_dark" />
 
                 <RelativeLayout
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:id="@+id/image_dateend_group"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/dateend"
-                    android:layout_toEndOf="@+id/dateend"
-                    android:background="@drawable/dialog_button">
-
-                    <ImageView
-                        android:layout_width="23dp"
-                        android:layout_height="23dp"
-                        android:id="@+id/image_dateend"
-                        android:layout_centerVertical="true"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/date"/>
-                </RelativeLayout>
-
-                <EditText
-                    android:layout_width="95dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/timeend"
-                    android:hint="@string/text_due_time"
-                    android:focusable="false"
-                    android:layout_alignParentTop="true"
-                    android:layout_toRightOf="@+id/image_dateend_group"
-                    android:layout_toEndOf="@+id/image_dateend_group"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_below="@+id/text_end"
+                    android:id="@+id/dateend_group">
 
-                <RelativeLayout
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:id="@+id/image_timeend_group"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/timeend"
-                    android:layout_toEndOf="@+id/timeend"
-                    android:background="@drawable/dialog_button">
-
-                    <ImageView
-                        android:layout_width="23dp"
-                        android:layout_height="23dp"
-                        android:id="@+id/image_timeend"
+                    <EditText
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/time"/>
-                </RelativeLayout>
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:id="@+id/dateend"
+                        android:focusable="false" />
 
+                    <RelativeLayout
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/image_dateend_group"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/dateend"
+                        android:layout_toEndOf="@+id/dateend"
+                        android:background="@drawable/dialog_button">
+
+                        <ImageView
+                            android:layout_width="23dp"
+                            android:layout_height="23dp"
+                            android:id="@+id/image_dateend"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/date"/>
+                    </RelativeLayout>
+
+                    <EditText
+                        android:layout_width="95dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/timeend"
+                        android:focusable="false"
+                        android:layout_alignParentTop="true"
+                        android:layout_toRightOf="@+id/image_dateend_group"
+                        android:layout_toEndOf="@+id/image_dateend_group"
+                        android:layout_marginLeft="10dp" />
+
+                    <RelativeLayout
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/image_timeend_group"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/timeend"
+                        android:layout_toEndOf="@+id/timeend"
+                        android:background="@drawable/dialog_button">
+
+                        <ImageView
+                            android:layout_width="23dp"
+                            android:layout_height="23dp"
+                            android:id="@+id/image_timeend"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/time"/>
+                    </RelativeLayout>
+
+                </RelativeLayout>
             </RelativeLayout>
 
             <TextView
@@ -382,7 +462,8 @@
                 android:id="@+id/text_dateend_error"
                 android:layout_marginLeft="12dp"
                 android:textColor="@color/red"
-                android:layout_marginRight="10dp" />
+                android:layout_marginRight="10dp"
+                android:visibility="invisible" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -391,7 +472,7 @@
                 android:text="@string/text_assignments"
                 android:id="@+id/text_assignments"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black" />
 

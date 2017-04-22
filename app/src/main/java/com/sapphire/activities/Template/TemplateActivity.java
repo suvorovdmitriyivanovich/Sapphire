@@ -616,6 +616,16 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        text_name.clearAnimation();
+        text_description.clearAnimation();
+        text_name_error.clearAnimation();
+        text_name_hint.clearAnimation();
+        text_description_hint.clearAnimation();
+    }
+
+    @Override
     public void onBackPressed() {
         exit();
     }
@@ -623,6 +633,8 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     @Override
     public void onDestroy() {
         super.onDestroy();
+        name.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+        description.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
         unregisterReceiver(br);
     }
 }

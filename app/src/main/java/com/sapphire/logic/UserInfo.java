@@ -13,7 +13,7 @@ import com.sapphire.models.ParameterData;
 import com.sapphire.models.ProfileData;
 import com.sapphire.models.PunchesCategoryData;
 import com.sapphire.models.TemplateData;
-import com.sapphire.models.TimeBankData;
+import com.sapphire.models.TimeBankAccountData;
 import com.sapphire.models.TimeZoneData;
 import com.sapphire.models.TopicData;
 import com.sapphire.models.WorkplaceInspectionData;
@@ -39,7 +39,7 @@ public class UserInfo {
     private int position = -1;
     private ArrayList<CategoryData> docCategoryDatas = new ArrayList<CategoryData>();
     private TimeZoneData timeZone = new TimeZoneData();
-    private ArrayList<TimeBankData> timeBankDatas = new ArrayList<TimeBankData>();
+    private ArrayList<TimeBankAccountData> timeBankDatas = new ArrayList<TimeBankAccountData>();
     private ArrayList<AttendanceCodeData> attendanceCodeDatas = new ArrayList<AttendanceCodeData>();
     private ArrayList<DayData> days = new ArrayList<DayData>();
     private ArrayList<DayData> allDays = new ArrayList<DayData>();
@@ -245,13 +245,13 @@ public class UserInfo {
         return timeZone;
     }
 
-    public void setTimeBankDatas(ArrayList<TimeBankData> timeBankDatas) {
+    public void setTimeBankDatas(ArrayList<TimeBankAccountData> timeBankDatas) {
         this.timeBankDatas.clear();
-        this.timeBankDatas.add(new TimeBankData());
+        this.timeBankDatas.add(new TimeBankAccountData());
         this.timeBankDatas.addAll(timeBankDatas);
     }
 
-    public ArrayList<TimeBankData> getTimeBankDatas() {
+    public ArrayList<TimeBankAccountData> getTimeBankDatas() {
         return timeBankDatas;
     }
 

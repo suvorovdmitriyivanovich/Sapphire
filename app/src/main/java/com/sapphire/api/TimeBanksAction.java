@@ -8,7 +8,7 @@ import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.UserInfo;
 import com.sapphire.models.ErrorMessageData;
-import com.sapphire.models.TimeBankData;
+import com.sapphire.models.TimeBankAccountData;
 import com.sapphire.models.ResponseData;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,11 +17,11 @@ import java.util.ArrayList;
 public class TimeBanksAction extends AsyncTask{
 
     public interface RequestTimeBanks {
-        public void onRequestTimeBanks(String result, ArrayList<TimeBankData> datas);
+        public void onRequestTimeBanks(String result, ArrayList<TimeBankAccountData> datas);
     }
 
     private Context mContext;
-    private ArrayList<TimeBankData> datas;
+    private ArrayList<TimeBankAccountData> datas;
 
     public TimeBanksAction(Context context) {
         this.mContext = context;
@@ -45,10 +45,10 @@ public class TimeBanksAction extends AsyncTask{
 
         if (responseData.getSuccess()) {
             JSONArray data = responseData.getData();
-            datas = new ArrayList<TimeBankData>();
+            datas = new ArrayList<TimeBankAccountData>();
             for (int y=0; y < data.length(); y++) {
                 try {
-                    datas.add(new TimeBankData(data.getJSONObject(y)));
+                    datas.add(new TimeBankAccountData(data.getJSONObject(y)));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

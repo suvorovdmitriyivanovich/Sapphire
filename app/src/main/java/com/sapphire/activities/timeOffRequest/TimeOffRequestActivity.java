@@ -7,12 +7,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -35,7 +40,7 @@ import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.UserInfo;
 import com.sapphire.models.AttendanceCodeData;
 import com.sapphire.models.DayData;
-import com.sapphire.models.TimeBankData;
+import com.sapphire.models.TimeBankAccountData;
 import com.sapphire.models.TimeOffRequestData;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,16 +67,17 @@ public class TimeOffRequestActivity extends BaseActivity implements DayItemsAdap
     private SpinAttendanceCodesAdapter adapterAttendance;
     private EditText timeBank;
     private Spinner spinnerTimeBank;
-    private ArrayList<TimeBankData> timeBanks;
+    private ArrayList<TimeBankAccountData> timeBanks;
     private SpinTimeBanksAdapter adapterTimeBank;
     private boolean clickSpinner = false;
     private String attendanceId = "";
     private String attendanceIdOld = "";
-    private View text_attendance;
+    private TextView text_attendance;
     private String timeBankId = "";
     private View text_timeBank;
     private TimeOffRequestData data = new TimeOffRequestData();
-    private View text_no;
+    private TextView text_no;
+    private TextView text_days;
     private boolean isCheckAttendance = false;
     private BroadcastReceiver br;
     private View nointernet_group;
@@ -83,6 +89,11 @@ public class TimeOffRequestActivity extends BaseActivity implements DayItemsAdap
     private ArrayList<DayData> datas = new ArrayList<DayData>();
     private View text_attendance_error;
     private String statusId = "";
+    private Animation animationErrorDown;
+    private Animation animationErrorUpCode;
+    private Animation animationErrorUpDays;
+    private boolean showErrorCode = false;
+    private boolean showErrorDays = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +111,8 @@ public class TimeOffRequestActivity extends BaseActivity implements DayItemsAdap
         //adapter = new DayItemsAdapter(this, !readonly);
         //itemlist.setAdapter(adapter);
 
-        text_no = findViewById(R.id.text_no);
+        text_no = (TextView) findViewById(R.id.text_no);
+        text_days = (TextView) findViewById(R.id.text_items);
 
         View back = findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
@@ -175,11 +187,18 @@ public class TimeOffRequestActivity extends BaseActivity implements DayItemsAdap
         text_attendance_error = findViewById(R.id.text_attendance_error);
         attendance = (EditText) findViewById(R.id.attendance);
         spinnerAttendance = (Spinner) findViewById(R.id.spinnerAttendance);
-        text_attendance = findViewById(R.id.text_attendance);
+        text_attendance = (TextView) findViewById(R.id.text_attendance);
         timeBank = (EditText) findViewById(R.id.time_bank);
         spinnerTimeBank = (Spinner) findViewById(R.id.spinnerTime_bank);
         text_timeBank = findViewById(R.id.text_time_bank);
         text_days_error = findViewById(R.id.text_days_error);
+
+        animationErrorDown = AnimationUtils.loadAnimation(this, R.anim.translate_down);
+        animationErrorUpCode = AnimationUtils.loadAnimation(this, R.anim.translate_up);
+        animationErrorUpDays = AnimationUtils.loadAnimation(this, R.anim.translate_up);
+
+        animationErrorUpCode.setAnimationListener(animationErrorUpCodeListener);
+        animationErrorUpDays.setAnimationListener(animationErrorUpDaysListener);
 
         Intent intent = getIntent();
         id = intent.getStringExtra("id");
@@ -255,8 +274,7 @@ public class TimeOffRequestActivity extends BaseActivity implements DayItemsAdap
                 }
                 attendance.setText(attendances.get(position).getName());
                 attendanceId = attendances.get(position).getAttendanceCodeId();
-                text_attendance.setVisibility(View.VISIBLE);
-                text_attendance_error.setVisibility(View.GONE);
+                updateViews();
                 clickSpinner = false;
             }
 
@@ -391,6 +409,34 @@ public class TimeOffRequestActivity extends BaseActivity implements DayItemsAdap
         }
     }
 
+    Animation.AnimationListener animationErrorUpCodeListener = new Animation.AnimationListener() {
+
+        @Override
+        public void onAnimationEnd(Animation arg0) {
+            text_attendance_error.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {}
+
+        @Override
+        public void onAnimationStart(Animation animation) {}
+    };
+
+    Animation.AnimationListener animationErrorUpDaysListener = new Animation.AnimationListener() {
+
+        @Override
+        public void onAnimationEnd(Animation arg0) {
+            text_days_error.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {}
+
+        @Override
+        public void onAnimationStart(Animation animation) {}
+    };
+
     private void UpdateBottom() {
         if (Sapphire.getInstance().getNeedUpdate()) {
             par_nointernet_group.height = GetPixelFromDips(56);
@@ -404,9 +450,9 @@ public class TimeOffRequestActivity extends BaseActivity implements DayItemsAdap
     public void updateVisibility() {
         if (datas == null || datas.size() == 0) {
             text_no.setVisibility(View.VISIBLE);
-            itemlist.setVisibility(View.GONE);
+            //itemlist.setVisibility(View.GONE);
         } else {
-            itemlist.setVisibility(View.VISIBLE);
+            //itemlist.setVisibility(View.VISIBLE);
             text_no.setVisibility(View.GONE);
         }
     }
@@ -469,15 +515,42 @@ public class TimeOffRequestActivity extends BaseActivity implements DayItemsAdap
     private void updateViews() {
         if (isCheckAttendance && attendance.getText().toString().equals("")) {
             text_attendance_error.setVisibility(View.VISIBLE);
-            text_attendance.setVisibility(View.GONE);
-        } else {
-            text_attendance_error.setVisibility(View.GONE);
-            text_attendance.setVisibility(View.VISIBLE);
+            attendance.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.red), PorterDuff.Mode.SRC_ATOP);
+            text_attendance.setTextColor(ContextCompat.getColor(this, R.color.red));
+            attendance.setHintTextColor(ContextCompat.getColor(this, R.color.red));
+            attendance.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_dropdown_red, 0);
+            if (!showErrorCode) {
+                showErrorCode = true;
+                text_attendance_error.startAnimation(animationErrorDown);
+            }
+        } else if (!attendance.getText().toString().equals("")) {
+            attendance.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+            text_attendance.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            attendance.setHintTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            attendance.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_dropdown, 0);
+            if (showErrorCode) {
+                showErrorCode = false;
+                text_attendance_error.startAnimation(animationErrorUpCode);
+            }
         }
         if (isCheckDays && datas.size() == 0) {
             text_days_error.setVisibility(View.VISIBLE);
-        } else {
+            text_days.setTextColor(ContextCompat.getColor(this, R.color.red));
+            text_no.setTextColor(ContextCompat.getColor(this, R.color.red));
+            if (!showErrorDays) {
+                showErrorDays = true;
+                text_days_error.startAnimation(animationErrorDown);
+            }
+        } else if (datas.size() != 0) {
+            text_days.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_no.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
             text_days_error.setVisibility(View.GONE);
+            /*
+            if (showErrorDays) {
+                showErrorDays = false;
+                text_days_error.startAnimation(animationErrorUpDays);
+            }
+            */
         }
     }
 
@@ -605,6 +678,13 @@ public class TimeOffRequestActivity extends BaseActivity implements DayItemsAdap
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        text_attendance_error.clearAnimation();
+        text_days_error.clearAnimation();
+    }
+
+    @Override
     public void onBackPressed() {
         exit();
     }
@@ -612,6 +692,7 @@ public class TimeOffRequestActivity extends BaseActivity implements DayItemsAdap
     @Override
     public void onDestroy() {
         super.onDestroy();
+        attendance.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
         unregisterReceiver(br);
     }
 }

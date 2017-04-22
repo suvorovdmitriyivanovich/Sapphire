@@ -36,7 +36,7 @@ import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.UserInfo;
 import com.sapphire.models.AttendanceCodeData;
-import com.sapphire.models.TimeBankData;
+import com.sapphire.models.TimeBankAccountData;
 import com.sapphire.models.TimeOffRequestData;
 import java.util.ArrayList;
 
@@ -310,7 +310,7 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
     }
 
     @Override
-    public void onRequestTimeBanks(String result, ArrayList<TimeBankData> timeBankDatas) {
+    public void onRequestTimeBanks(String result, ArrayList<TimeBankAccountData> timeBankDatas) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

@@ -238,7 +238,7 @@
                 android:text="@string/text_members"
                 android:id="@+id/text_members"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black" />
 
@@ -295,11 +295,8 @@
                 android:id="@+id/spinnerTemplate"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:layout_below="@+id/template"
-                android:layout_alignLeft="@+id/template"
-                android:layout_alignStart="@+id/template"
-                android:layout_alignRight="@+id/template"
-                android:layout_alignEnd="@+id/template" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -308,7 +305,7 @@
                 android:text="@string/text_topics"
                 android:id="@+id/text_topics"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black" />
 

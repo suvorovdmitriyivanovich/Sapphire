@@ -20,7 +20,7 @@ public class AttendanceCodeData {
     private String canBeAttachedToBank = "";
     private SettingData settings = new SettingData();
     private String attendanceCodeType = "";
-    private ArrayList<TimeBankData> timeBanks = new ArrayList<TimeBankData>();
+    private ArrayList<TimeBankAccountData> timeBanks = new ArrayList<TimeBankAccountData>();
 
     public AttendanceCodeData() {
 
@@ -194,15 +194,15 @@ public class AttendanceCodeData {
         this.attendanceCodeType = attendanceCodeType;
     }
 
-    public ArrayList<TimeBankData> getTimeBanks() {
+    public ArrayList<TimeBankAccountData> getTimeBanks() {
         return timeBanks;
     }
 
     public void setTimeBanks(JSONArray timeBanks) {
-        ArrayList<TimeBankData> timeBankDatas = new ArrayList<TimeBankData>();
+        ArrayList<TimeBankAccountData> timeBankDatas = new ArrayList<TimeBankAccountData>();
         for (int y=0; y < timeBanks.length(); y++) {
             try {
-                timeBankDatas.add(new TimeBankData(timeBanks.getJSONObject(y)));
+                timeBankDatas.add(new TimeBankAccountData(timeBanks.getJSONObject(y)));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
