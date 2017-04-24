@@ -27,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -149,6 +150,10 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
     private TextView text_time_hint;
     private TextView text_dateend_hint;
     private TextView text_timeend_hint;
+    private ImageView image_date;
+    private ImageView image_time;
+    private ImageView image_dateend;
+    private ImageView image_timeend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -239,6 +244,10 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
         text_time_hint = (TextView) findViewById(R.id.text_time_hint);
         text_dateend_hint = (TextView) findViewById(R.id.text_dateend_hint);
         text_timeend_hint = (TextView) findViewById(R.id.text_timeend_hint);
+        image_date = (ImageView) findViewById(R.id.image_date);
+        image_time = (ImageView) findViewById(R.id.image_time);
+        image_dateend = (ImageView) findViewById(R.id.image_dateend);
+        image_timeend = (ImageView) findViewById(R.id.image_timeend);
 
         animationErrorDown = AnimationUtils.loadAnimation(this, R.anim.translate_down);
         animationErrorUpName = AnimationUtils.loadAnimation(this, R.anim.translate_up);
@@ -884,21 +893,35 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
                 act.timeend.setText("" + mHour + ":" + mMinute + " " + ampm);
             }
 
+            /*
             if (act.thisStart) {
                 if (act.timeend.getText().toString().equals("")) {
                     act.timeend.setText("" + mHour + ":" + mMinute + " " + ampm);
+                    act.text_timeend.setVisibility(View.VISIBLE);
                 }
             } else {
                 if (act.time.getText().toString().equals("")) {
                     act.time.setText("" + mHour + ":" + mMinute + " " + ampm);
+                    act.text_time.setVisibility(View.VISIBLE);
                 }
             }
+            */
 
             Date dateD = null;
-            if (act.date.getText().toString().equals("")) {
-                dateD = new Date();
-                String datet = format.format(dateD);
-                act.date.setText(datet.substring(0,10));
+            if (act.thisStart) {
+                if (act.date.getText().toString().equals("")) {
+                    dateD = new Date();
+                    String datet = format.format(dateD);
+                    act.date.setText(datet.substring(0, 10));
+                    act.text_date.setVisibility(View.VISIBLE);
+                }
+            } else {
+                if (act.dateend.getText().toString().equals("")) {
+                    dateD = new Date();
+                    String datet = format.format(dateD);
+                    act.dateend.setText(datet.substring(0, 10));
+                    act.text_dateend.setVisibility(View.VISIBLE);
+                }
             }
 
             String dateNewstr = act.date.getText().toString() + " " + act.time.getText().toString();
@@ -911,7 +934,7 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
                 }
             }
 
-            String dateendNewstr = act.date.getText().toString() + " " + act.timeend.getText().toString();
+            String dateendNewstr = act.dateend.getText().toString() + " " + act.timeend.getText().toString();
             if (!dateendNewstr.equals("")) {
                 try {
                     dateD = format.parse(dateendNewstr);
@@ -1031,12 +1054,14 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
                     dateD = new Date();
                     String datet = format.format(dateD);
                     act.time.setText(datet.substring(11));
+                    act.text_time.setVisibility(View.VISIBLE);
                 }
             } else {
                 if (act.timeend.getText().toString().equals("")) {
                     dateD = new Date();
                     String datet = format.format(dateD);
                     act.timeend.setText(datet.substring(11));
+                    act.text_timeend.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -1152,7 +1177,9 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
         if (isCheckDate && date.getText().toString().equals("")) {
             text_date_error.setVisibility(View.VISIBLE);
             date.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.red), PorterDuff.Mode.SRC_ATOP);
+            image_date.setImageResource(R.drawable.date_red);
             time.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.red), PorterDuff.Mode.SRC_ATOP);
+            image_time.setImageResource(R.drawable.time_red);
             text_date.setTextColor(ContextCompat.getColor(this, R.color.red));
             text_date_hint.setTextColor(ContextCompat.getColor(this, R.color.red));
             text_time.setTextColor(ContextCompat.getColor(this, R.color.red));
@@ -1164,7 +1191,9 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
         } else if (!date.getText().toString().equals("")) {
             text_date.setVisibility(View.VISIBLE);
             date.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+            image_date.setImageResource(R.drawable.date);
             time.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+            image_time.setImageResource(R.drawable.time);
             text_date.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
             text_date_hint.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
             text_date_hint.setVisibility(View.GONE);
@@ -1179,7 +1208,9 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
         if (isCheckDateend && dateend.getText().toString().equals("")) {
             text_dateend_error.setVisibility(View.VISIBLE);
             dateend.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.red), PorterDuff.Mode.SRC_ATOP);
+            image_dateend.setImageResource(R.drawable.date_red);
             timeend.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.red), PorterDuff.Mode.SRC_ATOP);
+            image_timeend.setImageResource(R.drawable.time_red);
             text_dateend.setTextColor(ContextCompat.getColor(this, R.color.red));
             text_dateend_hint.setTextColor(ContextCompat.getColor(this, R.color.red));
             text_timeend.setTextColor(ContextCompat.getColor(this, R.color.red));
@@ -1191,7 +1222,9 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
         } else if (!dateend.getText().toString().equals("")) {
             text_dateend.setVisibility(View.VISIBLE);
             dateend.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+            image_dateend.setImageResource(R.drawable.date);
             timeend.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+            image_timeend.setImageResource(R.drawable.time);
             text_dateend.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
             text_dateend_hint.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
             text_dateend_hint.setVisibility(View.GONE);

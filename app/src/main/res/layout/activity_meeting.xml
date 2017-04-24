@@ -93,23 +93,42 @@
             android:layout_height="wrap_content"
             android:id="@+id/scroll_group">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/name"
-                android:id="@+id/text_name"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp" />
-
-            <EditText
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:id="@+id/name"
-                android:hint="@string/name"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_marginTop="10dp"
+                android:id="@+id/name_group"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/name"
+                    android:id="@+id/text_name"
+                    android:textColor="@color/grey_dark"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/name"
+                    android:id="@+id/text_name_hint"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_below="@+id/text_name"
+                    android:textColor="@color/grey_dark" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_name"
+                    android:inputType="text"
+                    android:id="@+id/name"/>
+
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -119,31 +138,50 @@
                 android:id="@+id/text_name_error"
                 android:layout_marginLeft="12dp"
                 android:textColor="@color/red"
-                android:layout_marginRight="10dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/text_location"
-                android:id="@+id/text_location"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:id="@+id/location"
-                android:hint="@string/text_location"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_marginRight="10dp"
+                android:visibility="invisible" />
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/date_text_group"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/location_group"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/text_location"
+                    android:id="@+id/text_location"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/text_location"
+                    android:id="@+id/text_location_hint"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_below="@+id/text_location"
+                    android:textColor="@color/grey_dark" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:id="@+id/location"
+                    android:layout_below="@+id/text_location" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/date_grup"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp">
 
@@ -152,7 +190,8 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/text_date"
-                    android:id="@+id/text_date" />
+                    android:id="@+id/text_date"
+                    android:visibility="invisible" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -160,7 +199,8 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/text_start_time"
                     android:id="@+id/text_start_time"
-                    android:layout_marginLeft="115dp" />
+                    android:layout_marginLeft="115dp"
+                    android:visibility="invisible" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -168,49 +208,78 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/text_end_time"
                     android:id="@+id/text_end_time"
-                    android:layout_marginLeft="220dp" />
+                    android:layout_marginLeft="220dp"
+                    android:visibility="invisible" />
 
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/date_group"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp">
-
-                <EditText
-                    android:layout_width="105dp"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:hint="@string/text_date"
-                    android:id="@+id/date"
-                    android:focusable="false" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/text_date"
+                    android:id="@+id/text_date_hint"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_below="@+id/text_date"
+                    android:textColor="@color/grey_dark" />
 
-                <EditText
-                    android:layout_width="95dp"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:id="@+id/time"
-                    android:hint="@string/text_start_time"
-                    android:focusable="false"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@+id/date"
-                    android:layout_toEndOf="@+id/date" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/text_start_time"
+                    android:id="@+id/text_time_hint"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="119dp"
+                    android:layout_below="@+id/text_date"
+                    android:textColor="@color/grey_dark" />
 
-                <EditText
-                    android:layout_width="95dp"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:id="@+id/endtime"
-                    android:hint="@string/text_end_time"
-                    android:focusable="false"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@+id/time"
-                    android:layout_toEndOf="@+id/time" />
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/text_end_time"
+                    android:id="@+id/text_endtime_hint"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="224dp"
+                    android:layout_below="@+id/text_date"
+                    android:textColor="@color/grey_dark" />
 
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/date_group"
+                    android:layout_below="@+id/text_date">
+
+                    <EditText
+                        android:layout_width="105dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:id="@+id/date"
+                        android:focusable="false" />
+
+                    <EditText
+                        android:layout_width="95dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:id="@+id/time"
+                        android:focusable="false"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/date"
+                        android:layout_toEndOf="@+id/date" />
+
+                    <EditText
+                        android:layout_width="95dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:id="@+id/endtime"
+                        android:focusable="false"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/time"
+                        android:layout_toEndOf="@+id/time" />
+
+                </RelativeLayout>
             </RelativeLayout>
 
             <TextView
@@ -221,7 +290,8 @@
                 android:id="@+id/text_date_error"
                 android:layout_marginLeft="12dp"
                 android:textColor="@color/red"
-                android:layout_marginRight="10dp" />
+                android:layout_marginRight="10dp"
+                android:visibility="invisible" />
 
             <CheckBox
                 android:layout_width="wrap_content"
@@ -342,7 +412,8 @@
                     android:layout_below="@+id/text_topics_no"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginTop="10dp" />
+                    android:layout_marginTop="10dp"
+                    android:visibility="invisible" />
             </RelativeLayout>
 
             <TextView

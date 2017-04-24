@@ -234,6 +234,9 @@ public class TopicActivity extends BaseActivity implements UpdateAction.RequestU
             }
         });
 
+        name.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+        description.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+
         updateViews();
 
         nointernet_group = findViewById(R.id.nointernet_group);

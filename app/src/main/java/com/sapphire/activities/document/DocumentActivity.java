@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -92,6 +93,7 @@ public class DocumentActivity extends BaseActivity implements DocumentAddAction.
     private boolean showDate = true;
     private TextView text_name_hint;
     private TextView text_date_hint;
+    private ImageView image_date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +167,7 @@ public class DocumentActivity extends BaseActivity implements DocumentAddAction.
         text_date = (TextView) findViewById(R.id.text_date);
         text_name_hint = (TextView) findViewById(R.id.text_name_hint);
         text_date_hint = (TextView) findViewById(R.id.text_date_hint);
+        image_date = (ImageView) findViewById(R.id.image_date);
 
         animationErrorDown = AnimationUtils.loadAnimation(this, R.anim.translate_down);
         animationErrorUpName = AnimationUtils.loadAnimation(this, R.anim.translate_up);
@@ -562,6 +565,7 @@ public class DocumentActivity extends BaseActivity implements DocumentAddAction.
         if (isCheckDate && date.getText().toString().equals("")) {
             text_date_error.setVisibility(View.VISIBLE);
             date.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.red), PorterDuff.Mode.SRC_ATOP);
+            image_date.setImageResource(R.drawable.date_red);
             text_date.setTextColor(ContextCompat.getColor(this, R.color.red));
             text_date_hint.setTextColor(ContextCompat.getColor(this, R.color.red));
             if (!showErrorDate) {
@@ -571,6 +575,7 @@ public class DocumentActivity extends BaseActivity implements DocumentAddAction.
         } else if (!date.getText().toString().equals("")) {
             text_date.setVisibility(View.VISIBLE);
             date.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+            image_date.setImageResource(R.drawable.date);
             text_date.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
             text_date_hint.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
             text_date_hint.setVisibility(View.GONE);

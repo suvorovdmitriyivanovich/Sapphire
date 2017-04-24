@@ -9,8 +9,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,12 +21,15 @@ import android.text.Html;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -79,8 +84,6 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
     private View text_name_error;
     private View text_date_error;
     private View text_topics_error;
-    private View text_name;
-    private View date_text_group;
     private String nameOld = "";
     private String locationOld = "";
     private boolean postedOld = false;
@@ -104,7 +107,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
     private EditText time;
     private EditText endtime;
     private View text_no;
-    private View text_topics_no;
+    private TextView text_topics_no;
     private boolean thisStart = false;
     private CheckBox posted;
     private UserInfo userInfo;
@@ -125,6 +128,30 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
     private boolean readonly = false;
+    private TextView text_name;
+    private TextView text_location;
+    private TextView text_date;
+    private TextView text_time;
+    private TextView text_endtime;
+    private Animation animationErrorDown;
+    private Animation animationErrorUpName;
+    private Animation animationErrorUpDate;
+    private boolean showErrorName = false;
+    private boolean showErrorDate = false;
+    private boolean showErrorTopics = false;
+    private Animation animationUp;
+    private Animation animationDown;
+    private boolean showName = true;
+    private boolean showLocation = true;
+    private boolean showDate = true;
+    private boolean showTime = true;
+    private boolean showEndtime = true;
+    private TextView text_name_hint;
+    private TextView text_location_hint;
+    private TextView text_date_hint;
+    private TextView text_time_hint;
+    private TextView text_endtime_hint;
+    private TextView text_topics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,8 +228,6 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         location = (EditText) findViewById(R.id.location);
         text_name_error = findViewById(R.id.text_name_error);
         text_date_error = findViewById(R.id.text_date_error);
-        text_name = findViewById(R.id.text_name);
-        date_text_group = findViewById(R.id.date_text_group);
         time = (EditText) findViewById(R.id.time);
         endtime = (EditText) findViewById(R.id.endtime);
         posted = (CheckBox) findViewById(R.id.posted);
@@ -211,6 +236,32 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         text_template = findViewById(R.id.text_template);
         nextDate = (TextView) findViewById(R.id.nextDate);
         text_topics_error = findViewById(R.id.text_topics_error);
+        text_name = (TextView) findViewById(R.id.text_name);
+        text_location = (TextView) findViewById(R.id.text_location);
+        text_date = (TextView) findViewById(R.id.text_date);
+        text_time = (TextView) findViewById(R.id.text_start_time);
+        text_endtime = (TextView) findViewById(R.id.text_end_time);
+        text_name_hint = (TextView) findViewById(R.id.text_name_hint);
+        text_location_hint = (TextView) findViewById(R.id.text_location_hint);
+        text_date_hint = (TextView) findViewById(R.id.text_date_hint);
+        text_time_hint = (TextView) findViewById(R.id.text_time_hint);
+        text_endtime_hint = (TextView) findViewById(R.id.text_endtime_hint);
+        text_topics = (TextView) findViewById(R.id.text_topics);
+
+        animationErrorDown = AnimationUtils.loadAnimation(this, R.anim.translate_down);
+        animationErrorUpName = AnimationUtils.loadAnimation(this, R.anim.translate_up);
+        animationErrorUpDate = AnimationUtils.loadAnimation(this, R.anim.translate_up);
+
+        animationErrorUpName.setAnimationListener(animationErrorUpNameListener);
+        animationErrorUpDate.setAnimationListener(animationErrorUpDateListener);
+
+        animationUp = AnimationUtils.loadAnimation(this, R.anim.translate_scale_up);
+        animationDown = AnimationUtils.loadAnimation(this, R.anim.translate_scale_down);
+
+        TextWatcher inputTextWatcher = new TextWatch(1);
+        name.addTextChangedListener(inputTextWatcher);
+        inputTextWatcher = new TextWatch(2);
+        location.addTextChangedListener(inputTextWatcher);
 
         format = new SimpleDateFormat("dd.MM.yyyy hh:mm aa");
 
@@ -219,7 +270,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         topicslist.setLayoutManager(new LinearLayoutManager(MeetingActivity.this));
 
         text_no = findViewById(R.id.text_no);
-        text_topics_no = findViewById(R.id.text_topics_no);
+        text_topics_no = (TextView) findViewById(R.id.text_topics_no);
 
         Intent intent = getIntent();
         id = intent.getStringExtra("id");
@@ -287,6 +338,22 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
 
             template.setVisibility(View.GONE);
             text_template.setVisibility(View.GONE);
+
+            if (name.getText().length() != 0) {
+                showName = false;
+            }
+            if (location.getText().length() != 0) {
+                showLocation = false;
+            }
+            if (date.getText().length() != 0) {
+                showDate = false;
+            }
+            if (time.getText().length() != 0) {
+                showTime = false;
+            }
+            if (endtime.getText().length() != 0) {
+                showEndtime = false;
+            }
         } else {
             datas = userInfo.getAllMembers();
         }
@@ -386,9 +453,6 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             }
         });
 
-        TextWatcher inputTextWatcher = new TextWatch();
-        name.addTextChangedListener(inputTextWatcher);
-
         View button_ok = findViewById(R.id.ok);
         button_ok.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -430,6 +494,40 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         adapter = new MeetingMembersAdapter(this, readonly);
         memberslist.setAdapter(adapter);
 
+        name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus && name.getText().length() == 0 && showName) {
+                    text_name_hint.setVisibility(View.GONE);
+                    text_name.setVisibility(View.VISIBLE);
+                    showName = false;
+                    text_name.startAnimation(animationUp);
+                } else if (!hasFocus && name.getText().length() == 0 && !showName) {
+                    text_name.setVisibility(View.INVISIBLE);
+                    showName = true;
+                    text_name_hint.setVisibility(View.VISIBLE);
+                    text_name_hint.startAnimation(animationDown);
+                }
+            }
+        });
+
+        location.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus && location.getText().length() == 0 && showLocation) {
+                    text_location_hint.setVisibility(View.GONE);
+                    text_location.setVisibility(View.VISIBLE);
+                    showLocation = false;
+                    text_location.startAnimation(animationUp);
+                } else if (!hasFocus && location.getText().length() == 0 && !showLocation) {
+                    text_location.setVisibility(View.INVISIBLE);
+                    showLocation = true;
+                    text_location_hint.setVisibility(View.VISIBLE);
+                    text_location_hint.startAnimation(animationDown);
+                }
+            }
+        });
+
         updateViews();
 
         adapter.setListArray(datas);
@@ -465,6 +563,8 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             }
         });
 
+        updateVisibility();
+
         UpdateBottom();
 
         if (readonly) {
@@ -478,6 +578,34 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             posted.setClickable(false);
         }
     }
+
+    Animation.AnimationListener animationErrorUpNameListener = new Animation.AnimationListener() {
+
+        @Override
+        public void onAnimationEnd(Animation arg0) {
+            text_name_error.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {}
+
+        @Override
+        public void onAnimationStart(Animation animation) {}
+    };
+
+    Animation.AnimationListener animationErrorUpDateListener = new Animation.AnimationListener() {
+
+        @Override
+        public void onAnimationEnd(Animation arg0) {
+            text_date_error.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {}
+
+        @Override
+        public void onAnimationStart(Animation animation) {}
+    };
 
     private void UpdateBottom() {
         if (Sapphire.getInstance().getNeedUpdate()) {
@@ -569,6 +697,22 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
 
         this.thisStart = thisStart;
 
+        if (this.thisStart) {
+            if (time.getText().length() == 0 && showTime) {
+                text_time_hint.setVisibility(View.GONE);
+                text_time.setVisibility(View.VISIBLE);
+                showTime = false;
+                text_time.startAnimation(animationUp);
+            }
+        } else {
+            if (endtime.getText().length() == 0 && showEndtime) {
+                text_endtime_hint.setVisibility(View.GONE);
+                text_endtime.setVisibility(View.VISIBLE);
+                showEndtime= false;
+                text_endtime.startAnimation(animationUp);
+            }
+        }
+
         Date date = null;
         try {
             if (thisStart) {
@@ -591,8 +735,10 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
-    public static class TimePickerFragment extends DialogFragment
-            implements TimePickerDialog.OnTimeSetListener {
+    public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener,
+                                                                             TimePickerDialog.OnCancelListener {
+
+        private MeetingActivity act;
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -601,7 +747,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             //int hour = c.get(Calendar.HOUR_OF_DAY);
             //int minute = c.get(Calendar.MINUTE);
 
-            MeetingActivity act = (MeetingActivity) getActivity();
+            act = (MeetingActivity) getActivity();
 
             // Create a new instance of TimePickerDialog and return it
             return new TimePickerDialog(getActivity(), this, act.myHour, act.myMinute, false);
@@ -609,10 +755,26 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             //.is24HourFormat(getActivity()));
         }
 
+        public void onCancel(DialogInterface dialog) {
+            if (act.thisStart) {
+                if (act.time.getText().length() == 0 && !act.showTime) {
+                    act.text_time.setVisibility(View.INVISIBLE);
+                    act.showTime = true;
+                    act.text_time_hint.setVisibility(View.VISIBLE);
+                    act.text_time_hint.startAnimation(act.animationDown);
+                }
+            } else {
+                if (act.endtime.getText().length() == 0 && !act.showEndtime) {
+                    act.text_endtime.setVisibility(View.INVISIBLE);
+                    act.showEndtime = true;
+                    act.text_endtime_hint.setVisibility(View.VISIBLE);
+                    act.text_endtime_hint.startAnimation(act.animationDown);
+                }
+            }
+        }
+
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // Do something with the time chosen by the user
-            MeetingActivity act = (MeetingActivity) getActivity();
-
             String ampm = "AM";
             act.myHour = hourOfDay;
             act.myMinute = minute;
@@ -647,10 +809,12 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             if (act.thisStart) {
                 if (act.endtime.getText().toString().equals("")) {
                     act.endtime.setText("" + mHour + ":" + mMinute + " " + ampm);
+                    act.text_endtime.setVisibility(View.VISIBLE);
                 }
             } else {
                 if (act.time.getText().toString().equals("")) {
                     act.time.setText("" + mHour + ":" + mMinute + " " + ampm);
+                    act.text_time.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -659,6 +823,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
                 dateD = new Date();
                 String datet = format.format(dateD);
                 act.date.setText(datet.substring(0,10));
+                act.text_date.setVisibility(View.VISIBLE);
             }
 
             String dateNewstr = act.date.getText().toString() + " " + act.time.getText().toString();
@@ -693,6 +858,13 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
     private void choiseDate() {
         hideSoftKeyboard();
 
+        if (date.getText().length() == 0 && showDate) {
+            text_date_hint.setVisibility(View.GONE);
+            text_date.setVisibility(View.VISIBLE);
+            showDate = false;
+            text_date.startAnimation(animationUp);
+        }
+
         Date dateD = null;
         try {
             dateD = format.parse(date.getText().toString());
@@ -711,8 +883,10 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
-    public static class DatePickerFragment extends DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
+    public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener,
+                                                                             DatePickerDialog.OnCancelListener {
+
+        private MeetingActivity act;
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -722,15 +896,23 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             //int month = c.get(Calendar.MONTH);
             //int day = c.get(Calendar.DAY_OF_MONTH);
 
-            MeetingActivity act = (MeetingActivity) getActivity();
+            act = (MeetingActivity) getActivity();
 
             // Create a new instance of DatePickerDialog and return it
             return new DatePickerDialog(getActivity(), this, act.myYear, act.myMonth, act.myDay);
         }
 
+        public void onCancel(DialogInterface dialog) {
+            if (act.date.getText().length() == 0 && !act.showDate) {
+                act.text_date.setVisibility(View.INVISIBLE);
+                act.showDate = true;
+                act.text_date_hint.setVisibility(View.VISIBLE);
+                act.text_date_hint.startAnimation(act.animationDown);
+            }
+        }
+
         public void onDateSet(DatePicker view, int year, int month, int day) {
             // Do something with the date chosen by the user
-            MeetingActivity act = (MeetingActivity) getActivity();
             act.myYear = year;
             act.myMonth = month;
             act.myDay = day;
@@ -754,11 +936,13 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
                 dateD = new Date();
                 String datet = format.format(dateD);
                 act.time.setText(datet.substring(11));
+                act.text_time.setVisibility(View.VISIBLE);
             }
             if (act.endtime.getText().toString().equals("")) {
                 dateD = new Date();
                 String datet = format.format(dateD);
                 act.endtime.setText(datet.substring(11));
+                act.text_endtime.setVisibility(View.VISIBLE);
             }
 
             String dateNewstr = act.date.getText().toString() + " " + act.time.getText().toString();
@@ -823,12 +1007,17 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
     }
 
     private class TextWatch implements TextWatcher {
-        public TextWatch(){
+        private int type;
+
+        public TextWatch(int type){
             super();
+            this.type = type;
         }
 
         public void afterTextChanged(Editable s) {
-            isCheckName = true;
+            if (type == 1) {
+                isCheckName = true;
+            }
             updateViews();
         }
 
@@ -840,22 +1029,85 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
     private void updateViews() {
         if (isCheckName && name.getText().toString().equals("")) {
             text_name_error.setVisibility(View.VISIBLE);
-            text_name.setVisibility(View.GONE);
-        } else {
-            text_name_error.setVisibility(View.GONE);
+            name.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.red), PorterDuff.Mode.SRC_ATOP);
+            text_name.setTextColor(ContextCompat.getColor(this, R.color.red));
+            text_name_hint.setTextColor(ContextCompat.getColor(this, R.color.red));
+            if (!showErrorName) {
+                showErrorName = true;
+                text_name_error.startAnimation(animationErrorDown);
+            }
+        } else if (!name.getText().toString().equals("")) {
             text_name.setVisibility(View.VISIBLE);
+            name.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+            text_name.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_name_hint.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_name_hint.setVisibility(View.GONE);
+            if (showErrorName) {
+                showErrorName = false;
+                text_name_error.startAnimation(animationErrorUpName);
+            }
         }
         if (isCheckDate && date.getText().toString().equals("")) {
             text_date_error.setVisibility(View.VISIBLE);
-            date_text_group.setVisibility(View.GONE);
-        } else {
-            text_date_error.setVisibility(View.GONE);
-            date_text_group.setVisibility(View.VISIBLE);
+            date.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.red), PorterDuff.Mode.SRC_ATOP);
+            time.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.red), PorterDuff.Mode.SRC_ATOP);
+            endtime.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.red), PorterDuff.Mode.SRC_ATOP);
+            text_date.setTextColor(ContextCompat.getColor(this, R.color.red));
+            text_date_hint.setTextColor(ContextCompat.getColor(this, R.color.red));
+            text_time.setTextColor(ContextCompat.getColor(this, R.color.red));
+            text_time_hint.setTextColor(ContextCompat.getColor(this, R.color.red));
+            text_endtime.setTextColor(ContextCompat.getColor(this, R.color.red));
+            text_endtime_hint.setTextColor(ContextCompat.getColor(this, R.color.red));
+            if (!showErrorDate) {
+                showErrorDate = true;
+                text_date_error.startAnimation(animationErrorDown);
+            }
+        } else if (!date.getText().toString().equals("")) {
+            text_date.setVisibility(View.VISIBLE);
+            date.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+            time.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+            endtime.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+            text_date.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_date_hint.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_date_hint.setVisibility(View.GONE);
+            text_time.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_time_hint.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_time_hint.setVisibility(View.GONE);
+            text_endtime.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_endtime_hint.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_endtime_hint.setVisibility(View.GONE);
+            if (showErrorDate) {
+                showErrorDate = false;
+                text_date_error.startAnimation(animationErrorUpDate);
+            }
         }
         if (isCheckTopic && datasTopic.size() == 0) {
             text_topics_error.setVisibility(View.VISIBLE);
-        } else {
+            text_topics.setTextColor(ContextCompat.getColor(this, R.color.red));
+            text_topics_no.setTextColor(ContextCompat.getColor(this, R.color.red));
+            if (!showErrorTopics) {
+                showErrorTopics = true;
+                text_topics_error.startAnimation(animationErrorDown);
+            }
+        } else if (datasTopic.size() != 0) {
+            text_topics.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_topics_no.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
             text_topics_error.setVisibility(View.GONE);
+            showErrorTopics = false;
+            /*
+            if (showErrorTopics) {
+                showErrorTopics = false;
+                text_topics_error.startAnimation(animationErrorUpTopics);
+            }
+            */
+        }
+
+
+
+
+        if (!location.getText().toString().equals("")) {
+            text_location.setVisibility(View.VISIBLE);
+            text_location_hint.setVisibility(View.GONE);
         }
     }
 
@@ -1101,6 +1353,23 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        text_name.clearAnimation();
+        text_location.clearAnimation();
+        text_date.clearAnimation();
+        text_time.clearAnimation();
+        text_endtime.clearAnimation();
+        text_name_error.clearAnimation();
+        text_date_error.clearAnimation();
+        text_name_hint.clearAnimation();
+        text_location_hint.clearAnimation();
+        text_date_hint.clearAnimation();
+        text_time_hint.clearAnimation();
+        text_endtime_hint.clearAnimation();
+    }
+
+    @Override
     public void onBackPressed() {
         exit();
     }
@@ -1108,6 +1377,10 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
     @Override
     public void onDestroy() {
         super.onDestroy();
+        name.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+        date.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+        time.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+        endtime.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
         unregisterReceiver(br);
     }
 }

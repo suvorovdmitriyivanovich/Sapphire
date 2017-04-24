@@ -39,6 +39,7 @@ public class CoursesAction extends AsyncTask{
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
         String urlstring = Environment.SERVER + Environment.CoursesCurrentURL;
+        //urlstring = urlstring + "?%24inlinecount=allpages&%24format=json&rnum=0.4155117882079695";
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET",UserInfo.getUserInfo().getAuthToken()));
 

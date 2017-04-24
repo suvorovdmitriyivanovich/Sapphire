@@ -545,6 +545,7 @@ public class TimeOffRequestActivity extends BaseActivity implements DayItemsAdap
             text_days.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
             text_no.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
             text_days_error.setVisibility(View.GONE);
+            showErrorDays = false;
             /*
             if (showErrorDays) {
                 showErrorDays = false;
