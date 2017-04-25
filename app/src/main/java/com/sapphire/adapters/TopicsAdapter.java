@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
@@ -31,6 +32,7 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView name;
+        CheckBox complete;
         Button open;
         Button delete;
         View border;
@@ -39,6 +41,7 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
         ViewHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.text_name);
+            complete = (CheckBox) itemView.findViewById(R.id.complete);
             open = (Button) itemView.findViewById(R.id.open);
             delete = (Button) itemView.findViewById(R.id.delete);
             border = itemView.findViewById(R.id.border);
@@ -72,6 +75,8 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
         holder.border.setVisibility(View.VISIBLE);
 
         holder.name.setText(data.getName());
+
+        holder.complete.setChecked(data.getCompleted());
 
         if (data.getIsTemplate()) {
             holder.open.setVisibility(View.GONE);

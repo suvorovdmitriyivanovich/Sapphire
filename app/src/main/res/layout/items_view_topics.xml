@@ -24,8 +24,18 @@
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@+id/open" />
+            android:layout_toLeftOf="@+id/complete"
+            android:layout_marginRight="5dp" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/complete"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/open"
+            android:layout_toStartOf="@+id/open"
+            android:clickable="false"
+            android:layout_marginRight="5dp" />
 
         <Button
             android:layout_width="45dp"
