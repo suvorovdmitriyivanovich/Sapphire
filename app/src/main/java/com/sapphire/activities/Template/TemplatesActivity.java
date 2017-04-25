@@ -153,6 +153,9 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
+                } else if (putreqwest.equals("update")) {
+                    pd.show();
+                    new TemplatesAction(TemplatesActivity.this, typeId).execute();
                 }
             }
         };

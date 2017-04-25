@@ -105,6 +105,9 @@ public class MyContactsActivity extends BaseActivity implements GetContactsActio
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
+                } else if (putreqwest.equals("update")) {
+                    pd.show();
+                    new GetContactsAction(MyContactsActivity.this, true).execute();
                 }
             }
         };

@@ -148,6 +148,9 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
+                } else if (putreqwest.equals("update")) {
+                    pd.show();
+                    new GetProfilesAction(ProfileActivity.this).execute();
                 }
             }
         };

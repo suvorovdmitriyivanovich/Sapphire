@@ -150,6 +150,9 @@ public class DocumentsActivity extends BaseActivity implements DocumentsAdapter.
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
+                } else if (putreqwest.equals("update")) {
+                    pd.show();
+                    new DocumentsAction(DocumentsActivity.this).execute();
                 }
             }
         };

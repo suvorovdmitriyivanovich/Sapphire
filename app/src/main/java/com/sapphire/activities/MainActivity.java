@@ -183,6 +183,9 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
                     Intent intnt = new Intent(Sapphire.getInstance(), LoginActivity.class);
                     startActivity(intnt);
                     finish();
+                } else if (putreqwest.equals("update")) {
+                    pd.show();
+                    new CoursesAction(MainActivity.this, true).execute();
                 }
             }
         };

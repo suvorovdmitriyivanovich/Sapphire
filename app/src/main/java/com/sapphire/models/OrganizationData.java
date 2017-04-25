@@ -19,6 +19,7 @@ public class OrganizationData {
     private ArrayList<AppSecurityData> accountOrganizationAppSecurities = new ArrayList<AppSecurityData>();
     private ArrayList<AppSecurityData> accountOrganizationGlobalAppSecurities = new ArrayList<AppSecurityData>();
     private String authToken = "";
+    private ProfileData profile = new ProfileData();
 
     public OrganizationData() {
 
@@ -58,6 +59,9 @@ public class OrganizationData {
             }
             if (!data.isNull("AuthToken")) {
                 setAuthToken(data.getString("AuthToken"));
+            }
+            if (!data.isNull("Profile")) {
+                setProfile(data.getJSONObject("Profile"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -175,5 +179,13 @@ public class OrganizationData {
 
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
+    }
+
+    public ProfileData getProfile() {
+        return profile;
+    }
+
+    public void setProfile(JSONObject profile) {
+        this.profile = new ProfileData(profile);
     }
 }

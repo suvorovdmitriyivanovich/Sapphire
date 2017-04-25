@@ -147,6 +147,9 @@ public class PerformancesActivity extends BaseActivity implements PerformancesAd
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
+                } else if (putreqwest.equals("update")) {
+                    pd.show();
+                    new PerformancesAction(PerformancesActivity.this).execute();
                 }
             }
         };

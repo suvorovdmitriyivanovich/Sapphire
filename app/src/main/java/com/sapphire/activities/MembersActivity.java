@@ -84,6 +84,9 @@ public class MembersActivity extends BaseActivity implements MembersAdapter.OnRo
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
+                } else if (putreqwest.equals("update")) {
+                    pd.show();
+                    new MembersAction(MembersActivity.this).execute();
                 }
             }
         };
@@ -247,7 +250,6 @@ public class MembersActivity extends BaseActivity implements MembersAdapter.OnRo
         } catch (Exception e) {}
 
         pd.show();
-
         new MembersAction(MembersActivity.this).execute();
     }
 

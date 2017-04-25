@@ -152,6 +152,9 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
+                } else if (putreqwest.equals("update")) {
+                    pd.show();
+                    new InvestigationsAction(InvestigationsActivity.this, me).execute();
                 }
             }
         };

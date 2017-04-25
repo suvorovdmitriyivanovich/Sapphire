@@ -91,6 +91,9 @@ public class CoursesActivity extends BaseActivity implements CoursesAdapter.OnRo
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
+                } else if (putreqwest.equals("update")) {
+                    pd.show();
+                    new CoursesAction(CoursesActivity.this, false).execute();
                 }
             }
         };

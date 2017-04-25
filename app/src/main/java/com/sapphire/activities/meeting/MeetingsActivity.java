@@ -148,6 +148,9 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
+                } else if (putreqwest.equals("update")) {
+                    pd.show();
+                    new MeetingsAction(MeetingsActivity.this, false).execute();
                 }
             }
         };

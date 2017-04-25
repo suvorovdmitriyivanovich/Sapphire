@@ -85,6 +85,9 @@ public class TimeBanksActivity extends BaseActivity implements TimeBanksAdapter.
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
+                } else if (putreqwest.equals("update")) {
+                    pd.show();
+                    new TimeBanksAction(TimeBanksActivity.this).execute();
                 }
             }
         };
@@ -248,7 +251,6 @@ public class TimeBanksActivity extends BaseActivity implements TimeBanksAdapter.
         } catch (Exception e) {}
 
         pd.show();
-
         new TimeBanksAction(TimeBanksActivity.this).execute();
     }
 

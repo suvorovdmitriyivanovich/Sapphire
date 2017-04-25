@@ -92,6 +92,9 @@ public class AttendancesActivity extends BaseActivity implements AttendancesAdap
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
+                } else if (putreqwest.equals("update")) {
+                    pd.show();
+                    new AttendancesAction(AttendancesActivity.this).execute();
                 }
             }
         };

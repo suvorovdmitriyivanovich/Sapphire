@@ -162,6 +162,9 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
                     } catch (Exception e) {}
                 } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
+                } else if (putreqwest.equals("update")) {
+                    pd.show();
+                    new WorkplaceInspectionsAction(WorkplaceInspectionsActivity.this, false).execute();
                 }
             }
         };

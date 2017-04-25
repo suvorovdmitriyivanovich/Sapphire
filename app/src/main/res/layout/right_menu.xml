@@ -64,13 +64,52 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header_root"
+        android:id="@+id/organization_group"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/text_organization_only"
+            android:id="@+id/text_organization" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:id="@+id/organization"
+            android:hint="@string/text_organization_only"
+            android:drawableRight="@drawable/icon_dropdown"
+            android:focusable="false"
+            android:layout_below="@+id/text_organization" />
+
+        <Spinner
+            style="@style/spinner_eee"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/spinnerOrganization"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_below="@+id/organization"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/logout_group"
-        android:layout_below="@+id/header_root"
-        android:layout_marginTop="20dp"
+        android:layout_below="@+id/organization_group"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:background="@drawable/button_selector_transparent"
         android:paddingLeft="10dp"

@@ -14,17 +14,22 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
-import com.sapphire.activities.course.CoursesActivity;
 import com.sapphire.adapters.LanguagesAdapter;
+import com.sapphire.adapters.SpinOrganizationsAdapter;
 import com.sapphire.api.AuthenticationsDeleteAction;
 import com.sapphire.api.PunchesAddAction;
+import com.sapphire.logic.Environment;
 import com.sapphire.models.LanguageData;
 import com.sapphire.logic.UserInfo;
+import com.sapphire.models.OrganizationData;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -37,6 +42,12 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
     private SharedPreferences sPref;
     private SharedPreferences.Editor ed;
     private ProgressDialog pd;
+    private EditText organization;
+    private Spinner spinnerOrganization;
+    private ArrayList<OrganizationData> organizations;
+    private SpinOrganizationsAdapter adapterOrganization;
+    private boolean clickSpinner = false;
+    private UserInfo userInfo;
 
     @SuppressLint("ValidFragment")
     public RightFragment(ProgressDialog pd){
@@ -51,8 +62,13 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
 
         drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawerLayout);
 
+        userInfo = UserInfo.getUserInfo();
+
         sPref = Sapphire.getInstance().getSharedPreferences("GlobalPreferences", Sapphire.getInstance().MODE_PRIVATE);
         ed = sPref.edit();
+
+        spinnerOrganization = (Spinner) rootView.findViewById(R.id.spinnerOrganization);
+        organization = (EditText) rootView.findViewById(R.id.organization);
 
         languageDatas = new ArrayList<LanguageData>();
         LanguageData languageDataEn = new LanguageData("en");
@@ -83,7 +99,7 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
         }
 
         TextView name = (TextView) rootView.findViewById(R.id.name);
-        String userName = UserInfo.getUserInfo().getProfile().getFullName();
+        String userName = userInfo.getProfile().getFullName();
         if (userName.equals("")) {
             userName = sPref.getString("USER","");
         }
@@ -194,6 +210,67 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
                 new PunchesAddAction(getActivity(), "Status In").execute();
             }
         });
+
+        organizations = new ArrayList<>();
+        organizations.addAll(userInfo.getOrganizations());
+
+        if (organizations.size() > 1) {
+            adapterOrganization = new SpinOrganizationsAdapter(getActivity(), R.layout.spinner_list_item_black);
+            spinnerOrganization.setAdapter(adapterOrganization);
+            adapterOrganization.setValues(organizations);
+            organization.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clickSpinner = true;
+                    spinnerOrganization.performClick();
+                }
+            });
+            spinnerOrganization.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (!clickSpinner) {
+                        return;
+                    }
+                    organization.setText(organizations.get(position).getName());
+                    userInfo.setAuthToken(organizations.get(position).getAuthToken());
+                    clickSpinner = false;
+                    drawerLayout.closeDrawers();
+                    Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                    try {
+                        intExit.putExtra(Environment.PARAM_TASK, "update");
+                        Sapphire.getInstance().sendBroadcast(intExit);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+            if (!userInfo.getCurrentOrganization().getOrganizationId().equals("")) {
+                int organizationPosition = 0;
+                for (int i = 0; i < organizations.size(); i++) {
+                    if (organizations.get(i).getOrganizationId().equals(userInfo.getCurrentOrganization().getOrganizationId())) {
+                        organizationPosition = i;
+                        break;
+                    }
+                }
+                organization.setText(organizations.get(organizationPosition).getName());
+                final int finalOrganizationPosition = organizationPosition;
+                organization.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        spinnerOrganization.setSelection(finalOrganizationPosition, false);
+                    }
+                }, 10);
+            }
+        } else {
+            View organization_group = rootView.findViewById(R.id.organization_group);
+            organization_group.setVisibility(View.GONE);
+        }
 
         return rootView;
     }
