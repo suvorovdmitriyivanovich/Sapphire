@@ -39,7 +39,7 @@ public class TimeBanksAction extends AsyncTask{
 
         String urlstring = Environment.SERVER + Environment.TimeBanksURL + filter;
 
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthToken()));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthTokenFirst()));
 
         String result = "";
 

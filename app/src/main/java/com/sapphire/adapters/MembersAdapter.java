@@ -93,7 +93,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
         }
         description = description + "<br>" + Sapphire.getInstance().getResources().getString(R.string.text_healthcertified);
         description = description + ": ";
-        if (data.getIsHealthSafetyCertified()) {
+        if (data.getIsSafetyCertified()) {
             description = description + "<big><font color=#16a085>&#"+Environment.IcoOk+";</font></big> ";
         } else {
             description = description + "<big><font color=#cc3300>&#"+Environment.IcoClose+";</font></big>";

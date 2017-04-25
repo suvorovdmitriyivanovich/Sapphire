@@ -91,7 +91,8 @@ public class AuthenticationsAction extends AsyncTask{
                     DBHelper.getInstance(Sapphire.getInstance()).addNavigationMenus(navigationMenuDatas);
                 }
                 UserInfo userInfo = UserInfo.getUserInfo();
-                userInfo.setAuthToken(accountDatas.get(0).getAuthToken());
+                userInfo.setAuthTokenFirst(accountDatas.get(0).getOrganizations().get(0).getAuthToken());
+                userInfo.setAuthToken(accountDatas.get(0).getOrganizations().get(0).getAuthToken());
                 userInfo.setAccountId(accountDatas.get(0).getAccountId());
                 userInfo.setProfile(accountDatas.get(0).getCurrentProfile());
                 userInfo.setOrganizations(accountDatas.get(0).getOrganizations());

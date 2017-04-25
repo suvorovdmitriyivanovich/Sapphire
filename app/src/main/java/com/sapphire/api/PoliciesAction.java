@@ -40,7 +40,7 @@ public class PoliciesAction extends AsyncTask{
         }
         String urlstring = Environment.SERVER + Environment.PoliciesCurrentURL;
 
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthToken()));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthTokenFirst()));
 
         String result = "";
 

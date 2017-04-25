@@ -56,7 +56,7 @@ public class GetContactsAction extends AsyncTask{
 
         String urlstring = Environment.SERVER + Environment.ContactsURL + filter;
 
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", userInfo.getAuthToken()));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", userInfo.getAuthTokenFirst()));
 
         String result = "";
 

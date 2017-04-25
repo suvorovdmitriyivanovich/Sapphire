@@ -226,4 +226,5 @@
     <string name="text_attendances">My Attendances</string>
     <string name="text_attendances_no">No attendances to display</string>
     <string name="attendances_error">Attendances is required</string>
+    <string name="text_inspected">Inspected</string>
 </resources>

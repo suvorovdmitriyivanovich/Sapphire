@@ -39,7 +39,7 @@ public class DocumentsAction extends AsyncTask{
 
         String urlstring = Environment.SERVER + Environment.DocumentsURL + filter;
 
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", userInfo.getAuthToken()));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", userInfo.getAuthTokenFirst()));
 
         String result = "";
 

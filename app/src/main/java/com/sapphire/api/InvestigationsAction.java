@@ -37,16 +37,19 @@ public class InvestigationsAction extends AsyncTask{
 
         UserInfo userInfo = UserInfo.getUserInfo();
 
+        String authToken = userInfo.getAuthToken();
+
         String filter = "";
         if (me) {
             filter = "?$filter=Profiles/any(profile:%20profile/ProfileId%20eq%20guid'"+userInfo.getProfile().getProfileId()+"')";
+            authToken = userInfo.getAuthTokenFirst();
         } else {
             filter = "?$filter=OrganizationId%20eq%20guid'"+userInfo.getCurrentOrganization().getOrganizationId()+"'";
         }
 
         String urlstring = Environment.SERVER + Environment.InvestigationsCurrentURL + filter;
 
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", userInfo.getAuthToken()));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", authToken));
 
         String result = "";
 

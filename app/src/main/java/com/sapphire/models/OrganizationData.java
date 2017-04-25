@@ -18,6 +18,7 @@ public class OrganizationData {
     private ArrayList<OrganizationStructureData> accountCurrentOrganizationStructures = new ArrayList<OrganizationStructureData>();
     private ArrayList<AppSecurityData> accountOrganizationAppSecurities = new ArrayList<AppSecurityData>();
     private ArrayList<AppSecurityData> accountOrganizationGlobalAppSecurities = new ArrayList<AppSecurityData>();
+    private String authToken = "";
 
     public OrganizationData() {
 
@@ -54,6 +55,9 @@ public class OrganizationData {
             }
             if (!data.isNull("AccountOrganizationGlobalAppSecurities")) {
                 setAccountOrganizationGlobalAppSecurities(data.getJSONArray("AccountOrganizationGlobalAppSecurities"));
+            }
+            if (!data.isNull("AuthToken")) {
+                setAuthToken(data.getString("AuthToken"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -163,5 +167,13 @@ public class OrganizationData {
             }
         }
         this.accountOrganizationGlobalAppSecurities = appSecuritiesDatas;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 }

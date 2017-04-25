@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 public class UserInfo {
     private String authToken = "";
+    private String authTokenFirst = "";
     private String accountId = "";
     private ProfileData profile = new ProfileData();
     private ArrayList<OrganizationData> organizations = new ArrayList<OrganizationData>();
@@ -66,6 +67,14 @@ public class UserInfo {
 
     public String getAuthToken() {
         return authToken;
+    }
+
+    public void setAuthTokenFirst(String authTokenFirst) {
+        this.authTokenFirst = authTokenFirst;
+    }
+
+    public String getAuthTokenFirst() {
+        return authTokenFirst;
     }
 
     public void setAccountId(String accountId) {

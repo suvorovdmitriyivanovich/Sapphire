@@ -96,7 +96,38 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
         }
 
         holder.text_name.setText(data.getName());
-        holder.text_date.setText(data.getDateString());
+
+        String description = "";
+        if (data.getDate() != 0l) {
+            description = description + data.getDateString();
+        }
+        if (!description.equals("")) {
+            description = description + "<br>";
+        }
+        description = description + Sapphire.getInstance().getResources().getString(R.string.text_inspected);
+        description = description + ": ";
+        if (data.getInspected()) {
+            description = description + "<big><font color=#16a085>&#"+Environment.IcoOk+";</font></big> ";
+        } else {
+            description = description + "<big><font color=#cc3300>&#"+Environment.IcoClose+";</font></big>";
+        }
+        description = description + "<br>" + Sapphire.getInstance().getResources().getString(R.string.text_completed);
+        description = description + ": ";
+        if (data.getCompleted()) {
+            description = description + "<big><font color=#16a085>&#"+Environment.IcoOk+";</font></big> ";
+        } else {
+            description = description + "<big><font color=#cc3300>&#"+Environment.IcoClose+";</font></big>";
+        }
+        description = description + "<br>" + Sapphire.getInstance().getResources().getString(R.string.text_posted);
+        description = description + ": ";
+        if (data.getPostedOnBoard()) {
+            description = description + "<big><font color=#16a085>&#"+Environment.IcoOk+";</font></big> ";
+        } else {
+            description = description + "<big><font color=#cc3300>&#"+Environment.IcoClose+";</font></big>";
+        }
+
+        holder.text_date.setTypeface(typeFace);
+        holder.text_date.setText(Html.fromHtml(description));
 
         holder.open.setTypeface(typeFace);
         holder.open.setText(Html.fromHtml("&#"+Environment.IcoEdit+";"));

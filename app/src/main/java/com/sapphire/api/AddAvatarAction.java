@@ -68,7 +68,7 @@ public class AddAvatarAction extends AsyncTask{
             body = jsonArray.toString();
         }
 
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring, body, 0, true, method, UserInfo.getUserInfo().getAuthToken()));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring, body, 0, true, method, UserInfo.getUserInfo().getAuthTokenFirst()));
 
         String result = "";
 

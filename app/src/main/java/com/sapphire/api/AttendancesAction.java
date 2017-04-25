@@ -39,7 +39,7 @@ public class AttendancesAction extends AsyncTask{
 
         String urlstring = Environment.SERVER + Environment.AttendancesURL + filter;
 
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", userInfo.getAuthToken()));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", userInfo.getAuthTokenFirst()));
 
         String result = "";
 
