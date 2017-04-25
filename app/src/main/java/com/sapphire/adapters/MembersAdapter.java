@@ -77,16 +77,23 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
         }
 
         String description = "";
-        description = description + Sapphire.getInstance().getResources().getString(R.string.certified);
+        description = description + Sapphire.getInstance().getResources().getString(R.string.text_certified);
         description = description + ": ";
         if (data.getIsCPRCertified()) {
             description = description + "<big><font color=#16a085>&#"+Environment.IcoOk+";</font></big> ";
         } else {
             description = description + "<big><font color=#cc3300>&#"+Environment.IcoClose+";</font></big>";
         }
-        description = description + "<br>" + Sapphire.getInstance().getResources().getString(R.string.text_firstaid);
+        description = description + "<br>" + Sapphire.getInstance().getResources().getString(R.string.text_aidcertified);
         description = description + ": ";
         if (data.getIsFirstAidCertified()) {
+            description = description + "<big><font color=#16a085>&#"+Environment.IcoOk+";</font></big> ";
+        } else {
+            description = description + "<big><font color=#cc3300>&#"+Environment.IcoClose+";</font></big>";
+        }
+        description = description + "<br>" + Sapphire.getInstance().getResources().getString(R.string.text_healthcertified);
+        description = description + ": ";
+        if (data.getIsHealthSafetyCertified()) {
             description = description + "<big><font color=#16a085>&#"+Environment.IcoOk+";</font></big> ";
         } else {
             description = description + "<big><font color=#cc3300>&#"+Environment.IcoClose+";</font></big>";

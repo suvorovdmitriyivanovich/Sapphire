@@ -38,6 +38,7 @@ public class ProfileData {
     private String email = "";
     private boolean isCPRCertified = false;
     private boolean isFirstAidCertified = false;
+    private boolean isHealthSafetyCertified = false;
     private boolean presence = false;
 
     public ProfileData() {
@@ -141,6 +142,9 @@ public class ProfileData {
             }
             if (!data.isNull("IsFirstAidCertified")) {
                 setIsFirstAidCertified(data.getBoolean("IsFirstAidCertified"));
+            }
+            if (!data.isNull("IsHealthSafetyCertified")) {
+                setIsHealthSafetyCertified(data.getBoolean("IsHealthSafetyCertified"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -481,6 +485,14 @@ public class ProfileData {
 
     public boolean getIsFirstAidCertified() {
         return isFirstAidCertified;
+    }
+
+    public void setIsHealthSafetyCertified(boolean isHealthSafetyCertified) {
+        this.isHealthSafetyCertified = isHealthSafetyCertified;
+    }
+
+    public boolean getIsHealthSafetyCertified() {
+        return isHealthSafetyCertified;
     }
 
     public void setPresence(boolean presence) {

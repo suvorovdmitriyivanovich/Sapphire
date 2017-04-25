@@ -132,6 +132,7 @@
     <string name="text_member">Health And Safety Member</string>
     <string name="text_certified">CPR Certified</string>
     <string name="text_aidcertified">First Aid Certified</string>
+    <string name="text_healthcertified">Health &#38; Safety Certified</string>
     <string name="text_investigations">Investigations</string>
     <string name="text_investigation_no">No uncompleted investigations</string>
     <string name="text_investigation">Investigation</string>
@@ -152,8 +153,6 @@
     <string name="text_meetings_templates">Meetings Topic Templates</string>
     <string name="text_members">Members</string>
     <string name="text_members_no">No members to display</string>
-    <string name="certified">Certified</string>
-    <string name="text_firstaid">FirstAid</string>
     <string name="text_meetings">Meetings</string>
     <string name="text_meetings_no">No upcoming meetings</string>
     <string name="text_completed">Completed</string>
