@@ -198,7 +198,8 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
             @Override
             public void onClick(View v) {
                 hideSoftKeyboard();
-                if (readonly) {
+                //if (readonly) {
+                if (true) {
                     return;
                 }
                 clickSpinner = true;
@@ -237,7 +238,8 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
             @Override
             public void onClick(View v) {
                 hideSoftKeyboard();
-                if (readonly) {
+                //if (readonly) {
+                if (true) {
                     return;
                 }
                 clickSpinner = true;
@@ -270,7 +272,8 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
             @Override
             public void onClick(View v) {
                 hideSoftKeyboard();
-                if (readonly) {
+                //if (readonly) {
+                if (true) {
                     return;
                 }
                 clickSpinner = true;
@@ -529,15 +532,15 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
         UpdateBottom();
 
         if (readonly) {
-            button_ok.setVisibility(View.GONE);
             name.setFocusable(false);
             description.setFocusable(false);
-            status.setFocusable(false);
-            severity.setFocusable(false);
-            priority.setFocusable(false);
-            comments.setFocusable(false);
-            recommendedActions.setFocusable(false);
+            button_ok.setVisibility(View.GONE);
         }
+        status.setFocusable(false);
+        severity.setFocusable(false);
+        priority.setFocusable(false);
+        comments.setFocusable(false);
+        recommendedActions.setFocusable(false);
     }
 
     Animation.AnimationListener animationErrorUpNameListener = new Animation.AnimationListener() {
