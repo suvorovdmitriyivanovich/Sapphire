@@ -145,6 +145,43 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/description_group"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/text_description"
+                    android:id="@+id/text_description"
+                    android:textColor="@color/grey_dark"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/text_description"
+                    android:id="@+id/text_description_hint"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_below="@+id/text_description"
+                    android:textColor="@color/grey_dark" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_description"
+                    android:inputType="text"
+                    android:id="@+id/description" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:id="@+id/date_grup"
                 android:layout_marginRight="10dp"
@@ -257,43 +294,6 @@
                 android:id="@+id/posted"
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/description_group"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="@string/text_description"
-                    android:id="@+id/text_description"
-                    android:textColor="@color/grey_dark"
-                    android:visibility="invisible" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/text_description"
-                    android:id="@+id/text_description_hint"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_below="@+id/text_description"
-                    android:textColor="@color/grey_dark" />
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/text_description"
-                    android:inputType="text"
-                    android:id="@+id/description" />
-
-            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"
