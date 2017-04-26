@@ -228,4 +228,6 @@
     <string name="attendances_error">Attendances is required</string>
     <string name="text_inspected">Inspected</string>
     <string name="text_organization_only">Organization</string>
+    <string name="text_bulletin_board">Bulletin Board</string>
+    <string name="text_news_no">No news to display</string>
 </resources>

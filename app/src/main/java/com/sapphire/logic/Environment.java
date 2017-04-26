@@ -61,6 +61,7 @@ public class Environment {
     public static final String PunchesCategoriesURL = "/v1/Punches/Categories";
     public static final String PunchesURL = "/v1/Punches";
     public static final String AttendancesURL = "/v1/WorkforceManagement/Attendances";
+    public static final String BulletinURL = "/v1/News";
 
     public static final String PolicyStatusStarted = "1586dc39-979b-3991-c822-a4bcb14d1345";
     public static final String PolicyStatusAcknowledged  = "1586dc39-979b-ab1c-838f-1917fce340de";

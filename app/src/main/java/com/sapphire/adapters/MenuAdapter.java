@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
@@ -23,6 +24,7 @@ public class MenuAdapter extends BaseExpandableListAdapter {
     private ArrayList<NavigationMenuData> mGroups;
     private MenuFragment mContext;
     private Typeface typeFace;
+    private boolean isOpenGroup = false;
 
     public MenuAdapter(MenuFragment context, ArrayList<NavigationMenuData> groups) {
         mContext = context;
@@ -66,7 +68,7 @@ public class MenuAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
+    public View getGroupView(final int groupPosition, boolean isExpanded, View convertView,
                              ViewGroup parent) {
 
         if (convertView == null) {
@@ -74,15 +76,42 @@ public class MenuAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.group_view_white, null);
         }
 
+        ImageView ico = (ImageView) convertView.findViewById(R.id.ico);
+
         if (isExpanded){
             //Изменяем что-нибудь, если текущая Group раскрыта
-        }
-        else{
+            ico.setImageResource(R.drawable.ico_up);
+            if (mGroups.get(groupPosition).getSubMenus().size() == 0) {
+                if (!isOpenGroup) {
+                    isOpenGroup = true;
+                    ((OnRootClickListener) mContext).onRootClick(groupPosition, 0);
+                }
+            }
+        } else{
             //Изменяем что-нибудь, если текущая Group скрыта
+            ico.setImageResource(R.drawable.ico_down);
+        }
+
+        if (mGroups.get(groupPosition).getSubMenus().size() == 0) {
+            ico.setVisibility(View.GONE);
+        } else {
+            ico.setVisibility(View.VISIBLE);
         }
 
         TextView name = (TextView) convertView.findViewById(R.id.text_name);
         name.setText(mGroups.get(groupPosition).getName());
+
+        /*
+        if (mGroups.get(groupPosition).getSubMenus().size() == 0) {
+            View root = convertView.findViewById(R.id.root);
+            root.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((OnRootClickListener) mContext).onRootClick(groupPosition, 0);
+                }
+            });
+        }
+        */
 
         return convertView;
 
