@@ -137,7 +137,7 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             public void onClick(View v) {
                 pd.show();
 
-                new PunchesAddAction(getActivity(), "Punch In").execute();
+                new PunchesAddAction(getActivity(), "Punch In", "d71cdd39-a1ce-f2dd-35e3-70e550bed74c").execute();
             }
         });
 
@@ -147,7 +147,7 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             public void onClick(View v) {
                 pd.show();
 
-                new PunchesAddAction(getActivity(), "Punch Out").execute();
+                new PunchesAddAction(getActivity(), "Punch Out", "d71cdd39-a1ce-f2dd-35e3-70e550bed74c").execute();
             }
         });
 
@@ -157,7 +157,7 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             public void onClick(View v) {
                 pd.show();
 
-                new PunchesAddAction(getActivity(), "Lunch Out").execute();
+                new PunchesAddAction(getActivity(), "Lunch Out", "").execute();
             }
         });
 
@@ -167,7 +167,7 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             public void onClick(View v) {
                 pd.show();
 
-                new PunchesAddAction(getActivity(), "Lunch In").execute();
+                new PunchesAddAction(getActivity(), "Lunch In", "").execute();
             }
         });
 
@@ -177,7 +177,7 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             public void onClick(View v) {
                 pd.show();
 
-                new PunchesAddAction(getActivity(), "Break Out").execute();
+                new PunchesAddAction(getActivity(), "Break Out", "").execute();
             }
         });
 
@@ -187,7 +187,7 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             public void onClick(View v) {
                 pd.show();
 
-                new PunchesAddAction(getActivity(), "Break In").execute();
+                new PunchesAddAction(getActivity(), "Break In", "").execute();
             }
         });
 
@@ -197,7 +197,7 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             public void onClick(View v) {
                 pd.show();
 
-                new PunchesAddAction(getActivity(), "Status Out").execute();
+                new PunchesAddAction(getActivity(), "Status Out", "").execute();
             }
         });
 
@@ -207,7 +207,7 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
             public void onClick(View v) {
                 pd.show();
 
-                new PunchesAddAction(getActivity(), "Status In").execute();
+                new PunchesAddAction(getActivity(), "Status In", "").execute();
             }
         });
 
@@ -270,6 +270,20 @@ public class RightFragment extends Fragment implements LanguagesAdapter.OnRootCl
         } else {
             View organization_group = rootView.findViewById(R.id.organization_group);
             organization_group.setVisibility(View.GONE);
+        }
+
+        if (userInfo.getMasterOrganization().getOrganizationId().equals("")
+           || userInfo.getMasterOrganization().getProfile().getProfileId().equals("")
+           || !userInfo.getGlobalAppRoleAppSecurities().hasGlobalAppRoleAppSecurities("d71cdd39-a1ce-4db1-c8ba-88e289d6256a")
+           || !userInfo.getGlobalAppRoleAppSecurities().isActiveGlobalAppRoleAppSecurities("d71cdd39-a1ce-4db1-c8ba-88e289d6256a")) {
+            punchin.setVisibility(View.GONE);
+            punchout.setVisibility(View.GONE);
+            lunchout.setVisibility(View.GONE);
+            lunchin.setVisibility(View.GONE);
+            breakout.setVisibility(View.GONE);
+            breakin.setVisibility(View.GONE);
+            statusout.setVisibility(View.GONE);
+            statusin.setVisibility(View.GONE);
         }
 
         return rootView;

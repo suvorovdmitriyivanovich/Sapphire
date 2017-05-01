@@ -145,6 +145,24 @@ public class OrganizationData {
         return accountOrganizationAppSecurities;
     }
 
+    public boolean hasAccountOrganizationAppSecurities(String accountOrganizationAppSecurity) {
+        for(AppSecurityData item: accountOrganizationAppSecurities) {
+            if (item.getAppSecurityId().equals(accountOrganizationAppSecurity)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isActiveGlobalAppRoleAppSecurities(String globalAppRoleAppSecurity) {
+        for(AppSecurityData item: accountOrganizationGlobalAppSecurities) {
+            if (item.getAppSecurityId().equals(globalAppRoleAppSecurity) && item.getIsActive()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void setAccountOrganizationAppSecurities(JSONArray accountOrganizationAppSecurities) {
         ArrayList<AppSecurityData> appSecuritiesDatas = new ArrayList<AppSecurityData>();
         for (int y=0; y < accountOrganizationAppSecurities.length(); y++) {

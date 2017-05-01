@@ -230,4 +230,6 @@
     <string name="text_organization_only">Organization</string>
     <string name="text_bulletin_board">Bulletin Board</string>
     <string name="text_news_no">No news to display</string>
+    <string name="text_my_accidents">My Accidents</string>
+    <string name="text_accidents_no">No accidents to display</string>
 </resources>

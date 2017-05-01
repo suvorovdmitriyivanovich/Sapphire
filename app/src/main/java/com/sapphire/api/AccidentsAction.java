@@ -7,27 +7,24 @@ import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.UserInfo;
+import com.sapphire.models.AccidentData;
 import com.sapphire.models.ErrorMessageData;
 import com.sapphire.models.ResponseData;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import java.util.ArrayList;
 
-public class PunchesAddAction extends AsyncTask{
+public class AccidentsAction extends AsyncTask{
 
-    public interface RequestPunchesAdd {
-        public void onRequestPunchesAdd(String result);
+    public interface RequestAccidents {
+        public void onRequestAccidents(String result, ArrayList<AccidentData> datas);
     }
 
     private Context mContext;
-    private String punchCategoryId;
-    private String punchTypeId;
+    private ArrayList<AccidentData> datas;
 
-    public PunchesAddAction(Context context, String punchCategoryId, String punchTypeId) {
+    public AccidentsAction(Context context) {
         this.mContext = context;
-        this.punchCategoryId = punchCategoryId;
-        this.punchTypeId = punchTypeId;
     }
 
     @Override
@@ -38,25 +35,25 @@ public class PunchesAddAction extends AsyncTask{
 
         UserInfo userInfo = UserInfo.getUserInfo();
 
-        String urlstring = Environment.SERVER + Environment.PunchesURL;
+        String filter = "?$filter=ProfileId%20eq%20guid'"+userInfo.getProfile().getProfileId()+"'";
 
-        JSONArray jsonArray = new JSONArray();
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("PunchTypeId", punchTypeId);
-            jsonObject.put("PunchCategoryId", UserInfo.getUserInfo().getPunchesCategoryId(punchCategoryId));
-            jsonArray.put(jsonObject);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        String urlstring = Environment.SERVER + Environment.AccidentsURL + filter;
 
-        String method = "POST";
-
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonArray.toString(),0,true,method, userInfo.getAuthToken()));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", UserInfo.getUserInfo().getAuthTokenFirst()));
 
         String result = "";
 
-        if (responseData.getSuccess() && responseData.getDataCount() == 1) {
+        if (responseData.getSuccess()) {
+            JSONArray data = responseData.getData();
+            datas = new ArrayList<AccidentData>();
+            for (int y=0; y < data.length(); y++) {
+                try {
+                    datas.add(new AccidentData(data.getJSONObject(y)));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
             result = "OK";
         } else {
             ArrayList<ErrorMessageData> errorMessageDatas = responseData.getErrorMessages();
@@ -79,7 +76,7 @@ public class PunchesAddAction extends AsyncTask{
     protected void onPostExecute(Object o) {
         String resultData = (String) o;
         if(mContext!=null) {
-            ((RequestPunchesAdd) mContext).onRequestPunchesAdd(resultData);
+            ((RequestAccidents) mContext).onRequestAccidents(resultData, datas);
         }
     }
 }

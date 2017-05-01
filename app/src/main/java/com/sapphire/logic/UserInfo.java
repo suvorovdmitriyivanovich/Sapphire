@@ -1,5 +1,6 @@
 package com.sapphire.logic;
 
+import com.sapphire.models.AppRoleAppSecurityData;
 import com.sapphire.models.AttendanceCodeData;
 import com.sapphire.models.CategoryData;
 import com.sapphire.models.DayData;
@@ -18,6 +19,8 @@ import com.sapphire.models.TimeZoneData;
 import com.sapphire.models.TopicData;
 import com.sapphire.models.WorkplaceInspectionData;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class UserInfo {
@@ -33,6 +36,7 @@ public class UserInfo {
     private ArrayList<ItemStatusData> itemStatusDatas = new ArrayList<ItemStatusData>();
     private ArrayList<FileData> fileDatas = new ArrayList<FileData>();
     private OrganizationData currentOrganization = new OrganizationData();
+    private OrganizationData masterOrganization = new OrganizationData();
     private ArrayList<MemberData> members = new ArrayList<MemberData>();
     private ArrayList<TopicData> topics = new ArrayList<TopicData>();
     private ArrayList<MemberData> allmembers = new ArrayList<MemberData>();
@@ -50,6 +54,7 @@ public class UserInfo {
     private String accountSession = "";
     private ArrayList<PunchesCategoryData> punchesCategories = new ArrayList<PunchesCategoryData>();
     private WorkplaceInspectionData workplaceInspection = new WorkplaceInspectionData();
+    private AppRoleAppSecurityData globalAppRoleAppSecurities = new AppRoleAppSecurityData();
 
     //---------------------Singleton---------------------------
     private static UserInfo userInfo;
@@ -107,6 +112,14 @@ public class UserInfo {
 
     public OrganizationData getCurrentOrganization() {
         return currentOrganization;
+    }
+
+    public void setMasterOrganization(OrganizationData masterOrganization) {
+        this.masterOrganization = masterOrganization;
+    }
+
+    public OrganizationData getMasterOrganization() {
+        return masterOrganization;
     }
 
     public ArrayList<OrganizationStructureData> getOrganizationStructureDatas() {
@@ -366,5 +379,13 @@ public class UserInfo {
 
     public void setWorkplaceInspection(WorkplaceInspectionData workplaceInspection) {
         this.workplaceInspection = workplaceInspection;
+    }
+
+    public AppRoleAppSecurityData getGlobalAppRoleAppSecurities() {
+        return globalAppRoleAppSecurities;
+    }
+
+    public void setGlobalAppRoleAppSecurities(AppRoleAppSecurityData globalAppRoleAppSecurities) {
+        this.globalAppRoleAppSecurities = globalAppRoleAppSecurities;
     }
 }

@@ -266,7 +266,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/text_language"
         android:id="@+id/text_language"
-        android:layout_below="@+id/logout_group"
+        android:layout_below="@+id/status_group"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
         android:textStyle="bold"

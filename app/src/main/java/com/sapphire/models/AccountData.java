@@ -19,6 +19,7 @@ public class AccountData {
     private boolean isPasswordRetrieval = false;
     private Long dateCreated = 0l;
     private Long dateUpdated = 0l;
+    private AppRoleAppSecurityData globalAppRoleAppSecurities = new AppRoleAppSecurityData();
 
     public AccountData() {
 
@@ -58,6 +59,9 @@ public class AccountData {
             }
             if (!data.isNull("CurrentProfile")) {
                 setCurrentProfile(data.getJSONObject("CurrentProfile"));
+            }
+            if (!data.isNull("GlobalAppRoleAppSecurities")) {
+                setGlobalAppRoleAppSecurities(data.getJSONObject("GlobalAppRoleAppSecurities"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -168,5 +172,13 @@ public class AccountData {
 
     public void setCurrentProfile(JSONObject currentProfile) {
         this.currentProfile = new ProfileData(currentProfile);
+    }
+
+    public AppRoleAppSecurityData getGlobalAppRoleAppSecurities() {
+        return globalAppRoleAppSecurities;
+    }
+
+    public void setGlobalAppRoleAppSecurities(JSONObject globalAppRoleAppSecurities) {
+        this.globalAppRoleAppSecurities = new AppRoleAppSecurityData(globalAppRoleAppSecurities);
     }
 }
