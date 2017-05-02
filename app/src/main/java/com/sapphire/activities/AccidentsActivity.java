@@ -24,7 +24,6 @@ import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.AccidentData;
-import com.sapphire.models.TimeBankAccountData;
 import java.util.ArrayList;
 
 public class AccidentsActivity extends BaseActivity implements AccidentsAdapter.OnRootAccidentsClickListener,

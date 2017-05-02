@@ -79,7 +79,7 @@ public class TaskManagementLinksAction extends AsyncTask{
         } else {
             String models = "";
             for (WorkplaceInspectionItemData item : itemDatas) {
-                if (item.getWorkplaceInspectionItemId().equals("")) {
+                if (item.getWorkplaceInspectionItemId().equals("") || !item.getStatus().getWorkplaceInspectionItemStatusId().equals(Environment.StatusFail)) {
                     continue;
                 }
                 if (!models.equals("")) {
