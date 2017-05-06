@@ -33,9 +33,6 @@ public class AttendanceCodesAction extends AsyncTask{
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
 
-        UserInfo userInfo = UserInfo.getUserInfo();
-
-        //String filter = "?$filter=ProfileId%20eq%20guid'"+userInfo.getProfile().getProfileId()+"'";
         String filter = "?$filter=IsRequestAvailable%20eq%20true";
 
         String urlstring = Environment.SERVER + Environment.AttendanceCodesURL + filter;

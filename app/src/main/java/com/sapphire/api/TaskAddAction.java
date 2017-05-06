@@ -70,25 +70,6 @@ public class TaskAddAction extends AsyncTask{
             method = "PUT";
         }
 
-        /*
-        [{"TaskTypeId":"c5b2dd39-03b1-c9b8-fb19-feaf9c6e0d36",
-        "TaskCategoryId":"14eddc39-49f6-3b9e-f38a-fef408856a6b",
-        "Name":"new",
-        "Description":null,
-        "PlannedStartDate":"2017-04-08T16:23:40.391Z",
-        "PlannedFinishDate":"2017-04-08T16:23:40.391Z",
-        "Priority":0}]
-
-        [{"ParentId":"",
-        "TaskTypeId":"c5b2dd39-03b1-c9b8-fb19-feaf9c6e0d36",
-        "TaskCategoryId":"c5b2dd39-03b1-c9b8-fb19-feaf9c6e0d36",
-        "Name":"new1",
-        "Description":"",
-                "PlannedStartDate":"2017-04-08T05:00:00.000Z",
-                "PlannedFinishDate":"2017-04-08T05:00:00.000Z",
-                "Priority":"0"}]
-                */
-
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonArray.toString(),0,true,method, userInfo.getAuthToken()));
 
         String result = "";
