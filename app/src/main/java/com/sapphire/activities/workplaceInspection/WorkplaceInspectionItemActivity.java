@@ -198,8 +198,8 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
             @Override
             public void onClick(View v) {
                 hideSoftKeyboard();
-                //if (readonly) {
-                if (true) {
+                if (readonly) {
+                //if (true) {
                     return;
                 }
                 clickSpinner = true;
@@ -238,8 +238,8 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
             @Override
             public void onClick(View v) {
                 hideSoftKeyboard();
-                //if (readonly) {
-                if (true) {
+                if (readonly) {
+                //if (true) {
                     return;
                 }
                 clickSpinner = true;
@@ -272,8 +272,8 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
             @Override
             public void onClick(View v) {
                 hideSoftKeyboard();
-                //if (readonly) {
-                if (true) {
+                if (readonly) {
+                //if (true) {
                     return;
                 }
                 clickSpinner = true;
@@ -535,12 +535,17 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
             name.setFocusable(false);
             description.setFocusable(false);
             button_ok.setVisibility(View.GONE);
+            status.setFocusable(false);
+            severity.setFocusable(false);
+            priority.setFocusable(false);
+            comments.setFocusable(false);
+            recommendedActions.setFocusable(false);
         }
-        status.setFocusable(false);
-        severity.setFocusable(false);
-        priority.setFocusable(false);
-        comments.setFocusable(false);
-        recommendedActions.setFocusable(false);
+        //status.setFocusable(false);
+        //severity.setFocusable(false);
+        //priority.setFocusable(false);
+        //comments.setFocusable(false);
+        //recommendedActions.setFocusable(false);
     }
 
     Animation.AnimationListener animationErrorUpNameListener = new Animation.AnimationListener() {
