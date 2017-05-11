@@ -83,9 +83,9 @@ public class PoliciesAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if (isDashboard) {
-                convertView = inflater.inflate(R.layout.group_view_fiksed, null);
+                convertView = inflater.inflate(R.layout.group_view_fiksed_two, null);
             } else {
-                convertView = inflater.inflate(R.layout.group_view, null);
+                convertView = inflater.inflate(R.layout.group_view_two, null);
             }
         }
 
@@ -98,6 +98,28 @@ public class PoliciesAdapter extends BaseExpandableListAdapter {
 
         TextView name = (TextView) convertView.findViewById(R.id.text_name);
         name.setText(mGroups.get(groupPosition).getName());
+
+        String textAcknowledged = "";
+        textAcknowledged = textAcknowledged + Sapphire.getInstance().getResources().getString(R.string.text_acknowledge);
+        textAcknowledged = textAcknowledged + ": ";
+
+        boolean allAcknowledged = true;
+        for(PolicyData item: mGroups.get(groupPosition).getSubPolicies()) {
+            if (!item.getIsAcknowledged()) {
+                allAcknowledged = false;
+                break;
+            }
+        }
+
+        if (allAcknowledged) {
+            textAcknowledged = textAcknowledged + "<big><font color=#16a085>&#"+Environment.IcoOk+";</font></big> ";
+        } else {
+            textAcknowledged = textAcknowledged + "<big><font color=#cc3300>&#"+Environment.IcoClose+";</font></big>";
+        }
+
+        TextView description = (TextView) convertView.findViewById(R.id.text_description);
+        description.setTypeface(typeFace);
+        description.setText(Html.fromHtml(textAcknowledged));
 
         if (isDashboard) {
             View root = convertView.findViewById(R.id.root);

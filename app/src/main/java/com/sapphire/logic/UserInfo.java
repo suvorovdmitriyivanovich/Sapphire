@@ -225,7 +225,12 @@ public class UserInfo {
     }
 
     public ArrayList<MemberData> getAllMembers() {
-        return allmembers;
+        ArrayList<MemberData> arrayList = new ArrayList<>();
+        for (MemberData item: allmembers) {
+            arrayList.add(new MemberData(item));
+        }
+
+        return arrayList;
     }
 
     public void setAllMembers(ArrayList<MemberData> allmembers) {

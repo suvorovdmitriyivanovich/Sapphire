@@ -87,9 +87,9 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if (isDashboard) {
-                convertView = inflater.inflate(R.layout.group_view_fiksed, null);
+                convertView = inflater.inflate(R.layout.group_view_fiksed_tree, null);
             } else {
-                convertView = inflater.inflate(R.layout.group_view, null);
+                convertView = inflater.inflate(R.layout.group_view_two, null);
             }
         }
 
@@ -103,6 +103,40 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
 
         TextView name = (TextView) convertView.findViewById(R.id.text_name);
         name.setText(mGroups.get(groupPosition).getName());
+
+        boolean allCoursePassed = true;
+        boolean allQuizPassed = true;
+        for(CoursesData item: mGroups.get(groupPosition).getSubCourses()) {
+            if (!item.getCoursePassed()) {
+                allCoursePassed = false;
+            }
+            if (!item.getCoursePassed()) {
+                allQuizPassed = false;
+            }
+            if (!allCoursePassed && !allQuizPassed) {
+                break;
+            }
+        }
+
+        String textCourse = "";
+        textCourse = textCourse + Sapphire.getInstance().getResources().getString(R.string.text_course);
+        textCourse = textCourse + ": ";
+        if (allCoursePassed) {
+            textCourse = textCourse + "<big><font color=#16a085>&#"+Environment.IcoOk+";</font></big> ";
+        } else {
+            textCourse = textCourse + "<big><font color=#cc3300>&#"+Environment.IcoClose+";</font></big>";
+        }
+        textCourse = textCourse + "<br>" + Sapphire.getInstance().getResources().getString(R.string.text_quiz);
+        textCourse = textCourse + ": ";
+        if (allQuizPassed) {
+            textCourse = textCourse + "<big><font color=#16a085>&#"+Environment.IcoOk+";</font></big> ";
+        } else {
+            textCourse = textCourse + "<big><font color=#cc3300>&#"+Environment.IcoClose+";</font></big>";
+        }
+
+        TextView description = (TextView) convertView.findViewById(R.id.text_description);
+        description.setTypeface(typeFace);
+        description.setText(Html.fromHtml(textCourse));
 
         if (isDashboard) {
             View root = convertView.findViewById(R.id.root);

@@ -84,9 +84,10 @@
             android:layout_centerVertical="true"
             android:enabled="false"
             android:layout_marginRight="8dp"
-            android:background="@drawable/button_selector_grey"
+            android:background="@drawable/button_selector"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp" />
+            android:paddingRight="10dp"
+            android:textColor="@color/white" />
     </RelativeLayout>
 
     <RelativeLayout

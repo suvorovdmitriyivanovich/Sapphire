@@ -234,6 +234,8 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         intent.putExtra("date", workplaceInspectionData.getDate());
         intent.putExtra("workplaceInspectionId", workplaceInspectionData.getWorkplaceInspectionId());
         intent.putExtra("posted", workplaceInspectionData.getPostedOnBoard());
+        UserInfo userInfo = UserInfo.getUserInfo();
+        userInfo.setMembers(workplaceInspectionData.getProfiles());
         startActivity(intent);
     }
 
@@ -246,6 +248,8 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         intent.putExtra("date", workplaceInspectionData.getDate());
         intent.putExtra("workplaceInspectionId", workplaceInspectionData.getWorkplaceInspectionId());
         intent.putExtra("posted", workplaceInspectionData.getPostedOnBoard());
+        UserInfo userInfo = UserInfo.getUserInfo();
+        userInfo.setMembers(workplaceInspectionData.getProfiles());
         startActivity(intent);
     }
 

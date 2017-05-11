@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.Sapphire;
@@ -131,6 +132,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
     private DrawerLayout drawerLayout;
+    private ScrollView scroll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -292,6 +294,8 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
         });
 
         UpdateBottom();
+
+        scroll = (ScrollView) findViewById(R.id.scrollView);
     }
 
     private void UpdateBottom() {
@@ -347,7 +351,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
         if (adapterCourses == null) {
             return;
         }
-        int totalHeight = GetPixelFromDips(coursesDatas.size() * 40);
+        int totalHeight = GetPixelFromDips(coursesDatas.size() * 80);
         for (int i = 0; i < coursesDatas.size(); i++) {
             if (courseslist.isGroupExpanded(i)) {
                 totalHeight += GetPixelFromDips(coursesDatas.get(i).getSubCourses().size() * 120);
@@ -369,7 +373,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
         if (adapterPolicies == null) {
             return;
         }
-        int totalHeight = GetPixelFromDips(policiesDatas.size() * 40);
+        int totalHeight = GetPixelFromDips(policiesDatas.size() * 60);
         for (int i = 0; i < policiesDatas.size(); i++) {
             if (policieslist.isGroupExpanded(i)) {
                 totalHeight += GetPixelFromDips(policiesDatas.get(i).getSubPolicies().size() * 80);
@@ -499,6 +503,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
         if (!result.equals("OK")) {
             updateVisibility();
             pd.hide();
+            scroll.scrollTo(0, 0);
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
@@ -520,6 +525,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
     public void onRequestMeetingDelete(String result) {
         if (!result.equals("OK")) {
             pd.hide();
+            scroll.scrollTo(0, 0);
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
@@ -576,6 +582,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
     public void onRequestCourses(String result) {
         updateVisibility();
         pd.hide();
+        scroll.scrollTo(0, 0);
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
@@ -642,6 +649,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
     public void onRequestPolicies(String result) {
         updateVisibility();
         pd.hide();
+        scroll.scrollTo(0, 0);
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
@@ -673,7 +681,8 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
         justifyListViewHeightBasedOnChildrenPolicies(policieslist);
 
         //pd.hide();
-        new WorkplaceInspectionsAction(MainActivity.this, true).execute();
+        //new WorkplaceInspectionsAction(MainActivity.this, true).execute();
+        new TemplatesAction(MainActivity.this, getResources().getString(R.string.text_workplace_templates)).execute();
     }
 
     @Override
@@ -729,6 +738,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
     public void onRequestWorkplaceInspections(String result) {
         updateVisibility();
         pd.hide();
+        scroll.scrollTo(0, 0);
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
@@ -744,6 +754,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
     public void onRequestWorkplaceInspectionDelete(String result) {
         if (!result.equals("OK")) {
             pd.hide();
+            scroll.scrollTo(0, 0);
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
@@ -763,7 +774,8 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
 
         updateVisibility();
 
-        new TemplatesAction(MainActivity.this, getResources().getString(R.string.text_workplace_templates)).execute();
+        //new TemplatesAction(MainActivity.this, getResources().getString(R.string.text_workplace_templates)).execute();
+        new PunchesCategoriesAction(MainActivity.this).execute();
 
         //pd.hide();
     }
@@ -771,6 +783,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
     @Override
     public void onRequestTemplates(String result) {
         pd.hide();
+        scroll.scrollTo(0, 0);
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
@@ -801,6 +814,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
     public void onRequestMembers(String result, ArrayList<ProfileData> datas) {
         if (!result.equals("OK")) {
             pd.hide();
+            scroll.scrollTo(0, 0);
             updateVisibility();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
@@ -824,7 +838,8 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
             }
             UserInfo.getUserInfo().setAllMembers(datasMembers);
 
-            new PunchesCategoriesAction(MainActivity.this).execute();
+            new WorkplaceInspectionsAction(MainActivity.this, true).execute();
+            //new PunchesCategoriesAction(MainActivity.this).execute();
             //pd.hide();
         }
     }
@@ -832,6 +847,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
     @Override
     public void onRequestPunchesCategories(String result, ArrayList<PunchesCategoryData> datas) {
         pd.hide();
+        scroll.scrollTo(0, 0);
         if (!result.equals("OK")) {
             updateVisibility();
             Toast.makeText(getBaseContext(), result,
@@ -849,6 +865,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
     @Override
     public void onRequestItemPriorities(String result) {
         pd.hide();
+        scroll.scrollTo(0, 0);
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
@@ -872,6 +889,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
     @Override
     public void onRequestItemStatuses(String result) {
         pd.hide();
+        scroll.scrollTo(0, 0);
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
@@ -895,6 +913,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
     public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
             pd.hide();
+            scroll.scrollTo(0, 0);
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
@@ -906,12 +925,14 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();
             pd.hide();
+            scroll.scrollTo(0, 0);
         }
     }
 
     @Override
     public void onRequestPunchesAdd(String result) {
         pd.hide();
+        scroll.scrollTo(0, 0);
         if (!result.equals("OK")) {
             Toast.makeText(Sapphire.getInstance(), result,
                     Toast.LENGTH_LONG).show();

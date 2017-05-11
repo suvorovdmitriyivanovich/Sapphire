@@ -36,6 +36,7 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.FilesActivity;
+import com.sapphire.adapters.MeetingMembersAdapter;
 import com.sapphire.adapters.SpinTemplatesAdapter;
 import com.sapphire.adapters.WorkplaceInspectionItemsAdapter;
 import com.sapphire.api.GetTemplateAction;
@@ -47,6 +48,7 @@ import com.sapphire.api.WorkplaceInspectionAddAction;
 import com.sapphire.db.DBHelper;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
+import com.sapphire.models.MemberData;
 import com.sapphire.models.TemplateData;
 import com.sapphire.models.TemplateItemData;
 import com.sapphire.logic.UserInfo;
@@ -69,6 +71,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
                                                                          WorkplaceInspectionAddAction.RequestWorkplaceInspectionAdd,
                                                                          WorkplaceInspectionAddAction.RequestWorkplaceInspectionAddData,
                                                                          WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd,
+                                                                         MeetingMembersAdapter.OnRootMeetingMembersClickListener,
                                                                          UpdateAction.RequestUpdate{
     private String workplaceInspectionId = "";
     private ProgressDialog pd;
@@ -131,6 +134,11 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     private TextView text_date_hint;
     private TextView text_description_hint;
     private ImageView image_date;
+    private ArrayList<MemberData> datasTeam = new ArrayList<MemberData>();
+    private RecyclerView teamlist;
+    private MeetingMembersAdapter adapterTeam;
+    private View text_team_no;
+    private UserInfo userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -243,6 +251,8 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
 
         format = new SimpleDateFormat("dd.MM.yyyy");
 
+        userInfo = UserInfo.getUserInfo();
+
         Intent intent = getIntent();
         workplaceInspectionId = intent.getStringExtra("workplaceInspectionId");
         if (workplaceInspectionId == null) {
@@ -281,6 +291,18 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             if (description.getText().length() != 0) {
                 showDescription = false;
             }
+
+            datasTeam.clear();
+            for (MemberData item: userInfo.getMembers()) {
+                MemberData memberData = new MemberData();
+                memberData.setPresence(item.getPresence());
+                memberData.setProfile(item.getProfile());
+                memberData.setMeetingMemberId(item.getMeetingMemberId());
+
+                datasTeam.add(memberData);
+            }
+        } else {
+            datasTeam = userInfo.getAllMembers();
         }
 
         if (workplaceInspectionId.equals("")) {
@@ -357,10 +379,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             public void onClick(View v) {
                 hideSoftKeyboard();
 
-                if (workplaceInspectionId.equals("") || !nameOld.equals(name.getText().toString())
-                        || !descriptionOld.equals(description.getText().toString())
-                        || !dateOld.equals(dateNew)
-                        || postedOld != posted.isChecked()) {
+                if (workplaceInspectionId.equals("") || notEquals()) {
                     updateWorkplaceInspection(0);
                 } else {
                     finish();
@@ -381,10 +400,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
                     return;
                 }
 
-                if (!nameOld.equals(name.getText().toString())
-                        || !descriptionOld.equals(description.getText().toString())
-                        || !dateOld.equals(dateNew)
-                        || postedOld != posted.isChecked()) {
+                if (notEquals()) {
                     updateWorkplaceInspection(1);
                 } else {
                     addItem();
@@ -406,6 +422,15 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
 
         adapter = new WorkplaceInspectionItemsAdapter(this, readonly, false);
         itemlist.setAdapter(adapter);
+
+        teamlist = (RecyclerView) findViewById(R.id.teamlist);
+        teamlist.setNestedScrollingEnabled(false);
+        teamlist.setLayoutManager(new LinearLayoutManager(WorkplaceInspectionActivity.this));
+
+        adapterTeam = new MeetingMembersAdapter(this, readonly);
+        teamlist.setAdapter(adapterTeam);
+
+        adapterTeam.setListArray(datasTeam);
 
         // создаем BroadcastReceiver
         br = new BroadcastReceiver() {
@@ -460,6 +485,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         updateViews();
 
         text_no = findViewById(R.id.text_no);
+        text_team_no = findViewById(R.id.text_team_no);
 
         nointernet_group = findViewById(R.id.nointernet_group);
         par_nointernet_group = nointernet_group.getLayoutParams();
@@ -513,6 +539,38 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         public void onAnimationStart(Animation animation) {}
     };
 
+    private boolean notEquals() {
+        boolean rezult = !nameOld.equals(name.getText().toString())
+                || !descriptionOld.equals(description.getText().toString())
+                || !dateOld.equals(dateNew)
+                || postedOld != posted.isChecked();
+
+        if (!rezult) {
+            ArrayList<MemberData> memberDatas = userInfo.getMembers();
+            if (memberDatas.size() == 0) {
+                memberDatas = userInfo.getAllMembers();
+            }
+            if (memberDatas.size() != datasTeam.size()) {
+                rezult = true;
+            } else {
+                for (int i=0; i < datasTeam.size(); i++) {
+                    if (memberDatas.size() <= i) {
+                        rezult = true;
+                        break;
+                    } else {
+                        if (!datasTeam.get(i).getMeetingMemberId().equals(memberDatas.get(i).getMeetingMemberId())
+                                || datasTeam.get(i).getPresence() != memberDatas.get(i).getPresence()) {
+                            rezult = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return rezult;
+    }
+
     private void UpdateBottom() {
         if (Sapphire.getInstance().getNeedUpdate()) {
             par_nointernet_group.height = GetPixelFromDips(56);
@@ -530,6 +588,13 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         } else {
             itemlist.setVisibility(View.VISIBLE);
             text_no.setVisibility(View.GONE);
+        }
+        if (datasTeam == null || datasTeam.size() == 0) {
+            text_team_no.setVisibility(View.VISIBLE);
+            teamlist.setVisibility(View.GONE);
+        } else {
+            teamlist.setVisibility(View.VISIBLE);
+            text_team_no.setVisibility(View.GONE);
         }
     }
 
@@ -642,7 +707,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
 
             pressType = type;
 
-            new WorkplaceInspectionAddAction(WorkplaceInspectionActivity.this, workplaceInspectionId, name.getText().toString(), description.getText().toString(), dateNew, posted.isChecked()).execute();
+            new WorkplaceInspectionAddAction(WorkplaceInspectionActivity.this, workplaceInspectionId, name.getText().toString(), description.getText().toString(), dateNew, posted.isChecked(), datasTeam).execute();
         }
     }
 
@@ -723,10 +788,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     }
 
     private void exit() {
-        if (!nameOld.equals(name.getText().toString())
-                || !descriptionOld.equals(description.getText().toString())
-                || !dateOld.equals(dateNew)
-                || postedOld != posted.isChecked()) {
+        if (notEquals()) {
             tittle_message.setText(getResources().getString(R.string.text_save_change));
             button_cancel_save.setText(getResources().getString(R.string.text_no_save));
             button_send_save.setText(getResources().getString(R.string.text_yes_save));
@@ -741,6 +803,13 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         Intent intent = new Intent(WorkplaceInspectionActivity.this, WorkplaceInspectionItemActivity.class);
         intent.putExtra("workplaceInspectionId", workplaceInspectionId);
         startActivity(intent);
+    }
+
+    @Override
+    public void onRootMeetingMembersClick(int position) {
+        hideSoftKeyboard();
+        datasTeam.get(position).setPresence(!datasTeam.get(position).getPresence());
+        adapterTeam.notifyDataSetChanged();
     }
 
     @Override

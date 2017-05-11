@@ -1,7 +1,7 @@
 package com.sapphire.models;
 
+import com.sapphire.logic.UserInfo;
 import com.sapphire.utils.DateOperations;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +22,7 @@ public class WorkplaceInspectionData {
     private JSONArray itemsJson = new JSONArray();
     private JSONObject taskJson = new JSONObject();
     private boolean inspected = false;
+    private ArrayList<MemberData> profiles = new ArrayList<MemberData>();
 
     public WorkplaceInspectionData() {
 
@@ -66,6 +67,10 @@ public class WorkplaceInspectionData {
             }
             if (!data.isNull("Inspected")) {
                 setInspected(data.getBoolean("Inspected"));
+            }
+            setProfiles(UserInfo.getUserInfo().getAllMembers());
+            if (!data.isNull("Profiles")) {
+                setProfiles(data.getJSONArray("Profiles"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -186,4 +191,41 @@ public class WorkplaceInspectionData {
     public void setInspected(boolean inspected) {
         this.inspected = inspected;
     }
+
+    public ArrayList<MemberData> getProfiles() {
+        return profiles;
+    }
+
+    public void setProfiles(JSONArray profiles) {
+        for (int y=0; y < profiles.length(); y++) {
+            try {
+                MemberData memberData = new MemberData(profiles.getJSONObject(y));
+                for (MemberData item: this.profiles) {
+                    if (item.getProfile().getProfileId().equals(memberData.getProfile().getProfileId())) {
+                        item.setPresence(true);
+                        /*
+                        item.setWorkplaceInspectionProfileId(memberData.getWorkplaceInspectionProfileId());
+                        item.setWorkplaceInspectionId(memberData.getWorkplaceInspectionId());
+                        item.setName(memberData.getName());
+                        */
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void setProfiles(ArrayList<MemberData> profiles) {
+        this.profiles = profiles;
+    }
+
+    /*
+    public void setProfiles(ArrayList<MemberData> profiles) {
+        this.profiles.clear();
+        for (MemberData item: profiles) {
+            this.profiles.add(item);
+        }
+    }
+    */
 }

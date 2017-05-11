@@ -7,17 +7,15 @@ import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
 import com.sapphire.models.ErrorMessageData;
 import com.sapphire.logic.NetRequests;
+import com.sapphire.models.MemberData;
 import com.sapphire.models.ResponseData;
 import com.sapphire.logic.UserInfo;
 import com.sapphire.models.WorkplaceInspectionData;
 import com.sapphire.utils.DateOperations;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class WorkplaceInspectionAddAction extends AsyncTask{
 
@@ -36,13 +34,15 @@ public class WorkplaceInspectionAddAction extends AsyncTask{
     private String date = "";
     private boolean posted = false;
     private WorkplaceInspectionData workplaceInspectionData = new WorkplaceInspectionData();
+    private ArrayList<MemberData> datasTeam;
 
-    public WorkplaceInspectionAddAction(Context context, String workplaceInspectionId, String name, String description, Long dateLong, boolean posted) {
+    public WorkplaceInspectionAddAction(Context context, String workplaceInspectionId, String name, String description, Long dateLong, boolean posted, ArrayList<MemberData> datasTeam) {
         this.mContext = context;
         this.workplaceInspectionId = workplaceInspectionId;
         this.name = name;
         this.description = description;
         this.posted = posted;
+        this.datasTeam = datasTeam;
 
         if (dateLong != 0l) {
             this.date = DateOperations.getDateServer(dateLong);
@@ -67,6 +67,23 @@ public class WorkplaceInspectionAddAction extends AsyncTask{
             jsonObject.put("Date", date);
             jsonObject.put("PostedOnBoard", posted);
             //jsonObject.put("OrganizationId", posted);
+
+            JSONArray jsonArrayProfile = new JSONArray();
+            for (MemberData item: datasTeam) {
+                if (!item.getPresence()) {
+                    continue;
+                }
+                JSONObject jsonObjectProfile = new JSONObject();
+                jsonObjectProfile.put("WorkplaceInspectionProfileId", item.getWorkplaceInspectionProfileId());
+                jsonObjectProfile.put("WorkplaceInspectionId", item.getWorkplaceInspectionId());
+                jsonObjectProfile.put("ProfileId", item.getProfile().getProfileId());
+                jsonObjectProfile.put("Name", item.getName());
+                jsonArrayProfile.put(jsonObjectProfile);
+            }
+            if (jsonArrayProfile.length() != 0) {
+                jsonObject.put("Profiles", jsonArrayProfile);
+            }
+
             jsonArray.put(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();

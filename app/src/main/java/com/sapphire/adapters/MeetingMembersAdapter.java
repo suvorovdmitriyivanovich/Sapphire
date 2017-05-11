@@ -60,7 +60,11 @@ public class MeetingMembersAdapter extends RecyclerView.Adapter<MeetingMembersAd
 
         holder.border.setVisibility(View.VISIBLE);
 
-        holder.text_name.setText(data.getProfile().getFullName());
+        if (data.getProfile().getFullName().equals("")) {
+            holder.text_name.setText(data.getName());
+        } else {
+            holder.text_name.setText(data.getProfile().getFullName());
+        }
         holder.presence.setChecked(data.getPresence());
 
         holder.item.setOnClickListener(new View.OnClickListener() {

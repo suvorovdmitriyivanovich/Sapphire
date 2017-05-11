@@ -51,6 +51,10 @@ public class ProfileData {
         this.presence = presence;
     }
 
+    public ProfileData(String profileId) {
+        this.profileId = profileId;
+    }
+
     public ProfileData(JSONObject data) {
         try {
             if (!data.isNull("ProfileId")) {
