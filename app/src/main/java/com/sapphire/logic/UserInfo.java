@@ -363,7 +363,7 @@ public class UserInfo {
         this.punchesCategories = punchesCategories;
     }
 
-    public ArrayList<PunchesCategoryData> gePunchesCategories() {
+    public ArrayList<PunchesCategoryData> getPunchesCategories() {
         return punchesCategories;
     }
 
