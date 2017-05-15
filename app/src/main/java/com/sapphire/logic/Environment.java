@@ -6,8 +6,8 @@ public class Environment {
     public static final String PARAM_TASK = "task";
     public static final String BROADCAST_ACTION = "action";
 
-    public static final String SERVER = "http://apiv1.dealerpilothr.com";
-    public static final String SERVERFull = "http://portal.dealerpilothr.com";
+    public static final String SERVER = "https://apiv1.dealerpilothr.com";
+    public static final String SERVERFull = "https://portal.dealerpilothr.com";
     public static final String GoogleURLReadPDF = "https://docs.google.com/viewer?url=";
     public static final String DocumentManagementFilesDownloadURL = "/v1/DocumentManagement/Files/Download?fileId=";
     public static final String SecurityAuthenticationsURL = "/v1/Security/Authentications";
@@ -63,6 +63,10 @@ public class Environment {
     public static final String AttendancesURL = "/v1/WorkforceManagement/Attendances";
     public static final String BulletinURL = "/v1/News";
     public static final String AccidentsURL = "/v1/Accidents";
+    public static final String AddressesURL = "/v1/Addresses";
+    public static final String HealthAndSafetyMemberURL = "/v1/Profiles/HealthAndSafetyMember";
+    public static final String ProfilesEmployeeInformationURL = "/v1/Profiles/EmployeeInformation";
+    public static final String ProfilesContactInformationURL = "/v1/Profiles/ContactInformation";
 
     public static final String PolicyStatusStarted = "1586dc39-979b-3991-c822-a4bcb14d1345";
     public static final String PolicyStatusAcknowledged  = "1586dc39-979b-ab1c-838f-1917fce340de";

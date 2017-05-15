@@ -1,7 +1,6 @@
 package com.sapphire.models;
 
 import com.sapphire.utils.DateOperations;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.text.SimpleDateFormat;
@@ -36,10 +35,18 @@ public class ProfileData {
     private String name = "";
     private String position = "";
     private String email = "";
+    private boolean isHumanAndSafetyMember = false;
     private boolean isCPRCertified = false;
     private boolean isFirstAidCertified = false;
     private boolean isSafetyCertified = false;
     private boolean presence = false;
+    private String manager = "";
+    private String managerId = "";
+    private String secondaryManager = "";
+    private String secondaryManagerId = "";
+    private String homePhoneNumber = "";
+    private String cellPhoneNumber = "";
+    private String secondaryEmail = "";
 
     public ProfileData() {
 
@@ -104,6 +111,8 @@ public class ProfileData {
             }
             if (!data.isNull("HireType")) {
                 setHireType(data.getJSONObject("HireType"));
+            } else if (!data.isNull("HireTypes")) {
+                setHireType(data.getString("HireTypes"));
             }
             if (!data.isNull("CustomField1")) {
                 setCustomField1(data.getString("CustomField1"));
@@ -140,6 +149,20 @@ public class ProfileData {
             }
             if (!data.isNull("Email")) {
                 setEmail(data.getString("Email"));
+            } else if (!data.isNull("PrimaryEmail")) {
+                setEmail(data.getString("PrimaryEmail"));
+            }
+            if (!data.isNull("SecondaryEmail")) {
+                setSecondaryEmail(data.getString("SecondaryEmail"));
+            }
+            if (!data.isNull("HomePhoneNumber")) {
+                setHomePhoneNumber(data.getString("HomePhoneNumber"));
+            }
+            if (!data.isNull("CellPhoneNumber")) {
+                setCellPhoneNumber(data.getString("CellPhoneNumber"));
+            }
+            if (!data.isNull("IsHumanAndSafetyMember")) {
+                setIsHumanAndSafetyMember(data.getBoolean("IsHumanAndSafetyMember"));
             }
             if (!data.isNull("IsCPRCertified")) {
                 setIsCPRCertified(data.getBoolean("IsCPRCertified"));
@@ -149,6 +172,18 @@ public class ProfileData {
             }
             if (!data.isNull("IsSafetyCertified")) {
                 setIsSafetyCertified(data.getBoolean("IsSafetyCertified"));
+            }
+            if (!data.isNull("Manager")) {
+                setManager(data.getString("Manager"));
+            }
+            if (!data.isNull("ManagerId")) {
+                setManagerId(data.getString("ManagerId"));
+            }
+            if (!data.isNull("SecondaryManager")) {
+                setSecondaryManager(data.getString("SecondaryManager"));
+            }
+            if (!data.isNull("SecondaryManagerId")) {
+                setSecondaryManagerId(data.getString("SecondaryManagerId"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -186,7 +221,7 @@ public class ProfileData {
     public String getBirthdayString() {
         String dateString = "";
         if (birthday != 0l) {
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
             Date date = new Date();
             date.setTime(birthday);
             dateString = format.format(date);
@@ -213,7 +248,7 @@ public class ProfileData {
     public String getDriverLicenseNumberExpireString() {
         String dateString = "";
         if (driverLicenseNumberExpire != 0l) {
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
             Date date = new Date();
             date.setTime(driverLicenseNumberExpire);
             dateString = format.format(date);
@@ -240,7 +275,7 @@ public class ProfileData {
     public String getTechLicenseNumberExpireString() {
         String dateString = "";
         if (techLicenseNumberExpire != 0l) {
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
             Date date = new Date();
             date.setTime(techLicenseNumberExpire);
             dateString = format.format(date);
@@ -275,7 +310,7 @@ public class ProfileData {
     public String getVSRNumberExpireString() {
         String dateString = "";
         if (vSRNumberExpire != 0l) {
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
             Date date = new Date();
             date.setTime(vSRNumberExpire);
             dateString = format.format(date);
@@ -302,7 +337,7 @@ public class ProfileData {
     public String getHireDateString() {
         String dateString = "";
         if (hireDate != 0l) {
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
             Date date = new Date();
             date.setTime(hireDate);
             dateString = format.format(date);
@@ -321,7 +356,7 @@ public class ProfileData {
     public String getProbationEndDateString() {
         String dateString = "";
         if (probationEndDate != 0l) {
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
             Date date = new Date();
             date.setTime(probationEndDate);
             dateString = format.format(date);
@@ -340,7 +375,7 @@ public class ProfileData {
     public String getTerminationDateString() {
         String dateString = "";
         if (terminationDate != 0l) {
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
             Date date = new Date();
             date.setTime(terminationDate);
             dateString = format.format(date);
@@ -349,6 +384,10 @@ public class ProfileData {
     }
 
     public void setHireType(JSONObject hireType) {
+        this.hireType = new HireTypeData(hireType);
+    }
+
+    public void setHireType(String hireType) {
         this.hireType = new HireTypeData(hireType);
     }
 
@@ -475,6 +514,14 @@ public class ProfileData {
         return email;
     }
 
+    public void setIsHumanAndSafetyMember(boolean isHumanAndSafetyMember) {
+        this.isHumanAndSafetyMember = isHumanAndSafetyMember;
+    }
+
+    public boolean getIsHumanAndSafetyMember() {
+        return isHumanAndSafetyMember;
+    }
+
     public void setIsCPRCertified(boolean isCPRCertified) {
         this.isCPRCertified = isCPRCertified;
     }
@@ -505,5 +552,61 @@ public class ProfileData {
 
     public boolean getPresence() {
         return presence;
+    }
+
+    public String getManager() {
+        return manager;
+    }
+
+    public void setManager(String manager) {
+        this.manager = manager;
+    }
+
+    public String getManagerId() {
+        return managerId;
+    }
+
+    public void setManagerId(String managerId) {
+        this.managerId = managerId;
+    }
+
+    public String getSecondaryManager() {
+        return secondaryManager;
+    }
+
+    public void setSecondaryManager(String secondaryManager) {
+        this.secondaryManager = secondaryManager;
+    }
+
+    public String getSecondaryManagerId() {
+        return secondaryManagerId;
+    }
+
+    public void setSecondaryManagerId(String secondaryManagerId) {
+        this.secondaryManagerId = secondaryManagerId;
+    }
+
+    public String getHomePhoneNumber() {
+        return homePhoneNumber;
+    }
+
+    public void setHomePhoneNumber(String homePhoneNumber) {
+        this.homePhoneNumber = homePhoneNumber;
+    }
+
+    public String getCellPhoneNumber() {
+        return cellPhoneNumber;
+    }
+
+    public void setCellPhoneNumber(String cellPhoneNumber) {
+        this.cellPhoneNumber = cellPhoneNumber;
+    }
+
+    public String getSecondaryEmail() {
+        return secondaryEmail;
+    }
+
+    public void setSecondaryEmail(String secondaryEmail) {
+        this.secondaryEmail = secondaryEmail;
     }
 }

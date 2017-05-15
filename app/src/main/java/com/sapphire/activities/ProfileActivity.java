@@ -25,6 +25,7 @@ import android.text.Html;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,12 +34,17 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.adapters.AdressAdapter;
 import com.sapphire.api.AddAvatarAction;
+import com.sapphire.api.GetAdressesAction;
 import com.sapphire.api.GetContactsAction;
+import com.sapphire.api.GetHealthAndSafetyMemberAction;
 import com.sapphire.api.GetProfilesAction;
+import com.sapphire.api.GetProfilesContactInformationAction;
+import com.sapphire.api.GetProfilesEmployeeInformationAction;
 import com.sapphire.api.PunchesAddAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
+import com.sapphire.models.AdressData;
 import com.sapphire.models.ContactData;
 import com.sapphire.models.ProfileData;
 import java.io.File;
@@ -53,10 +59,15 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
                                                              GetContactsAction.RequestContacts,
                                                              GetContactsAction.RequestContactsData,
                                                              AddAvatarAction.RequestAddAvatar,
+                                                             GetAdressesAction.RequestAdresses,
+                                                             GetHealthAndSafetyMemberAction.RequestHealthAndSafetyMember,
+                                                             GetProfilesEmployeeInformationAction.RequestProfilesEmployeeInformation,
+                                                             GetProfilesContactInformationAction.RequestProfilesContactInformation,
                                                              UpdateAction.RequestUpdate,
                                                              PunchesAddAction.RequestPunchesAdd{
 
     private ProgressDialog pd;
+    private TextView primary;
     private TextView contact;
     private TextView additional;
     private TextView employee;
@@ -82,6 +93,10 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     private Bitmap bitmap;
     private Bitmap bitmapold;
     private DrawerLayout drawerLayout;
+    private CheckBox member;
+    private CheckBox certified;
+    private CheckBox aidcertified;
+    private CheckBox safetycertified;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +129,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         pd.setCancelable(false);
         pd.setCanceledOnTouchOutside(false);
 
+        primary = (TextView) findViewById(R.id.primary);
         contact = (TextView) findViewById(R.id.contact);
         additional = (TextView) findViewById(R.id.additional);
         employee = (TextView) findViewById(R.id.employee);
@@ -121,6 +137,10 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         work_additional = (TextView) findViewById(R.id.work_additional);
         custom = (TextView) findViewById(R.id.custom);
         personal_group = findViewById(R.id.personal_group);
+        member = (CheckBox) findViewById(R.id.member);
+        certified = (CheckBox) findViewById(R.id.certified);
+        aidcertified = (CheckBox) findViewById(R.id.aidcertified);
+        safetycertified = (CheckBox) findViewById(R.id.safetycertified);
 
         adresslist = (RecyclerView) findViewById(R.id.adresslist);
         adapter = new AdressAdapter(this, false);
@@ -473,48 +493,12 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
 
     @Override
     public void onRequestProfilesData(ProfileData profileData) {
-        String detail = "";
-        //if (!profileData.getContact().getPhone1().equals("")) {
-            if (!detail.equals("")) {
-                detail = detail + "<br>";
-            }
-            detail = detail + "<b>" + getResources().getString(R.string.text_home_phone) + "</b>: " + profileData.getContact().getPhone1();
-        //}
-        //if (!profileData.getContact().getPhone2().equals("")) {
-            if (!detail.equals("")) {
-                detail = detail + "<br>";
-            }
-            detail = detail + "<b>" + getResources().getString(R.string.text_cell_phone) + "</b>: " + profileData.getContact().getPhone2();
-        //}
-        //if (!profileData.getContact().getEmail1().equals("")) {
-            if (!detail.equals("")) {
-                detail = detail + "<br>";
-            }
-            detail = detail + "<b>" + getResources().getString(R.string.text_business_email) + "</b>: " + profileData.getContact().getEmail1();
-        //}
-        //if (!profileData.getContact().getEmail2().equals("")) {
-            if (!detail.equals("")) {
-                detail = detail + "<br>";
-            }
-            detail = detail + "<b>" + getResources().getString(R.string.text_personal_email) + "</b>: " + profileData.getContact().getEmail2();
-        //}
-        contact.setText(Html.fromHtml(detail));
-
         String additionalStr = "";
         additionalStr = additionalStr + "<b>" + getResources().getString(R.string.text_birthday) + "</b>: " + profileData.getBirthdayString();
         additionalStr = additionalStr + "<br><b>" + getResources().getString(R.string.text_sinnumber) + "</b>: " + profileData.getSINNumber();
         additionalStr = additionalStr + "<br><b>" + getResources().getString(R.string.text_driver_license) + "</b>: " + profileData.getDriverLicenseNumber();
         additionalStr = additionalStr + "<br><b>" + getResources().getString(R.string.text_expire_date) + "</b>: " + profileData.getDriverLicenseNumberExpireString();
         additional.setText(Html.fromHtml(additionalStr));
-
-        String employeeStr = "";
-        employeeStr = employeeStr + "<b>" + getResources().getString(R.string.text_hire_date) + "</b>: " + profileData.getHireDateString();
-        employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_probation) + "</b>: " + profileData.getProbationEndDateString();
-        employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_hire_type) + "</b>: " + profileData.getHireType().getName();
-        employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_manager) + "</b>: " + "";
-        employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_secondary_manager) + "</b>: " + "";
-        employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_termination) + "</b>: " + profileData.getTerminationDateString();
-        employee.setText(Html.fromHtml(employeeStr));
 
         String payrollStr = "";
         payrollStr = payrollStr + "<b>" + getResources().getString(R.string.text_number) + "</b>: " + profileData.getPayrollInformation().getEmployeeNumber();
@@ -526,12 +510,12 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         payroll.setText(Html.fromHtml(payrollStr));
 
         String additionalworkStr = "";
-        additionalworkStr = additionalworkStr + "<b>" + getResources().getString(R.string.text_work_permit) + "</b>: " + profileData.getWorkPermitNumber();
-        additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_driver_license_expire) + "</b>: " + profileData.getDriverLicenseNumberExpireString();
+        additionalworkStr = additionalworkStr + "<b>" + getResources().getString(R.string.text_vsr_number) + "</b>: " + profileData.getVSRNumber();
+        additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_vsr_expire) + "</b>: " + profileData.getVSRNumberExpireString();
         additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_tech_license) + "</b>: " + profileData.getTechLicenseNumber();
         additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_tech_license_expire) + "</b>: " + profileData.getTechLicenseNumberExpireString();
-        additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_vsr_number) + "</b>: " + profileData.getVSRNumber();
-        additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_vsr_expire) + "</b>: " + profileData.getVSRNumberExpireString();
+        additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_work_permit) + "</b>: " + profileData.getWorkPermitNumber();
+        additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_driver_license_expire) + "</b>: " + profileData.getDriverLicenseNumberExpireString();
         work_additional.setText(Html.fromHtml(additionalworkStr));
 
         String customStr = "";
@@ -567,14 +551,161 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
 
     @Override
     public void onRequestContactsData(ArrayList<ContactData> adressDatas) {
+        /*
         if (adressDatas == null || adressDatas.size() == 0) {
             personal_group.setVisibility(View.GONE);
         } else {
             adapter.setData(adressDatas);
             personal_group.setVisibility(View.VISIBLE);
         }
+        */
 
+        //pd.hide();
+
+        new GetAdressesAction(ProfileActivity.this).execute();
+    }
+
+    @Override
+    public void onRequestAdresses(String result, AdressData adressData) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+            }
+        } else {
+            String primaryInfo = "";
+            //if (!profileData.getContact().getAddress().getAddressLine1().equals("")) {
+            if (!primaryInfo.equals("")) {
+                primaryInfo = primaryInfo + "<br>";
+            }
+            primaryInfo = primaryInfo + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_adress) + "</b>: " + adressData.getAddressLine1();
+            //}
+            //if (!profileData.getContact().getAddress().getCountry().equals("")) {
+            if (!primaryInfo.equals("")) {
+                primaryInfo = primaryInfo + "<br>";
+            }
+            primaryInfo = primaryInfo + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_country) + "</b>: " + adressData.getCountry();
+            //}
+            //if (!profileData.getContact().getAddress().getProvince().equals("")) {
+            if (!primaryInfo.equals("")) {
+                primaryInfo = primaryInfo + "<br>";
+            }
+            primaryInfo = primaryInfo + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_province) + "</b>: " + adressData.getRegion();
+            //}
+            //if (!profileData.getContact().getAddress().getCity().equals("")) {
+            if (!primaryInfo.equals("")) {
+                primaryInfo = primaryInfo + "<br>";
+            }
+            primaryInfo = primaryInfo + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_city) + "</b>: " + adressData.getCity();
+            //}
+            //if (!profileData.getContact().getAddress().getPostalCode().equals("")) {
+            if (!primaryInfo.equals("")) {
+                primaryInfo = primaryInfo + "<br>";
+            }
+            primaryInfo = primaryInfo + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_postal_code) + "</b>: " + adressData.getPostalCode();
+            //}
+            primary.setText(Html.fromHtml(primaryInfo));
+
+            new GetHealthAndSafetyMemberAction(ProfileActivity.this).execute();
+        }
+    }
+
+    @Override
+    public void onRequestHealthAndSafetyMember(String result, ProfileData profileData) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+            }
+        } else {
+            member.setChecked(profileData.getIsHumanAndSafetyMember());
+            certified.setChecked(profileData.getIsCPRCertified());
+            aidcertified.setChecked(profileData.getIsFirstAidCertified());
+            safetycertified.setChecked(profileData.getIsSafetyCertified());
+
+            new GetProfilesEmployeeInformationAction(ProfileActivity.this).execute();
+        }
+    }
+
+    @Override
+    public void onRequestProfilesEmployeeInformation(String result, ProfileData profileData) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+            }
+        } else {
+            String employeeStr = "";
+            employeeStr = employeeStr + "<b>" + getResources().getString(R.string.text_hire_date) + "</b>: " + profileData.getHireDateString();
+            employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_probation) + "</b>: " + profileData.getProbationEndDateString();
+            employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_hire_type) + "</b>: " + profileData.getHireType().getName();
+            employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_termination) + "</b>: " + profileData.getTerminationDateString();
+            employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_manager) + "</b>: " + profileData.getManager();
+            employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_secondary_manager) + "</b>: " + profileData.getSecondaryManager();
+            employee.setText(Html.fromHtml(employeeStr));
+
+            new GetProfilesContactInformationAction(ProfileActivity.this).execute();
+        }
+    }
+
+    @Override
+    public void onRequestProfilesContactInformation(String result, ProfileData profileData) {
         pd.hide();
+        if (!result.equals("OK")) {
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+            }
+        } else {
+            String detail = "<b>" + getResources().getString(R.string.text_primary_email) + "</b>: " + profileData.getEmail();
+            detail = detail + "<br><b>" + getResources().getString(R.string.text_secondary_email) + "</b>: " + profileData.getSecondaryEmail();
+            detail = detail + "<br><b>" + getResources().getString(R.string.text_home_phone) + "</b>: " + profileData.getHomePhoneNumber();
+            detail = detail + "<br><b>" + getResources().getString(R.string.text_cell_phone) + "</b>: " + profileData.getCellPhoneNumber();
+            contact.setText(Html.fromHtml(detail));
+        }
     }
 
     @Override

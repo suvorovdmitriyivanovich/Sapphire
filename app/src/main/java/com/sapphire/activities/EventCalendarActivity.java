@@ -207,7 +207,7 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("x-yauth", UserInfo.getUserInfo().getAuthToken());
         //webView.loadUrl("javascript:localStorage.setItem('accountSession', " + UserInfo.getUserInfo().getAccountSession() + ");");
-        webView.loadUrl("http://portal.dealerpilothr.com/mobile/me/my-calendar", map);
+        webView.loadUrl("https://portal.dealerpilothr.com/mobile/me/my-calendar", map);
     }
 
     private void UpdateBottom() {

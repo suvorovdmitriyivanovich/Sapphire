@@ -12,6 +12,10 @@ public class HireTypeData {
 
     }
 
+    public HireTypeData(String name) {
+        this.name = name;
+    }
+
     public HireTypeData(JSONObject data) {
         try {
             if (!data.isNull("HireTypeId")) {

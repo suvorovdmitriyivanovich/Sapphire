@@ -282,6 +282,7 @@ public class QuizActivity extends BaseActivity implements AnswersAdapter.OnRootC
 
     @Override
     public void onRequestQuizData(QuizData quizData) {
+        quizData.randomSort();
         this.quizData = quizData;
         quizScore = "";
 

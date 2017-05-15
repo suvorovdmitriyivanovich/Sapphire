@@ -4,6 +4,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Random;
 
 public class QuizData {
     private String quizId = "";
@@ -84,5 +87,30 @@ public class QuizData {
             }
         }
         this.questions = questionDatas;
+    }
+
+    public void randomSort() {
+        long seed = System.nanoTime();
+        Collections.shuffle(questions, new Random(seed));
+
+        for(QuestionData item: questions) {
+            Collections.shuffle(item.getAnswers(), new Random(seed));
+            boolean existMove = false;
+            for(int i = 0; i<item.getAnswers().size(); i++) {
+                if (item.getAnswers().get(i).getName().equals("All of the above") && i != item.getAnswers().size()-1) {
+                    Collections.swap(item.getAnswers(), i, item.getAnswers().size()-1);
+                    existMove = true;
+                    break;
+                }
+            }
+            if (existMove) {
+                for(int i = 0; i<item.getAnswers().size(); i++) {
+                    if (item.getAnswers().get(i).getName().equals("None of the above") && i != item.getAnswers().size()-1) {
+                        Collections.swap(item.getAnswers(), i, item.getAnswers().size()-1);
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

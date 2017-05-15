@@ -110,7 +110,7 @@ public class CoursesAdapter extends BaseExpandableListAdapter {
             if (!item.getCoursePassed()) {
                 allCoursePassed = false;
             }
-            if (!item.getCoursePassed()) {
+            if (!item.getQuizPassed()) {
                 allQuizPassed = false;
             }
             if (!allCoursePassed && !allQuizPassed) {
