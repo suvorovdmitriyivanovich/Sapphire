@@ -187,7 +187,8 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
             public void onClick(View v) {
                 if ((!url.equals(Environment.PerformanceEvaluationsFilesURL)
                     && !url.equals(Environment.DisciplinesFilesURL)
-                    && !url.equals(Environment.DocumentsFilesURL))
+                    && !url.equals(Environment.DocumentsFilesURL)
+                    && !url.equals(Environment.SafetisFilesURL))
                     || fileDatas.size() == 0) {
                     dialog.show();
                 } else {

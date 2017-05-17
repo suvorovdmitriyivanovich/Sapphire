@@ -153,9 +153,9 @@ public class TimeOffRequestData {
         String dateString = "";
         if (requestDate != 0l) {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date dateT = new Date();
-            dateT.setTime(requestDate);
-            dateString = format.format(dateT);
+            Date thisdaten = new Date();
+            thisdaten.setTime(requestDate);
+            dateString = format.format(thisdaten);
         }
         return dateString;
     }

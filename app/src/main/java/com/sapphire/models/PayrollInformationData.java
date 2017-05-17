@@ -96,12 +96,28 @@ public class PayrollInformationData {
         return hoursPerDay;
     }
 
+    public String getHoursPerDayString() {
+        if (hoursPerDay == 0d) {
+            return "";
+        } else {
+            return String.valueOf(hoursPerDay);
+        }
+    }
+
     public void setHoursPerDay(Double hoursPerDay) {
         this.hoursPerDay = hoursPerDay;
     }
 
     public Double getSalary() {
         return salary;
+    }
+
+    public String getSalaryString() {
+        if (salary == 0d) {
+            return "";
+        } else {
+            return String.valueOf(salary);
+        }
     }
 
     public void setSalary(Double salary) {

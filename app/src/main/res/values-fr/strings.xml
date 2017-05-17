@@ -83,7 +83,7 @@
     <string name="text_vsr_expire">VSR number expire</string>
     <string name="text_primary_residence">Primary Residence</string>
     <string name="text_secondary_residence">Secondary Residence</string>
-    <string name="text_adress">Adress</string>
+    <string name="text_address">Adress</string>
     <string name="text_phone">Phone</string>
     <string name="text_email">Email</string>
     <string name="text_confirm_delete">Are you sure you want to delete?</string>

@@ -119,9 +119,9 @@ public class MeetingData {
         String dateString = "";
         if (meetingDate != 0l) {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date dateT = new Date();
-            dateT.setTime(meetingDate);
-            dateString = format.format(dateT);
+            Date thisdaten = new Date();
+            thisdaten.setTime(meetingDate);
+            dateString = format.format(thisdaten);
         }
         return dateString;
     }
@@ -146,9 +146,9 @@ public class MeetingData {
         String dateString = "";
         if (endTime != 0l) {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date dateT = new Date();
-            dateT.setTime(endTime);
-            dateString = format.format(dateT);
+            Date thisdaten = new Date();
+            thisdaten.setTime(endTime);
+            dateString = format.format(thisdaten);
         }
         return dateString;
     }

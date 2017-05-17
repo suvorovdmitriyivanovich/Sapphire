@@ -60,7 +60,7 @@
     <string name="text_cancel">Cancel</string>
     <string name="text_error_camera">You didn\'t grant access of App to the camera or your device does not support camera</string>
     <string name="text_calendar">My Calendar</string>
-    <string name="text_my_hr_details">My Hr Details</string>
+    <string name="text_my_hr_details">My HR Details</string>
     <string name="text_personal">Personal Information</string>
     <string name="text_contact">Contact Information</string>
     <string name="text_additional">Additional Information</string>
@@ -75,7 +75,7 @@
     <string name="text_probation">Probation End Date</string>
     <string name="text_termination">Termination Date</string>
     <string name="text_hire_type">Type</string>
-    <string name="text_work_permit">Work permit number</string>
+    <string name="text_work_permit">Work Permit Number</string>
     <string name="text_tech_license">Tech License Number</string>
     <string name="text_vsr_number">VSR Number</string>
     <string name="text_driver_license_expire">Driver license number expire</string>
@@ -83,7 +83,7 @@
     <string name="text_vsr_expire">VSR Expiry Date</string>
     <string name="text_primary_residence">Primary Residence</string>
     <string name="text_secondary_residence">Secondary Residence</string>
-    <string name="text_adress">Adress</string>
+    <string name="text_address">Address</string>
     <string name="text_country">Country</string>
     <string name="text_province">Province</string>
     <string name="text_city">City</string>
@@ -124,10 +124,10 @@
     <string name="text_workplace_no">No uncompleted inspections posted on board</string>
     <string name="text_manager">Primary Manager</string>
     <string name="text_secondary_manager">Secondary Manager</string>
-    <string name="text_number">Number</string>
+    <string name="text_number">Employee Number</string>
     <string name="text_punch_number">Punch Number</string>
     <string name="text_pay_frequency">Pay Frequency</string>
-    <string name="text_hours_per_day">Hours Per Day</string>
+    <string name="text_hours_per_day">Worked Hours Per Day</string>
     <string name="text_salary">Salary</string>
     <string name="text_hourly_rate">Hourly Rate</string>
     <string name="text_custom">Custom Fields</string>
@@ -241,4 +241,19 @@
     <string name="text_safetycertified">Safety Certified</string>
     <string name="text_primary_email">Primary Email</string>
     <string name="text_secondary_email">Secondary Email</string>
+    <string name="text_pay_type">Pay Type</string>
+    <string name="text_pay_amount">Pay Amount</string>
+    <string name="text_payroll_group">Payroll Group</string>
+    <string name="text_uniform_description">Uniform Description</string>
+    <string name="text_uniform_allowance">Uniform Allowance</string>
+    <string name="text_uniform_allowance_amount">Uniform Allowance Amount</string>
+    <string name="text_uniform_renewal_date">Uniform Renewal Date</string>
+    <string name="text_work_permit_expiry_date">Work Permit Expiry Date</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+    <string name="text_safetis">Safety Data Sheets</string>
+    <string name="text_safety">Safety Data Sheet</string>
+    <string name="text_safetis_no">No safety data sheets to display</string>
+    <string name="supplier">Supplier</string>
+    <string name="supplier_error">Supplier is required</string>
 </resources>

@@ -7,23 +7,23 @@ import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.UserInfo;
-import com.sapphire.models.AdressData;
 import com.sapphire.models.ErrorMessageData;
+import com.sapphire.models.ProfileData;
 import com.sapphire.models.ResponseData;
 import org.json.JSONArray;
 import org.json.JSONException;
 import java.util.ArrayList;
 
-public class GetAdressesAction extends AsyncTask{
+public class GetProfilesAdditionalInformationAction extends AsyncTask{
 
-    public interface RequestAdresses {
-        public void onRequestAdresses(String result, AdressData adressData);
+    public interface RequestProfilesAdditionalInformation {
+        public void onRequestProfilesAdditionalInformation(String result, ProfileData profileData);
     }
 
     private Context mContext;
-    private AdressData adressData = new AdressData();
+    private ProfileData profileData = new ProfileData();
 
-    public GetAdressesAction(Context context) {
+    public GetProfilesAdditionalInformationAction(Context context) {
         this.mContext = context;
     }
 
@@ -35,9 +35,9 @@ public class GetAdressesAction extends AsyncTask{
 
         UserInfo userInfo = UserInfo.getUserInfo();
 
-        String filter = "?$filter=Profiles/any(profile:%20profile/ProfileId%20eq%20guid'"+userInfo.getProfile().getProfileId()+"')";
+        String filter = "?$filter=ProfileId%20eq%20guid'"+userInfo.getProfile().getProfileId()+"'";
 
-        String urlstring = Environment.SERVER + Environment.AddressesURL + filter;
+        String urlstring = Environment.SERVER + Environment.ProfilesAdditionalInformationURL + filter;
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", userInfo.getAuthTokenFirst()));
 
@@ -47,11 +47,7 @@ public class GetAdressesAction extends AsyncTask{
             JSONArray data = responseData.getData();
             for (int y=0; y < data.length(); y++) {
                 try {
-                    AdressData adresData = new AdressData(data.getJSONObject(y));
-                    if (!adresData.getIsPrimary()) {
-                        continue;
-                    }
-                    adressData = adresData;
+                    profileData = new ProfileData(data.getJSONObject(y));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -79,7 +75,7 @@ public class GetAdressesAction extends AsyncTask{
     protected void onPostExecute(Object o) {
         String resultData = (String) o;
         if(mContext!=null) {
-            ((RequestAdresses) mContext).onRequestAdresses(resultData, adressData);
+            ((RequestProfilesAdditionalInformation) mContext).onRequestProfilesAdditionalInformation(resultData, profileData);
         }
     }
 }

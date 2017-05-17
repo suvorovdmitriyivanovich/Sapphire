@@ -38,6 +38,7 @@ import com.sapphire.api.GetAdressesAction;
 import com.sapphire.api.GetContactsAction;
 import com.sapphire.api.GetHealthAndSafetyMemberAction;
 import com.sapphire.api.GetProfilesAction;
+import com.sapphire.api.GetProfilesAdditionalInformationAction;
 import com.sapphire.api.GetProfilesContactInformationAction;
 import com.sapphire.api.GetProfilesEmployeeInformationAction;
 import com.sapphire.api.PunchesAddAction;
@@ -63,6 +64,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
                                                              GetHealthAndSafetyMemberAction.RequestHealthAndSafetyMember,
                                                              GetProfilesEmployeeInformationAction.RequestProfilesEmployeeInformation,
                                                              GetProfilesContactInformationAction.RequestProfilesContactInformation,
+                                                             GetProfilesAdditionalInformationAction.RequestProfilesAdditionalInformation,
                                                              UpdateAction.RequestUpdate,
                                                              PunchesAddAction.RequestPunchesAdd{
 
@@ -503,20 +505,11 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         String payrollStr = "";
         payrollStr = payrollStr + "<b>" + getResources().getString(R.string.text_number) + "</b>: " + profileData.getPayrollInformation().getEmployeeNumber();
         payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_punch_number) + "</b>: " + profileData.getPayrollInformation().getPunchClockNumber();
-        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_pay_frequency) + "</b>: " + profileData.getPayrollInformation().getPayFrequency();
-        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_hours_per_day) + "</b>: " + profileData.getPayrollInformation().getHoursPerDay();
-        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_salary) + "</b>: " + profileData.getPayrollInformation().getSalary();
-        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_hourly_rate) + "</b>: " + profileData.getPayrollInformation().getPayRate();
+        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_hours_per_day) + "</b>: " + profileData.getPayrollInformation().getHoursPerDayString();
+        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_pay_type) + "</b>: " + profileData.getPayrollInformation().getPayType();
+        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_pay_amount) + "</b>: " + profileData.getPayrollInformation().getSalaryString();
+        payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_payroll_group) + "</b>: " + profileData.getPayrollInformation().getPayrollGroup();
         payroll.setText(Html.fromHtml(payrollStr));
-
-        String additionalworkStr = "";
-        additionalworkStr = additionalworkStr + "<b>" + getResources().getString(R.string.text_vsr_number) + "</b>: " + profileData.getVSRNumber();
-        additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_vsr_expire) + "</b>: " + profileData.getVSRNumberExpireString();
-        additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_tech_license) + "</b>: " + profileData.getTechLicenseNumber();
-        additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_tech_license_expire) + "</b>: " + profileData.getTechLicenseNumberExpireString();
-        additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_work_permit) + "</b>: " + profileData.getWorkPermitNumber();
-        additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_driver_license_expire) + "</b>: " + profileData.getDriverLicenseNumberExpireString();
-        work_additional.setText(Html.fromHtml(additionalworkStr));
 
         String customStr = "";
         customStr = customStr + "<b>" + getResources().getString(R.string.text_custom1) + "</b>: " + profileData.getCustomField1();
@@ -589,7 +582,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             if (!primaryInfo.equals("")) {
                 primaryInfo = primaryInfo + "<br>";
             }
-            primaryInfo = primaryInfo + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_adress) + "</b>: " + adressData.getAddressLine1();
+            primaryInfo = primaryInfo + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_address) + "</b>: " + adressData.getAddressLine1();
             //}
             //if (!profileData.getContact().getAddress().getCountry().equals("")) {
             if (!primaryInfo.equals("")) {
@@ -683,8 +676,8 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
 
     @Override
     public void onRequestProfilesContactInformation(String result, ProfileData profileData) {
-        pd.hide();
         if (!result.equals("OK")) {
+            pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
@@ -705,6 +698,42 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             detail = detail + "<br><b>" + getResources().getString(R.string.text_home_phone) + "</b>: " + profileData.getHomePhoneNumber();
             detail = detail + "<br><b>" + getResources().getString(R.string.text_cell_phone) + "</b>: " + profileData.getCellPhoneNumber();
             contact.setText(Html.fromHtml(detail));
+
+            new GetProfilesAdditionalInformationAction(ProfileActivity.this).execute();
+        }
+    }
+
+    @Override
+    public void onRequestProfilesAdditionalInformation(String result, ProfileData profileData) {
+        pd.hide();
+        if (!result.equals("OK")) {
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+            }
+        } else {
+            String additionalworkStr = "";
+            additionalworkStr = additionalworkStr + "<b>" + getResources().getString(R.string.text_vsr_number) + "</b>: " + profileData.getVSRNumber();
+            additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_vsr_expire) + "</b>: " + profileData.getVSRNumberExpireString();
+            additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_tech_license) + "</b>: " + profileData.getTechLicenseNumber();
+            additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_tech_license_expire) + "</b>: " + profileData.getTechLicenseNumberExpireString();
+            additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_uniform_description) + "</b>: " + profileData.getUniformDescription();
+            additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_uniform_allowance) + "</b>: " + profileData.getUniformAllowanceString();
+            additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_uniform_allowance_amount) + "</b>: " + profileData.getUniformAllowanceAmount();
+            additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_uniform_renewal_date) + "</b>: " + profileData.getUniformRenewalDateString();
+            additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_work_permit) + "</b>: " + profileData.getWorkPermitNumber();
+            additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_work_permit_expiry_date) + "</b>: " + profileData.getWorkPermitNumberExpireString();
+            work_additional.setText(Html.fromHtml(additionalworkStr));
         }
     }
 

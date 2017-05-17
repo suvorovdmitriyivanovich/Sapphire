@@ -91,9 +91,9 @@ public class InvestigationItemData {
         String dateString = "";
         if (date != 0l) {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date dateT = new Date();
-            dateT.setTime(date);
-            dateString = format.format(date);
+            Date thisdaten = new Date();
+            thisdaten.setTime(date);
+            dateString = format.format(thisdaten);
         }
         return dateString;
     }

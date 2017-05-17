@@ -161,9 +161,9 @@ public class TaskData {
         String dateString = "";
         if (plannedStartDate != 0l) {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date dateT = new Date();
-            dateT.setTime(plannedStartDate);
-            dateString = format.format(dateT);
+            Date thisdaten = new Date();
+            thisdaten.setTime(plannedStartDate);
+            dateString = format.format(thisdaten);
         }
         return dateString;
     }
@@ -188,9 +188,9 @@ public class TaskData {
         String dateString = "";
         if (plannedFinishDate != 0l) {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date dateT = new Date();
-            dateT.setTime(plannedFinishDate);
-            dateString = format.format(dateT);
+            Date thisdaten = new Date();
+            thisdaten.setTime(plannedFinishDate);
+            dateString = format.format(thisdaten);
         }
         return dateString;
     }

@@ -132,7 +132,7 @@ public class AdressAdapter extends RecyclerView.Adapter<AdressAdapter.ViewHolder
             if (!detail.equals("")) {
                 detail = detail + "<br>";
             }
-            detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_adress) + "</b>: " + data.getAddress().getAddress();
+            detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_address) + "</b>: " + data.getAddress().getAddress();
         }
 
         viewHolder.text_name.setText(name);

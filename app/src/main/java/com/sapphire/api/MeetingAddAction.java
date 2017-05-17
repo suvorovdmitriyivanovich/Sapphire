@@ -54,6 +54,8 @@ public class MeetingAddAction extends AsyncTask{
             jsonObject.put("Posted", data.getPosted());
             jsonObject.put("Completed", data.getCompleted());
             jsonObject.put("OrganizationId", userInfo.getCurrentOrganization().getOrganizationId());
+            jsonObject.put("Published", data.getPublished());
+            jsonObject.put("Profiles", new JSONArray());
 
             JSONArray jsonArrayMember = new JSONArray();
             for (MemberData item: data.getMembers()) {
@@ -77,6 +79,8 @@ public class MeetingAddAction extends AsyncTask{
                 //}
                 jsonObjectTopic.put("Name", item.getName());
                 jsonObjectTopic.put("Description", item.getDescription());
+                jsonObjectTopic.put("Completed", item.getCompleted());
+                jsonObjectTopic.put("Editable", null);
                 jsonArrayTopic.put(jsonObjectTopic);
             }
             jsonObject.put("Topics", jsonArrayTopic);

@@ -204,10 +204,45 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
 
         webView.getSettings().setDomStorageEnabled(true);
 
-        HashMap<String, String> map = new HashMap<String, String>();
-        map.put("x-yauth", UserInfo.getUserInfo().getAuthToken());
+        //работает но после ввода пароля (
+        //webView.loadUrl("https://portal.dealerpilothr.com/mobile/me/my-calendar");
+        // )
+
+        //HashMap<String, String> map = new HashMap<String, String>();
+        //map.put("x-yauth", UserInfo.getUserInfo().getAuthToken());
         //webView.loadUrl("javascript:localStorage.setItem('accountSession', " + UserInfo.getUserInfo().getAccountSession() + ");");
-        webView.loadUrl("https://portal.dealerpilothr.com/mobile/me/my-calendar", map);
+        //webView.loadUrl("https://portal.dealerpilothr.com/mobile/me/my-calendar", map);
+        //webView.loadUrl("https://portal.dealerpilothr.com/mobile/me/my-calendar");
+
+        //HashMap<String, String> map = new HashMap<String, String>();
+        //map.put("_timeZoneOffset", "-11");
+        //map.put("_ya", UserInfo.getUserInfo().getAuthToken());
+        //map.put("_yo", UserInfo.getUserInfo().getCurrentOrganization().getOrganizationId());
+        //map.put("accountSession", UserInfo.getUserInfo().getAccountSession());
+        //webView.loadUrl("https://portal.dealerpilothr.com/mobile/me/my-calendar", map);
+
+        webView.getSettings().setSaveFormData(false);
+        //webView.getSettings().setDatabaseEnabled(true);
+        //String databasePath = this.getApplicationContext().getDir("database", Context.MODE_PRIVATE).getPath();
+        //webView.getSettings().setDatabasePath(databasePath);
+
+        CookieSyncManager.createInstance(this);
+        CookieSyncManager.getInstance().startSync();
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
+        }
+        webView.getSettings().setAppCacheEnabled(true);
+        //cookieManager.setCookie("_timeZoneOffset", "-11");
+        //cookieManager.setCookie("_ya", UserInfo.getUserInfo().getAuthToken());
+        //cookieManager.setCookie("_yo", UserInfo.getUserInfo().getCurrentOrganization().getOrganizationId());
+
+        cookieManager.setCookie("portal.dealerpilothr.com", "_timeZoneOffset=-11; Domain=portal.dealerpilothr.com");
+        cookieManager.setCookie("portal.dealerpilothr.com", "_ya="+UserInfo.getUserInfo().getAuthToken()+"; Domain=portal.dealerpilothr.com");
+        cookieManager.setCookie("portal.dealerpilothr.com", "_yo="+UserInfo.getUserInfo().getCurrentOrganization().getOrganizationId()+"; Domain=portal.dealerpilothr.com");
+
+        webView.loadUrl("https://portal.dealerpilothr.com/mobile/me/my-calendar");
     }
 
     private void UpdateBottom() {
@@ -248,6 +283,9 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             //view.loadUrl("javascript:window.INTERFACE.processContent(document.getElementsByTagName('body')[0].innerText);");
+
+            String myCookies = CookieManager.getInstance().getCookie(url);
+
             pd.hide();
         }
     }

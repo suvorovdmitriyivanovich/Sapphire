@@ -7,24 +7,22 @@ import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.logic.UserInfo;
-import com.sapphire.models.AdressData;
 import com.sapphire.models.ErrorMessageData;
 import com.sapphire.models.ResponseData;
-import org.json.JSONArray;
-import org.json.JSONException;
 import java.util.ArrayList;
 
-public class GetAdressesAction extends AsyncTask{
+public class SafetyDeleteAction extends AsyncTask{
 
-    public interface RequestAdresses {
-        public void onRequestAdresses(String result, AdressData adressData);
+    public interface RequestSafetyDelete {
+        public void onRequestSafetyDelete(String result);
     }
 
     private Context mContext;
-    private AdressData adressData = new AdressData();
+    private String id;
 
-    public GetAdressesAction(Context context) {
+    public SafetyDeleteAction(Context context, String id) {
         this.mContext = context;
+        this.id = id;
     }
 
     @Override
@@ -32,30 +30,43 @@ public class GetAdressesAction extends AsyncTask{
         if (!NetRequests.getNetRequests().isOnline(true)) {
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
+        String urlstring = Environment.SERVER + Environment.SafetisURL + "?model%5B%5D="+id;
 
-        UserInfo userInfo = UserInfo.getUserInfo();
-
-        String filter = "?$filter=Profiles/any(profile:%20profile/ProfileId%20eq%20guid'"+userInfo.getProfile().getProfileId()+"')";
-
-        String urlstring = Environment.SERVER + Environment.AddressesURL + filter;
-
-        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"GET", userInfo.getAuthTokenFirst()));
+        ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,"",0,true,"DELETE", UserInfo.getUserInfo().getAuthToken()));
 
         String result = "";
 
         if (responseData.getSuccess()) {
+            /*
             JSONArray data = responseData.getData();
+            policiesDatas = new ArrayList<PoliciesData>();
             for (int y=0; y < data.length(); y++) {
                 try {
-                    AdressData adresData = new AdressData(data.getJSONObject(y));
-                    if (!adresData.getIsPrimary()) {
+                    if (!data.getJSONObject(y).isNull("ParentId")) {
                         continue;
                     }
-                    adressData = adresData;
+                    policiesDatas.add(new PoliciesData(data.getJSONObject(y)));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
+            for (int y=0; y < data.length(); y++) {
+                try {
+                    if (data.getJSONObject(y).isNull("ParentId")) {
+                        continue;
+                    }
+                    PoliciesData policiesData = new PoliciesData(data.getJSONObject(y));
+                    for (int z=0; z < policiesDatas.size(); z++) {
+                        if (policiesDatas.get(z).getId().equals(policiesData.getParentId())) {
+                            policiesDatas.get(z).getSubPolicies().add(policiesData);
+                            break;
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            */
 
             result = "OK";
         } else {
@@ -79,7 +90,7 @@ public class GetAdressesAction extends AsyncTask{
     protected void onPostExecute(Object o) {
         String resultData = (String) o;
         if(mContext!=null) {
-            ((RequestAdresses) mContext).onRequestAdresses(resultData, adressData);
+            ((RequestSafetyDelete) mContext).onRequestSafetyDelete(resultData);
         }
     }
 }

@@ -42,6 +42,18 @@
             android:layout_height="40dp"
             android:id="@+id/open"
             android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/files"
+            android:layout_toStartOf="@+id/files"
+            android:layout_marginRight="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:background="@drawable/button_selector_dark"
+            android:textColor="@color/white" />
+
+        <Button
+            android:layout_width="45dp"
+            android:layout_height="40dp"
+            android:id="@+id/files"
+            android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/delete"
             android:layout_toStartOf="@+id/delete"
             android:layout_marginRight="10dp"
@@ -54,22 +66,10 @@
             android:layout_height="40dp"
             android:id="@+id/delete"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/files"
-            android:layout_toStartOf="@+id/files"
-            android:layout_marginRight="10dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:background="@drawable/button_selector_red"
-            android:textColor="@color/white" />
-
-        <Button
-            android:layout_width="45dp"
-            android:layout_height="40dp"
-            android:id="@+id/files"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:background="@drawable/button_selector_dark"
+            android:background="@drawable/button_selector_red"
             android:textColor="@color/white" />
 
         <Button

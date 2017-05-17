@@ -54,7 +54,8 @@ public class FileAddAction extends AsyncTask{
         String method = "POST";
         if (url.equals(Environment.PerformanceEvaluationsFilesURL)
             || url.equals(Environment.DisciplinesFilesURL)
-            || url.equals(Environment.DocumentsFilesURL)) {
+            || url.equals(Environment.DocumentsFilesURL)
+            || url.equals(Environment.SafetisFilesURL)) {
             method = "PUT";
         }
 

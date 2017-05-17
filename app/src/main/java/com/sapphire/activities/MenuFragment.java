@@ -18,6 +18,7 @@ import com.sapphire.activities.investigation.InvestigationsActivity;
 import com.sapphire.activities.meeting.MeetingsActivity;
 import com.sapphire.activities.performance.PerformancesActivity;
 import com.sapphire.activities.policy.PoliciesActivity;
+import com.sapphire.activities.safety.SafetisActivity;
 import com.sapphire.activities.template.TemplatesActivity;
 import com.sapphire.activities.timeOffRequest.TimeOffRequestsActivity;
 import com.sapphire.activities.workplaceInspection.WorkplaceInspectionsActivity;
@@ -145,6 +146,9 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
             startActivity(intent);
         } else if (urlRoute.equals("/me/my-accidents")) {
             Intent intent = new Intent(getActivity(), AccidentsActivity.class);
+            startActivity(intent);
+        } else if (urlRoute.equals("/health-and-safety/safety-data-sheets")) {
+            Intent intent = new Intent(getActivity(), SafetisActivity.class);
             startActivity(intent);
         }
     }

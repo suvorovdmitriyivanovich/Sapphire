@@ -258,9 +258,9 @@ public class CoursesData {
         String quizDateCompletedString = "";
         if (quizDateCompleted != 0l) {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date date = new Date();
-            date.setTime(quizDateCompleted);
-            quizDateCompletedString = format.format(date);
+            Date thisdaten = new Date();
+            thisdaten.setTime(quizDateCompleted);
+            quizDateCompletedString = format.format(thisdaten);
         }
         return quizDateCompletedString;
     }

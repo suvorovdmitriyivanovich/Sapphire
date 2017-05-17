@@ -92,9 +92,9 @@ public class DisciplineData {
         String dateString = "";
         if (datePosted != 0l) {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date dateT = new Date();
-            dateT.setTime(datePosted);
-            dateString = format.format(datePosted);
+            Date thisdaten = new Date();
+            thisdaten.setTime(datePosted);
+            dateString = format.format(thisdaten);
         }
         return dateString;
     }

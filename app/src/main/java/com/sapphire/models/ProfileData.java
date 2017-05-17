@@ -1,5 +1,7 @@
 package com.sapphire.models;
 
+import com.sapphire.R;
+import com.sapphire.Sapphire;
 import com.sapphire.utils.DateOperations;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,6 +49,11 @@ public class ProfileData {
     private String homePhoneNumber = "";
     private String cellPhoneNumber = "";
     private String secondaryEmail = "";
+    private Long workPermitNumberExpire = 0l;
+    private String uniformDescription = "";
+    private boolean uniformAllowance = false;
+    private Long uniformRenewalDate = 0l;
+    private Double uniformAllowanceAmount = 0d;
 
     public ProfileData() {
 
@@ -185,6 +192,21 @@ public class ProfileData {
             if (!data.isNull("SecondaryManagerId")) {
                 setSecondaryManagerId(data.getString("SecondaryManagerId"));
             }
+            if (!data.isNull("WorkPermitNumberExpire")) {
+                setWorkPermitNumberExpire(data.getString("WorkPermitNumberExpire"));
+            }
+            if (!data.isNull("UniformDescription")) {
+                setUniformDescription(data.getString("UniformDescription"));
+            }
+            if (!data.isNull("UniformAllowance")) {
+                setUniformAllowance(data.getBoolean("UniformAllowance"));
+            }
+            if (!data.isNull("UniformRenewalDate")) {
+                setUniformRenewalDate(data.getString("UniformRenewalDate"));
+            }
+            if (!data.isNull("UniformAllowanceAmount")) {
+                setUniformAllowanceAmount(data.getDouble("UniformAllowanceAmount"));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -222,9 +244,9 @@ public class ProfileData {
         String dateString = "";
         if (birthday != 0l) {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date date = new Date();
-            date.setTime(birthday);
-            dateString = format.format(date);
+            Date thisdaten = new Date();
+            thisdaten.setTime(birthday);
+            dateString = format.format(thisdaten);
         }
         return dateString;
     }
@@ -249,9 +271,9 @@ public class ProfileData {
         String dateString = "";
         if (driverLicenseNumberExpire != 0l) {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date date = new Date();
-            date.setTime(driverLicenseNumberExpire);
-            dateString = format.format(date);
+            Date thisdaten = new Date();
+            thisdaten.setTime(driverLicenseNumberExpire);
+            dateString = format.format(thisdaten);
         }
         return dateString;
     }
@@ -276,9 +298,9 @@ public class ProfileData {
         String dateString = "";
         if (techLicenseNumberExpire != 0l) {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date date = new Date();
-            date.setTime(techLicenseNumberExpire);
-            dateString = format.format(date);
+            Date thisdaten = new Date();
+            thisdaten.setTime(techLicenseNumberExpire);
+            dateString = format.format(thisdaten);
         }
         return dateString;
     }
@@ -311,9 +333,9 @@ public class ProfileData {
         String dateString = "";
         if (vSRNumberExpire != 0l) {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date date = new Date();
-            date.setTime(vSRNumberExpire);
-            dateString = format.format(date);
+            Date thisdaten = new Date();
+            thisdaten.setTime(vSRNumberExpire);
+            dateString = format.format(thisdaten);
         }
         return dateString;
     }
@@ -338,9 +360,9 @@ public class ProfileData {
         String dateString = "";
         if (hireDate != 0l) {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date date = new Date();
-            date.setTime(hireDate);
-            dateString = format.format(date);
+            Date thisdaten = new Date();
+            thisdaten.setTime(hireDate);
+            dateString = format.format(thisdaten);
         }
         return dateString;
     }
@@ -357,9 +379,9 @@ public class ProfileData {
         String dateString = "";
         if (probationEndDate != 0l) {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date date = new Date();
-            date.setTime(probationEndDate);
-            dateString = format.format(date);
+            Date thisdaten = new Date();
+            thisdaten.setTime(probationEndDate);
+            dateString = format.format(thisdaten);
         }
         return dateString;
     }
@@ -376,9 +398,9 @@ public class ProfileData {
         String dateString = "";
         if (terminationDate != 0l) {
             SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-            Date date = new Date();
-            date.setTime(terminationDate);
-            dateString = format.format(date);
+            Date thisdaten = new Date();
+            thisdaten.setTime(terminationDate);
+            dateString = format.format(thisdaten);
         }
         return dateString;
     }
@@ -608,5 +630,75 @@ public class ProfileData {
 
     public void setSecondaryEmail(String secondaryEmail) {
         this.secondaryEmail = secondaryEmail;
+    }
+
+    public void setWorkPermitNumberExpire(String workPermitNumberExpire) {
+        this.workPermitNumberExpire = DateOperations.getDate(workPermitNumberExpire);
+    }
+
+    public Long getWorkPermitNumberExpire() {
+        return workPermitNumberExpire;
+    }
+
+    public String getWorkPermitNumberExpireString() {
+        String dateString = "";
+        if (workPermitNumberExpire != 0l) {
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+            Date thisdaten = new Date();
+            thisdaten.setTime(workPermitNumberExpire);
+            dateString = format.format(thisdaten);
+        }
+        return dateString;
+    }
+
+    public String getUniformDescription() {
+        return uniformDescription;
+    }
+
+    public void setUniformDescription(String uniformDescription) {
+        this.uniformDescription = uniformDescription;
+    }
+
+    public boolean getUniformAllowance() {
+        return uniformAllowance;
+    }
+
+    public String getUniformAllowanceString() {
+        if (uniformAllowance) {
+            return Sapphire.getInstance().getResources().getString(R.string.yes);
+        } else {
+            return Sapphire.getInstance().getResources().getString(R.string.no);
+        }
+    }
+
+    public void setUniformAllowance(boolean uniformAllowance) {
+        this.uniformAllowance = uniformAllowance;
+    }
+
+    public void setUniformRenewalDate(String uniformRenewalDate) {
+        this.uniformRenewalDate = DateOperations.getDate(uniformRenewalDate);
+    }
+
+    public Long getUniformRenewalDate() {
+        return uniformRenewalDate;
+    }
+
+    public String getUniformRenewalDateString() {
+        String dateString = "";
+        if (uniformRenewalDate != 0l) {
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+            Date thisdaten = new Date();
+            thisdaten.setTime(uniformRenewalDate);
+            dateString = format.format(thisdaten);
+        }
+        return dateString;
+    }
+
+    public Double getUniformAllowanceAmount() {
+        return uniformAllowanceAmount;
+    }
+
+    public void setUniformAllowanceAmount(Double uniformAllowanceAmount) {
+        this.uniformAllowanceAmount = uniformAllowanceAmount;
     }
 }
