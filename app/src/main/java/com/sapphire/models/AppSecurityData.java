@@ -16,6 +16,8 @@ public class AppSecurityData {
     private boolean isMenu = false;
     private boolean isAndroid = false;
     private boolean isIos = false;
+    private String securityMode = "";
+    private String settingMode = "";
 
     public AppSecurityData() {
 
@@ -58,6 +60,12 @@ public class AppSecurityData {
             }
             if (!data.isNull("IsIos")) {
                 setIsIos(data.getBoolean("IsIos"));
+            }
+            if (!data.isNull("SecurityMode")) {
+                setSecurityMode(data.getString("SecurityMode"));
+            }
+            if (!data.isNull("SettingMode")) {
+                setSettingMode(data.getString("SettingMode"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -174,5 +182,21 @@ public class AppSecurityData {
 
     public void setIsIos(boolean isIos) {
         this.isIos = isIos;
+    }
+
+    public String getSecurityMode() {
+        return securityMode;
+    }
+
+    public void setSecurityMode(String securityMode) {
+        this.securityMode = securityMode;
+    }
+
+    public String getSettingMode() {
+        return settingMode;
+    }
+
+    public void setSettingMode(String settingMode) {
+        this.settingMode = settingMode;
     }
 }

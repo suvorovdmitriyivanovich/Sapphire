@@ -54,6 +54,7 @@ public class ProfileData {
     private boolean uniformAllowance = false;
     private Long uniformRenewalDate = 0l;
     private Double uniformAllowanceAmount = 0d;
+    private boolean isEmployee = false;
 
     public ProfileData() {
 
@@ -73,6 +74,8 @@ public class ProfileData {
         try {
             if (!data.isNull("ProfileId")) {
                 setProfileId(data.getString("ProfileId"));
+            } else if (!data.isNull("Id")) {
+                setProfileId(data.getString("Id"));
             }
             if (!data.isNull("FullName")) {
                 setFullName(data.getString("FullName"));
@@ -206,6 +209,9 @@ public class ProfileData {
             }
             if (!data.isNull("UniformAllowanceAmount")) {
                 setUniformAllowanceAmount(data.getDouble("UniformAllowanceAmount"));
+            }
+            if (!data.isNull("IsEmployee")) {
+                setIsEmployee(data.getBoolean("IsEmployee"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -700,5 +706,13 @@ public class ProfileData {
 
     public void setUniformAllowanceAmount(Double uniformAllowanceAmount) {
         this.uniformAllowanceAmount = uniformAllowanceAmount;
+    }
+
+    public boolean getIsEmployee() {
+        return isEmployee;
+    }
+
+    public void setIsEmployee(boolean isEmployee) {
+        this.isEmployee = isEmployee;
     }
 }

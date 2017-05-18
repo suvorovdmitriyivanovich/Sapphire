@@ -71,6 +71,7 @@ public class Environment {
     public static final String SafetisURL = "/v1/HealthAndSafety/SafetyDataSheets";
     public static final String SafetisCurrentURL = "/v1/HealthAndSafety/SafetyDataSheets";
     public static final String SafetisFilesURL = "/v1/HealthAndSafety/SafetyDataSheets/AttachFile";
+    public static final String CurrentOrganizationStructuresURL = "/v1/Security/Organizations/CurrentOrganizationStructures";
 
     public static final String PolicyStatusStarted = "1586dc39-979b-3991-c822-a4bcb14d1345";
     public static final String PolicyStatusAcknowledged  = "1586dc39-979b-ab1c-838f-1917fce340de";

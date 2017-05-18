@@ -121,7 +121,7 @@
     <string name="text_outstanding_policies">Outstanding Policies</string>
     <string name="text_courses_no">No pending courses to display</string>
     <string name="text_policies_no">No pending policies</string>
-    <string name="text_workplace_no">No uncompleted inspections posted on board</string>
+    <string name="text_workplace_no">There are currently no posted inspections</string>
     <string name="text_manager">Primary Manager</string>
     <string name="text_secondary_manager">Secondary Manager</string>
     <string name="text_number">Employee Number</string>

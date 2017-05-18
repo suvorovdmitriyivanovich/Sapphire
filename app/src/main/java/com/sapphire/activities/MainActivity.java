@@ -37,6 +37,7 @@ import com.sapphire.adapters.MembersAdapter;
 import com.sapphire.adapters.PoliciesAdapter;
 import com.sapphire.adapters.WorkplaceInspectionsAdapter;
 import com.sapphire.api.CoursesAction;
+import com.sapphire.api.CurrentOrganizationStructuresAction;
 import com.sapphire.api.ItemPrioritiesAction;
 import com.sapphire.api.ItemStatusesAction;
 import com.sapphire.api.MeetingDeleteAction;
@@ -95,6 +96,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
                                                           MeetingDeleteAction.RequestMeetingDelete,
                                                           MembersAction.RequestMembers,
                                                           PunchesCategoriesAction.RequestPunchesCategories,
+                                                          CurrentOrganizationStructuresAction.RequestCurrentOrganizationStructures,
                                                           MembersAdapter.OnRootMembersClickListener,
                                                           UpdateAction.RequestUpdate,
                                                           PunchesAddAction.RequestPunchesAdd{
@@ -845,7 +847,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
     }
 
     @Override
-    public void onRequestPunchesCategories(String result, ArrayList<PunchesCategoryData> datas) {
+    public void onRequestCurrentOrganizationStructures(String result, ArrayList<ProfileData> datas) {
         pd.hide();
         scroll.scrollTo(0, 0);
         if (!result.equals("OK")) {
@@ -858,7 +860,27 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
                 finish();
             }
         } else {
+            UserInfo.getUserInfo().setCurrentOrganizationStructures(datas);
+        }
+    }
+
+    @Override
+    public void onRequestPunchesCategories(String result, ArrayList<PunchesCategoryData> datas) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            scroll.scrollTo(0, 0);
+            updateVisibility();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        } else {
             UserInfo.getUserInfo().setPunchesCategories(datas);
+
+            new CurrentOrganizationStructuresAction(MainActivity.this).execute();
         }
     }
 

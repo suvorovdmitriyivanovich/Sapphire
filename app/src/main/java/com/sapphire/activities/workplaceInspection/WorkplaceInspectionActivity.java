@@ -49,6 +49,7 @@ import com.sapphire.db.DBHelper;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.MemberData;
+import com.sapphire.models.ProfileData;
 import com.sapphire.models.TemplateData;
 import com.sapphire.models.TemplateItemData;
 import com.sapphire.logic.UserInfo;
@@ -302,7 +303,13 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
                 datasTeam.add(memberData);
             }
         } else {
-            datasTeam = userInfo.getAllMembers();
+            datasTeam.clear();
+            for (ProfileData item: userInfo.getCurrentOrganizationStructures()) {
+                MemberData memberData = new MemberData();
+                memberData.setProfile(item);
+
+                datasTeam.add(memberData);
+            }
         }
 
         if (workplaceInspectionId.equals("")) {

@@ -40,6 +40,7 @@ import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.ItemPriorityData;
 import com.sapphire.models.ItemStatusData;
+import com.sapphire.models.MemberData;
 import com.sapphire.models.ParameterData;
 import com.sapphire.models.ProfileData;
 import com.sapphire.models.TemplateData;
@@ -235,7 +236,20 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         intent.putExtra("workplaceInspectionId", workplaceInspectionData.getWorkplaceInspectionId());
         intent.putExtra("posted", workplaceInspectionData.getPostedOnBoard());
         UserInfo userInfo = UserInfo.getUserInfo();
-        userInfo.setMembers(workplaceInspectionData.getProfiles());
+        ArrayList<MemberData> memberDatas = new ArrayList<MemberData>();
+        for (ProfileData item: userInfo.getCurrentOrganizationStructures()) {
+            MemberData memberData = new MemberData();
+            memberData.setProfile(item);
+            for (MemberData itemProfile: workplaceInspectionData.getProfiles()) {
+                if (item.getProfileId().equals(itemProfile.getProfile().getProfileId())) {
+                    memberData.setPresence(itemProfile.getPresence());
+                    break;
+                }
+            }
+
+            memberDatas.add(memberData);
+        }
+        userInfo.setMembers(memberDatas);
         startActivity(intent);
     }
 
@@ -249,7 +263,20 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         intent.putExtra("workplaceInspectionId", workplaceInspectionData.getWorkplaceInspectionId());
         intent.putExtra("posted", workplaceInspectionData.getPostedOnBoard());
         UserInfo userInfo = UserInfo.getUserInfo();
-        userInfo.setMembers(workplaceInspectionData.getProfiles());
+        ArrayList<MemberData> memberDatas = new ArrayList<MemberData>();
+        for (ProfileData item: userInfo.getCurrentOrganizationStructures()) {
+            MemberData memberData = new MemberData();
+            memberData.setProfile(item);
+            for (MemberData itemProfile: workplaceInspectionData.getProfiles()) {
+                if (item.getProfileId().equals(itemProfile.getProfile().getProfileId())) {
+                    memberData.setPresence(itemProfile.getPresence());
+                    break;
+                }
+            }
+
+            memberDatas.add(memberData);
+        }
+        userInfo.setMembers(memberDatas);
         startActivity(intent);
     }
 

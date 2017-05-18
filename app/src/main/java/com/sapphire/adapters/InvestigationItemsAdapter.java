@@ -127,7 +127,7 @@ public class InvestigationItemsAdapter extends RecyclerView.Adapter<Investigatio
         if (readonly) {
             holder.open.setVisibility(View.GONE);
             holder.delete.setVisibility(View.GONE);
-            holder.files.setVisibility(View.GONE);
+            //holder.files.setVisibility(View.GONE);
         }
     }
 

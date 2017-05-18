@@ -203,6 +203,7 @@ public class EventCalendarActivity extends BaseActivity implements GetCourseFile
         //webView.loadUrl("http://portal.dealerpilothr.com/mobile/me/my-calendar?auth="+UserInfo.getUserInfo().getAuthToken());
 
         webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setDatabaseEnabled(true);
 
         //работает но после ввода пароля (
         //webView.loadUrl("https://portal.dealerpilothr.com/mobile/me/my-calendar");

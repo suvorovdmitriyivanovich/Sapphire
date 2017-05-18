@@ -55,6 +55,7 @@ public class UserInfo {
     private ArrayList<PunchesCategoryData> punchesCategories = new ArrayList<PunchesCategoryData>();
     private WorkplaceInspectionData workplaceInspection = new WorkplaceInspectionData();
     private AppRoleAppSecurityData globalAppRoleAppSecurities = new AppRoleAppSecurityData();
+    private ArrayList<ProfileData> currentOrganizationStructures = new ArrayList<ProfileData>();
 
     //---------------------Singleton---------------------------
     private static UserInfo userInfo;
@@ -392,5 +393,13 @@ public class UserInfo {
 
     public void setGlobalAppRoleAppSecurities(AppRoleAppSecurityData globalAppRoleAppSecurities) {
         this.globalAppRoleAppSecurities = globalAppRoleAppSecurities;
+    }
+
+    public ArrayList<ProfileData> getCurrentOrganizationStructures() {
+        return currentOrganizationStructures;
+    }
+
+    public void setCurrentOrganizationStructures(ArrayList<ProfileData> currentOrganizationStructures) {
+        this.currentOrganizationStructures = currentOrganizationStructures;
     }
 }
