@@ -1,6 +1,7 @@
 package com.sapphire.logic;
 
 import com.sapphire.models.AppRoleAppSecurityData;
+import com.sapphire.models.AppSecurityData;
 import com.sapphire.models.AttendanceCodeData;
 import com.sapphire.models.CategoryData;
 import com.sapphire.models.DayData;

@@ -25,12 +25,14 @@ public class GetFileAction extends AsyncTask{
     private String filename = "";
     private String folder = "";
     private String file = "";
+    private String url = "";
 
-    public GetFileAction(Context context, String id, String filename, String folder) {
+    public GetFileAction(Context context, String id, String filename, String folder, String url) {
         this.mContext = context;
         this.id = id;
         this.filename = filename;
         this.folder = folder;
+        this.url = url;
     }
 
     @Override
@@ -39,7 +41,13 @@ public class GetFileAction extends AsyncTask{
             return Sapphire.getInstance().getResources().getString(R.string.text_need_internet);
         }
 
-        String urlstring = Environment.SERVER + Environment.DocumentManagementFilesDownloadURL + id;
+        String urlstring = Environment.SERVER;
+        if (url.equals("")) {
+            urlstring = urlstring + Environment.DocumentManagementFilesDownloadURL;
+        } else {
+            urlstring = urlstring + url;
+        }
+        urlstring = urlstring + id;
 
         String result = "";
 

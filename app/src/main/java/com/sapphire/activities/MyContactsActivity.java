@@ -23,6 +23,7 @@ import com.sapphire.api.PunchesAddAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
+import com.sapphire.logic.UserInfo;
 import com.sapphire.models.ContactData;
 import java.util.ArrayList;
 
@@ -40,6 +41,10 @@ public class MyContactsActivity extends BaseActivity implements GetContactsActio
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
     private DrawerLayout drawerLayout;
+    private boolean viewEmergency = false;
+    private boolean viewFamily = false;
+    private boolean editEmergency = false;
+    private boolean editFamily = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,8 +111,12 @@ public class MyContactsActivity extends BaseActivity implements GetContactsActio
                 } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
                 } else if (putreqwest.equals("update")) {
-                    pd.show();
-                    new GetContactsAction(MyContactsActivity.this, true).execute();
+                    if (editEmergency || viewEmergency || editFamily || viewFamily) {
+                        boolean needEmergency = (editEmergency || viewEmergency);
+                        boolean needFamily = (editFamily || viewFamily);
+                        pd.show();
+                        new GetContactsAction(MyContactsActivity.this, true, needEmergency, needFamily).execute();
+                    }
                 }
             }
         };
@@ -130,6 +139,41 @@ public class MyContactsActivity extends BaseActivity implements GetContactsActio
         });
 
         UpdateBottom();
+
+        UserInfo userInfo = UserInfo.getUserInfo();
+        String securityModeEmergency = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-emergency contacts", "");
+        if (securityModeEmergency.equals("fullAccess")) {
+            editEmergency = true;
+        } else if (securityModeEmergency.equals("viewOnly")) {
+            viewEmergency = true;
+        }
+
+        String securityModeFamily = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-family-members", "");
+        if (securityModeFamily.equals("fullAccess")) {
+            editFamily = true;
+        } else if (securityModeFamily.equals("viewOnly")) {
+            viewFamily = true;
+        }
+
+        if (!editEmergency && !viewEmergency) {
+            View text_emergency = findViewById(R.id.text_emergency);
+            text_emergency.setVisibility(View.GONE);
+
+            View border = findViewById(R.id.border);
+            border.setVisibility(View.GONE);
+
+            emergency_group.setVisibility(View.GONE);
+        }
+
+        if (!editFamily && !viewFamily) {
+            View text_family = findViewById(R.id.text_family);
+            text_family.setVisibility(View.GONE);
+
+            View border2 = findViewById(R.id.border2);
+            border2.setVisibility(View.GONE);
+
+            family_group.setVisibility(View.GONE);
+        }
     }
 
     private void UpdateBottom() {
@@ -244,8 +288,12 @@ public class MyContactsActivity extends BaseActivity implements GetContactsActio
             fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
         } catch (Exception e) {}
 
-        pd.show();
-        new GetContactsAction(MyContactsActivity.this, true).execute();
+        if (editEmergency || viewEmergency || editFamily || viewFamily) {
+            boolean needEmergency = (editEmergency || viewEmergency);
+            boolean needFamily = (editFamily || viewFamily);
+            pd.show();
+            new GetContactsAction(MyContactsActivity.this, true, needEmergency, needFamily).execute();
+        }
     }
 
     @Override

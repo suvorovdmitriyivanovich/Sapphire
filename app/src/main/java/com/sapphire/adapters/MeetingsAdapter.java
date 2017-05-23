@@ -29,11 +29,16 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
         void onDeleteMeetingsClick(int position);
     }
 
+    public interface OnReportMeetingsClickListener{
+        void onReportMeetingsClick(int position);
+    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView text_name;
         TextView text_date;
         Button open;
         Button delete;
+        Button report;
         View border;
         View item;
 
@@ -43,6 +48,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
             text_date = (TextView) itemView.findViewById(R.id.text_description);
             open = (Button) itemView.findViewById(R.id.open);
             delete = (Button) itemView.findViewById(R.id.delete);
+            report = (Button) itemView.findViewById(R.id.report);
             border = itemView.findViewById(R.id.border);
             item = itemView;
         }
@@ -52,17 +58,19 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
     private Context mContext;
     private Typeface typeFace;
     private boolean isDashboard = false;
+    private boolean edit = false;
 
-    public MeetingsAdapter(Context context, boolean isDashboard) {
+    public MeetingsAdapter(Context context, boolean isDashboard, boolean edit) {
         mContext = context;
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
         mData = new ArrayList<MeetingData>();
         this.isDashboard = isDashboard;
+        this.edit = edit;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view_full, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view_report_full, parent, false);
         return new MeetingsAdapter.ViewHolder(view);
     }
 
@@ -126,6 +134,17 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
             }
         });
 
+        holder.report.setTypeface(typeFace);
+        holder.report.setText(Html.fromHtml("&#"+Environment.IcoReport+";"));
+        holder.report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mContext instanceof OnReportMeetingsClickListener) {
+                    ((OnReportMeetingsClickListener) mContext).onReportMeetingsClick(holder.getAdapterPosition());
+                }
+            }
+        });
+
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,6 +153,13 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
                 }
             }
         });
+
+        holder.report.setEnabled(data.getCompleted());
+
+        if (!edit) {
+            holder.open.setVisibility(View.GONE);
+            holder.delete.setVisibility(View.GONE);
+        }
     }
 
     @Override

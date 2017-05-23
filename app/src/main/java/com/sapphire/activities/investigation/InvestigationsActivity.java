@@ -174,7 +174,7 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
         list.setNestedScrollingEnabled(false);
         list.setLayoutManager(new LinearLayoutManager(InvestigationsActivity.this));
 
-        adapter = new InvestigationsAdapter(this, false);
+        adapter = new InvestigationsAdapter(this, false, !me);
         list.setAdapter(adapter);
 
         text_no = findViewById(R.id.text_no);
@@ -192,6 +192,10 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
         });
 
         UpdateBottom();
+
+        if (me) {
+            add.setVisibility(View.GONE);
+        }
     }
 
     private void UpdateBottom() {
@@ -257,6 +261,7 @@ public class InvestigationsActivity extends BaseActivity implements Investigatio
         intent.putExtra("id", investigationData.getInvestigationId());
         intent.putExtra("url", Environment.InvestigationsFilesURL);
         intent.putExtra("nameField", "InvestigationId");
+        intent.putExtra("readonly", me);
         UserInfo.getUserInfo().setFileDatas(investigationData.getFiles());
         startActivity(intent);
     }

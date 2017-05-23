@@ -99,6 +99,10 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     private CheckBox certified;
     private CheckBox aidcertified;
     private CheckBox safetycertified;
+    //private boolean viewPersonal = false;
+    //private boolean editPersonal = false;
+    //private boolean viewWork = false;
+    //private boolean editWork = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -288,6 +292,67 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         this.bitmapold = this.bitmap;
 
         UpdateBottom();
+
+        /*
+        UserInfo userInfo = UserInfo.getUserInfo();
+        String securityModePersonal = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-emergency contacts", "");
+        if (securityModePersonal.equals("fullAccess")) {
+            editPersonal = true;
+        } else if (securityModePersonal.equals("viewOnly")) {
+            viewPersonal = true;
+        }
+
+        String securityModeWork = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-family-members", "");
+        if (securityModeWork.equals("fullAccess")) {
+            editWork = true;
+        } else if (securityModeWork.equals("viewOnly")) {
+            viewWork = true;
+        }
+
+        if (!editPersonal && !viewPersonal) {
+            View text_personal = findViewById(R.id.text_personal);
+            text_personal.setVisibility(View.GONE);
+
+            View border = findViewById(R.id.border);
+            border.setVisibility(View.GONE);
+
+            photo_group.setVisibility(View.GONE);
+
+            personal_group.setVisibility(View.GONE);
+
+            View contact_group = findViewById(R.id.contact_group);
+            contact_group.setVisibility(View.GONE);
+
+            View additional_group = findViewById(R.id.additional_group);
+            additional_group.setVisibility(View.GONE);
+
+            View primary_group = findViewById(R.id.primary_group);
+            primary_group.setVisibility(View.GONE);
+        }
+
+        if (!editWork && !viewWork) {
+            View text_work = findViewById(R.id.text_work);
+            text_work.setVisibility(View.GONE);
+
+            View border2 = findViewById(R.id.border2);
+            border2.setVisibility(View.GONE);
+
+            View employee_group = findViewById(R.id.employee_group);
+            employee_group.setVisibility(View.GONE);
+
+            View payroll_group = findViewById(R.id.payroll_group);
+            payroll_group.setVisibility(View.GONE);
+
+            View work_additional_group = findViewById(R.id.work_additional_group);
+            work_additional_group.setVisibility(View.GONE);
+
+            View custom_group = findViewById(R.id.custom_group);
+            custom_group.setVisibility(View.GONE);
+
+            View member_group = findViewById(R.id.member_group);
+            member_group.setVisibility(View.GONE);
+        }
+        */
     }
 
     @Override
@@ -516,7 +581,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         customStr = customStr + "<br><b>" + getResources().getString(R.string.text_custom2) + "</b>: " + profileData.getCustomField1();
         custom.setText(Html.fromHtml(customStr));
 
-        new GetContactsAction(ProfileActivity.this, false).execute();
+        new GetContactsAction(ProfileActivity.this, false, true, true).execute();
         //pd.hide();
     }
 

@@ -106,6 +106,7 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
             startActivity(intent);
         } else if (urlRoute.equals("/health-and-safety/workplace-inspections-reports")) {
             Intent intent = new Intent(getActivity(), WorkplaceInspectionsActivity.class);
+            intent.putExtra("urlroute", urlRoute);
             startActivity(intent);
         } else if (urlRoute.equals("/health-and-safety/investigations")) {
             Intent intent = new Intent(getActivity(), InvestigationsActivity.class);
@@ -122,6 +123,7 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
             startActivity(intent);
         } else if (urlRoute.equals("/health-and-safety/meetings")) {
             Intent intent = new Intent(getActivity(), MeetingsActivity.class);
+            intent.putExtra("urlroute", urlRoute);
             startActivity(intent);
         } else if (urlRoute.equals("/me/my-performance")) {
             Intent intent = new Intent(getActivity(), PerformancesActivity.class);
@@ -132,8 +134,9 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
         } else if (urlRoute.equals("/me/my-documents")) {
             Intent intent = new Intent(getActivity(), DocumentsActivity.class);
             startActivity(intent);
-        } else if (urlRoute.equals("/me/my-time-off-requests")) {
+        } else if (urlRoute.equals("/me/my-timeoff-requests")) {
             Intent intent = new Intent(getActivity(), TimeOffRequestsActivity.class);
+            intent.putExtra("urlroute", urlRoute);
             startActivity(intent);
         } else if (urlRoute.equals("/me/my-time-banks")) {
             Intent intent = new Intent(getActivity(), TimeBanksActivity.class);
@@ -149,6 +152,7 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
             startActivity(intent);
         } else if (urlRoute.equals("/health-and-safety/safety-data-sheets")) {
             Intent intent = new Intent(getActivity(), SafetisActivity.class);
+            intent.putExtra("urlroute", urlRoute);
             startActivity(intent);
         }
     }

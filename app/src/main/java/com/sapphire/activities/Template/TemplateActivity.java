@@ -83,12 +83,15 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     private boolean showDescription = true;
     private TextView text_name_hint;
     private TextView text_description_hint;
+    private TextView text_header;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_template);
+
+        text_header = (TextView) findViewById(R.id.text_header);
 
         View back = findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
@@ -232,6 +235,12 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
             if (description.getText().length() != 0) {
                 showDescription = false;
             }
+        }
+
+        if (typeId.equals(getResources().getString(R.string.text_workplace_templates))) {
+            text_header.setText(getResources().getString(R.string.text_template));
+        } else if (typeId.equals(getResources().getString(R.string.text_meetings_templates))) {
+            text_header.setText(getResources().getString(R.string.text_meeting_template));
         }
 
         itemlist = (RecyclerView) findViewById(R.id.itemlist);

@@ -26,6 +26,7 @@ import com.sapphire.api.PunchesAddAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
+import com.sapphire.logic.UserInfo;
 import com.sapphire.models.AttendanceData;
 import java.util.ArrayList;
 

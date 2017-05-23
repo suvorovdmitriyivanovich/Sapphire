@@ -78,23 +78,23 @@
             android:layout_height="35dp"
             android:id="@+id/assign"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
+            android:layout_toLeftOf="@+id/report"
+            android:layout_toStartOf="@+id/report"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:background="@drawable/button_selector_dark"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:layout_marginRight="10dp" />
 
         <Button
-            android:layout_width="45dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:id="@+id/report"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:background="@drawable/button_selector"
-            android:textColor="@color/white"
-            android:visibility="gone" />
+            android:textColor="@color/white" />
 
     </RelativeLayout>
 

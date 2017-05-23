@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
+import com.sapphire.models.AppRoleAppSecurityData;
 import com.sapphire.models.FileData;
 import com.sapphire.models.ItemPriorityData;
 import com.sapphire.models.ItemStatusData;
@@ -122,7 +123,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void addNavigationMenus(ArrayList<NavigationMenuData> navigationMenuDatas) {
+    public void addNavigationMenus(ArrayList<NavigationMenuData> navigationMenuDatas, AppRoleAppSecurityData appRoleAppSecurityData) {
         if (navigationMenuDatas.size() == 0) {
             return;
         }
@@ -134,6 +135,9 @@ public class DBHelper extends SQLiteOpenHelper {
         try {
             for (int y=0; y < navigationMenuDatas.size(); y++) {
                 NavigationMenuData navigationMenuData = navigationMenuDatas.get(y);
+                if (!navigationMenuData.getIsActive() || appRoleAppSecurityData.getSecurityMode(navigationMenuData.getUrlRoute(), navigationMenuData.getName()).equals("noAccess")) {
+                    continue;
+                }
                 cv = new ContentValues();
 
                 cv.put("menuid", navigationMenuData.getMenuId());
@@ -150,6 +154,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 ArrayList<NavigationMenuData> subMenus = navigationMenuData.getSubMenus();
                 if (subMenus != null && subMenus.size() > 0) {
                     for (int s=0; s < subMenus.size(); s++) {
+                        if (!subMenus.get(s).getIsActive() || appRoleAppSecurityData.getSecurityMode(subMenus.get(s).getUrlRoute(), "").equals("noAccess")) {
+                            continue;
+                        }
                         cv = new ContentValues();
 
                         cv.put("menuid", subMenus.get(s).getMenuId());

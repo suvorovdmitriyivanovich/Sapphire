@@ -33,10 +33,14 @@ public class GetContactsAction extends AsyncTask{
     private ArrayList<ContactData> emergencyDatas = new ArrayList<ContactData>();
     private ArrayList<ContactData> familyDatas = new ArrayList<ContactData>();
     private boolean me = false;
+    private boolean needEmergency = false;
+    private boolean needFamily = false;
 
-    public GetContactsAction(Context context, boolean me) {
+    public GetContactsAction(Context context, boolean me, boolean needEmergency, boolean needFamily) {
         this.mContext = context;
         this.me = me;
+        this.needEmergency = needEmergency;
+        this.needFamily = needFamily;
     }
 
     @Override
@@ -49,7 +53,13 @@ public class GetContactsAction extends AsyncTask{
 
         String filter = "";
         if (me) {
-            filter = "?$filter=(ContactTypeId%20eq%20guid'"+Environment.EmergencyContactType+"'%20or%20ContactTypeId%20eq%20guid'"+Environment.FamilyContactType+"')%20and%20Profiles/any(profile:%20profile/ProfileId%20eq%20guid'"+userInfo.getProfile().getProfileId()+"')";
+            if (needEmergency && needFamily) {
+                filter = "?$filter=(ContactTypeId%20eq%20guid'" + Environment.EmergencyContactType + "'%20or%20ContactTypeId%20eq%20guid'" + Environment.FamilyContactType + "')%20and%20Profiles/any(profile:%20profile/ProfileId%20eq%20guid'" + userInfo.getProfile().getProfileId() + "')";
+            } else if (needEmergency) {
+                filter = "?$filter=(ContactTypeId%20eq%20guid'" + Environment.EmergencyContactType + "')%20and%20Profiles/any(profile:%20profile/ProfileId%20eq%20guid'" + userInfo.getProfile().getProfileId() + "')";
+            } else {
+                filter = "?$filter=(ContactTypeId%20eq%20guid'" + Environment.FamilyContactType + "')%20and%20Profiles/any(profile:%20profile/ProfileId%20eq%20guid'" + userInfo.getProfile().getProfileId() + "')";
+            }
         } else {
             filter = "?$filter=Profiles/any(profile:%20profile/ProfileId%20eq%20guid'"+userInfo.getProfile().getProfileId()+"')";
         }

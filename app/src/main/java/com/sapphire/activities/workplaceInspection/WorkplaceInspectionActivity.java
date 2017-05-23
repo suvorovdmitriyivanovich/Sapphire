@@ -815,8 +815,8 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     @Override
     public void onRootMeetingMembersClick(int position) {
         hideSoftKeyboard();
-        datasTeam.get(position).setPresence(!datasTeam.get(position).getPresence());
-        adapterTeam.notifyDataSetChanged();
+        //datasTeam.get(position).setPresence(!datasTeam.get(position).getPresence());
+        //adapterTeam.notifyDataSetChanged();
     }
 
     @Override

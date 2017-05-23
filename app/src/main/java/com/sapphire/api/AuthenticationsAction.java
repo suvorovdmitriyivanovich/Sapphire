@@ -85,11 +85,6 @@ public class AuthenticationsAction extends AsyncTask{
             result = "OK";
 
             if (accountDatas.size() == 1) {
-                ArrayList<NavigationMenuData> navigationMenuDatas = accountDatas.get(0).getNavigationMenus();
-                if (navigationMenuDatas != null && navigationMenuDatas.size() > 0) {
-                    DBHelper.getInstance(Sapphire.getInstance()).deleteNavigationMenus();
-                    DBHelper.getInstance(Sapphire.getInstance()).addNavigationMenus(navigationMenuDatas);
-                }
                 UserInfo userInfo = UserInfo.getUserInfo();
                 userInfo.setAuthTokenFirst(accountDatas.get(0).getOrganizations().get(0).getAuthToken());
                 userInfo.setAuthToken(accountDatas.get(0).getOrganizations().get(0).getAuthToken());
@@ -103,6 +98,11 @@ public class AuthenticationsAction extends AsyncTask{
                 //ed.putString("AUTHTOKEN", accountDatas.get(0).getAuthToken());
                 //ed.putString("ACCOUNTID", accountDatas.get(0).getAccountId());
                 //ed.apply();
+                ArrayList<NavigationMenuData> navigationMenuDatas = accountDatas.get(0).getNavigationMenus();
+                if (navigationMenuDatas != null && navigationMenuDatas.size() > 0) {
+                    DBHelper.getInstance(Sapphire.getInstance()).deleteNavigationMenus();
+                    DBHelper.getInstance(Sapphire.getInstance()).addNavigationMenus(navigationMenuDatas, accountDatas.get(0).getGlobalAppRoleAppSecurities());
+                }
 
                 //userInfo.getProfile().setAvatarId("6993dd39-d2da-8230-6ad8-86f3839db097");
 

@@ -25,6 +25,7 @@ import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
+import com.sapphire.activities.policy.PdfActivity;
 import com.sapphire.adapters.MeetingsAdapter;
 import com.sapphire.api.MembersAction;
 import com.sapphire.api.MeetingsAction;
@@ -35,6 +36,7 @@ import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.MemberData;
+import com.sapphire.models.PolicyData;
 import com.sapphire.models.ProfileData;
 import com.sapphire.models.TemplateData;
 import com.sapphire.logic.UserInfo;
@@ -44,6 +46,7 @@ import java.util.ArrayList;
 public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.OnRootMeetingsClickListener,
                                                               MeetingsAdapter.OnOpenMeetingsClickListener,
                                                               MeetingsAdapter.OnDeleteMeetingsClickListener,
+                                                              MeetingsAdapter.OnReportMeetingsClickListener,
                                                               TemplatesAction.RequestTemplates,
                                                               TemplatesAction.RequestTemplatesData,
                                                               MeetingsAction.RequestMeetings,
@@ -66,12 +69,22 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
     private DrawerLayout drawerLayout;
+    private boolean edit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_meetings);
+
+        Intent intent = getIntent();
+        String urlroute = intent.getStringExtra("urlroute");
+        if (urlroute != null && !urlroute.equals("")) {
+            UserInfo userInfo = UserInfo.getUserInfo();
+            if (userInfo.getGlobalAppRoleAppSecurities().getSecurityMode(urlroute, "").equals("fullAccess")) {
+                edit = true;
+            }
+        }
 
         AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
         adb_save.setCancelable(true);
@@ -170,7 +183,7 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
         list.setNestedScrollingEnabled(false);
         list.setLayoutManager(new LinearLayoutManager(MeetingsActivity.this));
 
-        adapter = new MeetingsAdapter(this, false);
+        adapter = new MeetingsAdapter(this, false, edit);
         list.setAdapter(adapter);
 
         text_no = findViewById(R.id.text_no);
@@ -188,6 +201,10 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
         });
 
         UpdateBottom();
+
+        if (!edit) {
+            add.setVisibility(View.GONE);
+        }
     }
 
     private void UpdateBottom() {
@@ -221,6 +238,7 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
         intent.putExtra("dateend", data.getEndTime());
         intent.putExtra("id", data.getMeetingId());
         intent.putExtra("posted", data.getPosted());
+        intent.putExtra("completed", data.getCompleted());
         UserInfo userInfo = UserInfo.getUserInfo();
         userInfo.setMembers(data.getMembers());
         userInfo.setTopics(data.getTopics());
@@ -237,6 +255,7 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
         intent.putExtra("dateend", data.getEndTime());
         intent.putExtra("id", data.getMeetingId());
         intent.putExtra("posted", data.getPosted());
+        intent.putExtra("completed", data.getCompleted());
         UserInfo userInfo = UserInfo.getUserInfo();
         userInfo.setMembers(data.getMembers());
         userInfo.setTopics(data.getTopics());
@@ -251,6 +270,18 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
         button_cancel_save.setText(getResources().getString(R.string.text_cancel));
         button_send_save.setText(getResources().getString(R.string.text_delete));
         dialog_confirm.show();
+    }
+
+    @Override
+    public void onReportMeetingsClick(int position) {
+        Intent intent = new Intent(MeetingsActivity.this, PdfActivity.class);
+        MeetingData data = datas.get(position);
+        intent.putExtra("name", data.getName());
+        intent.putExtra("acknowledged", true);
+        intent.putExtra("id", data.getMeetingId());
+        intent.putExtra("fileId", data.getMeetingId());
+        intent.putExtra("url", Environment.MeetingsReportURL);
+        startActivity(intent);
     }
 
     @Override

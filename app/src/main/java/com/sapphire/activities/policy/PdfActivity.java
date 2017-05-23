@@ -46,6 +46,7 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
     private boolean successOpen = false;
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +102,7 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
         fileId = intent.getStringExtra("fileId");
         id = intent.getStringExtra("id");
         acknowledged = intent.getBooleanExtra("acknowledged", false);
+        url = intent.getStringExtra("url");
 
         if (acknowledged) {
             View bottom_group = findViewById(R.id.bottom_group);
@@ -148,7 +150,7 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
         registerReceiver(br, intFilt);
 
         pd.show();
-        new GetFileAction(PdfActivity.this, fileId, "temp.pdf", getFilesDir().getAbsolutePath()).execute();
+        new GetFileAction(PdfActivity.this, fileId, "temp.pdf", getFilesDir().getAbsolutePath(), url).execute();
         //new GetFileAction(PdfActivity.this, fileId, "temp.pdf", android.os.Environment.getExternalStorageDirectory().getPath()).execute();
 
         nointernet_group = findViewById(R.id.nointernet_group);

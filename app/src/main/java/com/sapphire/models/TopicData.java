@@ -29,6 +29,9 @@ public class TopicData {
             if (!data.isNull("Description")) {
                 setDescription(data.getString("Description"));
             }
+            if (!data.isNull("Completed")) {
+                setCompleted(data.getBoolean("Completed"));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

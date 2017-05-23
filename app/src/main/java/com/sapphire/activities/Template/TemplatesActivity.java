@@ -38,6 +38,7 @@ import com.sapphire.api.TemplatesAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
+import com.sapphire.logic.UserInfo;
 import com.sapphire.models.TemplateData;
 import java.util.ArrayList;
 
@@ -66,10 +67,12 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
     private SpinTypesAdapter adapterType;
     private boolean clickSpinner = false;
     private EditText type;
-    private String typeId;
+    private String typeId = "";
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
     private DrawerLayout drawerLayout;
+    private boolean editMeetings = false;
+    private boolean editWorkplace = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,13 +126,15 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
             }
         });
 
-        View add = findViewById(R.id.add);
+        final View add = findViewById(R.id.add);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TemplatesActivity.this, TemplateActivity.class);
-                intent.putExtra("typeId", typeId);
-                startActivity(intent);
+                if (!typeId.equals("")) {
+                    Intent intent = new Intent(TemplatesActivity.this, TemplateActivity.class);
+                    intent.putExtra("typeId", typeId);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -177,18 +182,52 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
         templateslist.setNestedScrollingEnabled(false);
         templateslist.setLayoutManager(new LinearLayoutManager(TemplatesActivity.this));
 
-        adapter = new TemplatesAdapter(this);
-        templateslist.setAdapter(adapter);
+        UserInfo userInfo = UserInfo.getUserInfo();
+        boolean viewMeetings = false;
+        boolean viewWorkplace = false;
+        String securityModeMeetings = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/configuration/health-and-safety/meetings-topic-templates", "");
+        if (securityModeMeetings.equals("fullAccess")) {
+            editMeetings = true;
+        } else if (securityModeMeetings.equals("viewOnly")) {
+            viewMeetings = true;
+        }
+
+        String securityModeWorkplace = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/configuration/health-and-safety/workplace-investigation-templates", "");
+        if (securityModeWorkplace.equals("fullAccess")) {
+            editWorkplace = true;
+        } else if (securityModeWorkplace.equals("viewOnly")) {
+            viewWorkplace = true;
+        }
 
         text_no = findViewById(R.id.text_no);
         spinnerType = (Spinner) findViewById(R.id.spinnerType);
         type = (EditText) findViewById(R.id.type);
-        typeId = getResources().getString(R.string.text_workplace_templates);
+        if (editWorkplace || viewWorkplace) {
+            typeId = getResources().getString(R.string.text_workplace_templates);
+            adapter = new TemplatesAdapter(this, editWorkplace);
+
+            if (!editWorkplace) {
+                add.setVisibility(View.GONE);
+            }
+        } else if (editMeetings || viewMeetings) {
+            typeId = getResources().getString(R.string.text_meetings_templates);
+            adapter = new TemplatesAdapter(this, editMeetings);
+
+            if (!editMeetings) {
+                add.setVisibility(View.GONE);
+            }
+        }
         type.setText(typeId);
 
+        templateslist.setAdapter(adapter);
+
         types = new ArrayList<>();
-        types.add(getResources().getString(R.string.text_workplace_templates));
-        types.add(getResources().getString(R.string.text_meetings_templates));
+        if (editWorkplace || viewWorkplace) {
+            types.add(getResources().getString(R.string.text_workplace_templates));
+        }
+        if (editMeetings || viewMeetings) {
+            types.add(getResources().getString(R.string.text_meetings_templates));
+        }
 
         adapterType = new SpinTypesAdapter(this, R.layout.spinner_list_item_black);
         spinnerType.setAdapter(adapterType);
@@ -209,6 +248,25 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
                 type.setText(types.get(position));
                 typeId = types.get(position);
                 clickSpinner = false;
+
+                if (typeId.equals(getResources().getString(R.string.text_workplace_templates))) {
+                    adapter = new TemplatesAdapter(TemplatesActivity.this, editWorkplace);
+
+                    if (!editWorkplace) {
+                        add.setVisibility(View.GONE);
+                    } else {
+                        add.setVisibility(View.VISIBLE);
+                    }
+                } else if (typeId.equals(getResources().getString(R.string.text_meetings_templates))) {
+                    adapter = new TemplatesAdapter(TemplatesActivity.this, editMeetings);
+
+                    if (!editMeetings) {
+                        add.setVisibility(View.GONE);
+                    } else {
+                        add.setVisibility(View.VISIBLE);
+                    }
+                }
+                templateslist.setAdapter(adapter);
 
                 pd.show();
                 new TemplatesAction(TemplatesActivity.this, typeId).execute();
@@ -410,8 +468,10 @@ public class TemplatesActivity extends BaseActivity implements TemplatesAdapter.
             fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
         } catch (Exception e) {}
 
-        pd.show();
-        new TemplatesAction(TemplatesActivity.this, typeId).execute();
+        if (!typeId.equals("")) {
+            pd.show();
+            new TemplatesAction(TemplatesActivity.this, typeId).execute();
+        }
     }
 
     @Override

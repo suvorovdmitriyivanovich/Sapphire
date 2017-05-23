@@ -70,12 +70,14 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
     private Context mContext;
     private Typeface typeFace;
     private boolean isDashboard = false;
+    private boolean edit = false;
 
-    public WorkplaceInspectionsAdapter(Context context, boolean isDashboard) {
+    public WorkplaceInspectionsAdapter(Context context, boolean isDashboard, boolean edit) {
         mContext = context;
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
         mData = new ArrayList<WorkplaceInspectionData>();
         this.isDashboard = isDashboard;
+        this.edit = edit;
     }
 
     @Override
@@ -197,13 +199,20 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
             holder.open.setVisibility(View.GONE);
             holder.delete.setVisibility(View.GONE);
             holder.files.setVisibility(View.GONE);
-            holder.report.setVisibility(View.VISIBLE);
         } else {
             holder.open.setVisibility(View.VISIBLE);
             holder.delete.setVisibility(View.VISIBLE);
             holder.files.setVisibility(View.VISIBLE);
-            holder.report.setVisibility(View.GONE);
         }
+
+        if (!edit) {
+            holder.open.setVisibility(View.GONE);
+            holder.delete.setVisibility(View.GONE);
+            holder.files.setVisibility(View.GONE);
+            holder.assign.setVisibility(View.GONE);
+        }
+
+        holder.report.setEnabled(data.getInspected());
     }
 
     @Override

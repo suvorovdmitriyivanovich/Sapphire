@@ -64,12 +64,14 @@ public class InvestigationsAdapter extends RecyclerView.Adapter<InvestigationsAd
     private Context mContext;
     private Typeface typeFace;
     private boolean isDashboard = false;
+    private boolean edit = false;
 
-    public InvestigationsAdapter(Context context, boolean isDashboard) {
+    public InvestigationsAdapter(Context context, boolean isDashboard, boolean edit) {
         mContext = context;
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
         mData = new ArrayList<InvestigationData>();
         this.isDashboard = isDashboard;
+        this.edit = edit;
     }
 
     @Override
@@ -151,6 +153,11 @@ public class InvestigationsAdapter extends RecyclerView.Adapter<InvestigationsAd
             holder.delete.setVisibility(View.VISIBLE);
             holder.files.setVisibility(View.VISIBLE);
             holder.report.setVisibility(View.GONE);
+        }
+
+        if (!edit) {
+            holder.open.setVisibility(View.GONE);
+            holder.delete.setVisibility(View.GONE);
         }
     }
 

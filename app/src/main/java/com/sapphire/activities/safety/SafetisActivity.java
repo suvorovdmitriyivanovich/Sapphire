@@ -61,12 +61,23 @@ public class SafetisActivity extends BaseActivity implements SafetisAdapter.OnRo
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
     private DrawerLayout drawerLayout;
+    private boolean edit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_safetis);
+
+        Intent intent = getIntent();
+        edit = intent.getBooleanExtra("edit", false);
+        String urlroute = intent.getStringExtra("urlroute");
+        if (urlroute != null && !urlroute.equals("")) {
+            UserInfo userInfo = UserInfo.getUserInfo();
+            if (userInfo.getGlobalAppRoleAppSecurities().getSecurityMode(urlroute, "").equals("fullAccess")) {
+                edit = true;
+            }
+        }
 
         AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
         adb_save.setCancelable(true);
@@ -165,7 +176,7 @@ public class SafetisActivity extends BaseActivity implements SafetisAdapter.OnRo
         list.setNestedScrollingEnabled(false);
         list.setLayoutManager(new LinearLayoutManager(SafetisActivity.this));
 
-        adapter = new SafetisAdapter(this, false);
+        adapter = new SafetisAdapter(this, false, edit);
         list.setAdapter(adapter);
 
         text_no = findViewById(R.id.text_no);
@@ -183,6 +194,10 @@ public class SafetisActivity extends BaseActivity implements SafetisAdapter.OnRo
         });
 
         UpdateBottom();
+
+        if (!edit) {
+            add.setVisibility(View.GONE);
+        }
     }
 
     private void UpdateBottom() {
@@ -250,6 +265,7 @@ public class SafetisActivity extends BaseActivity implements SafetisAdapter.OnRo
         intent.putExtra("id", safetyData.getSafetyDataSheetId());
         intent.putExtra("url", Environment.SafetisFilesURL);
         intent.putExtra("nameField", "SafetyDataSheetId");
+        intent.putExtra("readonly", !edit);
 
         ArrayList<FileData> fileDatas = new ArrayList<FileData>();
         if (!safetyData.getFileId().equals("")) {

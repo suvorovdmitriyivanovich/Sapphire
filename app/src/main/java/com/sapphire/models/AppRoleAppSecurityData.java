@@ -44,4 +44,20 @@ public class AppRoleAppSecurityData {
         }
         return false;
     }
+
+    public String getSecurityMode(String urlRoute, String name) {
+        for (AppSecurityData item: appSecurityDatas) {
+            if (!urlRoute.equals("")) {
+                if (item.getUrlRoute().equals(urlRoute)) {
+                    return item.getSecurityMode();
+                }
+            } else {
+                if (item.getName().equals(name)) {
+                    return item.getSecurityMode();
+                }
+            }
+        }
+
+        return "";
+    }
 }

@@ -76,6 +76,13 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
 
         Intent intent = getIntent();
         edit = intent.getBooleanExtra("edit", false);
+        String urlroute = intent.getStringExtra("urlroute");
+        if (urlroute != null && !urlroute.equals("")) {
+            UserInfo userInfo = UserInfo.getUserInfo();
+            if (userInfo.getGlobalAppRoleAppSecurities().getSecurityMode(urlroute, "").equals("fullAccess")) {
+                edit = true;
+            }
+        }
 
         AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
         adb_save.setCancelable(true);
@@ -177,7 +184,7 @@ public class TimeOffRequestsActivity extends BaseActivity implements TimeOffRequ
         list.setNestedScrollingEnabled(false);
         list.setLayoutManager(new LinearLayoutManager(TimeOffRequestsActivity.this));
 
-        adapter = new TimeOffRequestsAdapter(this, edit);
+        adapter = new TimeOffRequestsAdapter(this, false);
         list.setAdapter(adapter);
 
         text_no = findViewById(R.id.text_no);

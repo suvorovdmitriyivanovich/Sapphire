@@ -29,7 +29,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -44,6 +43,7 @@ import com.sapphire.adapters.SpinTemplatesAdapter;
 import com.sapphire.api.GetNextMeetingsAction;
 import com.sapphire.api.GetNextWorkplaceInspectionsAction;
 import com.sapphire.api.MeetingAddAction;
+import com.sapphire.api.EventAddAction;
 import com.sapphire.api.GetTemplateAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
@@ -65,6 +65,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
                                                              TopicsAdapter.OnOpenTopicsClickListener,
                                                              TopicsAdapter.OnDeleteTopicsClickListener,
                                                              MeetingAddAction.RequestMeetingAdd,
+                                                             EventAddAction.RequestEventAdd,
                                                              GetTemplateAction.RequestTemplate,
                                                              GetTemplateAction.RequestTemplateData,
                                                              GetNextMeetingsAction.RequestNextMeetings,
@@ -82,6 +83,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
     private EditText date;
     private EditText location;
     private View text_name_error;
+    private View text_location_error;
     private View text_date_error;
     private View text_topics_error;
     private String nameOld = "";
@@ -122,6 +124,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
     private String nextWorkplaceInspection = "-";
     private TextView nextDate;
     private boolean isCheckName = false;
+    private boolean isCheckLocation = false;
     private boolean isCheckDate = false;
     private boolean isCheckTopic = false;
     private BroadcastReceiver br;
@@ -135,8 +138,10 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
     private TextView text_endtime;
     private Animation animationErrorDown;
     private Animation animationErrorUpName;
+    private Animation animationErrorUpLocation;
     private Animation animationErrorUpDate;
     private boolean showErrorName = false;
+    private boolean showErrorLocation = false;
     private boolean showErrorDate = false;
     private boolean showErrorTopics = false;
     private Animation animationUp;
@@ -227,6 +232,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         date = (EditText) findViewById(R.id.date);
         location = (EditText) findViewById(R.id.location);
         text_name_error = findViewById(R.id.text_name_error);
+        text_location_error = findViewById(R.id.text_location_error);
         text_date_error = findViewById(R.id.text_date_error);
         time = (EditText) findViewById(R.id.time);
         endtime = (EditText) findViewById(R.id.endtime);
@@ -250,9 +256,11 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
 
         animationErrorDown = AnimationUtils.loadAnimation(this, R.anim.translate_down);
         animationErrorUpName = AnimationUtils.loadAnimation(this, R.anim.translate_up);
+        animationErrorUpLocation = AnimationUtils.loadAnimation(this, R.anim.translate_up);
         animationErrorUpDate = AnimationUtils.loadAnimation(this, R.anim.translate_up);
 
         animationErrorUpName.setAnimationListener(animationErrorUpNameListener);
+        animationErrorUpLocation.setAnimationListener(animationErrorUpLocationListener);
         animationErrorUpDate.setAnimationListener(animationErrorUpDateListener);
 
         animationUp = AnimationUtils.loadAnimation(this, R.anim.translate_scale_up);
@@ -271,6 +279,42 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
 
         text_no = findViewById(R.id.text_no);
         text_topics_no = (TextView) findViewById(R.id.text_topics_no);
+
+        View button_ok = findViewById(R.id.ok);
+        button_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSoftKeyboard();
+
+                updateWorkplaceInspection(1);
+            }
+        });
+
+        View save = findViewById(R.id.save);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSoftKeyboard();
+
+                if (id.equals("") || notEquals()) {
+                    updateWorkplaceInspection(0);
+                } else {
+                    finish();
+                }
+            }
+        });
+
+        View add = findViewById(R.id.add);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSoftKeyboard();
+
+                hideSoftKeyboard();
+                Intent intent = new Intent(MeetingActivity.this, TopicActivity.class);
+                startActivity(intent);
+            }
+        });
 
         Intent intent = getIntent();
         id = intent.getStringExtra("id");
@@ -291,6 +335,9 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             name.setText(nameOld);
             location.setText(locationOld);
             posted.setChecked(postedOld);
+            if (intent.getBooleanExtra("completed", false)) {
+                button_ok.setVisibility(View.GONE);
+            }
 
             datas.clear();
             for (MemberData item: userInfo.getMembers()) {
@@ -453,32 +500,6 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             }
         });
 
-        View button_ok = findViewById(R.id.ok);
-        button_ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideSoftKeyboard();
-
-                if (id.equals("") || notEquals()) {
-                    updateWorkplaceInspection(0);
-                } else {
-                    finish();
-                }
-            }
-        });
-
-        View add = findViewById(R.id.add);
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideSoftKeyboard();
-
-                hideSoftKeyboard();
-                Intent intent = new Intent(MeetingActivity.this, TopicActivity.class);
-                startActivity(intent);
-            }
-        });
-
         View root = findViewById(R.id.rootLayout);
         root.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -569,6 +590,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
 
         if (readonly) {
             add.setVisibility(View.GONE);
+            save.setVisibility(View.GONE);
             button_ok.setVisibility(View.GONE);
             name.setFocusable(false);
             location.setFocusable(false);
@@ -584,6 +606,20 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         @Override
         public void onAnimationEnd(Animation arg0) {
             text_name_error.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {}
+
+        @Override
+        public void onAnimationStart(Animation animation) {}
+    };
+
+    Animation.AnimationListener animationErrorUpLocationListener = new Animation.AnimationListener() {
+
+        @Override
+        public void onAnimationEnd(Animation arg0) {
+            text_location_error.setVisibility(View.INVISIBLE);
         }
 
         @Override
@@ -980,9 +1016,12 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         hideSoftKeyboard();
         boolean allOk = true;
 
-        if (name.getText().toString().equals("") || date.getText().toString().equals("")
+        if (name.getText().toString().equals("")
+                || location.getText().toString().equals("")
+                || date.getText().toString().equals("")
                 || datasTopic.size() == 0) {
             isCheckName = true;
+            isCheckLocation = true;
             isCheckDate = true;
             isCheckTopic = true;
             updateViews();
@@ -992,17 +1031,31 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         if (allOk) {
             pd.show();
 
-            MeetingData meetingData = new MeetingData();
-            meetingData.setName(name.getText().toString());
-            meetingData.setEndTime(dateendNew);
-            meetingData.setLocation(location.getText().toString());
-            meetingData.setMeetingDate(dateNew);
-            meetingData.setPosted(posted.isChecked());
-            meetingData.setMeetingId(id);
-            meetingData.setMembers(datas);
-            meetingData.setTopics(datasTopic);
+            if (type == 0) {
+                MeetingData meetingData = new MeetingData();
+                meetingData.setName(name.getText().toString());
+                meetingData.setEndTime(dateendNew);
+                meetingData.setLocation(location.getText().toString());
+                meetingData.setMeetingDate(dateNew);
+                meetingData.setPosted(posted.isChecked());
+                meetingData.setMeetingId(id);
+                meetingData.setMembers(datas);
+                meetingData.setTopics(datasTopic);
 
-            new MeetingAddAction(MeetingActivity.this, meetingData).execute();
+                new MeetingAddAction(MeetingActivity.this, meetingData).execute();
+            } else {
+                MeetingData meetingData = new MeetingData();
+                meetingData.setName(name.getText().toString());
+                meetingData.setEndTime(dateendNew);
+                meetingData.setLocation(location.getText().toString());
+                meetingData.setMeetingDate(dateNew);
+                meetingData.setPosted(posted.isChecked());
+                meetingData.setMeetingId(id);
+                meetingData.setMembers(datas);
+                meetingData.setTopics(datasTopic);
+
+                new EventAddAction(MeetingActivity.this).execute();
+            }
         }
     }
 
@@ -1017,6 +1070,8 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         public void afterTextChanged(Editable s) {
             if (type == 1) {
                 isCheckName = true;
+            } else {
+                isCheckLocation = true;
             }
             updateViews();
         }
@@ -1045,6 +1100,26 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             if (showErrorName) {
                 showErrorName = false;
                 text_name_error.startAnimation(animationErrorUpName);
+            }
+        }
+        if (isCheckLocation && location.getText().toString().equals("")) {
+            text_location_error.setVisibility(View.VISIBLE);
+            location.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.red), PorterDuff.Mode.SRC_ATOP);
+            text_location.setTextColor(ContextCompat.getColor(this, R.color.red));
+            text_location_hint.setTextColor(ContextCompat.getColor(this, R.color.red));
+            if (!showErrorLocation) {
+                showErrorLocation = true;
+                text_location_error.startAnimation(animationErrorDown);
+            }
+        } else if (!location.getText().toString().equals("")) {
+            text_location.setVisibility(View.VISIBLE);
+            location.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+            text_location.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_location_hint.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_location_hint.setVisibility(View.GONE);
+            if (showErrorLocation) {
+                showErrorLocation = false;
+                text_location_error.startAnimation(animationErrorUpLocation);
             }
         }
         if (isCheckDate && date.getText().toString().equals("")) {
@@ -1100,14 +1175,6 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
                 text_topics_error.startAnimation(animationErrorUpTopics);
             }
             */
-        }
-
-
-
-
-        if (!location.getText().toString().equals("")) {
-            text_location.setVisibility(View.VISIBLE);
-            text_location_hint.setVisibility(View.GONE);
         }
     }
 
@@ -1195,23 +1262,23 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
 
     @Override
     public void onRequestTemplateData(ArrayList<TemplateItemData> templatesItemDatas) {
-        ArrayList<TopicData> list = new ArrayList<TopicData>();
+        ArrayList<TopicData> topicDatas = new ArrayList<TopicData>();
         for (TemplateItemData item: templatesItemDatas) {
             TopicData topicData = new TopicData();
             topicData.setDescription(item.getDescription());
             topicData.setName(item.getName());
             topicData.setIsTemplate(true);
-            list.add(topicData);
+            topicDatas.add(topicData);
         }
         for (TopicData item: datasTopic) {
             if (item.getIsTemplate()) {
                 continue;
             }
-            list.add(item);
+            topicDatas.add(item);
         }
 
-        this.datasTopic = list;
-        adapterTopics.setListArray(list);
+        datasTopic = topicDatas;
+        adapterTopics.setListArray(topicDatas);
         updateVisibility();
         pd.hide();
     }
@@ -1219,8 +1286,8 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
     @Override
     public void onRootMeetingMembersClick(int position) {
         hideSoftKeyboard();
-        datas.get(position).setPresence(!datas.get(position).getPresence());
-        adapter.notifyDataSetChanged();
+        //datas.get(position).setPresence(!datas.get(position).getPresence());
+        //adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -1243,6 +1310,40 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             }
         } else {
             finish();
+        }
+    }
+
+    @Override
+    public void onRequestEventAdd(String result) {
+        if (!result.equals("OK")) {
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+            }
+        } else {
+            MeetingData meetingData = new MeetingData();
+            meetingData.setName(name.getText().toString());
+            meetingData.setEndTime(dateendNew);
+            meetingData.setLocation(location.getText().toString());
+            meetingData.setMeetingDate(dateNew);
+            meetingData.setPosted(posted.isChecked());
+            meetingData.setMeetingId(id);
+            meetingData.setMembers(datas);
+            meetingData.setTopics(datasTopic);
+            meetingData.setCompleted(true);
+
+            new MeetingAddAction(MeetingActivity.this, meetingData).execute();
         }
     }
 
@@ -1361,6 +1462,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         text_time.clearAnimation();
         text_endtime.clearAnimation();
         text_name_error.clearAnimation();
+        text_location_error.clearAnimation();
         text_date_error.clearAnimation();
         text_name_hint.clearAnimation();
         text_location_hint.clearAnimation();

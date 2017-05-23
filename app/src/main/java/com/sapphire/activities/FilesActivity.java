@@ -587,7 +587,7 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
                             }
                         } else {
                             pd.show();
-                            new GetFileAction(FilesActivity.this, fileDatas.get(position).getFileId(), fileDatas.get(position).getName(), folder).execute();
+                            new GetFileAction(FilesActivity.this, fileDatas.get(position).getFileId(), fileDatas.get(position).getName(), folder, "").execute();
                         }
                     }
                 });

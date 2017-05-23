@@ -43,40 +43,61 @@
             android:singleLine="true"
             android:layout_marginLeft="5dp" />
 
-        <RelativeLayout
-            android:layout_width="56dp"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/add"
-            android:background="@drawable/top_button"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/ok"
-            android:layout_toStartOf="@+id/ok">
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:id="@+id/add_icon"
-                android:src="@drawable/add_icon"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="56dp"
-            android:layout_height="match_parent"
-            android:id="@+id/ok"
-            android:background="@drawable/top_button"
+            android:id="@+id/button_group"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true">
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true">
 
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:id="@+id/ok_icon"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/ok_icon" />
-        </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:id="@+id/add"
+                android:background="@drawable/top_button">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/add_icon"
+                    android:src="@drawable/add_icon"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:id="@+id/save"
+                android:background="@drawable/top_button">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/save_icon"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/save_icon" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:id="@+id/ok"
+                android:background="@drawable/top_button">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/ok_icon"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ok_icon" />
+            </RelativeLayout>
+
+        </LinearLayout>
 
     </RelativeLayout>
 
@@ -176,6 +197,17 @@
                     android:layout_below="@+id/text_location" />
 
             </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/location_error"
+                android:id="@+id/text_location_error"
+                android:layout_marginLeft="12dp"
+                android:textColor="@color/red"
+                android:layout_marginRight="10dp"
+                android:visibility="invisible" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

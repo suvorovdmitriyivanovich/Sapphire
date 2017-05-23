@@ -80,6 +80,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
                                                           WorkplaceInspectionsAdapter.OnOpenWorkplaceInspectionsClickListener,
                                                           WorkplaceInspectionsAdapter.OnDeleteWorkplaceInspectionsClickListener,
                                                           WorkplaceInspectionsAdapter.OnFilesWorkplaceInspectionsClickListener,
+                                                          WorkplaceInspectionsAdapter.OnReportWorkplaceInspectionsClickListener,
                                                           WorkplaceInspectionsAction.RequestWorkplaceInspections,
                                                           WorkplaceInspectionsAction.RequestWorkplaceInspectionsData,
                                                           WorkplaceInspectionDeleteAction.RequestWorkplaceInspectionDelete,
@@ -258,14 +259,14 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
         workplaceinspectionslist.setNestedScrollingEnabled(false);
         workplaceinspectionslist.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
-        adapterWorkplaceInspections = new WorkplaceInspectionsAdapter(this, true);
+        adapterWorkplaceInspections = new WorkplaceInspectionsAdapter(this, true, false);
         workplaceinspectionslist.setAdapter(adapterWorkplaceInspections);
 
         meetingslist = (RecyclerView) findViewById(R.id.meetingslist);
         meetingslist.setNestedScrollingEnabled(false);
         meetingslist.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
-        adapterMeetings = new MeetingsAdapter(this, true);
+        adapterMeetings = new MeetingsAdapter(this, true, false);
         meetingslist.setAdapter(adapterMeetings);
 
         memberslist = (RecyclerView) findViewById(R.id.memberslist);
@@ -733,6 +734,18 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
         intent.putExtra("nameField", "WorkplaceInspectionId");
 
         UserInfo.getUserInfo().setFileDatas(workplaceInspectionData.getFiles());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onReportWorkplaceInspectionsClick(int position) {
+        Intent intent = new Intent(MainActivity.this, PdfActivity.class);
+        WorkplaceInspectionData data = workplaceInspectionDatas.get(position);
+        intent.putExtra("name", data.getName());
+        intent.putExtra("acknowledged", true);
+        intent.putExtra("id", data.getWorkplaceInspectionId());
+        intent.putExtra("fileId", data.getWorkplaceInspectionId());
+        intent.putExtra("url", Environment.WorkplaceInspectionsReportURL);
         startActivity(intent);
     }
 

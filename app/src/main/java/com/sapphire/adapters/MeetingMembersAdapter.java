@@ -73,6 +73,8 @@ public class MeetingMembersAdapter extends RecyclerView.Adapter<MeetingMembersAd
                 if (readonly) {
                     return;
                 }
+                data.setPresence(!data.getPresence());
+                holder.presence.setChecked(data.getPresence());
                 if (context instanceof OnRootMeetingMembersClickListener) {
                     ((OnRootMeetingMembersClickListener) context).onRootMeetingMembersClick(holder.getAdapterPosition());
                 }
@@ -85,6 +87,8 @@ public class MeetingMembersAdapter extends RecyclerView.Adapter<MeetingMembersAd
                 if (data.getPresence() == isChecked || readonly) {
                     return;
                 }
+                data.setPresence(!data.getPresence());
+                holder.presence.setChecked(data.getPresence());
                 if (context instanceof OnRootMeetingMembersClickListener) {
                     ((OnRootMeetingMembersClickListener) context).onRootMeetingMembersClick(holder.getAdapterPosition());
                 }

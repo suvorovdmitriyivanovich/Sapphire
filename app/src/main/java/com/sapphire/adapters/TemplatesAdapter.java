@@ -51,11 +51,13 @@ public class TemplatesAdapter extends RecyclerView.Adapter<TemplatesAdapter.View
     private ArrayList<TemplateData> listData;
     private Context mContext;
     private Typeface typeFace;
+    private boolean edit = false;
 
-    public TemplatesAdapter(Context context) {
+    public TemplatesAdapter(Context context, boolean edit) {
         mContext = context;
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
         listData = new ArrayList<TemplateData>();
+        this.edit = edit;
     }
 
     @Override
@@ -104,6 +106,11 @@ public class TemplatesAdapter extends RecyclerView.Adapter<TemplatesAdapter.View
                 }
             }
         });
+
+        if (!edit) {
+            holder.open.setVisibility(View.GONE);
+            holder.delete.setVisibility(View.GONE);
+        }
     }
 
     @Override

@@ -26,6 +26,7 @@ import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.FilesActivity;
 import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
+import com.sapphire.activities.policy.PdfActivity;
 import com.sapphire.adapters.WorkplaceInspectionsAdapter;
 import com.sapphire.api.ItemPrioritiesAction;
 import com.sapphire.api.ItemStatusesAction;
@@ -40,6 +41,7 @@ import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.ItemPriorityData;
 import com.sapphire.models.ItemStatusData;
+import com.sapphire.models.MeetingData;
 import com.sapphire.models.MemberData;
 import com.sapphire.models.ParameterData;
 import com.sapphire.models.ProfileData;
@@ -53,6 +55,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
                                                                           WorkplaceInspectionsAdapter.OnDeleteWorkplaceInspectionsClickListener,
                                                                           WorkplaceInspectionsAdapter.OnFilesWorkplaceInspectionsClickListener,
                                                                           WorkplaceInspectionsAdapter.OnAssignWorkplaceInspectionsClickListener,
+                                                                          WorkplaceInspectionsAdapter.OnReportWorkplaceInspectionsClickListener,
                                                                           TemplatesAction.RequestTemplates,
                                                                           TemplatesAction.RequestTemplatesData,
                                                                           WorkplaceInspectionsAction.RequestWorkplaceInspections,
@@ -81,12 +84,23 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
     private DrawerLayout drawerLayout;
+    private boolean edit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_workplace_inspections);
+
+        Intent intent = getIntent();
+        edit = intent.getBooleanExtra("edit", false);
+        String urlroute = intent.getStringExtra("urlroute");
+        if (urlroute != null && !urlroute.equals("")) {
+            UserInfo userInfo = UserInfo.getUserInfo();
+            if (userInfo.getGlobalAppRoleAppSecurities().getSecurityMode(urlroute, "").equals("fullAccess")) {
+                edit = true;
+            }
+        }
 
         AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
         adb_save.setCancelable(true);
@@ -185,7 +199,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         workplaceinspectionslist.setNestedScrollingEnabled(false);
         workplaceinspectionslist.setLayoutManager(new LinearLayoutManager(WorkplaceInspectionsActivity.this));
 
-        adapter = new WorkplaceInspectionsAdapter(this, false);
+        adapter = new WorkplaceInspectionsAdapter(this, false, edit);
         workplaceinspectionslist.setAdapter(adapter);
 
         text_workplace_no = findViewById(R.id.text_workplace_no);
@@ -203,6 +217,10 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         });
 
         UpdateBottom();
+
+        if (!edit) {
+            add.setVisibility(View.GONE);
+        }
     }
 
     private void UpdateBottom() {
@@ -315,6 +333,18 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
 
         UserInfo.getUserInfo().setWorkplaceInspection(workplaceInspectionData);
 
+        startActivity(intent);
+    }
+
+    @Override
+    public void onReportWorkplaceInspectionsClick(int position) {
+        Intent intent = new Intent(WorkplaceInspectionsActivity.this, PdfActivity.class);
+        WorkplaceInspectionData data = workplaceInspectionDatas.get(position);
+        intent.putExtra("name", data.getName());
+        intent.putExtra("acknowledged", true);
+        intent.putExtra("id", data.getWorkplaceInspectionId());
+        intent.putExtra("fileId", data.getWorkplaceInspectionId());
+        intent.putExtra("url", Environment.WorkplaceInspectionsReportURL);
         startActivity(intent);
     }
 
