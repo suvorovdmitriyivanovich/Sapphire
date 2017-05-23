@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
+import com.sapphire.activities.policy.PdfActivity;
 import com.sapphire.adapters.AnswersAdapter;
 import com.sapphire.api.GetQuizAction;
 import com.sapphire.api.PostQuizzesAction;
@@ -44,6 +45,7 @@ public class QuizActivity extends BaseActivity implements AnswersAdapter.OnRootC
     private TextView text_header;
     private Button button_previous;
     private Button button_next;
+    private Button button_certificate;
     private String duration = "";
     private String quizScore = "";
     private BroadcastReceiver br;
@@ -152,6 +154,20 @@ public class QuizActivity extends BaseActivity implements AnswersAdapter.OnRootC
             }
         });
 
+        button_certificate = (Button) findViewById(R.id.button_certificate);
+        button_certificate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(QuizActivity.this, PdfActivity.class);
+                intent.putExtra("name", text_header.getText().toString());
+                intent.putExtra("acknowledged", true);
+                intent.putExtra("id", quizeId);
+                intent.putExtra("fileId", quizeId);
+                intent.putExtra("url", Environment.QuizzesReportURL);
+                startActivity(intent);
+            }
+        });
+
         // создаем BroadcastReceiver
         br = new BroadcastReceiver() {
             // действия при получении сообщений
@@ -227,8 +243,10 @@ public class QuizActivity extends BaseActivity implements AnswersAdapter.OnRootC
         } else if (currentQuestion == -2) {
             if (isPassed) {
                 questionName.setText(getResources().getString(R.string.text_your_quiz_score) + " " + quizScore + "!");
+                button_certificate.setVisibility(View.VISIBLE);
             } else {
                 questionName.setText(getResources().getString(R.string.text_quiz_failed));
+                button_certificate.setVisibility(View.GONE);
             }
         } else {
             QuestionData questionData = quizData.getQuestions().get(currentQuestion);

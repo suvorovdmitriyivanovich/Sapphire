@@ -70,21 +70,6 @@
             <RelativeLayout
                 android:layout_width="56dp"
                 android:layout_height="match_parent"
-                android:id="@+id/save"
-                android:background="@drawable/top_button">
-
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:id="@+id/save_icon"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/save_icon" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="56dp"
-                android:layout_height="match_parent"
                 android:id="@+id/ok"
                 android:background="@drawable/top_button">
 
@@ -95,6 +80,21 @@
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/ok_icon" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:id="@+id/save"
+                android:background="@drawable/top_button">
+
+                <ImageView
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:id="@+id/save_icon"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/save_icon" />
             </RelativeLayout>
 
         </LinearLayout>

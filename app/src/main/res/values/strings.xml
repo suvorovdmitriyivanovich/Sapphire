@@ -258,4 +258,5 @@
     <string name="supplier_error">Supplier is required</string>
     <string name="location_error">Location is required</string>
     <string name="text_meeting_template">Meeting Template</string>
+    <string name="text_view_certificate">View sertificate</string>
 </resources>
