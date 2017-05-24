@@ -35,14 +35,16 @@ public class WorkplaceInspectionAddAction extends AsyncTask{
     private boolean posted = false;
     private WorkplaceInspectionData workplaceInspectionData = new WorkplaceInspectionData();
     private ArrayList<MemberData> datasTeam;
+    private int type = 0;
 
-    public WorkplaceInspectionAddAction(Context context, String workplaceInspectionId, String name, String description, Long dateLong, boolean posted, ArrayList<MemberData> datasTeam) {
+    public WorkplaceInspectionAddAction(Context context, String workplaceInspectionId, String name, String description, Long dateLong, boolean posted, ArrayList<MemberData> datasTeam, int type) {
         this.mContext = context;
         this.workplaceInspectionId = workplaceInspectionId;
         this.name = name;
         this.description = description;
         this.posted = posted;
         this.datasTeam = datasTeam;
+        this.type = type;
 
         if (dateLong != 0l) {
             this.date = DateOperations.getDateServer(dateLong);
@@ -67,6 +69,13 @@ public class WorkplaceInspectionAddAction extends AsyncTask{
             jsonObject.put("Date", date);
             jsonObject.put("PostedOnBoard", posted);
             //jsonObject.put("OrganizationId", posted);
+            if (type == 1) {
+                jsonObject.put("Completed", false);
+                jsonObject.put("Inspected", false);
+            } else if (type == 2) {
+                jsonObject.put("Completed", true);
+                jsonObject.put("Inspected", true);
+            }
 
             JSONArray jsonArrayProfile = new JSONArray();
             for (MemberData item: datasTeam) {

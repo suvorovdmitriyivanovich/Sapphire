@@ -41,7 +41,8 @@ public class AssignTasksAction extends AsyncTask{
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("Completed", userInfo.getWorkplaceInspection().getCompleted());
+            //jsonObject.put("Completed", userInfo.getWorkplaceInspection().getCompleted());
+            jsonObject.put("Completed", true);
             jsonObject.put("Date", DateOperations.getDateServer(userInfo.getWorkplaceInspection().getDate()));
             jsonObject.put("Description", userInfo.getWorkplaceInspection().getDescription());
             jsonObject.put("Files", userInfo.getWorkplaceInspection().getFilesJson());

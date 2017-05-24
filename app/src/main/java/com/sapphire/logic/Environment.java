@@ -106,4 +106,5 @@ public class Environment {
     public static final String IcoDownload  = "61465";
     public static final String IcoAddTask  = "62065";
     public static final String IcoTask  = "61747";
+    public static final String IcoLock  = "61758";
 }

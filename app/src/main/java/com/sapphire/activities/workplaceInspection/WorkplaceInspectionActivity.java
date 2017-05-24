@@ -714,7 +714,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
 
             pressType = type;
 
-            new WorkplaceInspectionAddAction(WorkplaceInspectionActivity.this, workplaceInspectionId, name.getText().toString(), description.getText().toString(), dateNew, posted.isChecked(), datasTeam).execute();
+            new WorkplaceInspectionAddAction(WorkplaceInspectionActivity.this, workplaceInspectionId, name.getText().toString(), description.getText().toString(), dateNew, posted.isChecked(), datasTeam, 0).execute();
         }
     }
 

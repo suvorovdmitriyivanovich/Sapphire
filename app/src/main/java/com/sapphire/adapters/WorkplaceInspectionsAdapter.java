@@ -165,7 +165,11 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
         });
 
         holder.assign.setTypeface(typeFace);
-        holder.assign.setText(Html.fromHtml("&#"+Environment.IcoAssign+";"));
+        if (data.getInspected()) {
+            holder.assign.setText(Html.fromHtml("&#"+Environment.IcoLock+";"));
+        } else {
+            holder.assign.setText(Html.fromHtml("&#"+Environment.IcoAssign+";"));
+        }
         holder.assign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,6 +217,8 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
         }
 
         holder.report.setEnabled(data.getInspected());
+        holder.open.setEnabled(!data.getInspected());
+        holder.delete.setEnabled(!data.getInspected());
     }
 
     @Override

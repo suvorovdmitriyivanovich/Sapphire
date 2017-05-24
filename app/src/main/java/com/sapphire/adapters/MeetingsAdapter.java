@@ -89,7 +89,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
 
         String description = "";
         if (data.getMeetingDate() != 0l) {
-            description = description + data.getMeetingDateString();
+            description = description + data.getMeetingDateStartEndString();
         }
         if (!description.equals("")) {
             description = description + "<br>";

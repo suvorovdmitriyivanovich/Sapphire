@@ -80,6 +80,8 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
     private EditText status;
     private EditText priority;
     private boolean isCheckName = false;
+    private boolean isCheckStatus = false;
+    private View text_status_error;
     private View nointernet_group;
     private ViewGroup.LayoutParams par_nointernet_group;
     private WorkplaceInspectionItemData workplaceInspectionItemData;
@@ -94,7 +96,9 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
     private TextView text_recommended_actions;
     private Animation animationErrorDown;
     private Animation animationErrorUpName;
+    private Animation animationErrorUpStatus;
     private boolean showErrorName = false;
+    private boolean showErrorStatus = false;
     private Animation animationUp;
     private Animation animationDown;
     private boolean showName = true;
@@ -105,6 +109,7 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
     private TextView text_description_hint;
     private TextView text_comments_hint;
     private TextView text_recommended_actions_hint;
+    private TextView text_status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +163,7 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
         comments = (EditText) findViewById(R.id.comments);
         recommendedActions = (EditText) findViewById(R.id.recommendedActions);
         text_name_error = findViewById(R.id.text_name_error);
+        text_status_error = findViewById(R.id.text_status_error);
         severity = (EditText) findViewById(R.id.severity);
         spinnerStatus = (Spinner) findViewById(R.id.spinnerStatus);
         spinnerSeverity = (Spinner) findViewById(R.id.spinnerSeverity);
@@ -165,6 +171,7 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
         status = (EditText) findViewById(R.id.status);
         priority = (EditText) findViewById(R.id.priority);
         text_name = (TextView) findViewById(R.id.text_name);
+        text_status = (TextView) findViewById(R.id.text_status);
         text_description = (TextView) findViewById(R.id.text_description);
         text_comments = (TextView) findViewById(R.id.text_comments);
         text_recommended_actions = (TextView) findViewById(R.id.text_recommended_actions);
@@ -175,8 +182,10 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
 
         animationErrorDown = AnimationUtils.loadAnimation(this, R.anim.translate_down);
         animationErrorUpName = AnimationUtils.loadAnimation(this, R.anim.translate_up);
+        animationErrorUpStatus = AnimationUtils.loadAnimation(this, R.anim.translate_up);
 
         animationErrorUpName.setAnimationListener(animationErrorUpNameListener);
+        animationErrorUpStatus.setAnimationListener(animationErrorUpStatusListener);
 
         animationUp = AnimationUtils.loadAnimation(this, R.anim.translate_scale_up);
         animationDown = AnimationUtils.loadAnimation(this, R.anim.translate_scale_down);
@@ -214,6 +223,7 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
                 }
                 status.setText(statuses.get(position).getName());
                 statusId = statuses.get(position).getWorkplaceInspectionItemStatusId();
+                updateViews();
                 clickSpinner = false;
             }
 
@@ -562,6 +572,20 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
         public void onAnimationStart(Animation animation) {}
     };
 
+    Animation.AnimationListener animationErrorUpStatusListener = new Animation.AnimationListener() {
+
+        @Override
+        public void onAnimationEnd(Animation arg0) {
+            text_status_error.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {}
+
+        @Override
+        public void onAnimationStart(Animation animation) {}
+    };
+
     private void UpdateBottom() {
         text_nointernet.setText(getResources().getString(R.string.text_need_internet));
         text_setinternet.setText(getResources().getString(R.string.text_setinternet));
@@ -595,6 +619,12 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
 
         if (name.getText().toString().equals("")) {
             isCheckName = true;
+            updateViews();
+            allOk = false;
+        }
+
+        if (status.getText().toString().equals("")) {
+            isCheckStatus = true;
             updateViews();
             allOk = false;
         }
@@ -657,6 +687,26 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
             if (showErrorName) {
                 showErrorName = false;
                 text_name_error.startAnimation(animationErrorUpName);
+            }
+        }
+        if (isCheckStatus && status.getText().toString().equals("")) {
+            text_status_error.setVisibility(View.VISIBLE);
+            status.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.red), PorterDuff.Mode.SRC_ATOP);
+            text_status.setTextColor(ContextCompat.getColor(this, R.color.red));
+            status.setHintTextColor(ContextCompat.getColor(this, R.color.red));
+            status.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_dropdown_red, 0);
+            if (!showErrorStatus) {
+                showErrorStatus = true;
+                text_status_error.startAnimation(animationErrorDown);
+            }
+        } else if (!status.getText().toString().equals("")) {
+            status.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+            text_status.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            status.setHintTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            status.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_dropdown, 0);
+            if (showErrorStatus) {
+                showErrorStatus = false;
+                text_status_error.startAnimation(animationErrorUpStatus);
             }
         }
         if (!description.getText().toString().equals("")) {
@@ -780,6 +830,7 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
         text_comments.clearAnimation();
         text_recommended_actions.clearAnimation();
         text_name_error.clearAnimation();
+        text_status_error.clearAnimation();
         text_name_hint.clearAnimation();
         text_description_hint.clearAnimation();
         text_comments_hint.clearAnimation();
@@ -790,6 +841,7 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
     public void onDestroy() {
         super.onDestroy();
         name.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
+        status.getBackground().mutate().setColorFilter(ContextCompat.getColor(this, R.color.grey_dark), PorterDuff.Mode.SRC_ATOP);
         unregisterReceiver(br);
     }
 }

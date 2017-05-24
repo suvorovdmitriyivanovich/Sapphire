@@ -259,4 +259,8 @@
     <string name="location_error">Location is required</string>
     <string name="text_meeting_template">Meeting Template</string>
     <string name="text_view_certificate">View sertificate</string>
+    <string name="status_error">Status is required</string>
+    <string name="text_ok">Ok</string>
+    <string name="text_please_assign">Please assign status to all Workplace Inspection Items</string>
+    <string name="text_attendees">Attendees</string>
 </resources>

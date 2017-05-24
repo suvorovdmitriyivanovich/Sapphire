@@ -28,6 +28,7 @@ import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
 import com.sapphire.activities.policy.PdfActivity;
 import com.sapphire.adapters.WorkplaceInspectionsAdapter;
+import com.sapphire.api.GetWorkplaceInspectionAction;
 import com.sapphire.api.ItemPrioritiesAction;
 import com.sapphire.api.ItemStatusesAction;
 import com.sapphire.api.MembersAction;
@@ -35,8 +36,10 @@ import com.sapphire.api.PunchesAddAction;
 import com.sapphire.api.TaskManagementParametersAction;
 import com.sapphire.api.TemplatesAction;
 import com.sapphire.api.UpdateAction;
+import com.sapphire.api.WorkplaceInspectionAddAction;
 import com.sapphire.api.WorkplaceInspectionDeleteAction;
 import com.sapphire.api.WorkplaceInspectionsAction;
+import com.sapphire.db.DBHelper;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.ItemPriorityData;
@@ -48,6 +51,8 @@ import com.sapphire.models.ProfileData;
 import com.sapphire.models.TemplateData;
 import com.sapphire.logic.UserInfo;
 import com.sapphire.models.WorkplaceInspectionData;
+import com.sapphire.models.WorkplaceInspectionItemData;
+
 import java.util.ArrayList;
 
 public class WorkplaceInspectionsActivity extends BaseActivity implements WorkplaceInspectionsAdapter.OnRootWorkplaceInspectionsClickListener,
@@ -66,6 +71,9 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
                                                                           ItemStatusesAction.RequestItemStatuses,
                                                                           ItemStatusesAction.RequestItemStatusesData,
                                                                           TaskManagementParametersAction.RequestTaskManagementParameters,
+                                                                          GetWorkplaceInspectionAction.RequestWorkplaceInspection,
+                                                                          WorkplaceInspectionAddAction.RequestWorkplaceInspectionAdd,
+                                                                          WorkplaceInspectionAddAction.RequestWorkplaceInspectionAddData,
                                                                           MembersAction.RequestMembers,
                                                                           UpdateAction.RequestUpdate,
                                                                           PunchesAddAction.RequestPunchesAdd{
@@ -76,6 +84,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
     private ProgressDialog pd;
     private RecyclerView workplaceinspectionslist;
     private Dialog dialog_confirm;
+    private Dialog dialog_info;
     private TextView tittle_message;
     private Button button_cancel_save;
     private Button button_send_save;
@@ -127,6 +136,27 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
                 pd.show();
 
                 new WorkplaceInspectionDeleteAction(WorkplaceInspectionsActivity.this, workplaceInspectionDatas.get(currentPosition).getWorkplaceInspectionId()).execute();
+            }
+        });
+
+        AlertDialog.Builder adb_info = new AlertDialog.Builder(this);
+        adb_info.setCancelable(true);
+        LinearLayout view_info = (LinearLayout) getLayoutInflater()
+                .inflate(R.layout.dialog_save, null);
+        adb_info.setView(view_info);
+        TextView tittle_info = (TextView) view_info.findViewById(R.id.tittle);
+        Button button_cancel_info = (Button) view_info.findViewById(R.id.button_cancel);
+        Button button_send_info = (Button) view_info.findViewById(R.id.button_send);
+        dialog_info = adb_info.create();
+
+        button_cancel_info.setVisibility(View.GONE);
+        button_send_info.setText(getResources().getString(R.string.text_ok));
+        tittle_info.setText(getResources().getString(R.string.text_please_assign));
+
+        button_send_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog_info.dismiss();
             }
         });
 
@@ -316,6 +346,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         intent.putExtra("id", workplaceInspectionData.getWorkplaceInspectionId());
         intent.putExtra("url", Environment.WorkplaceInspectionsFilesURL);
         intent.putExtra("nameField", "WorkplaceInspectionId");
+        intent.putExtra("readonly", workplaceInspectionData.getInspected());
 
         UserInfo.getUserInfo().setFileDatas(workplaceInspectionData.getFiles());
         startActivity(intent);
@@ -323,17 +354,14 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
 
     @Override
     public void onAssignWorkplaceInspectionsClick(int position) {
-        Intent intent = new Intent(WorkplaceInspectionsActivity.this, AssignActivity.class);
-        WorkplaceInspectionData workplaceInspectionData = workplaceInspectionDatas.get(position);
-        intent.putExtra("name", workplaceInspectionData.getName());
-        intent.putExtra("description", workplaceInspectionData.getDescription());
-        intent.putExtra("date", workplaceInspectionData.getDate());
-        intent.putExtra("workplaceInspectionId", workplaceInspectionData.getWorkplaceInspectionId());
-        intent.putExtra("inspected", workplaceInspectionData.getInspected());
-
-        UserInfo.getUserInfo().setWorkplaceInspection(workplaceInspectionData);
-
-        startActivity(intent);
+        pd.show();
+        if (workplaceInspectionDatas.get(position).getInspected()) {
+            WorkplaceInspectionData workplaceInspectionData = workplaceInspectionDatas.get(position);
+            new WorkplaceInspectionAddAction(WorkplaceInspectionsActivity.this, workplaceInspectionData.getWorkplaceInspectionId(), workplaceInspectionData.getName(), workplaceInspectionData.getDescription(), workplaceInspectionData.getDate(), workplaceInspectionData.getPostedOnBoard(), workplaceInspectionData.getProfiles(), 1).execute();
+        } else {
+            currentPosition = position;
+            new GetWorkplaceInspectionAction(WorkplaceInspectionsActivity.this, workplaceInspectionDatas.get(position).getWorkplaceInspectionId()).execute();
+        }
     }
 
     @Override
@@ -346,6 +374,118 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         intent.putExtra("fileId", data.getWorkplaceInspectionId());
         intent.putExtra("url", Environment.WorkplaceInspectionsReportURL);
         startActivity(intent);
+    }
+
+    @Override
+    public void onRequestWorkplaceInspectionAdd(String result) {
+        pd.hide();
+
+        Toast.makeText(getBaseContext(), result,
+                Toast.LENGTH_LONG).show();
+        if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+            //Intent intent = new Intent(this, LoginActivity.class);
+            //startActivity(intent);
+            Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+            try {
+                intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                Sapphire.getInstance().sendBroadcast(intExit);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            finish();
+        }
+    }
+
+    @Override
+    public void onRequestWorkplaceInspectionAddData(WorkplaceInspectionData workplaceInspectionData) {
+        new WorkplaceInspectionsAction(WorkplaceInspectionsActivity.this, false).execute();
+    }
+
+    @Override
+    public void onRequestWorkplaceInspection(String result, ArrayList<WorkplaceInspectionItemData> workplaceInspectionItemDatas) {
+        if (!result.equals("OK") && !result.equals(getResources().getString(R.string.text_need_internet))) {
+            currentPosition = -1;
+            pd.hide();
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+            }
+            return;
+        }
+
+        ArrayList<WorkplaceInspectionItemData> allDatas = new ArrayList<WorkplaceInspectionItemData>();
+        ArrayList<WorkplaceInspectionItemData> datas = DBHelper.getInstance(Sapphire.getInstance()).getWorkplaceInspectionItems(workplaceInspectionDatas.get(currentPosition).getWorkplaceInspectionId());
+
+        boolean isExist = false;
+        for (WorkplaceInspectionItemData item: workplaceInspectionItemDatas) {
+            isExist = false;
+            for (WorkplaceInspectionItemData item2: datas) {
+                if (item.getWorkplaceInspectionItemId().equals(item2.getWorkplaceInspectionItemId())) {
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                allDatas.add(item);
+            }
+        }
+        for (WorkplaceInspectionItemData item: datas) {
+            allDatas.add(item);
+        }
+
+        boolean existFullStatus = false;
+        for (WorkplaceInspectionItemData item: allDatas) {
+            if (item.getStatus().getWorkplaceInspectionItemStatusId().equals("")) {
+                existFullStatus = true;
+                break;
+            }
+        }
+
+        boolean allPassStatus = true;
+        for (WorkplaceInspectionItemData item: allDatas) {
+            if (!item.getStatus().getName().equals("Pass")) {
+                allPassStatus = false;
+                break;
+            }
+        }
+
+        if (existFullStatus) {
+            currentPosition = -1;
+            pd.hide();
+
+            dialog_info.show();
+        } else if (allPassStatus) {
+            WorkplaceInspectionData workplaceInspectionData = workplaceInspectionDatas.get(currentPosition);
+            new WorkplaceInspectionAddAction(WorkplaceInspectionsActivity.this, workplaceInspectionData.getWorkplaceInspectionId(), workplaceInspectionData.getName(), workplaceInspectionData.getDescription(), workplaceInspectionData.getDate(), workplaceInspectionData.getPostedOnBoard(), workplaceInspectionData.getProfiles(), 2).execute();
+
+            currentPosition = -1;
+        } else {
+            pd.hide();
+
+            Intent intent = new Intent(WorkplaceInspectionsActivity.this, AssignActivity.class);
+            WorkplaceInspectionData workplaceInspectionData = workplaceInspectionDatas.get(currentPosition);
+            intent.putExtra("name", workplaceInspectionData.getName());
+            intent.putExtra("description", workplaceInspectionData.getDescription());
+            intent.putExtra("date", workplaceInspectionData.getDate());
+            intent.putExtra("workplaceInspectionId", workplaceInspectionData.getWorkplaceInspectionId());
+            intent.putExtra("inspected", workplaceInspectionData.getInspected());
+
+            UserInfo.getUserInfo().setWorkplaceInspection(workplaceInspectionData);
+
+            startActivity(intent);
+
+            currentPosition = -1;
+        }
     }
 
     @Override

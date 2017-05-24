@@ -126,6 +126,23 @@ public class MeetingData {
         return dateString;
     }
 
+    public String getMeetingDateStartEndString() {
+        String dateString = "";
+        if (meetingDate != 0l) {
+            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy hh:mm aa");
+            Date thisdaten = new Date();
+            thisdaten.setTime(meetingDate);
+            dateString = format.format(thisdaten);
+        }
+        if (endTime != 0l) {
+            SimpleDateFormat format = new SimpleDateFormat("hh:mm aa");
+            Date thisdaten = new Date();
+            thisdaten.setTime(endTime);
+            dateString = dateString + " - " + format.format(thisdaten);
+        }
+        return dateString;
+    }
+
     public String getMeetingDateServer() {
         return DateOperations.getDateServer(meetingDate);
     }
