@@ -93,6 +93,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
                                                           MeetingsAdapter.OnRootMeetingsClickListener,
                                                           MeetingsAdapter.OnOpenMeetingsClickListener,
                                                           MeetingsAdapter.OnDeleteMeetingsClickListener,
+                                                          MeetingsAdapter.OnReportMeetingsClickListener,
                                                           MeetingsAction.RequestMeetings,
                                                           MeetingDeleteAction.RequestMeetingDelete,
                                                           MembersAction.RequestMembers,
@@ -502,6 +503,23 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
     }
 
     @Override
+    public void onReportMeetingsClick(int position) {
+        Intent intent = new Intent(MainActivity.this, PdfActivity.class);
+        MeetingData data = meetingDatas.get(position);
+        intent.putExtra("name", data.getName());
+        intent.putExtra("acknowledged", true);
+        intent.putExtra("id", data.getMeetingId());
+        if (!data.getCustomReportId().equals("")) {
+            intent.putExtra("fileId", data.getCustomReportId());
+        } else {
+            intent.putExtra("fileId", data.getMeetingId());
+            intent.putExtra("url", Environment.MeetingsReportURL);
+        }
+        intent.putExtra("nolog", true);
+        startActivity(intent);
+    }
+
+    @Override
     public void onRequestMeetings(String result, ArrayList<MeetingData> datas) {
         if (!result.equals("OK")) {
             updateVisibility();
@@ -746,6 +764,7 @@ public class MainActivity extends BaseActivity implements CoursesAdapter.OnGroup
         intent.putExtra("id", data.getWorkplaceInspectionId());
         intent.putExtra("fileId", data.getWorkplaceInspectionId());
         intent.putExtra("url", Environment.WorkplaceInspectionsReportURL);
+        intent.putExtra("nolog", true);
         startActivity(intent);
     }
 

@@ -42,7 +42,7 @@ public class GetFileAction extends AsyncTask{
         }
 
         String urlstring = Environment.SERVER;
-        if (url.equals("")) {
+        if (url == null || url.equals("")) {
             urlstring = urlstring + Environment.DocumentManagementFilesDownloadURL;
         } else {
             urlstring = urlstring + url;

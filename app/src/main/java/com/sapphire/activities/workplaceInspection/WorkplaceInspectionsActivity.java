@@ -373,6 +373,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         intent.putExtra("id", data.getWorkplaceInspectionId());
         intent.putExtra("fileId", data.getWorkplaceInspectionId());
         intent.putExtra("url", Environment.WorkplaceInspectionsReportURL);
+        intent.putExtra("nolog", true);
         startActivity(intent);
     }
 

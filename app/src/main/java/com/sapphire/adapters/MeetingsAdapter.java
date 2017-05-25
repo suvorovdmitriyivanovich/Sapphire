@@ -2,6 +2,7 @@ package com.sapphire.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -155,6 +156,20 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
         });
 
         holder.report.setEnabled(data.getCompleted());
+
+        if (!data.getCustomReportId().equals("")) {
+            if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                holder.report.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.button_selector_dark));
+            } else {
+                holder.report.setBackground(ContextCompat.getDrawable(mContext, R.drawable.button_selector_dark));
+            }
+        } else {
+            if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                holder.report.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.button_selector));
+            } else {
+                holder.report.setBackground(ContextCompat.getDrawable(mContext, R.drawable.button_selector));
+            }
+        }
 
         if (!edit) {
             holder.open.setVisibility(View.GONE);

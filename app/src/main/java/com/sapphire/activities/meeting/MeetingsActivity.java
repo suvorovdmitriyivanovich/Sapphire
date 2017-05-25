@@ -279,8 +279,13 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
         intent.putExtra("name", data.getName());
         intent.putExtra("acknowledged", true);
         intent.putExtra("id", data.getMeetingId());
-        intent.putExtra("fileId", data.getMeetingId());
-        intent.putExtra("url", Environment.MeetingsReportURL);
+        if (!data.getCustomReportId().equals("")) {
+            intent.putExtra("fileId", data.getCustomReportId());
+        } else {
+            intent.putExtra("fileId", data.getMeetingId());
+            intent.putExtra("url", Environment.MeetingsReportURL);
+        }
+        intent.putExtra("nolog", true);
         startActivity(intent);
     }
 

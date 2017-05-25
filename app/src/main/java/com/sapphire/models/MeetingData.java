@@ -24,6 +24,7 @@ public class MeetingData {
     private ArrayList<MemberData> members = new ArrayList<MemberData>();
     private ArrayList<TopicData> topics = new ArrayList<TopicData>();
     private ArrayList<FileData> files = new ArrayList<FileData>();
+    private String customReportId = "";
 
     public MeetingData() {
 
@@ -73,6 +74,9 @@ public class MeetingData {
             }
             if (!data.isNull("Files")) {
                 setFiles(data.getJSONArray("Files"));
+            }
+            if (!data.isNull("CustomReportId")) {
+                setCustomReportId(data.getString("CustomReportId"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -268,5 +272,13 @@ public class MeetingData {
             }
         }
         this.files = fileDatas;
+    }
+
+    public String getCustomReportId() {
+        return customReportId;
+    }
+
+    public void setCustomReportId(String customReportId) {
+        this.customReportId = customReportId;
     }
 }

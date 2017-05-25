@@ -47,6 +47,7 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
     private ViewGroup.LayoutParams par_nointernet_group;
     private boolean successOpen = false;
     private String url;
+    private boolean nolog = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +104,7 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
         id = intent.getStringExtra("id");
         acknowledged = intent.getBooleanExtra("acknowledged", false);
         url = intent.getStringExtra("url");
+        nolog = intent.getBooleanExtra("nolog", false);
 
         if (acknowledged) {
             View bottom_group = findViewById(R.id.bottom_group);
@@ -338,9 +340,13 @@ public class PdfActivity extends BaseActivity implements PolicyLogAction.Request
     }
 
     private void back() {
-        pd.show();
-        needClose = true;
-        new PolicyLogAction(PdfActivity.this, id, Environment.PolicyStatusStarted).execute();
+        if (nolog) {
+            finish();
+        } else {
+            pd.show();
+            needClose = true;
+            new PolicyLogAction(PdfActivity.this, id, Environment.PolicyStatusStarted).execute();
+        }
     }
 
     @Override

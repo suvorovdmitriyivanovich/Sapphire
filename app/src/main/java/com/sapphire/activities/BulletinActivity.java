@@ -6,8 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -32,6 +36,7 @@ public class BulletinActivity extends BaseActivity implements BulletinsAdapter.O
     private BulletinsAdapter adapter;
     private RecyclerView list;
     private View text_no;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +44,21 @@ public class BulletinActivity extends BaseActivity implements BulletinsAdapter.O
 
         setContentView(R.layout.activity_bulletin);
 
-        View close = findViewById(R.id.close);
-        close.setOnClickListener(new View.OnClickListener() {
+        View menu = findViewById(R.id.menu);
+        menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+                drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
+
+        View exit = findViewById(R.id.delete);
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+                drawerLayout.openDrawer(Gravity.RIGHT);
             }
         });
 
@@ -69,8 +84,23 @@ public class BulletinActivity extends BaseActivity implements BulletinsAdapter.O
             public void onReceive(Context context, Intent intent) {
                 final String putreqwest = intent.getStringExtra(Environment.PARAM_TASK);
 
-                if (putreqwest.equals("updatebottom")) {
+                if (putreqwest.equals("updateleftmenu")) {
+                    try {
+                        Fragment fragment = new MenuFragment();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
+                    } catch (Exception e) {}
+                } else if (putreqwest.equals("updaterightmenu")) {
+                    try {
+                        Fragment fragmentRight = new RightFragment(pd);
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
+                    } catch (Exception e) {}
+                } else if (putreqwest.equals("updatebottom")) {
                     UpdateBottom();
+                } else if (putreqwest.equals("update")) {
+                    pd.show();
+                    new BulletinsAction(BulletinActivity.this).execute();
                 }
             }
         };
@@ -89,6 +119,8 @@ public class BulletinActivity extends BaseActivity implements BulletinsAdapter.O
                 new UpdateAction(BulletinActivity.this);
             }
         });
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
         UpdateBottom();
     }
@@ -182,6 +214,15 @@ public class BulletinActivity extends BaseActivity implements BulletinsAdapter.O
     @Override
     protected void onResume() {
         super.onResume();
+
+        try {
+            Fragment fragment = new MenuFragment();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.nav_left, fragment).commit();
+
+            Fragment fragmentRight = new RightFragment(pd);
+            fragmentManager.beginTransaction().replace(R.id.nav_right, fragmentRight).commit();
+        } catch (Exception e) {}
 
         pd.show();
         new BulletinsAction(BulletinActivity.this).execute();
