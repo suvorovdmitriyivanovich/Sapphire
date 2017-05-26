@@ -68,7 +68,7 @@ public class WorkplaceInspectionData {
             if (!data.isNull("Inspected")) {
                 setInspected(data.getBoolean("Inspected"));
             }
-            setProfiles(UserInfo.getUserInfo().getAllMembers());
+            setProfiles(UserInfo.getUserInfo().getCurrentOrganizationStructures());
             if (!data.isNull("Profiles")) {
                 setProfiles(data.getJSONArray("Profiles"));
             }
@@ -216,8 +216,14 @@ public class WorkplaceInspectionData {
         }
     }
 
-    public void setProfiles(ArrayList<MemberData> profiles) {
-        this.profiles = profiles;
+    public void setProfiles(ArrayList<ProfileData> profiles) {
+        this.profiles.clear();
+        for (ProfileData item: profiles) {
+            MemberData memberData = new MemberData();
+            memberData.setProfile(item);
+
+            this.profiles.add(memberData);
+        }
     }
 
     /*

@@ -594,6 +594,10 @@ public class DocumentActivity extends BaseActivity implements DocumentAddAction.
     }
 
     private void exit() {
+        if (readonly) {
+            finish();
+            return;
+        }
         if (!nameOld.equals(name.getText().toString())
                 || !dateOld.equals(dateNew)
                 || !categoryIdOld.equals(categoryId)) {

@@ -643,6 +643,10 @@ public class SafetyActivity extends BaseActivity implements SafetyAddAction.Requ
     }
 
     private void exit() {
+        if (readonly) {
+            finish();
+            return;
+        }
         if (!nameOld.equals(name.getText().toString())
                 || !supplierOld.equals(supplier.getText().toString())
                 || !notesOld.equals(notes.getText().toString())

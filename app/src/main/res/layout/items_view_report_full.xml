@@ -38,7 +38,7 @@
             android:layout_marginRight="10dp" />
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -46,22 +46,32 @@
             android:layout_alignParentEnd="true"
             android:id="@+id/button_group">
 
-            <Button
-                android:layout_width="45dp"
-                android:layout_height="40dp"
-                android:id="@+id/open"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:background="@drawable/button_selector_dark"
-                android:textColor="@color/white" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_top">
 
-            <Button
-                android:layout_width="45dp"
-                android:layout_height="40dp"
-                android:id="@+id/delete"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:background="@drawable/button_selector_red"
-                android:textColor="@color/white"
-                android:layout_marginLeft="10dp" />
+                <Button
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/open"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:background="@drawable/button_selector_dark"
+                    android:textColor="@color/white"
+                    android:layout_marginBottom="10dp" />
+
+                <Button
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/delete"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:background="@drawable/button_selector_red"
+                    android:textColor="@color/white"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="10dp" />
+
+            </LinearLayout>
 
             <Button
                 android:layout_width="45dp"
@@ -70,7 +80,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:background="@drawable/button_selector"
                 android:textColor="@color/white"
-                android:layout_marginLeft="10dp" />
+                android:layout_gravity="right" />
 
         </LinearLayout>
 

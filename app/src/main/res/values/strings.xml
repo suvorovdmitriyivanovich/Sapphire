@@ -263,4 +263,9 @@
     <string name="text_ok">Ok</string>
     <string name="text_please_assign">Please assign status to all Workplace Inspection Items</string>
     <string name="text_attendees">Attendees</string>
+    <string name="text_edit_contact">Edit Contact Information</string>
+    <string name="text_not_valid_email">Not a valid email</string>
+    <string name="text_notification_primary">Allow Notifications to Primary Email</string>
+    <string name="text_notification_secondary">Allow Notifications to Secondary Email</string>
+    <string name="text_emails_equals">Must be different from Primary Email</string>
 </resources>

@@ -109,7 +109,8 @@
                     android:id="@+id/photo_group"
                     android:paddingTop="15dp"
                     android:paddingBottom="15dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <com.sapphire.ui.CircleImageView
                         android:layout_width="150dp"
@@ -180,24 +181,53 @@
                     android:padding="10dp"
                     android:layout_marginBottom="10dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/text_contact"
-                        android:id="@+id/text_contact"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:id="@+id/contact_edit">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="@string/text_contact"
+                            android:id="@+id/text_contact"
+                            android:layout_centerVertical="true"
+                            android:singleLine="true"
+                            android:layout_toLeftOf="@+id/contactedit"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginRight="5dp" />
+
+                        <RelativeLayout
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:id="@+id/contactedit"
+                            android:background="@drawable/dialog_button_transparent"
+                            android:gravity="center"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:id="@+id/contactedit_icon"
+                                android:src="@drawable/change_ico"
+                                android:layout_centerVertical="true"
+                                android:layout_centerHorizontal="true" />
+                        </RelativeLayout>
+
+                    </RelativeLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:id="@+id/contact"
-                        android:layout_below="@+id/text_contact"
-                        android:layout_alignLeft="@+id/text_contact"
-                        android:layout_alignStart="@+id/text_contact"
+                        android:layout_below="@+id/contact_edit"
+                        android:layout_alignLeft="@+id/contact_edit"
+                        android:layout_alignStart="@+id/contact_edit"
                         android:layout_marginTop="10dp" />
                 </RelativeLayout>
 
@@ -211,24 +241,52 @@
                     android:padding="10dp"
                     android:layout_marginBottom="10dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/text_additional"
-                        android:id="@+id/text_additional"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:id="@+id/additional_edit">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="@string/text_additional"
+                            android:id="@+id/text_additional"
+                            android:layout_centerVertical="true"
+                            android:singleLine="true"
+                            android:layout_toLeftOf="@+id/additionaledit"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginRight="5dp" />
+
+                        <RelativeLayout
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:id="@+id/additionaledit"
+                            android:background="@drawable/dialog_button_transparent"
+                            android:gravity="center"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:id="@+id/additionaledit_icon"
+                                android:src="@drawable/change_ico"
+                                android:layout_centerVertical="true"
+                                android:layout_centerHorizontal="true" />
+                        </RelativeLayout>
+                    </RelativeLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:id="@+id/additional"
-                        android:layout_below="@+id/text_additional"
-                        android:layout_alignLeft="@+id/text_additional"
-                        android:layout_alignStart="@+id/text_additional"
+                        android:layout_below="@+id/additional_edit"
+                        android:layout_alignLeft="@+id/additional_edit"
+                        android:layout_alignStart="@+id/additional_edit"
                         android:layout_marginTop="10dp" />
                 </RelativeLayout>
 
@@ -242,24 +300,52 @@
                     android:padding="10dp"
                     android:layout_marginBottom="10dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/text_primary_residence"
-                        android:id="@+id/text_primary"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:id="@+id/primary_residence_edit">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="@string/text_primary_residence"
+                            android:id="@+id/text_primary"
+                            android:layout_centerVertical="true"
+                            android:singleLine="true"
+                            android:layout_toLeftOf="@+id/primary_residenceedit"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginRight="5dp" />
+
+                        <RelativeLayout
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:id="@+id/primary_residenceedit"
+                            android:background="@drawable/dialog_button_transparent"
+                            android:gravity="center"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:id="@+id/primary_residence_icon"
+                                android:src="@drawable/change_ico"
+                                android:layout_centerVertical="true"
+                                android:layout_centerHorizontal="true" />
+                        </RelativeLayout>
+                    </RelativeLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:id="@+id/primary"
-                        android:layout_below="@+id/text_primary"
-                        android:layout_alignLeft="@+id/text_primary"
-                        android:layout_alignStart="@+id/text_primary"
+                        android:layout_below="@+id/primary_residence_edit"
+                        android:layout_alignLeft="@+id/primary_residence_edit"
+                        android:layout_alignStart="@+id/primary_residence_edit"
                         android:layout_marginTop="10dp" />
                 </RelativeLayout>
 
@@ -292,24 +378,52 @@
                     android:padding="10dp"
                     android:layout_marginBottom="10dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/text_employee"
-                        android:id="@+id/text_employee"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:id="@+id/employee_edit">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="@string/text_employee"
+                            android:id="@+id/text_employee"
+                            android:layout_centerVertical="true"
+                            android:singleLine="true"
+                            android:layout_toLeftOf="@+id/employeeedit"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginRight="5dp" />
+
+                        <RelativeLayout
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:id="@+id/employeeedit"
+                            android:background="@drawable/dialog_button_transparent"
+                            android:gravity="center"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:id="@+id/employeeedit_icon"
+                                android:src="@drawable/change_ico"
+                                android:layout_centerVertical="true"
+                                android:layout_centerHorizontal="true" />
+                        </RelativeLayout>
+                    </RelativeLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:id="@+id/employee"
-                        android:layout_below="@+id/text_employee"
-                        android:layout_alignLeft="@+id/text_employee"
-                        android:layout_alignStart="@+id/text_employee"
+                        android:layout_below="@+id/employee_edit"
+                        android:layout_alignLeft="@+id/employee_edit"
+                        android:layout_alignStart="@+id/employee_edit"
                         android:layout_marginTop="10dp" />
                 </RelativeLayout>
 
@@ -323,24 +437,52 @@
                     android:padding="10dp"
                     android:layout_marginBottom="10dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/text_payroll"
-                        android:id="@+id/text_payroll"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:id="@+id/payroll_edit">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="@string/text_payroll"
+                            android:id="@+id/text_payroll"
+                            android:layout_centerVertical="true"
+                            android:singleLine="true"
+                            android:layout_toLeftOf="@+id/payrolledit"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginRight="5dp" />
+
+                        <RelativeLayout
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:id="@+id/payrolledit"
+                            android:background="@drawable/dialog_button_transparent"
+                            android:gravity="center"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:id="@+id/payrolledit_icon"
+                                android:src="@drawable/change_ico"
+                                android:layout_centerVertical="true"
+                                android:layout_centerHorizontal="true" />
+                        </RelativeLayout>
+                    </RelativeLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:id="@+id/payroll"
-                        android:layout_below="@+id/text_payroll"
-                        android:layout_alignLeft="@+id/text_payroll"
-                        android:layout_alignStart="@+id/text_payroll"
+                        android:layout_below="@+id/payroll_edit"
+                        android:layout_alignLeft="@+id/payroll_edit"
+                        android:layout_alignStart="@+id/payroll_edit"
                         android:layout_marginTop="10dp" />
                 </RelativeLayout>
 
@@ -354,24 +496,52 @@
                     android:padding="10dp"
                     android:layout_marginBottom="10dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/text_additional"
-                        android:id="@+id/text_work_additional"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:id="@+id/additional_work_edit">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="@string/text_additional"
+                            android:id="@+id/text_work_additional"
+                            android:layout_centerVertical="true"
+                            android:singleLine="true"
+                            android:layout_toLeftOf="@+id/dditional_workedit"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginRight="5dp" />
+
+                        <RelativeLayout
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:id="@+id/dditional_workedit"
+                            android:background="@drawable/dialog_button_transparent"
+                            android:gravity="center"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:id="@+id/dditional_work_icon"
+                                android:src="@drawable/change_ico"
+                                android:layout_centerVertical="true"
+                                android:layout_centerHorizontal="true" />
+                        </RelativeLayout>
+                    </RelativeLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:id="@+id/work_additional"
-                        android:layout_below="@+id/text_work_additional"
-                        android:layout_alignLeft="@+id/text_work_additional"
-                        android:layout_alignStart="@+id/text_work_additional"
+                        android:layout_below="@+id/additional_work_edit"
+                        android:layout_alignLeft="@+id/additional_work_edit"
+                        android:layout_alignStart="@+id/additional_work_edit"
                         android:layout_marginTop="10dp" />
                 </RelativeLayout>
 
@@ -385,24 +555,52 @@
                     android:padding="10dp"
                     android:layout_marginBottom="10dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/text_custom"
-                        android:id="@+id/text_custom"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:id="@+id/custom_edit">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="@string/text_custom"
+                            android:id="@+id/text_custom"
+                            android:layout_centerVertical="true"
+                            android:singleLine="true"
+                            android:layout_toLeftOf="@+id/customedit"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginRight="5dp" />
+
+                        <RelativeLayout
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:id="@+id/customedit"
+                            android:background="@drawable/dialog_button_transparent"
+                            android:gravity="center"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:id="@+id/custom_icon"
+                                android:src="@drawable/change_ico"
+                                android:layout_centerVertical="true"
+                                android:layout_centerHorizontal="true" />
+                        </RelativeLayout>
+                    </RelativeLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:id="@+id/custom"
-                        android:layout_below="@+id/text_custom"
-                        android:layout_alignLeft="@+id/text_custom"
-                        android:layout_alignStart="@+id/text_custom"
+                        android:layout_below="@+id/custom_edit"
+                        android:layout_alignLeft="@+id/custom_edit"
+                        android:layout_alignStart="@+id/custom_edit"
                         android:layout_marginTop="10dp" />
                 </RelativeLayout>
 
@@ -416,15 +614,43 @@
                     android:padding="10dp"
                     android:layout_marginBottom="10dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/text_member"
-                        android:id="@+id/text_member"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:id="@+id/member_edit">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="@string/text_member"
+                            android:id="@+id/text_member"
+                            android:layout_centerVertical="true"
+                            android:singleLine="true"
+                            android:layout_toLeftOf="@+id/memberedit"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginRight="5dp" />
+
+                        <RelativeLayout
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:id="@+id/memberedit"
+                            android:background="@drawable/dialog_button_transparent"
+                            android:gravity="center"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:id="@+id/member_icon"
+                                android:src="@drawable/change_ico"
+                                android:layout_centerVertical="true"
+                                android:layout_centerHorizontal="true" />
+                        </RelativeLayout>
+                    </RelativeLayout>
 
                     <CheckBox
                         android:layout_width="wrap_content"
@@ -432,9 +658,9 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="@string/text_member"
                         android:id="@+id/member"
-                        android:layout_below="@+id/text_member"
-                        android:layout_alignLeft="@+id/text_member"
-                        android:layout_alignStart="@+id/text_member"
+                        android:layout_below="@+id/member_edit"
+                        android:layout_alignLeft="@+id/member_edit"
+                        android:layout_alignStart="@+id/member_edit"
                         android:layout_marginTop="10dp"
                         android:clickable="false" />
 

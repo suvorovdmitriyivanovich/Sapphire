@@ -55,6 +55,8 @@ public class ProfileData {
     private Long uniformRenewalDate = 0l;
     private Double uniformAllowanceAmount = 0d;
     private boolean isEmployee = false;
+    private boolean primaryEmailAllowNotification = false;
+    private boolean secondaryEmailAllowNotification = false;
 
     public ProfileData() {
 
@@ -212,6 +214,12 @@ public class ProfileData {
             }
             if (!data.isNull("IsEmployee")) {
                 setIsEmployee(data.getBoolean("IsEmployee"));
+            }
+            if (!data.isNull("PrimaryEmailAllowNotification")) {
+                setPrimaryEmailAllowNotification(data.getBoolean("PrimaryEmailAllowNotification"));
+            }
+            if (!data.isNull("SecondaryEmailAllowNotification")) {
+                setSecondaryEmailAllowNotification(data.getBoolean("SecondaryEmailAllowNotification"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -714,5 +722,21 @@ public class ProfileData {
 
     public void setIsEmployee(boolean isEmployee) {
         this.isEmployee = isEmployee;
+    }
+
+    public boolean getPrimaryEmailAllowNotification() {
+        return primaryEmailAllowNotification;
+    }
+
+    public void setPrimaryEmailAllowNotification(boolean primaryEmailAllowNotification) {
+        this.primaryEmailAllowNotification = primaryEmailAllowNotification;
+    }
+
+    public boolean getSecondaryEmailAllowNotification() {
+        return secondaryEmailAllowNotification;
+    }
+
+    public void setSecondaryEmailAllowNotification(boolean secondaryEmailAllowNotification) {
+        this.secondaryEmailAllowNotification = secondaryEmailAllowNotification;
     }
 }

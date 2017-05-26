@@ -76,7 +76,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
 
-        <activity android:name=".activities.ProfileActivity"
+        <activity android:name=".activities.hrdetails.ProfileActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+
+        <activity android:name=".activities.hrdetails.EditContactActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
 

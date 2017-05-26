@@ -561,6 +561,10 @@ public class DisciplineActivity extends BaseActivity implements DisciplineAddAct
     }
 
     private void exit() {
+        if (readonly) {
+            finish();
+            return;
+        }
         if (!nameOld.equals(name.getText().toString())
                 || !notesOld.equals(notes.getText().toString())
                 || !datePostedOld.equals(datePostedNew)) {

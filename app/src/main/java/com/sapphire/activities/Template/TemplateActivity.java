@@ -432,6 +432,10 @@ public class TemplateActivity extends BaseActivity implements GetTemplateAction.
     }
 
     private void exit() {
+        if (readonly) {
+            finish();
+            return;
+        }
         if (!nameOld.equals(name.getText().toString())
                 || !descriptionOld.equals(description.getText().toString())) {
             tittle_message.setText(getResources().getString(R.string.text_save_change));

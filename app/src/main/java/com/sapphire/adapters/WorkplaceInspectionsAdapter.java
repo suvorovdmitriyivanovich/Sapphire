@@ -82,7 +82,12 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view_workplace, parent, false);
+        View view = null;
+        if (isDashboard) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view_report_full, parent, false);
+        } else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view_workplace, parent, false);
+        }
         return new WorkplaceInspectionsAdapter.ViewHolder(view);
     }
 
@@ -131,53 +136,55 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
         holder.text_date.setTypeface(typeFace);
         holder.text_date.setText(Html.fromHtml(description));
 
-        holder.open.setTypeface(typeFace);
-        holder.open.setText(Html.fromHtml("&#"+Environment.IcoEdit+";"));
-        holder.open.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mContext instanceof OnOpenWorkplaceInspectionsClickListener) {
-                    ((OnOpenWorkplaceInspectionsClickListener) mContext).onOpenWorkplaceInspectionsClick(holder.getAdapterPosition());
+        if (!isDashboard) {
+            holder.open.setTypeface(typeFace);
+            holder.open.setText(Html.fromHtml("&#" + Environment.IcoEdit + ";"));
+            holder.open.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mContext instanceof OnOpenWorkplaceInspectionsClickListener) {
+                        ((OnOpenWorkplaceInspectionsClickListener) mContext).onOpenWorkplaceInspectionsClick(holder.getAdapterPosition());
+                    }
                 }
-            }
-        });
+            });
 
-        holder.delete.setTypeface(typeFace);
-        holder.delete.setText(Html.fromHtml("&#"+Environment.IcoDelete+";"));
-        holder.delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mContext instanceof OnDeleteWorkplaceInspectionsClickListener) {
-                    ((OnDeleteWorkplaceInspectionsClickListener) mContext).onDeleteWorkplaceInspectionsClick(holder.getAdapterPosition());
+            holder.delete.setTypeface(typeFace);
+            holder.delete.setText(Html.fromHtml("&#" + Environment.IcoDelete + ";"));
+            holder.delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mContext instanceof OnDeleteWorkplaceInspectionsClickListener) {
+                        ((OnDeleteWorkplaceInspectionsClickListener) mContext).onDeleteWorkplaceInspectionsClick(holder.getAdapterPosition());
+                    }
                 }
-            }
-        });
+            });
 
-        holder.files.setTypeface(typeFace);
-        holder.files.setText(Html.fromHtml("&#"+Environment.IcoFiles+";"));
-        holder.files.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mContext instanceof OnFilesWorkplaceInspectionsClickListener) {
-                    ((OnFilesWorkplaceInspectionsClickListener) mContext).onFilesWorkplaceInspectionsClick(holder.getAdapterPosition());
+            holder.files.setTypeface(typeFace);
+            holder.files.setText(Html.fromHtml("&#" + Environment.IcoFiles + ";"));
+            holder.files.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mContext instanceof OnFilesWorkplaceInspectionsClickListener) {
+                        ((OnFilesWorkplaceInspectionsClickListener) mContext).onFilesWorkplaceInspectionsClick(holder.getAdapterPosition());
+                    }
                 }
-            }
-        });
+            });
 
-        holder.assign.setTypeface(typeFace);
-        if (data.getInspected()) {
-            holder.assign.setText(Html.fromHtml("&#"+Environment.IcoLock+";"));
-        } else {
-            holder.assign.setText(Html.fromHtml("&#"+Environment.IcoAssign+";"));
+            holder.assign.setTypeface(typeFace);
+            if (data.getInspected()) {
+                holder.assign.setText(Html.fromHtml("&#" + Environment.IcoLock + ";"));
+            } else {
+                holder.assign.setText(Html.fromHtml("&#" + Environment.IcoAssign + ";"));
+            }
+            holder.assign.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mContext instanceof OnAssignWorkplaceInspectionsClickListener) {
+                        ((OnAssignWorkplaceInspectionsClickListener) mContext).onAssignWorkplaceInspectionsClick(holder.getAdapterPosition());
+                    }
+                }
+            });
         }
-        holder.assign.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mContext instanceof OnAssignWorkplaceInspectionsClickListener) {
-                    ((OnAssignWorkplaceInspectionsClickListener) mContext).onAssignWorkplaceInspectionsClick(holder.getAdapterPosition());
-                }
-            }
-        });
 
         holder.report.setTypeface(typeFace);
         holder.report.setText(Html.fromHtml("&#"+Environment.IcoReport+";"));
@@ -202,14 +209,14 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
         if (isDashboard) {
             holder.open.setVisibility(View.GONE);
             holder.delete.setVisibility(View.GONE);
-            holder.files.setVisibility(View.GONE);
+            //holder.files.setVisibility(View.GONE);
         } else {
             holder.open.setVisibility(View.VISIBLE);
             holder.delete.setVisibility(View.VISIBLE);
-            holder.files.setVisibility(View.VISIBLE);
+            //holder.files.setVisibility(View.VISIBLE);
         }
 
-        if (!edit) {
+        if (!edit && !isDashboard) {
             holder.open.setVisibility(View.GONE);
             holder.delete.setVisibility(View.GONE);
             holder.files.setVisibility(View.GONE);
@@ -217,8 +224,10 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
         }
 
         holder.report.setEnabled(data.getInspected());
-        holder.open.setEnabled(!data.getInspected());
-        holder.delete.setEnabled(!data.getInspected());
+        if (!isDashboard) {
+            holder.open.setEnabled(!data.getInspected());
+            holder.delete.setEnabled(!data.getInspected());
+        }
     }
 
     @Override

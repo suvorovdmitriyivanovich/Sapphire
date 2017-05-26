@@ -486,6 +486,9 @@ public class TimeOffRequestActivity extends BaseActivity implements DayItemsAdap
     }
 
     private boolean notEquals() {
+        if (readonly) {
+            return false;
+        }
         boolean rezult = !attendanceIdOld.equals(attendanceId);
 
         if (!rezult) {

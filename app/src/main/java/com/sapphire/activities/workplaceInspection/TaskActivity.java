@@ -735,6 +735,9 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
     }
 
     private boolean notEquals() {
+        if (readonly) {
+            return false;
+        }
         boolean rezult = !nameOld.equals(name.getText().toString())
                 || !descriptionOld.equals(description.getText().toString())
                 || !dateOld.equals(dateNew)

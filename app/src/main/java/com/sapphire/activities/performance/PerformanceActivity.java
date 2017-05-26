@@ -608,6 +608,10 @@ public class PerformanceActivity extends BaseActivity implements PerformanceAddA
     }
 
     private void exit() {
+        if (readonly) {
+            finish();
+            return;
+        }
         if (!nameOld.equals(name.getText().toString())
                 || !datePostedOld.equals(datePostedNew)
                 || !renewalDateOld.equals(renewalDateNew)) {

@@ -41,7 +41,7 @@ public class DateOperations {
         String dateString = "";
         if (date != 0l) {
             //int localOffset = TimeZone.getDefault().getOffset(date);
-            int organizationOffset = TimeZone.getTimeZone("America/Toronto").getOffset(date);
+            int organizationOffset = TimeZone.getTimeZone(UserInfo.getUserInfo().getTimeZone().getName()).getOffset(date);
 
             //Long dateLong = date-organizationOffset;
             //Long dateLong = date+(localOffset-organizationOffset);

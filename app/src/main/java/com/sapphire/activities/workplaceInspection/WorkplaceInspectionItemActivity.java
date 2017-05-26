@@ -731,6 +731,10 @@ public class WorkplaceInspectionItemActivity extends BaseActivity implements Wor
     }
 
     private void exit() {
+        if (readonly) {
+            finish();
+            return;
+        }
         int severityNew = 0;
         if (!severity.getText().toString().equals("")) {
             severityNew = Integer.valueOf(severity.getText().toString());

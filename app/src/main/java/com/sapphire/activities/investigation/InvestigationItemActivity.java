@@ -556,6 +556,10 @@ public class InvestigationItemActivity extends BaseActivity implements Investiga
     }
 
     private void exit() {
+        if (readonly) {
+            finish();
+            return;
+        }
         if (!nameOld.equals(name.getText().toString())
             || !descriptionOld.equals(description.getText().toString())
             || !dateOld.equals(dateNew)) {

@@ -547,6 +547,10 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     };
 
     private boolean notEquals() {
+        if (readonly) {
+            return false;
+        }
+
         boolean rezult = !nameOld.equals(name.getText().toString())
                 || !descriptionOld.equals(description.getText().toString())
                 || !dateOld.equals(dateNew)

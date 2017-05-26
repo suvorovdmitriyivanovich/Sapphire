@@ -14,6 +14,7 @@ import com.sapphire.activities.attendance.AttendancesActivity;
 import com.sapphire.activities.course.CoursesActivity;
 import com.sapphire.activities.discipline.DisciplinesActivity;
 import com.sapphire.activities.document.DocumentsActivity;
+import com.sapphire.activities.hrdetails.ProfileActivity;
 import com.sapphire.activities.investigation.InvestigationsActivity;
 import com.sapphire.activities.meeting.MeetingsActivity;
 import com.sapphire.activities.performance.PerformancesActivity;

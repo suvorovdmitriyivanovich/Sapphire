@@ -654,6 +654,9 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
     }
 
     private boolean notEquals() {
+        if (readonly) {
+            return false;
+        }
         boolean rezult = !nameOld.equals(name.getText().toString())
                 || !locationOld.equals(location.getText().toString())
                 || !dateOld.equals(dateNew)
@@ -1044,6 +1047,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
 
                 new MeetingAddAction(MeetingActivity.this, meetingData).execute();
             } else {
+                /*
                 MeetingData meetingData = new MeetingData();
                 meetingData.setName(name.getText().toString());
                 meetingData.setEndTime(dateendNew);
@@ -1053,6 +1057,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
                 meetingData.setMeetingId(id);
                 meetingData.setMembers(datas);
                 meetingData.setTopics(datasTopic);
+                */
 
                 new EventAddAction(MeetingActivity.this).execute();
             }
