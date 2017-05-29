@@ -53,4 +53,46 @@ public class GeneralOperations {
 
         return str4.contains(".") && !str4.contains("@");
     }
+
+    public static boolean isSinNumberValid(String sinNumber, boolean fullValid) {
+        int length = sinNumber.length() - 1;
+
+        if (fullValid && length == -1) {
+            return true;
+        }
+
+        if (length != 10) {
+            return false;
+        }
+
+        if (sinNumber.indexOf("-") != 3) {
+            return false;
+        }
+
+        String str1 = sinNumber.substring(4);
+
+        if (str1.indexOf("-") != 3) {
+            return false;
+        }
+
+        for (int i = 0; i < 3; i++) {
+            if ("0123456789".indexOf(sinNumber.substring(i,i+1)) == -1) {
+                return false;
+            }
+        }
+
+        for (int i = 4; i < 7; i++) {
+            if ("0123456789".indexOf(sinNumber.substring(i,i+1)) == -1) {
+                return false;
+            }
+        }
+
+        for (int i = 8; i < 11; i++) {
+            if ("0123456789".indexOf(sinNumber.substring(i,i+1)) == -1) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

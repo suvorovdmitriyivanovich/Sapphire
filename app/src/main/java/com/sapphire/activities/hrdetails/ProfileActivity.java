@@ -113,6 +113,10 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     private String cellOld = "";
     private boolean primaryEmailAllowNotificationOld = false;
     private boolean secondaryEmailAllowNotificationOld = false;
+    private Long birthdayOld = 0l;
+    private String sin_numberOld = "";
+    private String driver_licenseOld = "";
+    private Long driver_expiryOld = 0l;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -320,7 +324,12 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         additionaledit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(ProfileActivity.this, EditAdditionalActivity.class);
+                intent.putExtra("birthday", birthdayOld);
+                intent.putExtra("sin_number", sin_numberOld);
+                intent.putExtra("driver_license", driver_licenseOld);
+                intent.putExtra("driver_expiry", driver_expiryOld);
+                startActivity(intent);
             }
         });
 
@@ -654,9 +663,13 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     @Override
     public void onRequestProfilesData(ProfileData profileData) {
         String additionalStr = "";
+        birthdayOld = profileData.getBirthday();
+        sin_numberOld = profileData.getSINNumber();
+        driver_licenseOld = profileData.getDriverLicenseNumber();
+        driver_expiryOld = profileData.getDriverLicenseNumberExpire();
         additionalStr = additionalStr + "<b>" + getResources().getString(R.string.text_birthday) + "</b>: " + profileData.getBirthdayString();
-        additionalStr = additionalStr + "<br><b>" + getResources().getString(R.string.text_sinnumber) + "</b>: " + profileData.getSINNumber();
-        additionalStr = additionalStr + "<br><b>" + getResources().getString(R.string.text_driver_license) + "</b>: " + profileData.getDriverLicenseNumber();
+        additionalStr = additionalStr + "<br><b>" + getResources().getString(R.string.text_sinnumber) + "</b>: " + sin_numberOld;
+        additionalStr = additionalStr + "<br><b>" + getResources().getString(R.string.text_driver_license) + "</b>: " + driver_licenseOld;
         additionalStr = additionalStr + "<br><b>" + getResources().getString(R.string.text_expire_date) + "</b>: " + profileData.getDriverLicenseNumberExpireString();
         additional.setText(Html.fromHtml(additionalStr));
 

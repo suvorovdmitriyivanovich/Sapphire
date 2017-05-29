@@ -250,8 +250,16 @@ public class ProfileData {
         this.birthday = DateOperations.getDate(birthday);
     }
 
+    public void setBirthday(Long birthday) {
+        this.birthday = birthday;
+    }
+
     public Long getBirthday() {
         return birthday;
+    }
+
+    public String getBirthdayServer() {
+        return DateOperations.getDateServer(birthday);
     }
 
     public String getBirthdayString() {
@@ -277,8 +285,16 @@ public class ProfileData {
         this.driverLicenseNumberExpire = DateOperations.getDate(driverLicenseNumberExpire);
     }
 
+    public void setDriverLicenseNumberExpire(Long driverLicenseNumberExpire) {
+        this.driverLicenseNumberExpire = driverLicenseNumberExpire;
+    }
+
     public Long getDriverLicenseNumberExpire() {
         return driverLicenseNumberExpire;
+    }
+
+    public String getDriverLicenseNumberExpireServer() {
+        return DateOperations.getDateServer(driverLicenseNumberExpire);
     }
 
     public String getDriverLicenseNumberExpireString() {
