@@ -377,6 +377,7 @@ public class CourseActivity extends BaseActivity implements GetCourseFileAction.
     @Override
     public void onDestroy() {
         super.onDestroy();
+        webView.destroy();
         unregisterReceiver(br);
     }
 }
