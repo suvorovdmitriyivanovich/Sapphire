@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+
+import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.logic.Environment;
 import com.sapphire.models.AppRoleAppSecurityData;
@@ -160,7 +162,11 @@ public class DBHelper extends SQLiteOpenHelper {
                         cv = new ContentValues();
 
                         cv.put("menuid", subMenus.get(s).getMenuId());
-                        cv.put("name", subMenus.get(s).getName());
+                        if (subMenus.get(s).getName().toLowerCase().equals(Sapphire.getInstance().getResources().getString(R.string.text_my_hr_details).toLowerCase())) {
+                            cv.put("name", Sapphire.getInstance().getResources().getString(R.string.text_my_hr_details));
+                        } else {
+                            cv.put("name", subMenus.get(s).getName());
+                        }
                         cv.put("ordernum", subMenus.get(s).getOrder());
                         cv.put("parentid", subMenus.get(s).getParentId());
                         cv.put("translationid", subMenus.get(s).getTranslationId());
