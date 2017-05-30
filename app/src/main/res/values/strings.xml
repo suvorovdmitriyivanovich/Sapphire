@@ -270,4 +270,5 @@
     <string name="text_emails_equals">Must be different from Primary Email</string>
     <string name="text_edit_additional">Edit Additional Information</string>
     <string name="text_sin_number_template">###-###-###</string>
+    <string name="text_attachment">Attachment</string>
 </resources>

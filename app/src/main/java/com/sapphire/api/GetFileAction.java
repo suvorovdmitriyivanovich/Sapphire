@@ -109,23 +109,25 @@ public class GetFileAction extends AsyncTask{
         if (responseCode == HttpURLConnection.HTTP_OK) {
 
             int contentLength = httpConn.getContentLength();
-            //String disposition = httpConn.getHeaderField("Content-Disposition");
             //String contentType = httpConn.getContentType();
 
-            /*
-            if (disposition != null) {
-                // extracts file name from header field
-                int index = disposition.indexOf("filename=");
-                if (index > 0) {
-                    fileName = disposition.substring(index + 10,
-                            disposition.length() - 1);
+            if (filename.equals("")) {
+                String disposition = httpConn.getHeaderField("Content-Disposition");
+
+                if (disposition != null) {
+                    // extracts file name from header field
+                    int index = disposition.indexOf("filename=");
+                    if (index > 0) {
+                        filename = disposition.substring(index + 9, disposition.length() - 1);
+                    } else {
+                        // extracts file name from URL
+                        filename = fileURL.substring(fileURL.lastIndexOf("=") + 1, fileURL.length());
+                    }
+                } else {
+                    // extracts file name from URL
+                    filename = fileURL.substring(fileURL.lastIndexOf("=") + 1, fileURL.length());
                 }
-            } else {
-                // extracts file name from URL
-                fileName = fileURL.substring(fileURL.lastIndexOf("/") + 1,
-                        fileURL.length());
             }
-            */
 
             String saveFilePath = saveDir + File.separator + filename;
 

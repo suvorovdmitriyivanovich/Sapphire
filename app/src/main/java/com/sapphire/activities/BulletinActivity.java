@@ -1,32 +1,46 @@
 package com.sapphire.activities;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.adapters.BulletinsAdapter;
 import com.sapphire.api.BulletinsAction;
+import com.sapphire.api.GetFileAction;
 import com.sapphire.api.UpdateAction;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.BulletinData;
+import com.sapphire.ui.OpenFileDialog;
+import java.io.File;
 import java.util.ArrayList;
 
 public class BulletinActivity extends BaseActivity implements BulletinsAdapter.OnRootBulletinsClickListener,
+                                                              BulletinsAdapter.OnAttachmentBulletinsClickListener,
                                                               BulletinsAction.RequestBulletins,
+                                                              GetFileAction.RequestFile,
                                                               UpdateAction.RequestUpdate{
     private ProgressDialog pd;
     private BroadcastReceiver br;
@@ -37,6 +51,13 @@ public class BulletinActivity extends BaseActivity implements BulletinsAdapter.O
     private RecyclerView list;
     private View text_no;
     private DrawerLayout drawerLayout;
+    private OpenFileDialog fileDialogBuilder;
+    private Dialog fileDialog;
+    private String file = "";
+    private Dialog dialog_confirm;
+    private TextView tittle_message;
+    private Button button_cancel_save;
+    private Button button_send_save;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +130,44 @@ public class BulletinActivity extends BaseActivity implements BulletinsAdapter.O
         // регистрируем (включаем) BroadcastReceiver
         registerReceiver(br, intFilt);
 
+        AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
+        adb_save.setCancelable(true);
+        LinearLayout view_save = (LinearLayout) getLayoutInflater()
+                .inflate(R.layout.dialog_save, null);
+        adb_save.setView(view_save);
+        tittle_message = (TextView) view_save.findViewById(R.id.tittle);
+        button_cancel_save = (Button) view_save.findViewById(R.id.button_cancel);
+        button_send_save = (Button) view_save.findViewById(R.id.button_send);
+        dialog_confirm = adb_save.create();
+
+        button_cancel_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog_confirm.dismiss();
+            }
+        });
+
+        button_send_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog_confirm.dismiss();
+
+                Uri uri = Uri.fromFile(new File(file.toLowerCase()));
+                //Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                String extension = MimeTypeMap.getFileExtensionFromUrl(String.valueOf(uri));
+                String mType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+                intent.setDataAndType(uri, mType);
+                try {
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getBaseContext(), getResources().getString(R.string.text_error_open),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
         nointernet_group = findViewById(R.id.nointernet_group);
         par_nointernet_group = nointernet_group.getLayoutParams();
         nointernet_group.setOnClickListener(new View.OnClickListener() {
@@ -148,6 +207,65 @@ public class BulletinActivity extends BaseActivity implements BulletinsAdapter.O
     @Override
     public void onRootBulletinsClick(int position) {
 
+    }
+
+    @Override
+    public void onAttachmentBulletinsClick(int position) {
+        final BulletinData data = datas.get(position);
+
+        fileDialogBuilder = new OpenFileDialog(this, 2, ".qqq\\.qqq")
+                //.setFilter(".qqq\\.qqq")
+                .setAccessDeniedMessage(getResources().getString(R.string.text_access_denied))
+                //.setFolderIcon(ContextCompat.getDrawable(this, R.drawable.folder))
+                //.setFileIcon(ContextCompat.getDrawable(this, R.drawable.file))
+                .setOpenDialogListener(new OpenFileDialog.OpenDialogListener() {
+                    @Override
+                    public void OnSelectedFile(String folder) {
+                        pd.show();
+                        new GetFileAction(BulletinActivity.this, data.getFileId(), "", folder, "").execute();
+                    }
+                });
+        fileDialogBuilder.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    //dialog.cancel();
+                    fileDialogBuilder.onBackPressed();
+                    return true;
+                }
+                return false;
+            }
+        });
+        fileDialog = fileDialogBuilder.create();
+        fileDialogBuilder.setDialog(fileDialog);
+        fileDialog.show();
+    }
+
+    @Override
+    public void onRequestFile(String result, String file) {
+        pd.hide();
+        if (!result.equals("OK")) {
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Sapphire.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+            }
+        } else {
+            this.file = file;
+            tittle_message.setText(getResources().getString(R.string.text_open_file));
+            button_cancel_save.setText(getResources().getString(R.string.text_no));
+            button_send_save.setText(getResources().getString(R.string.text_open));
+            dialog_confirm.show();
+        }
     }
 
     @Override

@@ -24,4 +24,6 @@
     <color name="black_light">#323232</color>
     <color name="black_light_pressed">#606060</color>
     <color name="green_light">#80CBC4</color>
+    <color name="dark_blue">#3333f1</color>
+    <color name="light_blue">#6a6af4</color>
 </resources>

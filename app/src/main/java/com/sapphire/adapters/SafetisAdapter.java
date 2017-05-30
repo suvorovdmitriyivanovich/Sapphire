@@ -76,7 +76,7 @@ public class SafetisAdapter extends RecyclerView.Adapter<SafetisAdapter.ViewHold
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view_files_full, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_view_files_report_full, parent, false);
         return new SafetisAdapter.ViewHolder(view);
     }
 
