@@ -72,6 +72,7 @@ public class GetContactsAction extends AsyncTask{
 
         if (responseData.getSuccess()) {
             JSONArray data = responseData.getData();
+            int memb = 0;
             for (int y=0; y < data.length(); y++) {
                 try {
                     ContactData contactData = new ContactData(data.getJSONObject(y));
@@ -79,6 +80,8 @@ public class GetContactsAction extends AsyncTask{
                         if (contactData.getContactType().getContactTypeId().equals(Environment.EmergencyContactType)) {
                             emergencyDatas.add(contactData);
                         } else if (contactData.getContactType().getContactTypeId().equals(Environment.FamilyContactType)) {
+                            memb = memb + 1;
+                            contactData.setNameTop(Sapphire.getInstance().getResources().getString(R.string.member) + " " + String.valueOf(memb));
                             familyDatas.add(contactData);
                         }
                     } else {

@@ -83,56 +83,97 @@ public class AdressAdapter extends RecyclerView.Adapter<AdressAdapter.ViewHolder
         }
 
         String name = "";
-        if (data.getIsPrimary()) {
-            name = Sapphire.getInstance().getResources().getString(R.string.text_primary_residence);
+        if (full) {
+            if (!data.getNameTop().equals("")) {
+                name = data.getNameTop();
+            } else if (data.getIsPrimary()) {
+                name = Sapphire.getInstance().getResources().getString(R.string.text_primary_contact);
+            } else {
+                name = Sapphire.getInstance().getResources().getString(R.string.text_secondary_contact);
+            }
         } else {
-            name = Sapphire.getInstance().getResources().getString(R.string.text_secondary_residence);
+            if (data.getIsPrimary()) {
+                name = Sapphire.getInstance().getResources().getString(R.string.text_primary_residence);
+            } else {
+                name = Sapphire.getInstance().getResources().getString(R.string.text_secondary_residence);
+            }
         }
 
         String detail = "";
-        if (!data.getName().equals("")) {
+        if (!data.getName().equals("") || full) {
             if (!detail.equals("")) {
                 detail = detail + "<br>";
             }
             detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.name) + "</b>: " + data.getName();
         }
         if (full) {
-            if (!data.getRelationship().equals("")) {
+            //if (!data.getRelationship().equals("")) {
                 if (!detail.equals("")) {
                     detail = detail + "<br>";
                 }
                 detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_relationship) + "</b>: " + data.getRelationship();
-            }
-            if (!data.getPhone1().equals("")) {
+            //}
+            //if (!data.getPhone1().equals("")) {
                 if (!detail.equals("")) {
                     detail = detail + "<br>";
                 }
                 detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_primary_phone) + "</b>: " + data.getPhone1();
-            }
-            if (!data.getPhone2().equals("")) {
+            //}
+            //if (!data.getPhone2().equals("")) {
                 if (!detail.equals("")) {
                     detail = detail + "<br>";
                 }
                 detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_additional_phone) + "</b>: " + data.getPhone2();
-            }
-            if (!data.getEmail1().equals("")) {
+            //}
+            //if (!data.getEmail1().equals("")) {
                 if (!detail.equals("")) {
                     detail = detail + "<br>";
                 }
                 detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_email) + "</b>: " + data.getEmail1();
-            }
-            if (!data.getNote().getText().equals("")) {
+            //}
+            //if (!data.getAddress().getAddressLine1().equals("")) {
+                if (!detail.equals("")) {
+                    detail = detail + "<br>";
+                }
+                detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_address) + "</b>: " + data.getAddress().getAddressLine1();
+            //}
+            //if (!data.getAddress().getCity().equals("")) {
+                if (!detail.equals("")) {
+                    detail = detail + "<br>";
+                }
+                detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_city) + "</b>: " + data.getAddress().getCity();
+            //}
+            //if (!data.getAddress().getRegion().equals("")) {
+                if (!detail.equals("")) {
+                    detail = detail + "<br>";
+                }
+                detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_province) + "</b>: " + data.getAddress().getRegion();
+            //}
+            //if (!data.getAddress().getCountry().equals("")) {
+                if (!detail.equals("")) {
+                    detail = detail + "<br>";
+                }
+                detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_country) + "</b>: " + data.getAddress().getCountry();
+            //}
+            //if (!data.getAddress().getPostalCode().equals("")) {
+                if (!detail.equals("")) {
+                    detail = detail + "<br>";
+                }
+                detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_postal_code) + "</b>: " + data.getAddress().getPostalCode();
+            //}
+            //if (!data.getNote().getText().equals("")) {
                 if (!detail.equals("")) {
                     detail = detail + "<br>";
                 }
                 detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_notes) + "</b>: " + data.getNote().getText();
+            //}
+        } else {
+            if (!data.getAddress().getAddress().equals("")) {
+                if (!detail.equals("")) {
+                    detail = detail + "<br>";
+                }
+                detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_address) + "</b>: " + data.getAddress().getAddress();
             }
-        }
-        if (!data.getAddress().getAddress().equals("")) {
-            if (!detail.equals("")) {
-                detail = detail + "<br>";
-            }
-            detail = detail + "<b>" + Sapphire.getInstance().getResources().getString(R.string.text_address) + "</b>: " + data.getAddress().getAddress();
         }
 
         viewHolder.text_name.setText(name);

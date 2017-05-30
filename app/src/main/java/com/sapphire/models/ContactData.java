@@ -10,6 +10,7 @@ import org.json.JSONObject;
 public class ContactData {
     private String contactId = "";
     private String name = "";
+    private String nameTop = "";
     private String relationship = "";
     private String phone1 = "";
     private String phone2 = "";
@@ -81,6 +82,14 @@ public class ContactData {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNameTop() {
+        return nameTop;
+    }
+
+    public void setNameTop(String nameTop) {
+        this.nameTop = nameTop;
     }
 
     public void setRelationship(String relationship) {

@@ -149,6 +149,9 @@ public class MyContactsActivity extends BaseActivity implements GetContactsActio
         }
 
         String securityModeFamily = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-family-members", "");
+        if (securityModeFamily.equals("")) {
+            securityModeFamily = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-contacts", "");
+        }
         if (securityModeFamily.equals("fullAccess")) {
             editFamily = true;
         } else if (securityModeFamily.equals("viewOnly")) {

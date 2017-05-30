@@ -109,8 +109,7 @@
                     android:id="@+id/photo_group"
                     android:paddingTop="15dp"
                     android:paddingBottom="15dp"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:orientation="horizontal">
 
                     <com.sapphire.ui.CircleImageView
                         android:layout_width="150dp"
