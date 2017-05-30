@@ -13,6 +13,8 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.models.MemberData;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class MeetingMembersAdapter extends RecyclerView.Adapter<MeetingMembersAdapter.ViewHolder> {
 
@@ -111,6 +113,15 @@ public class MeetingMembersAdapter extends RecyclerView.Adapter<MeetingMembersAd
     public void setListArray(ArrayList<MemberData> list){
         listData.clear();
         listData.addAll(list);
+        sort();
         notifyDataSetChanged();
+    }
+
+    private void sort() {
+        Collections.sort(listData, new Comparator<MemberData>() {
+            public int compare(MemberData o1, MemberData o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
     }
 }

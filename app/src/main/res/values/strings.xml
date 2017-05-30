@@ -169,8 +169,8 @@
     <string name="text_topics">Topics</string>
     <string name="text_topics_no">No topics to display</string>
     <string name="text_time">Time</string>
-    <string name="text_next_meeting">Next meeting</string>
-    <string name="text_next_workplace_inspection">Next workplace inspection</string>
+    <string name="text_next_meeting">Next Meeting</string>
+    <string name="text_next_workplace_inspection">Next Workplace Inspection</string>
     <string name="text_topic">Topic</string>
     <string name="topics_error">Topics is required</string>
     <string name="text_unauthorized">Session has expired, please login again.</string>

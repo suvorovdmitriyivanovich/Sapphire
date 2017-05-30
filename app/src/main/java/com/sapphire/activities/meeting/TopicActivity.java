@@ -154,8 +154,8 @@ public class TopicActivity extends BaseActivity implements UpdateAction.RequestU
         if (id == null) {
             id = "";
         }
-        if (!id.equals("")) {
-            position = intent.getIntExtra("position", -1);
+        position = intent.getIntExtra("position", -1);
+        if (position != -1) {
             nameOld = intent.getStringExtra("name");
             if (nameOld == null) {
                 nameOld = "";

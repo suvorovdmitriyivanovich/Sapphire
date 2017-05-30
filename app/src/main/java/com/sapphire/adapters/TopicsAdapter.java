@@ -78,6 +78,7 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
 
         holder.complete.setChecked(data.getCompleted());
 
+        /*
         if (data.getIsTemplate()) {
             holder.open.setVisibility(View.GONE);
             holder.delete.setVisibility(View.GONE);
@@ -85,6 +86,7 @@ public class TopicsAdapter extends RecyclerView.Adapter<TopicsAdapter.ViewHolder
             holder.open.setVisibility(View.VISIBLE);
             holder.delete.setVisibility(View.VISIBLE);
         }
+        */
 
         holder.open.setTypeface(typeFace);
         holder.open.setText(Html.fromHtml("&#"+Environment.IcoEdit+";"));
