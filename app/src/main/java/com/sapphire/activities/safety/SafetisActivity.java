@@ -26,6 +26,7 @@ import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.FilesActivity;
 import com.sapphire.activities.MenuFragment;
 import com.sapphire.activities.RightFragment;
+import com.sapphire.activities.policy.PdfActivity;
 import com.sapphire.adapters.SafetisAdapter;
 import com.sapphire.api.SafetisAction;
 import com.sapphire.api.SafetyDeleteAction;
@@ -42,6 +43,7 @@ public class SafetisActivity extends BaseActivity implements SafetisAdapter.OnRo
                                                              SafetisAdapter.OnOpenSafetisClickListener,
                                                              SafetisAdapter.OnDeleteSafetisClickListener,
                                                              SafetisAdapter.OnFilesSafetisClickListener,
+                                                             SafetisAdapter.OnReportSafetisClickListener,
                                                              SafetisAction.RequestSafetis,
                                                              SafetyDeleteAction.RequestSafetyDelete,
                                                              UpdateAction.RequestUpdate,
@@ -273,6 +275,18 @@ public class SafetisActivity extends BaseActivity implements SafetisAdapter.OnRo
         }
 
         UserInfo.getUserInfo().setFileDatas(fileDatas);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onReportSafetisClick(int position) {
+        Intent intent = new Intent(SafetisActivity.this, PdfActivity.class);
+        SafetyData data = safetyDatas.get(position);
+        intent.putExtra("name", data.getName());
+        intent.putExtra("acknowledged", true);
+        intent.putExtra("id", data.getSafetyDataSheetId());
+        intent.putExtra("fileId", data.getFileId());
+        intent.putExtra("nolog", true);
         startActivity(intent);
     }
 

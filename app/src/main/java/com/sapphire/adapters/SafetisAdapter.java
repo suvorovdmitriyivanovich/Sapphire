@@ -152,13 +152,15 @@ public class SafetisAdapter extends RecyclerView.Adapter<SafetisAdapter.ViewHold
             holder.open.setVisibility(View.VISIBLE);
             holder.delete.setVisibility(View.VISIBLE);
             holder.files.setVisibility(View.VISIBLE);
-            holder.report.setVisibility(View.GONE);
+            holder.report.setVisibility(View.VISIBLE);
         }
 
         if (!edit) {
             holder.open.setVisibility(View.GONE);
             holder.delete.setVisibility(View.GONE);
         }
+
+        holder.report.setEnabled(!data.getFileId().equals(""));
     }
 
     @Override

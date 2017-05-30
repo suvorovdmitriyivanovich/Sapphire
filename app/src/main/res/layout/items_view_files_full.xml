@@ -79,7 +79,8 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:background="@drawable/button_selector"
                 android:textColor="@color/white"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:layout_marginLeft="10dp" />
 
         </LinearLayout>
 
