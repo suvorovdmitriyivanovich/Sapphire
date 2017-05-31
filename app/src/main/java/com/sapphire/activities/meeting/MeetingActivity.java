@@ -512,7 +512,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         memberslist.setNestedScrollingEnabled(false);
         memberslist.setLayoutManager(new LinearLayoutManager(MeetingActivity.this));
 
-        adapter = new MeetingMembersAdapter(this, readonly);
+        adapter = new MeetingMembersAdapter(this, readonly, false);
         memberslist.setAdapter(adapter);
 
         name.setOnFocusChangeListener(new View.OnFocusChangeListener() {

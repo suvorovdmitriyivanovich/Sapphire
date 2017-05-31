@@ -29,6 +29,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,7 @@ import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
 import com.sapphire.activities.FilesActivity;
+import com.sapphire.activities.organizationStructure.ChooseOrganizationStructureActivity;
 import com.sapphire.adapters.MeetingMembersAdapter;
 import com.sapphire.adapters.SpinTemplatesAdapter;
 import com.sapphire.adapters.WorkplaceInspectionItemsAdapter;
@@ -49,7 +51,6 @@ import com.sapphire.db.DBHelper;
 import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.MemberData;
-import com.sapphire.models.ProfileData;
 import com.sapphire.models.TemplateData;
 import com.sapphire.models.TemplateItemData;
 import com.sapphire.logic.UserInfo;
@@ -59,6 +60,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 public class WorkplaceInspectionActivity extends BaseActivity implements GetTemplateAction.RequestTemplate,
@@ -73,6 +76,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
                                                                          WorkplaceInspectionAddAction.RequestWorkplaceInspectionAddData,
                                                                          WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd,
                                                                          MeetingMembersAdapter.OnRootMeetingMembersClickListener,
+                                                                         MeetingMembersAdapter.OnDeleteMeetingMembersClickListener,
                                                                          UpdateAction.RequestUpdate{
     private String workplaceInspectionId = "";
     private ProgressDialog pd;
@@ -94,7 +98,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     private TextView tittle_message;
     private Button button_cancel_save;
     private Button button_send_save;
-    private boolean deleteItem = false;
+    private int deleteItem = 0;
     private int currentPosition = 0;
     private static SimpleDateFormat format;
     private Calendar cal = Calendar.getInstance();
@@ -140,6 +144,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     private MeetingMembersAdapter adapterTeam;
     private View text_team_no;
     private UserInfo userInfo;
+    private ScrollView scroll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,13 +180,13 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         dialog_confirm.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                deleteItem = false;
+                deleteItem = 0;
             }
         });
         dialog_confirm.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                deleteItem = false;
+                deleteItem = 0;
             }
         });
 
@@ -189,10 +194,10 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             @Override
             public void onClick(View v) {
                 dialog_confirm.dismiss();
-                if (!deleteItem) {
+                if (deleteItem == 0) {
                     finish();
                 }
-                deleteItem = false;
+                deleteItem = 0;
             }
         });
 
@@ -200,8 +205,8 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             @Override
             public void onClick(View v) {
                 dialog_confirm.dismiss();
-                if (deleteItem) {
-                    deleteItem = false;
+                if (deleteItem == 1) {
+                    deleteItem = 0;
                     if (workplaceInspectionItemDatas.get(currentPosition).getWorkplaceInspectionItemId().equals("")) {
                         DBHelper.getInstance(Sapphire.getInstance()).deleteWorkplaceInspectionItem(workplaceInspectionItemDatas.get(currentPosition).getId());
                         pd.show();
@@ -211,6 +216,11 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
 
                         new WorkplaceInspectionItemDeleteAction(WorkplaceInspectionActivity.this, workplaceInspectionItemDatas.get(currentPosition).getWorkplaceInspectionItemId()).execute();
                     }
+                } else if (deleteItem == 2) {
+                    deleteItem = 0;
+                    datasTeam.remove(currentPosition);
+                    adapterTeam.remove(currentPosition);
+                    updateVisibility();
                 } else {
                     updateWorkplaceInspection(0);
                 }
@@ -253,6 +263,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         format = new SimpleDateFormat("dd.MM.yyyy");
 
         userInfo = UserInfo.getUserInfo();
+        userInfo.setUpdateMembers(null);
 
         Intent intent = getIntent();
         workplaceInspectionId = intent.getStringExtra("workplaceInspectionId");
@@ -294,7 +305,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             }
 
             datasTeam.clear();
-            for (MemberData item: userInfo.getMembers()) {
+            for (MemberData item : userInfo.getMembers()) {
                 MemberData memberData = new MemberData();
                 memberData.setPresence(item.getPresence());
                 memberData.setProfile(item.getProfile());
@@ -302,15 +313,17 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
 
                 datasTeam.add(memberData);
             }
-        } else {
-            datasTeam.clear();
-            for (ProfileData item: userInfo.getCurrentOrganizationStructures()) {
-                MemberData memberData = new MemberData();
-                memberData.setProfile(item);
-
-                datasTeam.add(memberData);
-            }
         }
+        //} else {
+        //    datasTeam.clear();
+        //    for (ProfileData item: userInfo.getCurrentOrganizationStructures()) {
+        //        MemberData memberData = new MemberData();
+        //        memberData.setProfile(item);
+        //
+        //        datasTeam.add(memberData);
+        //    }
+        //}
+        sort();
 
         if (workplaceInspectionId.equals("")) {
             templates = new ArrayList<>();
@@ -344,6 +357,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
                         //    new GetWorkplaceInspectionAction(WorkplaceInspectionActivity.this, workplaceInspectionId).execute();
                     } else {
                         adapter.setListArray(new ArrayList<WorkplaceInspectionItemData>());
+                        updateVisibility();
                     }
                 }
 
@@ -415,6 +429,17 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             }
         });
 
+        View add_team = findViewById(R.id.add_team);
+        add_team.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSoftKeyboard();
+                userInfo.setUpdateMembers(datasTeam);
+                Intent intent = new Intent(WorkplaceInspectionActivity.this, ChooseOrganizationStructureActivity.class);
+                startActivity(intent);
+            }
+        });
+
         View root = findViewById(R.id.rootLayout);
         root.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -434,7 +459,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         teamlist.setNestedScrollingEnabled(false);
         teamlist.setLayoutManager(new LinearLayoutManager(WorkplaceInspectionActivity.this));
 
-        adapterTeam = new MeetingMembersAdapter(this, readonly);
+        adapterTeam = new MeetingMembersAdapter(this, readonly, true);
         teamlist.setAdapter(adapterTeam);
 
         adapterTeam.setListArray(datasTeam);
@@ -505,17 +530,21 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             }
         });
 
+        updateVisibility();
         UpdateBottom();
 
         if (readonly) {
             add.setVisibility(View.GONE);
             button_ok.setVisibility(View.GONE);
+            add_team.setVisibility(View.GONE);
             name.setFocusable(false);
             date.setFocusable(false);
             image_date_group.setClickable(false);
             posted.setClickable(false);
             description.setFocusable(false);
         }
+
+        scroll = (ScrollView) findViewById(R.id.scrollView);
     }
 
     Animation.AnimationListener animationErrorUpNameListener = new Animation.AnimationListener() {
@@ -558,9 +587,14 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
 
         if (!rezult) {
             ArrayList<MemberData> memberDatas = userInfo.getMembers();
-            if (memberDatas.size() == 0) {
-                memberDatas = userInfo.getAllMembers();
-            }
+            Collections.sort(memberDatas, new Comparator<MemberData>() {
+                public int compare(MemberData o1, MemberData o2) {
+                    return o1.getProfile().getName().compareTo(o2.getProfile().getName());
+                }
+            });
+            //if (memberDatas.size() == 0) {
+            //    memberDatas = userInfo.getAllMembers();
+            //}
             if (memberDatas.size() != datasTeam.size()) {
                 rezult = true;
             } else {
@@ -569,8 +603,9 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
                         rezult = true;
                         break;
                     } else {
-                        if (!datasTeam.get(i).getMeetingMemberId().equals(memberDatas.get(i).getMeetingMemberId())
-                                || datasTeam.get(i).getPresence() != memberDatas.get(i).getPresence()) {
+                        //if (!datasTeam.get(i).getMeetingMemberId().equals(memberDatas.get(i).getMeetingMemberId())
+                        //        || datasTeam.get(i).getPresence() != memberDatas.get(i).getPresence()) {
+                        if (!datasTeam.get(i).getProfile().getProfileId().equals(memberDatas.get(i).getProfile().getProfileId())) {
                             rezult = true;
                             break;
                         }
@@ -710,6 +745,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             isCheckName = true;
             isCheckDate = true;
             updateViews();
+            scroll.scrollTo(0, 0);
             allOk = false;
         }
 
@@ -826,6 +862,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     @Override
     public void onRequestTemplate(String result) {
         pd.hide();
+        scroll.scrollTo(0, 0);
         if (!result.equals("OK")) {
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
@@ -859,6 +896,8 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
 
         this.workplaceInspectionItemDatas = list;
         adapter.setListArray(list);
+        updateVisibility();
+        scroll.scrollTo(0, 0);
         pd.hide();
     }
 
@@ -867,6 +906,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         if (!result.equals("OK") && !result.equals(getResources().getString(R.string.text_need_internet))) {
             pressType = 0;
             updateVisibility();
+            scroll.scrollTo(0, 0);
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
@@ -909,6 +949,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         adapter.setListArray(this.workplaceInspectionItemDatas);
         updateVisibility();
 
+        scroll.scrollTo(0, 0);
         pd.hide();
         if (pressType == 2) {
             pressType = 0;
@@ -919,6 +960,9 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     @Override
     public void onRootClick(int position) {
         hideSoftKeyboard();
+        if (workplaceInspectionId.equals("")) {
+            return;
+        }
         currentPosition = position;
         openItem(true);
     }
@@ -928,7 +972,20 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         hideSoftKeyboard();
 
         currentPosition = position;
-        deleteItem = true;
+        deleteItem = 1;
+
+        tittle_message.setText(getResources().getString(R.string.text_confirm_delete));
+        button_cancel_save.setText(getResources().getString(R.string.text_cancel));
+        button_send_save.setText(getResources().getString(R.string.text_delete));
+        dialog_confirm.show();
+    }
+
+    @Override
+    public void onDeleteMeetingMembersClick(int position) {
+        hideSoftKeyboard();
+
+        currentPosition = position;
+        deleteItem = 2;
 
         tittle_message.setText(getResources().getString(R.string.text_confirm_delete));
         button_cancel_save.setText(getResources().getString(R.string.text_cancel));
@@ -968,6 +1025,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     public void onRequestWorkplaceInspectionItemDelete(String result) {
         dialog_confirm.dismiss();
         if (!result.equals("OK")) {
+            scroll.scrollTo(0, 0);
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
@@ -1011,6 +1069,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         } else {
             workplaceInspectionId = workplaceInspectionData.getWorkplaceInspectionId();
 
+            scroll.scrollTo(0, 0);
             pd.hide();
             requestWorkplaceInspectionAddData();
         }
@@ -1031,6 +1090,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     @Override
     public void onRequestWorkplaceInspectionItemAdd(String result, boolean neddclosepd, int ihms, String id) {
         if (!result.equals("OK")) {
+            scroll.scrollTo(0, 0);
             pd.hide();
 
             Toast.makeText(getBaseContext(), result,
@@ -1048,6 +1108,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
                 finish();
             }
         } else if (neddclosepd) {
+            scroll.scrollTo(0, 0);
             pd.hide();
 
             requestWorkplaceInspectionAddData();
@@ -1066,6 +1127,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
 
     @Override
     public void onRequestWorkplaceInspectionAdd(String result) {
+        scroll.scrollTo(0, 0);
         pd.hide();
 
         pressType = 0;
@@ -1100,6 +1162,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     @Override
     public void onRequestUpdate(String result) {
         if (!result.equals("OK")) {
+            scroll.scrollTo(0, 0);
             pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
@@ -1118,6 +1181,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         } else {
             Sapphire.getInstance().setNeedUpdate(NetRequests.getNetRequests().isOnline(false));
             UpdateBottom();
+            scroll.scrollTo(0, 0);
             pd.hide();
         }
     }
@@ -1129,11 +1193,33 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         return (int) (pixels * scale + 0.5f);
     }
 
+    private void sort() {
+        Collections.sort(datasTeam, new Comparator<MemberData>() {
+            public int compare(MemberData o1, MemberData o2) {
+                return o1.getProfile().getName().compareTo(o2.getProfile().getName());
+            }
+        });
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (!workplaceInspectionId.equals("")) {
+        if (userInfo.getUpdateMembers() != null) {
+            datasTeam.clear();
+            for (MemberData item: userInfo.getUpdateMembers()) {
+                MemberData memberData = new MemberData();
+                memberData.setPresence(item.getPresence());
+                memberData.setProfile(item.getProfile());
+                memberData.setMeetingMemberId(item.getMeetingMemberId());
+
+                datasTeam.add(memberData);
+            }
+            sort();
+            adapterTeam.setListArray(datasTeam);
+            updateVisibility();
+            userInfo.setUpdateMembers(null);
+        } else if (!workplaceInspectionId.equals("")) {
             pd.show();
             new GetWorkplaceInspectionAction(WorkplaceInspectionActivity.this, workplaceInspectionId).execute();
         }

@@ -256,16 +256,44 @@
                 android:layout_below="@+id/date_group"
                 android:visibility="invisible" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/text_team"
-                android:id="@+id/text_team"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black" />
+                android:id="@+id/top_team">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/text_team"
+                    android:id="@+id/text_team"
+                    android:textStyle="bold"
+                    android:layout_centerVertical="true"
+                    android:textColor="@android:color/black" />
+
+                <RelativeLayout
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/add_team"
+                    android:background="@drawable/button_selector"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/text_team"
+                    android:layout_toEndOf="@+id/text_team"
+                    android:layout_marginLeft="10dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:id="@+id/add_team_icon"
+                        android:src="@drawable/add_icon"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true" />
+                </RelativeLayout>
+
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -290,6 +318,14 @@
                     android:layout_marginRight="10dp"
                     android:visibility="gone" />
             </RelativeLayout>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_show_inspection"
+                android:id="@+id/posted"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -322,14 +358,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp" />
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_show_inspection"
-                android:id="@+id/posted"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="5dp" />
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -345,7 +373,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/list_group">
+                android:id="@+id/list_group"
+                android:layout_marginBottom="10dp">
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"

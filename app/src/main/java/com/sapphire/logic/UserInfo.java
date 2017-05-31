@@ -1,7 +1,6 @@
 package com.sapphire.logic;
 
 import com.sapphire.models.AppRoleAppSecurityData;
-import com.sapphire.models.AppSecurityData;
 import com.sapphire.models.AttendanceCodeData;
 import com.sapphire.models.CategoryData;
 import com.sapphire.models.DayData;
@@ -57,6 +56,7 @@ public class UserInfo {
     private WorkplaceInspectionData workplaceInspection = new WorkplaceInspectionData();
     private AppRoleAppSecurityData globalAppRoleAppSecurities = new AppRoleAppSecurityData();
     private ArrayList<ProfileData> currentOrganizationStructures = new ArrayList<ProfileData>();
+    private ArrayList<MemberData> updateMembers = new ArrayList<MemberData>();
 
     //---------------------Singleton---------------------------
     private static UserInfo userInfo;
@@ -402,5 +402,21 @@ public class UserInfo {
 
     public void setCurrentOrganizationStructures(ArrayList<ProfileData> currentOrganizationStructures) {
         this.currentOrganizationStructures = currentOrganizationStructures;
+    }
+
+    public ArrayList<MemberData> getUpdateMembers() {
+        return updateMembers;
+    }
+
+    public void setUpdateMembers(ArrayList<MemberData> updateMembers) {
+        if (updateMembers == null) {
+            this.updateMembers = null;
+        } else {
+            if (this.updateMembers == null) {
+                this.updateMembers = new ArrayList<MemberData>();
+            }
+            this.updateMembers.clear();
+            this.updateMembers.addAll(updateMembers);
+        }
     }
 }

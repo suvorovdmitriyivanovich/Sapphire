@@ -61,13 +61,16 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
     private Typeface typeFace;
     private boolean readonly = false;
     private boolean assign = false;
+    private boolean newItem = false;
 
+    //public WorkplaceInspectionItemsAdapter(Context context, boolean readonly, boolean assign, boolean newItem) {
     public WorkplaceInspectionItemsAdapter(Context context, boolean readonly, boolean assign) {
         this.context = context;
         listData = new ArrayList<WorkplaceInspectionItemData>();
         typeFace = Typeface.createFromAsset(Sapphire.getInstance().getAssets(),"fonts/fontawesome-webfont.ttf");
         this.readonly = readonly;
         this.assign = assign;
+        //this.newItem = newItem;
     }
 
     @Override
@@ -157,9 +160,18 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
             }
         });
 
+        /*
+        if (newItem) {
+            holder.files.setVisibility(View.GONE);
+        } else {
+            holder.files.setVisibility(View.VISIBLE);
+        }
+        */
+
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //if (context instanceof OnRootClickListener && !newItem) {
                 if (context instanceof OnRootClickListener) {
                     ((OnRootClickListener) context).onRootClick(holder.getAdapterPosition());
                 }

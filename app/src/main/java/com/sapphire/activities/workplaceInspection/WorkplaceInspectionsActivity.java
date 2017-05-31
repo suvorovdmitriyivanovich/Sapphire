@@ -44,7 +44,6 @@ import com.sapphire.logic.Environment;
 import com.sapphire.logic.NetRequests;
 import com.sapphire.models.ItemPriorityData;
 import com.sapphire.models.ItemStatusData;
-import com.sapphire.models.MeetingData;
 import com.sapphire.models.MemberData;
 import com.sapphire.models.ParameterData;
 import com.sapphire.models.ProfileData;
@@ -52,7 +51,6 @@ import com.sapphire.models.TemplateData;
 import com.sapphire.logic.UserInfo;
 import com.sapphire.models.WorkplaceInspectionData;
 import com.sapphire.models.WorkplaceInspectionItemData;
-
 import java.util.ArrayList;
 
 public class WorkplaceInspectionsActivity extends BaseActivity implements WorkplaceInspectionsAdapter.OnRootWorkplaceInspectionsClickListener,
@@ -285,6 +283,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         intent.putExtra("posted", workplaceInspectionData.getPostedOnBoard());
         UserInfo userInfo = UserInfo.getUserInfo();
         ArrayList<MemberData> memberDatas = new ArrayList<MemberData>();
+        /*
         for (ProfileData item: userInfo.getCurrentOrganizationStructures()) {
             MemberData memberData = new MemberData();
             memberData.setProfile(item);
@@ -296,6 +295,13 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
             }
 
             memberDatas.add(memberData);
+        }
+        */
+        for (MemberData itemProfile: workplaceInspectionData.getProfiles()) {
+            if (!itemProfile.getPresence()) {
+                continue;
+            }
+            memberDatas.add(itemProfile);
         }
         userInfo.setMembers(memberDatas);
         startActivity(intent);
@@ -312,6 +318,7 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         intent.putExtra("posted", workplaceInspectionData.getPostedOnBoard());
         UserInfo userInfo = UserInfo.getUserInfo();
         ArrayList<MemberData> memberDatas = new ArrayList<MemberData>();
+        /*
         for (ProfileData item: userInfo.getCurrentOrganizationStructures()) {
             MemberData memberData = new MemberData();
             memberData.setProfile(item);
@@ -323,6 +330,13 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
             }
 
             memberDatas.add(memberData);
+        }
+        */
+        for (MemberData itemProfile: workplaceInspectionData.getProfiles()) {
+            if (!itemProfile.getPresence()) {
+                continue;
+            }
+            memberDatas.add(itemProfile);
         }
         userInfo.setMembers(memberDatas);
         startActivity(intent);

@@ -274,4 +274,5 @@
     <string name="member">Member</string>
     <string name="text_primary_contact">Primary Contact</string>
     <string name="text_secondary_contact">Secondary Contact</string>
+    <string name="text_organization_structure_no">No organization structure to display</string>
 </resources>
