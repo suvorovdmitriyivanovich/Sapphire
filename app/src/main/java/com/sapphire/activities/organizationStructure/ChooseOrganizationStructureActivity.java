@@ -47,6 +47,7 @@ public class ChooseOrganizationStructureActivity extends BaseActivity implements
     private TextView tittle_message;
     private Button button_cancel_save;
     private Button button_send_save;
+    private boolean excludeMembers = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +122,9 @@ public class ChooseOrganizationStructureActivity extends BaseActivity implements
             }
         });
 
+        Intent intent = getIntent();
+        excludeMembers = intent.getBooleanExtra("excludeMembers", false);
+
         /*
         datas.clear();
         for (ProfileData item: userInfo.getCurrentOrganizationStructures()) {
@@ -142,11 +146,25 @@ public class ChooseOrganizationStructureActivity extends BaseActivity implements
         }
         */
         for (ProfileData item: userInfo.getCurrentOrganizationStructures()) {
+            if (excludeMembers) {
+                boolean needContinue = false;
+                for (MemberData itemProfile: userInfo.getChooseMembers()) {
+                    if (item.getProfileId().equals(itemProfile.getProfile().getProfileId())) {
+                        needContinue = true;
+                        break;
+                    }
+                }
+                if (needContinue) {
+                    continue;
+                }
+            }
             MemberData memberData = new MemberData();
             memberData.setProfile(item);
+            memberData.setName(item.getName());
             for (MemberData itemProfile: userInfo.getUpdateMembers()) {
                 if (item.getProfileId().equals(itemProfile.getProfile().getProfileId())) {
-                    memberData.setPresence(itemProfile.getPresence());
+                    //memberData.setPresence(itemProfile.getPresence());
+                    memberData.setPresence(true);
                     break;
                 }
             }
@@ -222,7 +240,7 @@ public class ChooseOrganizationStructureActivity extends BaseActivity implements
     private void sort() {
         Collections.sort(datas, new Comparator<MemberData>() {
             public int compare(MemberData o1, MemberData o2) {
-                return o1.getProfile().getName().compareTo(o2.getProfile().getName());
+                return o1.getName().compareTo(o2.getName());
             }
         });
     }

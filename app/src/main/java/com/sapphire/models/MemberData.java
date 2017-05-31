@@ -10,6 +10,7 @@ public class MemberData {
     private String name = "";
     private String workplaceInspectionId = "";
     private String WorkplaceInspectionProfileId = "";
+    private boolean isProfile = false;
 
     public MemberData() {
 
@@ -119,5 +120,13 @@ public class MemberData {
 
     public void setWorkplaceInspectionProfileId(String workplaceInspectionProfileId) {
         WorkplaceInspectionProfileId = workplaceInspectionProfileId;
+    }
+
+    public boolean getIsProfile() {
+        return isProfile;
+    }
+
+    public void setIsProfile(boolean isProfile) {
+        this.isProfile = isProfile;
     }
 }

@@ -219,7 +219,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
                 } else if (deleteItem == 2) {
                     deleteItem = 0;
                     datasTeam.remove(currentPosition);
-                    adapterTeam.remove(currentPosition);
+                    adapterTeam.deleteItem(currentPosition);
                     updateVisibility();
                 } else {
                     updateWorkplaceInspection(0);
@@ -307,9 +307,10 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             datasTeam.clear();
             for (MemberData item : userInfo.getMembers()) {
                 MemberData memberData = new MemberData();
-                memberData.setPresence(item.getPresence());
+                //memberData.setPresence(item.getPresence());
                 memberData.setProfile(item.getProfile());
                 memberData.setMeetingMemberId(item.getMeetingMemberId());
+                memberData.setName(item.getName());
 
                 datasTeam.add(memberData);
             }
@@ -589,7 +590,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             ArrayList<MemberData> memberDatas = userInfo.getMembers();
             Collections.sort(memberDatas, new Comparator<MemberData>() {
                 public int compare(MemberData o1, MemberData o2) {
-                    return o1.getProfile().getName().compareTo(o2.getProfile().getName());
+                    return o1.getName().compareTo(o2.getName());
                 }
             });
             //if (memberDatas.size() == 0) {
@@ -1196,7 +1197,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
     private void sort() {
         Collections.sort(datasTeam, new Comparator<MemberData>() {
             public int compare(MemberData o1, MemberData o2) {
-                return o1.getProfile().getName().compareTo(o2.getProfile().getName());
+                return o1.getName().compareTo(o2.getName());
             }
         });
     }
@@ -1209,9 +1210,10 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
             datasTeam.clear();
             for (MemberData item: userInfo.getUpdateMembers()) {
                 MemberData memberData = new MemberData();
-                memberData.setPresence(item.getPresence());
+                //memberData.setPresence(item.getPresence());
                 memberData.setProfile(item.getProfile());
                 memberData.setMeetingMemberId(item.getMeetingMemberId());
+                memberData.setName(item.getName());
 
                 datasTeam.add(memberData);
             }

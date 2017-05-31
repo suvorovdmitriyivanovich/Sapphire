@@ -68,7 +68,10 @@ public class WorkplaceInspectionData {
             if (!data.isNull("Inspected")) {
                 setInspected(data.getBoolean("Inspected"));
             }
-            setProfiles(UserInfo.getUserInfo().getCurrentOrganizationStructures());
+            //setProfiles(UserInfo.getUserInfo().getCurrentOrganizationStructures());
+            //if (!data.isNull("Profiles")) {
+            //    setProfiles(data.getJSONArray("Profiles"));
+            //}
             if (!data.isNull("Profiles")) {
                 setProfiles(data.getJSONArray("Profiles"));
             }
@@ -197,19 +200,27 @@ public class WorkplaceInspectionData {
     }
 
     public void setProfiles(JSONArray profiles) {
+        /*
         for (int y=0; y < profiles.length(); y++) {
             try {
                 MemberData memberData = new MemberData(profiles.getJSONObject(y));
                 for (MemberData item: this.profiles) {
                     if (item.getProfile().getProfileId().equals(memberData.getProfile().getProfileId())) {
                         item.setPresence(true);
-                        /*
-                        item.setWorkplaceInspectionProfileId(memberData.getWorkplaceInspectionProfileId());
-                        item.setWorkplaceInspectionId(memberData.getWorkplaceInspectionId());
-                        item.setName(memberData.getName());
-                        */
+                        //item.setWorkplaceInspectionProfileId(memberData.getWorkplaceInspectionProfileId());
+                        //item.setWorkplaceInspectionId(memberData.getWorkplaceInspectionId());
+                        //item.setName(memberData.getName());
                     }
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        */
+        this.profiles.clear();
+        for (int y=0; y < profiles.length(); y++) {
+            try {
+                this.profiles.add(new MemberData(profiles.getJSONObject(y)));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

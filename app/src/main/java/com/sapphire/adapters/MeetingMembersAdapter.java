@@ -73,7 +73,7 @@ public class MeetingMembersAdapter extends RecyclerView.Adapter<MeetingMembersAd
 
         holder.border.setVisibility(View.VISIBLE);
 
-        if (onDelete) {
+        if (onDelete || data.getIsProfile()) {
             holder.presence.setVisibility(View.GONE);
             holder.delete.setVisibility(View.VISIBLE);
         } else {
@@ -91,7 +91,7 @@ public class MeetingMembersAdapter extends RecyclerView.Adapter<MeetingMembersAd
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (readonly || onDelete) {
+                if (readonly || onDelete || data.getIsProfile()) {
                     return;
                 }
                 data.setPresence(!data.getPresence());
@@ -102,7 +102,7 @@ public class MeetingMembersAdapter extends RecyclerView.Adapter<MeetingMembersAd
             }
         });
 
-        if (onDelete) {
+        if (onDelete || data.getIsProfile()) {
             holder.delete.setTypeface(typeFace);
             holder.delete.setText(Html.fromHtml("&#" + Environment.IcoDelete + ";"));
             holder.delete.setOnClickListener(new View.OnClickListener() {
@@ -150,7 +150,7 @@ public class MeetingMembersAdapter extends RecyclerView.Adapter<MeetingMembersAd
         notifyDataSetChanged();
     }
 
-    public void remove(int position){
+    public void deleteItem(int position){
         listData.remove(position);
         notifyDataSetChanged();
     }

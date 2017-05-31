@@ -298,9 +298,9 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         }
         */
         for (MemberData itemProfile: workplaceInspectionData.getProfiles()) {
-            if (!itemProfile.getPresence()) {
-                continue;
-            }
+            //if (!itemProfile.getPresence()) {
+            //    continue;
+            //}
             memberDatas.add(itemProfile);
         }
         userInfo.setMembers(memberDatas);
@@ -333,9 +333,9 @@ public class WorkplaceInspectionsActivity extends BaseActivity implements Workpl
         }
         */
         for (MemberData itemProfile: workplaceInspectionData.getProfiles()) {
-            if (!itemProfile.getPresence()) {
-                continue;
-            }
+            //if (!itemProfile.getPresence()) {
+            //    continue;
+            //}
             memberDatas.add(itemProfile);
         }
         userInfo.setMembers(memberDatas);

@@ -240,7 +240,16 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
         intent.putExtra("posted", data.getPosted());
         intent.putExtra("completed", data.getCompleted());
         UserInfo userInfo = UserInfo.getUserInfo();
-        userInfo.setMembers(data.getMembers());
+        ArrayList<MemberData> memberDatas = new ArrayList<MemberData>();
+        for (MemberData itemProfile: data.getMembers()) {
+            memberDatas.add(itemProfile);
+        }
+        for (MemberData itemProfile: data.getProfiles()) {
+            MemberData memberData = itemProfile;
+            memberData.setIsProfile(true);
+            memberDatas.add(memberData);
+        }
+        userInfo.setMembers(memberDatas);
         userInfo.setTopics(data.getTopics());
         startActivity(intent);
     }
@@ -257,7 +266,16 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
         intent.putExtra("posted", data.getPosted());
         intent.putExtra("completed", data.getCompleted());
         UserInfo userInfo = UserInfo.getUserInfo();
-        userInfo.setMembers(data.getMembers());
+        ArrayList<MemberData> memberDatas = new ArrayList<MemberData>();
+        for (MemberData itemProfile: data.getMembers()) {
+            memberDatas.add(itemProfile);
+        }
+        for (MemberData itemProfile: data.getProfiles()) {
+            MemberData memberData = itemProfile;
+            memberData.setIsProfile(true);
+            memberDatas.add(memberData);
+        }
+        userInfo.setMembers(memberDatas);
         userInfo.setTopics(data.getTopics());
         startActivity(intent);
     }

@@ -79,9 +79,9 @@ public class WorkplaceInspectionAddAction extends AsyncTask{
 
             JSONArray jsonArrayProfile = new JSONArray();
             for (MemberData item: datasTeam) {
-                if (!item.getPresence()) {
-                    continue;
-                }
+                //if (!item.getPresence()) {
+                //    continue;
+                //}
                 JSONObject jsonObjectProfile = new JSONObject();
                 jsonObjectProfile.put("WorkplaceInspectionProfileId", item.getWorkplaceInspectionProfileId());
                 jsonObjectProfile.put("WorkplaceInspectionId", item.getWorkplaceInspectionId());

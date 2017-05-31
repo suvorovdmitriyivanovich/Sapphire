@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.sapphire.R;
 import com.sapphire.Sapphire;
 import com.sapphire.activities.BaseActivity;
+import com.sapphire.activities.organizationStructure.ChooseOrganizationStructureActivity;
 import com.sapphire.adapters.TopicsAdapter;
 import com.sapphire.adapters.MeetingMembersAdapter;
 import com.sapphire.adapters.SpinTemplatesAdapter;
@@ -58,9 +59,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 public class MeetingActivity extends BaseActivity implements MeetingMembersAdapter.OnRootMeetingMembersClickListener,
+                                                             MeetingMembersAdapter.OnDeleteMeetingMembersClickListener,
                                                              TopicsAdapter.OnRootTopicsClickListener,
                                                              TopicsAdapter.OnOpenTopicsClickListener,
                                                              TopicsAdapter.OnDeleteTopicsClickListener,
@@ -95,7 +99,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
     private TextView tittle_message;
     private Button button_cancel_save;
     private Button button_send_save;
-    private boolean deleteItem = false;
+    private int deleteItem = 0;
     private int currentPosition = 0;
     private static SimpleDateFormat format;
     private Calendar cal = Calendar.getInstance();
@@ -192,13 +196,13 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         dialog_confirm.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                deleteItem = false;
+                deleteItem = 0;
             }
         });
         dialog_confirm.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                deleteItem = false;
+                deleteItem = 0;
             }
         });
 
@@ -206,10 +210,10 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             @Override
             public void onClick(View v) {
                 dialog_confirm.dismiss();
-                if (!deleteItem) {
+                if (deleteItem == 0) {
                     finish();
                 }
-                deleteItem = false;
+                deleteItem = 0;
             }
         });
 
@@ -217,10 +221,15 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             @Override
             public void onClick(View v) {
                 dialog_confirm.dismiss();
-                if (deleteItem) {
-                    deleteItem = false;
+                if (deleteItem == 1) {
+                    deleteItem = 0;
                     adapterTopics.deleteItem(currentPosition);
                     datasTopic.remove(currentPosition);
+                    updateVisibility();
+                } else if (deleteItem == 2) {
+                    deleteItem = 0;
+                    adapter.deleteItem(currentPosition);
+                    datas.remove(currentPosition);
                     updateVisibility();
                 } else {
                     updateWorkplaceInspection(0);
@@ -316,13 +325,46 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             }
         });
 
+        View add_members = findViewById(R.id.add_members);
+        add_members.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSoftKeyboard();
+                ArrayList<MemberData> memberDatas = new ArrayList<MemberData>();
+                for (MemberData itemProfile: datas) {
+                    if (!itemProfile.getIsProfile()) {
+                        continue;
+                    }
+                    memberDatas.add(itemProfile);
+                }
+                userInfo.setUpdateMembers(memberDatas);
+
+                ArrayList<MemberData> chooseDatas = new ArrayList<MemberData>();
+                for (MemberData itemProfile: datas) {
+                    if (itemProfile.getIsProfile()) {
+                        continue;
+                    }
+                    chooseDatas.add(itemProfile);
+                }
+                userInfo.setChooseMembers(chooseDatas);
+
+                Intent intent = new Intent(MeetingActivity.this, ChooseOrganizationStructureActivity.class);
+                intent.putExtra("excludeMembers", true);
+                startActivity(intent);
+            }
+        });
+
         Intent intent = getIntent();
         id = intent.getStringExtra("id");
         if (id == null) {
             id = "";
         }
+
         userInfo = UserInfo.getUserInfo();
+        userInfo.setUpdateMembers(null);
+        userInfo.setChooseMembers(null);
         userInfo.setTopic(null);
+
         if (!id.equals("")) {
             readonly = intent.getBooleanExtra("readonly", false);
             nameOld = intent.getStringExtra("name");
@@ -345,6 +387,8 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
                 memberData.setPresence(item.getPresence());
                 memberData.setProfile(item.getProfile());
                 memberData.setMeetingMemberId(item.getMeetingMemberId());
+                memberData.setIsProfile(item.getIsProfile());
+                memberData.setName(item.getProfile().getFullName());
 
                 datas.add(memberData);
             }
@@ -404,6 +448,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         } else {
             datas = userInfo.getAllMembers();
         }
+        sort();
 
         adapterTopics = new TopicsAdapter(this, readonly);
         topicslist.setAdapter(adapterTopics);
@@ -592,6 +637,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
             add.setVisibility(View.GONE);
             save.setVisibility(View.GONE);
             button_ok.setVisibility(View.GONE);
+            add_members.setVisibility(View.GONE);
             name.setFocusable(false);
             location.setFocusable(false);
             date.setFocusable(false);
@@ -1225,7 +1271,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         hideSoftKeyboard();
 
         currentPosition = position;
-        deleteItem = true;
+        deleteItem = 1;
 
         tittle_message.setText(getResources().getString(R.string.text_confirm_delete));
         button_cancel_save.setText(getResources().getString(R.string.text_cancel));
@@ -1293,6 +1339,19 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         hideSoftKeyboard();
         //datas.get(position).setPresence(!datas.get(position).getPresence());
         //adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDeleteMeetingMembersClick(int position) {
+        hideSoftKeyboard();
+
+        currentPosition = position;
+        deleteItem = 2;
+
+        tittle_message.setText(getResources().getString(R.string.text_confirm_delete));
+        button_cancel_save.setText(getResources().getString(R.string.text_cancel));
+        button_send_save.setText(getResources().getString(R.string.text_delete));
+        dialog_confirm.show();
     }
 
     @Override
@@ -1436,11 +1495,56 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         return (int) (pixels * scale + 0.5f);
     }
 
+    private void sort() {
+        Collections.sort(datas, new Comparator<MemberData>() {
+            public int compare(MemberData o1, MemberData o2) {
+                //return o1.getName().compareTo(o2.getName());
+                String x1 = String.valueOf(o1.getIsProfile());
+                String x2 = String.valueOf(o2.getIsProfile());
+                int sComp = x1.compareTo(x2);
+
+                if (sComp != 0) {
+                    return sComp;
+                } else {
+                    String x11 = o1.getName();
+                    String x12 = o2.getName();
+                    return x11.compareTo(x12);
+                }
+            }
+        });
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (userInfo.getTopic() != null) {
+        if (userInfo.getUpdateMembers() != null) {
+            ArrayList<MemberData> memberDatas = new ArrayList<MemberData>();
+            for (MemberData item: datas) {
+                if (item.getIsProfile()) {
+                    continue;
+                }
+
+                memberDatas.add(item);
+            }
+
+            for (MemberData item: userInfo.getUpdateMembers()) {
+                MemberData memberData = new MemberData();
+                //memberData.setPresence(item.getPresence());
+                memberData.setProfile(item.getProfile());
+                memberData.setMeetingMemberId(item.getMeetingMemberId());
+                memberData.setName(item.getName());
+                memberData.setIsProfile(true);
+
+                memberDatas.add(memberData);
+            }
+            datas.clear();
+            datas.addAll(memberDatas);
+            sort();
+            adapter.setListArray(datas);
+            updateVisibility();
+            userInfo.setUpdateMembers(null);
+        } else if (userInfo.getTopic() != null) {
             if (userInfo.getPosition() == -1) {
                 datasTopic.add(userInfo.getTopic());
                 adapterTopics.addTopic(userInfo.getTopic());

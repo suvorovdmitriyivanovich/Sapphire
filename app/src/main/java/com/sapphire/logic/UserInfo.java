@@ -57,6 +57,7 @@ public class UserInfo {
     private AppRoleAppSecurityData globalAppRoleAppSecurities = new AppRoleAppSecurityData();
     private ArrayList<ProfileData> currentOrganizationStructures = new ArrayList<ProfileData>();
     private ArrayList<MemberData> updateMembers = new ArrayList<MemberData>();
+    private ArrayList<MemberData> chooseMembers = new ArrayList<MemberData>();
 
     //---------------------Singleton---------------------------
     private static UserInfo userInfo;
@@ -417,6 +418,22 @@ public class UserInfo {
             }
             this.updateMembers.clear();
             this.updateMembers.addAll(updateMembers);
+        }
+    }
+
+    public ArrayList<MemberData> getChooseMembers() {
+        return chooseMembers;
+    }
+
+    public void setChooseMembers(ArrayList<MemberData> chooseMembers) {
+        if (chooseMembers == null) {
+            this.chooseMembers = null;
+        } else {
+            if (this.chooseMembers == null) {
+                this.chooseMembers = new ArrayList<MemberData>();
+            }
+            this.chooseMembers.clear();
+            this.chooseMembers.addAll(chooseMembers);
         }
     }
 }
