@@ -71,7 +71,7 @@
             android:id="@+id/time"
             android:layout_centerVertical="true"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:layout_marginLeft="10dp" />
 
         <Button

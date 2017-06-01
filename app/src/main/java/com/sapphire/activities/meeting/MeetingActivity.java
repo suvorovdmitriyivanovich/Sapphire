@@ -19,6 +19,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -230,6 +231,10 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
                     deleteItem = 0;
                     adapter.deleteItem(currentPosition);
                     datas.remove(currentPosition);
+                    //adapter.setListArray(datas);
+                    //adapter = new MeetingMembersAdapter(MeetingActivity.this, readonly, false);
+                    //memberslist.setAdapter(adapter);
+                    //adapter.setListArray(datas);
                     updateVisibility();
                 } else {
                     updateWorkplaceInspection(0);
@@ -632,6 +637,15 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
         updateVisibility();
 
         UpdateBottom();
+
+        View scrollView = findViewById(R.id.scrollView);
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hideSoftKeyboard();
+                return false;
+            }
+        });
 
         if (readonly) {
             add.setVisibility(View.GONE);

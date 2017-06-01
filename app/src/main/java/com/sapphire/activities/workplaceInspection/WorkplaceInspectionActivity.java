@@ -17,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -546,6 +547,13 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         }
 
         scroll = (ScrollView) findViewById(R.id.scrollView);
+        scroll.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hideSoftKeyboard();
+                return false;
+            }
+        });
     }
 
     Animation.AnimationListener animationErrorUpNameListener = new Animation.AnimationListener() {

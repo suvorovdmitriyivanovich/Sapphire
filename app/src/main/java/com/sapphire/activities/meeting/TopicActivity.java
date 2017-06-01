@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -251,6 +252,15 @@ public class TopicActivity extends BaseActivity implements UpdateAction.RequestU
         });
 
         UpdateBottom();
+
+        View scrollView = findViewById(R.id.scrollView);
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hideSoftKeyboard();
+                return false;
+            }
+        });
     }
 
     Animation.AnimationListener animationErrorUpNameListener = new Animation.AnimationListener() {

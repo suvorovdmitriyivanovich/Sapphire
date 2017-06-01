@@ -114,6 +114,7 @@ public class MeetingMembersAdapter extends RecyclerView.Adapter<MeetingMembersAd
                 }
             });
         } else {
+            /*
             holder.presence.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -127,6 +128,7 @@ public class MeetingMembersAdapter extends RecyclerView.Adapter<MeetingMembersAd
                     }
                 }
             });
+            */
         }
 
         if (readonly) {

@@ -52,6 +52,8 @@ import com.sapphire.logic.UserInfo;
 import com.sapphire.models.AdressData;
 import com.sapphire.models.ContactData;
 import com.sapphire.models.ProfileData;
+import com.sapphire.utils.GeneralOperations;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -405,7 +407,8 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             View border = findViewById(R.id.border);
             border.setVisibility(View.GONE);
 
-            photo_group.setVisibility(View.GONE);
+            View photo_group_group = findViewById(R.id.photo_group);
+            photo_group_group.setVisibility(View.GONE);
 
             personal_group.setVisibility(View.GONE);
 
@@ -872,8 +875,8 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             secondaryEmailAllowNotificationOld = profileData.getSecondaryEmailAllowNotification();
             String detail = "<b>" + getResources().getString(R.string.text_primary_email) + "</b>: " + primaryOld;
             detail = detail + "<br><b>" + getResources().getString(R.string.text_secondary_email) + "</b>: " + secondaryOld;
-            detail = detail + "<br><b>" + getResources().getString(R.string.text_home_phone) + "</b>: " + homeOld;
-            detail = detail + "<br><b>" + getResources().getString(R.string.text_cell_phone) + "</b>: " + cellOld;
+            detail = detail + "<br><b>" + getResources().getString(R.string.text_home_phone) + "</b>: " + GeneralOperations.formatingPhone(homeOld);
+            detail = detail + "<br><b>" + getResources().getString(R.string.text_cell_phone) + "</b>: " + GeneralOperations.formatingPhone(cellOld);
             contact.setText(Html.fromHtml(detail));
 
             new GetProfilesAdditionalInformationAction(ProfileActivity.this).execute();

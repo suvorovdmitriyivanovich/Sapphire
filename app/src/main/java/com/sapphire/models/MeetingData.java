@@ -1,11 +1,9 @@
 package com.sapphire.models;
 
 import com.sapphire.utils.DateOperations;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

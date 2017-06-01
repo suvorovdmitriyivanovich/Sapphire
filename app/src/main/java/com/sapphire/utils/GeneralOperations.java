@@ -95,4 +95,32 @@ public class GeneralOperations {
 
         return true;
     }
+
+    public static String formatingPhone(String noFormating) {
+        String phone = "";
+
+        noFormating = noFormating.replaceAll("\\(", "");
+        noFormating = noFormating.replaceAll("\\)", "");
+        noFormating = noFormating.replaceAll(" ", "");
+        noFormating = noFormating.replaceAll("-", "");
+
+        int length1 = Math.min(3,noFormating.length());
+        if (length1 <=0) {
+            return phone;
+        }
+        phone = phone + "(" + noFormating.substring(0, length1) + ")";
+
+        int length2 = Math.min(6,noFormating.length());
+        if (length2 <=0 || noFormating.length() <= 3) {
+            return phone;
+        }
+        phone = phone + " " + noFormating.substring(3, length2);
+
+        if (noFormating.length() <= 6) {
+            return phone;
+        }
+        phone = phone + "-" + noFormating.substring(6, noFormating.length());
+
+        return phone;
+    }
 }
