@@ -98,6 +98,7 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
     private String newFile = "";
     private FileData fileData;
     private boolean readonly = false;
+    private boolean onlyStorage = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +118,7 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
 
             url = intent.getStringExtra("url");
             nameField = intent.getStringExtra("nameField");
+            onlyStorage = intent.getBooleanExtra("onlyStorage", false);
         }
 
         AlertDialog.Builder adb_save = new AlertDialog.Builder(this);
@@ -273,6 +275,11 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
                 dialog.dismiss();
             }
         });
+
+        if (onlyStorage) {
+            photo_group.setVisibility(View.GONE);
+            mobile_group.setVisibility(View.GONE);
+        }
 
         text_no = findViewById(R.id.text_no);
 

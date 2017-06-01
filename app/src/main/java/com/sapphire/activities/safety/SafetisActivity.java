@@ -268,6 +268,7 @@ public class SafetisActivity extends BaseActivity implements SafetisAdapter.OnRo
         intent.putExtra("url", Environment.SafetisFilesURL);
         intent.putExtra("nameField", "SafetyDataSheetId");
         intent.putExtra("readonly", !edit);
+        intent.putExtra("onlyStorage", true);
 
         ArrayList<FileData> fileDatas = new ArrayList<FileData>();
         if (!safetyData.getFileId().equals("")) {
