@@ -1230,7 +1230,7 @@ public class MeetingActivity extends BaseActivity implements MeetingMembersAdapt
                 text_topics_error.startAnimation(animationErrorDown);
             }
         } else if (datasTopic.size() != 0) {
-            text_topics.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
+            text_topics.setTextColor(ContextCompat.getColor(this, R.color.black));
             text_topics_no.setTextColor(ContextCompat.getColor(this, R.color.grey_dark));
             text_topics_error.setVisibility(View.GONE);
             showErrorTopics = false;

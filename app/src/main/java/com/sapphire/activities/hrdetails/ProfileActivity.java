@@ -53,7 +53,6 @@ import com.sapphire.models.AdressData;
 import com.sapphire.models.ContactData;
 import com.sapphire.models.ProfileData;
 import com.sapphire.utils.GeneralOperations;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -371,7 +370,12 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         customedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(ProfileActivity.this, EditCustomActivity.class);
+                intent.putExtra("birthday", birthdayOld);
+                intent.putExtra("sin_number", sin_numberOld);
+                intent.putExtra("driver_license", driver_licenseOld);
+                intent.putExtra("driver_expiry", driver_expiryOld);
+                startActivity(intent);
             }
         });
 
@@ -394,6 +398,9 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         }
 
         String securityModeWork = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-family-members", "");
+        if (securityModeWork.equals("")) {
+            securityModeWork = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-hr-details", "");
+        }
         if (securityModeWork.equals("fullAccess")) {
             editWork = true;
         } else if (securityModeWork.equals("viewOnly")) {
@@ -686,8 +693,8 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         payroll.setText(Html.fromHtml(payrollStr));
 
         String customStr = "";
-        customStr = customStr + "<b>" + getResources().getString(R.string.text_custom1) + "</b>: " + profileData.getCustomField1();
-        customStr = customStr + "<br><b>" + getResources().getString(R.string.text_custom2) + "</b>: " + profileData.getCustomField1();
+        customStr = customStr + "<b>" + getResources().getString(R.string.text_custom_field) + " 1</b>: " + profileData.getCustomField1();
+        customStr = customStr + "<br><b>" + getResources().getString(R.string.text_custom_field) + " 2</b>: " + profileData.getCustomField2();
         custom.setText(Html.fromHtml(customStr));
 
         new GetContactsAction(ProfileActivity.this, false, true, true).execute();

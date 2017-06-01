@@ -88,6 +88,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
 
+        <activity android:name=".activities.hrdetails.EditCustomActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+
         <activity android:name=".activities.workplaceInspection.WorkplaceInspectionsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
