@@ -39,7 +39,8 @@ public class DocumentData {
                 setDocCategoryId(data.getString("DocCategoryId"));
             }
             if (!data.isNull("Category")) {
-                setCategory(data.getJSONObject("Category"));
+                //setCategory(data.getJSONObject("Category"));
+                setCategory(data.getString("Category"));
             }
             if (!data.isNull("FileId")) {
                 setFileId(data.getString("FileId"));
@@ -107,9 +108,15 @@ public class DocumentData {
         return category;
     }
 
-    public void setCategory(JSONObject category) {
-        this.category = new CategoryData(category);
+    public void setCategory(String category) {
+        CategoryData categoryData = new CategoryData(category);
+        categoryData.setName(category);
+        this.category = categoryData;
     }
+
+    //public void setCategory(JSONObject category) {
+    //    this.category = new CategoryData(category);
+    //}
 
     public void setCategory(CategoryData category) {
         this.category = category;
