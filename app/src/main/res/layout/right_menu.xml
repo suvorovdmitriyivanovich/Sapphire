@@ -13,7 +13,7 @@
         android:background="@drawable/button_bottom"
         android:padding="5dp">
 
-        <com.sapphire.ui.CircleImageView
+        <com.dealerpilothr.ui.CircleImageView
             android:layout_width="63dp"
             android:layout_height="63dp"
             android:id="@+id/ico"

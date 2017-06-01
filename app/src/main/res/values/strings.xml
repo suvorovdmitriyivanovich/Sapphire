@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sapphire</string>
+    <string name="app_name">DealerPILOT HR</string>
     <string name="text_loading">Loading</string>
     <string name="text_please_wait">Please wait...</string>
     <string name="error_login">Incorrect login</string>
