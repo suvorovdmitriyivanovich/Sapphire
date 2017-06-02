@@ -73,14 +73,29 @@
 
             </LinearLayout>
 
-            <Button
-                android:layout_width="45dp"
-                android:layout_height="40dp"
-                android:id="@+id/report"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:background="@drawable/button_selector"
-                android:textColor="@color/white"
-                android:layout_gravity="right" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/button_bottom">
+
+                <Button
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/files"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:background="@drawable/button_selector_dark"
+                    android:textColor="@color/white"
+                    android:layout_marginRight="10dp" />
+
+                <Button
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/report"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:background="@drawable/button_selector"
+                    android:textColor="@color/white" />
+            </LinearLayout>
 
         </LinearLayout>
 

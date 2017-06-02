@@ -31,6 +31,10 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
         void onDeleteMeetingsClick(int position);
     }
 
+    public interface OnFilesMeetingsClickListener{
+        void onFilesMeetingsClick(int position);
+    }
+
     public interface OnReportMeetingsClickListener{
         void onReportMeetingsClick(int position);
     }
@@ -40,6 +44,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
         TextView text_date;
         Button open;
         Button delete;
+        Button files;
         Button report;
         View border;
         View item;
@@ -50,6 +55,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
             text_date = (TextView) itemView.findViewById(R.id.text_description);
             open = (Button) itemView.findViewById(R.id.open);
             delete = (Button) itemView.findViewById(R.id.delete);
+            files = (Button) itemView.findViewById(R.id.files);
             report = (Button) itemView.findViewById(R.id.report);
             border = itemView.findViewById(R.id.border);
             item = itemView;
@@ -136,6 +142,17 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
             }
         });
 
+        holder.files.setTypeface(typeFace);
+        holder.files.setText(Html.fromHtml("&#" + Environment.IcoFiles + ";"));
+        holder.files.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mContext instanceof OnFilesMeetingsClickListener) {
+                    ((OnFilesMeetingsClickListener) mContext).onFilesMeetingsClick(holder.getAdapterPosition());
+                }
+            }
+        });
+
         holder.report.setTypeface(typeFace);
         holder.report.setText(Html.fromHtml("&#"+Environment.IcoReport+";"));
         holder.report.setOnClickListener(new View.OnClickListener() {
@@ -170,6 +187,16 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
             } else {
                 holder.report.setBackground(ContextCompat.getDrawable(mContext, R.drawable.button_selector));
             }
+        }
+
+        if (isDashboard) {
+            holder.open.setVisibility(View.GONE);
+            holder.delete.setVisibility(View.GONE);
+            holder.files.setVisibility(View.GONE);
+        } else {
+            holder.open.setVisibility(View.VISIBLE);
+            holder.delete.setVisibility(View.VISIBLE);
+            holder.files.setVisibility(View.VISIBLE);
         }
 
         if (!edit) {

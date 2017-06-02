@@ -211,11 +211,11 @@ public class WorkplaceInspectionsAdapter extends RecyclerView.Adapter<WorkplaceI
         if (isDashboard) {
             holder.open.setVisibility(View.GONE);
             holder.delete.setVisibility(View.GONE);
-            //holder.files.setVisibility(View.GONE);
+            holder.files.setVisibility(View.GONE);
         } else {
             holder.open.setVisibility(View.VISIBLE);
             holder.delete.setVisibility(View.VISIBLE);
-            //holder.files.setVisibility(View.VISIBLE);
+            holder.files.setVisibility(View.VISIBLE);
         }
 
         if (!edit && !isDashboard) {

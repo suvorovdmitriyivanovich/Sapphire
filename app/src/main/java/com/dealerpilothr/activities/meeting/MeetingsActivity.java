@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dealerpilothr.Dealerpilothr;
+import com.dealerpilothr.activities.FilesActivity;
 import com.dealerpilothr.activities.MenuFragment;
 import com.dealerpilothr.activities.RightFragment;
 import com.dealerpilothr.activities.policy.PdfActivity;
@@ -46,6 +47,7 @@ import java.util.ArrayList;
 public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.OnRootMeetingsClickListener,
                                                               MeetingsAdapter.OnOpenMeetingsClickListener,
                                                               MeetingsAdapter.OnDeleteMeetingsClickListener,
+                                                              MeetingsAdapter.OnFilesMeetingsClickListener,
                                                               MeetingsAdapter.OnReportMeetingsClickListener,
                                                               TemplatesAction.RequestTemplates,
                                                               TemplatesAction.RequestTemplatesData,
@@ -288,6 +290,20 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
         button_cancel_save.setText(getResources().getString(R.string.text_cancel));
         button_send_save.setText(getResources().getString(R.string.text_delete));
         dialog_confirm.show();
+    }
+
+    @Override
+    public void onFilesMeetingsClick(int position) {
+        Intent intent = new Intent(MeetingsActivity.this, FilesActivity.class);
+        MeetingData meetingData = datas.get(position);
+        intent.putExtra("name", meetingData.getName());
+        intent.putExtra("id", meetingData.getMeetingId());
+        intent.putExtra("url", Environment.MeetingsFilesURL);
+        intent.putExtra("nameField", "MeetingId");
+        //intent.putExtra("readonly", meetingData.getCompleted());
+
+        UserInfo.getUserInfo().setFileDatas(meetingData.getFiles());
+        startActivity(intent);
     }
 
     @Override

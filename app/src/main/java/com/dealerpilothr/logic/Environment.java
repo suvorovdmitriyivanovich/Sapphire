@@ -42,6 +42,7 @@ public class Environment {
     public static final String TopicTemplateItemsURL = "/v1/HealthAndSafety/TopicTemplates/Items";
     public static final String MembersURL = "/v1/HealthAndSafety/Members";
     public static final String MeetingsURL = "/v1/HealthAndSafety/Meetings";
+    public static final String MeetingsFilesURL = "/v1/HealthAndSafety/Meetings/Files";
     public static final String PerformanceEvaluationsURL = "/v1/PerformanceEvaluations";
     public static final String PerformanceEvaluationsFilesURL = "/v1/PerformanceEvaluations/AttachFile";
     public static final String DisciplinesURL = "/v1/Disciplines";
