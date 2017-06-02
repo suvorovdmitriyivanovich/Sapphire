@@ -538,6 +538,8 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
             inspected = true;
             assign.setVisibility(View.GONE);
             pd.hide();
+
+            finish();
         }
     }
 
