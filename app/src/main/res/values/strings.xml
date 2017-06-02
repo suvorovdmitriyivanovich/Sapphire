@@ -169,7 +169,7 @@
     <string name="text_meetings_no">No upcoming meetings</string>
     <string name="text_completed">Completed</string>
     <string name="text_posted">Posted</string>
-    <string name="text_meeting">Meeting</string>
+    <string name="text_meeting">Meeting Minutes</string>
     <string name="text_location">Location</string>
     <string name="text_start_time">Start Time</string>
     <string name="text_end_time">End Time</string>

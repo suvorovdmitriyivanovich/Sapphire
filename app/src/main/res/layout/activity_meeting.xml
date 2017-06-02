@@ -333,14 +333,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp" />
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_show_minutes"
-                android:id="@+id/posted"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp" />
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -403,6 +395,14 @@
                     android:layout_marginRight="10dp"
                     android:visibility="gone" />
             </RelativeLayout>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_show_minutes"
+                android:id="@+id/posted"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp" />
 
             <TextView
                 android:layout_width="wrap_content"
