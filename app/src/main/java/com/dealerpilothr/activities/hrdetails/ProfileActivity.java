@@ -42,6 +42,7 @@ import com.dealerpilothr.api.GetHealthAndSafetyMemberAction;
 import com.dealerpilothr.api.GetProfilesAction;
 import com.dealerpilothr.api.GetProfilesAdditionalInformationAction;
 import com.dealerpilothr.api.GetProfilesContactInformationAction;
+import com.dealerpilothr.api.GetProfilesCustomFieldsAction;
 import com.dealerpilothr.api.PunchesAddAction;
 import com.dealerpilothr.api.UpdateAction;
 import com.dealerpilothr.logic.Environment;
@@ -62,18 +63,19 @@ import java.util.ArrayList;
 
 public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRootClickListener,
                                                              AdressAdapter.OnOpenClickListener,
-        GetProfilesAction.RequestProfiles,
+                                                             GetProfilesAction.RequestProfiles,
                                                              GetProfilesAction.RequestProfilesData,
-        GetContactsAction.RequestContacts,
+                                                             GetContactsAction.RequestContacts,
                                                              GetContactsAction.RequestContactsData,
-        AddAvatarAction.RequestAddAvatar,
-        GetAdressesAction.RequestAdresses,
-        GetHealthAndSafetyMemberAction.RequestHealthAndSafetyMember,
+                                                             AddAvatarAction.RequestAddAvatar,
+                                                             GetAdressesAction.RequestAdresses,
+                                                             GetHealthAndSafetyMemberAction.RequestHealthAndSafetyMember,
                                                              GetProfilesEmployeeInformationAction.RequestProfilesEmployeeInformation,
-        GetProfilesContactInformationAction.RequestProfilesContactInformation,
-        GetProfilesAdditionalInformationAction.RequestProfilesAdditionalInformation,
-        UpdateAction.RequestUpdate,
-        PunchesAddAction.RequestPunchesAdd {
+                                                             GetProfilesContactInformationAction.RequestProfilesContactInformation,
+                                                             GetProfilesAdditionalInformationAction.RequestProfilesAdditionalInformation,
+                                                             GetProfilesCustomFieldsAction.RequestProfilesCustomFields,
+                                                             UpdateAction.RequestUpdate,
+                                                             PunchesAddAction.RequestPunchesAdd {
 
     private ProgressDialog pd;
     private TextView primary;
@@ -120,6 +122,15 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     private String sin_numberOld = "";
     private String driver_licenseOld = "";
     private Long driver_expiryOld = 0l;
+    private String custom1Old = "";
+    private String custom2Old = "";
+    private String custom3Old = "";
+    private String custom4Old = "";
+    private String custom5Old = "";
+    private String custom6Old = "";
+    private String custom7Old = "";
+    private String custom8Old = "";
+    private String custom9Old = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -373,10 +384,15 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ProfileActivity.this, EditCustomActivity.class);
-                intent.putExtra("birthday", birthdayOld);
-                intent.putExtra("sin_number", sin_numberOld);
-                intent.putExtra("driver_license", driver_licenseOld);
-                intent.putExtra("driver_expiry", driver_expiryOld);
+                intent.putExtra("custom1", custom1Old);
+                intent.putExtra("custom2", custom2Old);
+                intent.putExtra("custom3", custom3Old);
+                intent.putExtra("custom4", custom4Old);
+                intent.putExtra("custom5", custom5Old);
+                intent.putExtra("custom6", custom6Old);
+                intent.putExtra("custom7", custom7Old);
+                intent.putExtra("custom8", custom8Old);
+                intent.putExtra("custom9", custom9Old);
                 startActivity(intent);
             }
         });
@@ -694,10 +710,10 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         payrollStr = payrollStr + "<br><b>" + getResources().getString(R.string.text_payroll_group) + "</b>: " + profileData.getPayrollInformation().getPayrollGroup();
         payroll.setText(Html.fromHtml(payrollStr));
 
-        String customStr = "";
-        customStr = customStr + "<b>" + getResources().getString(R.string.text_custom_field) + " 1</b>: " + profileData.getCustomField1();
-        customStr = customStr + "<br><b>" + getResources().getString(R.string.text_custom_field) + " 2</b>: " + profileData.getCustomField2();
-        custom.setText(Html.fromHtml(customStr));
+        //String customStr = "";
+        //customStr = customStr + "<b>" + getResources().getString(R.string.text_custom_field) + " 1</b>: " + profileData.getCustomField1();
+        //customStr = customStr + "<br><b>" + getResources().getString(R.string.text_custom_field) + " 2</b>: " + profileData.getCustomField2();
+        //custom.setText(Html.fromHtml(customStr));
 
         new GetContactsAction(ProfileActivity.this, false, true, true).execute();
         //pd.hide();
@@ -894,8 +910,8 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
 
     @Override
     public void onRequestProfilesAdditionalInformation(String result, ProfileData profileData) {
-        pd.hide();
         if (!result.equals("OK")) {
+            pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
@@ -923,6 +939,50 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_work_permit) + "</b>: " + profileData.getWorkPermitNumber();
             additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_work_permit_expiry_date) + "</b>: " + profileData.getWorkPermitNumberExpireString();
             work_additional.setText(Html.fromHtml(additionalworkStr));
+
+            new GetProfilesCustomFieldsAction(ProfileActivity.this).execute();
+        }
+    }
+
+    @Override
+    public void onRequestProfilesCustomFields(String result, ProfileData profileData) {
+        pd.hide();
+        if (!result.equals("OK")) {
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Dealerpilothr.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+            }
+        } else {
+            custom1Old = profileData.getCustomField1();
+            custom2Old = profileData.getCustomField2();
+            custom3Old = profileData.getCustomField3();
+            custom4Old = profileData.getCustomField4();
+            custom5Old = profileData.getCustomField5();
+            custom6Old = profileData.getCustomField6();
+            custom7Old = profileData.getCustomField7();
+            custom8Old = profileData.getCustomField8();
+            custom9Old = profileData.getCustomField9();
+            String customStr = "";
+            customStr = customStr + "<b>" + getResources().getString(R.string.text_custom_field) + " 1</b>: " + custom1Old;
+            customStr = customStr + "<br><b>" + getResources().getString(R.string.text_custom_field) + " 2</b>: " + custom2Old;
+            customStr = customStr + "<br><b>" + getResources().getString(R.string.text_custom_field) + " 3</b>: " + custom3Old;
+            customStr = customStr + "<br><b>" + getResources().getString(R.string.text_custom_field) + " 4</b>: " + custom4Old;
+            customStr = customStr + "<br><b>" + getResources().getString(R.string.text_custom_field) + " 5</b>: " + custom5Old;
+            customStr = customStr + "<br><b>" + getResources().getString(R.string.text_custom_field) + " 6</b>: " + custom6Old;
+            customStr = customStr + "<br><b>" + getResources().getString(R.string.text_custom_field) + " 7</b>: " + custom7Old;
+            customStr = customStr + "<br><b>" + getResources().getString(R.string.text_custom_field) + " 8</b>: " + custom8Old;
+            customStr = customStr + "<br><b>" + getResources().getString(R.string.text_custom_field) + " 9</b>: " + custom9Old;
+            custom.setText(Html.fromHtml(customStr));
         }
     }
 

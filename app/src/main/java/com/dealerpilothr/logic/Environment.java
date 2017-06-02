@@ -69,6 +69,7 @@ public class Environment {
     public static final String ProfilesContactInformationURL = "/v1/Profiles/ContactInformation";
     public static final String ProfilesPersonalAdditionalInformationURL = "/v1/Profiles/PersonalAdditionalInformation";
     public static final String ProfilesAdditionalInformationURL = "/v1/Profiles/WorkAdditinalInformation";
+    public static final String ProfilesCustomFieldsURL = "/v1/Profiles/CustomFields";
     public static final String SafetisURL = "/v1/HealthAndSafety/SafetyDataSheets";
     public static final String SafetisCurrentURL = "/v1/HealthAndSafety/SafetyDataSheets";
     public static final String SafetisFilesURL = "/v1/HealthAndSafety/SafetyDataSheets/AttachFile";

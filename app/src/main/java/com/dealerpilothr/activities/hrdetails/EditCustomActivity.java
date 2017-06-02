@@ -28,13 +28,13 @@ import com.dealerpilothr.logic.NetRequests;
 import com.dealerpilothr.R;
 import com.dealerpilothr.Dealerpilothr;
 import com.dealerpilothr.activities.BaseActivity;
-import com.dealerpilothr.api.ProfilesAdditionalInformationAddAction;
+import com.dealerpilothr.api.ProfilesCustomFieldsAddAction;
 import com.dealerpilothr.logic.Environment;
 import com.dealerpilothr.logic.UserInfo;
 import com.dealerpilothr.models.ProfileData;
 
-public class EditCustomActivity extends BaseActivity implements ProfilesAdditionalInformationAddAction.RequestProfilesAdditionalInformationAdd,
-        UpdateAction.RequestUpdate {
+public class EditCustomActivity extends BaseActivity implements ProfilesCustomFieldsAddAction.RequestProfilesCustomFieldsAdd,
+                                                                UpdateAction.RequestUpdate {
     private ProgressDialog pd;
     private EditText custom1;
     private EditText custom2;
@@ -526,13 +526,18 @@ public class EditCustomActivity extends BaseActivity implements ProfilesAddition
         pd.show();
 
         ProfileData data = new ProfileData();
-        //data.setBirthday(birthdayNew);
-        //data.setSINNumber(sin_number.getText().toString());
-        //data.setDriverLicenseNumber(driver_license.getText().toString());
-        //data.setDriverLicenseNumberExpire(driver_expiryNew);
+        data.setCustomField1(custom1.getText().toString());
+        data.setCustomField2(custom2.getText().toString());
+        data.setCustomField3(custom3.getText().toString());
+        data.setCustomField4(custom4.getText().toString());
+        data.setCustomField5(custom5.getText().toString());
+        data.setCustomField6(custom6.getText().toString());
+        data.setCustomField7(custom7.getText().toString());
+        data.setCustomField8(custom8.getText().toString());
+        data.setCustomField9(custom9.getText().toString());
         data.setProfileId(UserInfo.getUserInfo().getProfile().getProfileId());
 
-        new ProfilesAdditionalInformationAddAction(EditCustomActivity.this, data).execute();
+        new ProfilesCustomFieldsAddAction(EditCustomActivity.this, data).execute();
     }
 
     private class TextWatch implements TextWatcher {
@@ -619,7 +624,7 @@ public class EditCustomActivity extends BaseActivity implements ProfilesAddition
     }
 
     @Override
-    public void onRequestProfilesAdditionalInformationAdd(String result) {
+    public void onRequestProfilesCustomFieldsAdd(String result) {
         if (!result.equals("OK")) {
             pd.hide();
             Toast.makeText(getBaseContext(), result,

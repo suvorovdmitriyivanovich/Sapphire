@@ -25,6 +25,13 @@ public class ProfileData {
     private HireTypeData hireType = new HireTypeData();
     private String customField1 = "";
     private String customField2 = "";
+    private String customField3 = "";
+    private String customField4 = "";
+    private String customField5 = "";
+    private String customField6 = "";
+    private String customField7 = "";
+    private String customField8 = "";
+    private String customField9 = "";
     private ContactData contact = new ContactData();
     private PayrollInformationData payrollInformation = new PayrollInformationData();
     private String accountId = "";
@@ -131,6 +138,27 @@ public class ProfileData {
             }
             if (!data.isNull("CustomField2")) {
                 setCustomField2(data.getString("CustomField2"));
+            }
+            if (!data.isNull("CustomField3")) {
+                setCustomField3(data.getString("CustomField3"));
+            }
+            if (!data.isNull("CustomField4")) {
+                setCustomField4(data.getString("CustomField4"));
+            }
+            if (!data.isNull("CustomField5")) {
+                setCustomField5(data.getString("CustomField5"));
+            }
+            if (!data.isNull("CustomField6")) {
+                setCustomField6(data.getString("CustomField6"));
+            }
+            if (!data.isNull("CustomField7")) {
+                setCustomField7(data.getString("CustomField7"));
+            }
+            if (!data.isNull("CustomField8")) {
+                setCustomField8(data.getString("CustomField8"));
+            }
+            if (!data.isNull("CustomField9")) {
+                setCustomField9(data.getString("CustomField9"));
             }
             if (!data.isNull("Contact")) {
                 setContact(data.getJSONObject("Contact"));
@@ -461,6 +489,62 @@ public class ProfileData {
 
     public String getCustomField2() {
         return customField2;
+    }
+
+    public String getCustomField3() {
+        return customField3;
+    }
+
+    public void setCustomField3(String customField3) {
+        this.customField3 = customField3;
+    }
+
+    public String getCustomField4() {
+        return customField4;
+    }
+
+    public void setCustomField4(String customField4) {
+        this.customField4 = customField4;
+    }
+
+    public String getCustomField5() {
+        return customField5;
+    }
+
+    public void setCustomField5(String customField5) {
+        this.customField5 = customField5;
+    }
+
+    public String getCustomField6() {
+        return customField6;
+    }
+
+    public void setCustomField6(String customField6) {
+        this.customField6 = customField6;
+    }
+
+    public String getCustomField7() {
+        return customField7;
+    }
+
+    public void setCustomField7(String customField7) {
+        this.customField7 = customField7;
+    }
+
+    public String getCustomField8() {
+        return customField8;
+    }
+
+    public void setCustomField8(String customField8) {
+        this.customField8 = customField8;
+    }
+
+    public String getCustomField9() {
+        return customField9;
+    }
+
+    public void setCustomField9(String customField9) {
+        this.customField9 = customField9;
     }
 
     public void setContact(JSONObject contact) {
