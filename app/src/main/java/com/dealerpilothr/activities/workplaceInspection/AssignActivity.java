@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.dealerpilothr.Dealerpilothr;
@@ -38,13 +39,13 @@ import com.dealerpilothr.api.AssignTasksAction;
 import java.util.ArrayList;
 
 public class AssignActivity extends BaseActivity implements GetWorkplaceInspectionAction.RequestWorkplaceInspection,
-        TaskManagementLinksAction.RequestTaskManagementLinks,
-        WorkplaceInspectionItemsAdapter.OnRootClickListener,
+                                                            TaskManagementLinksAction.RequestTaskManagementLinks,
+                                                            WorkplaceInspectionItemsAdapter.OnRootClickListener,
                                                             WorkplaceInspectionItemsAdapter.OnFilesClickListener,
-        TaskAddAction.RequestTaskAdd,
-        LinkAddAction.RequestLinkAdd,
+                                                            TaskAddAction.RequestTaskAdd,
+                                                            LinkAddAction.RequestLinkAdd,
                                                             AssignTasksAction.RequestAssignTasks,
-        UpdateAction.RequestUpdate {
+                                                            UpdateAction.RequestUpdate {
     private String workplaceInspectionId = "";
     private ProgressDialog pd;
     private ArrayList<WorkplaceInspectionItemData> allsDatas = new ArrayList<WorkplaceInspectionItemData>();
@@ -456,7 +457,21 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
             UserInfo userInfo = UserInfo.getUserInfo();
 
             ArrayList<ProfileData> profileDatas = new ArrayList<ProfileData>();
-
+            for (ProfileData item: workplaceInspectionItemData.getTask().getAssignedProfiles()) {
+                ProfileData profileData = new ProfileData(item.getProfileId(), item.getName(), item.getPresence());
+                if (item.getName().equals("")) {
+                    String name = "";
+                    for (ProfileData itemName: userInfo.getCurrentOrganizationStructures()) {
+                        if (itemName.getProfileId().equals(item.getProfileId())) {
+                            name = itemName.getName();
+                            break;
+                        }
+                    }
+                    profileData.setName(name);
+                }
+                profileDatas.add(profileData);
+            }
+            /*
             for (ProfileData item: userInfo.getAllAssignedProfiles()) {
                 profileDatas.add(new ProfileData(item.getProfileId(), item.getName(), item.getPresence()));
             }
@@ -469,6 +484,7 @@ public class AssignActivity extends BaseActivity implements GetWorkplaceInspecti
                     }
                 }
             }
+            */
 
             userInfo.setAssignedProfiles(profileDatas);
         }

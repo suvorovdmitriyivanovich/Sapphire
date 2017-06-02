@@ -79,7 +79,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
                                                                          WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd,
                                                                          MeetingMembersAdapter.OnRootMeetingMembersClickListener,
                                                                          MeetingMembersAdapter.OnDeleteMeetingMembersClickListener,
-        UpdateAction.RequestUpdate {
+                                                                         UpdateAction.RequestUpdate {
     private String workplaceInspectionId = "";
     private ProgressDialog pd;
     private ArrayList<WorkplaceInspectionItemData> workplaceInspectionItemDatas = new ArrayList<WorkplaceInspectionItemData>();

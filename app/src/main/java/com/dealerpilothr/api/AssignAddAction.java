@@ -7,6 +7,7 @@ import com.dealerpilothr.Dealerpilothr;
 import com.dealerpilothr.logic.Environment;
 import com.dealerpilothr.logic.NetRequests;
 import com.dealerpilothr.models.ErrorMessageData;
+import com.dealerpilothr.models.MemberData;
 import com.dealerpilothr.models.ProfileData;
 import com.dealerpilothr.models.ResponseData;
 import com.dealerpilothr.R;
@@ -25,9 +26,9 @@ public class AssignAddAction extends AsyncTask{
 
     private Context mContext;
     private String id;
-    private ArrayList<ProfileData> profileDatas;
+    private ArrayList<MemberData> profileDatas;
 
-    public AssignAddAction(Context context, String id, ArrayList<ProfileData> profileDatas) {
+    public AssignAddAction(Context context, String id, ArrayList<MemberData> profileDatas) {
         this.mContext = context;
         this.id = id;
         this.profileDatas = profileDatas;
@@ -47,13 +48,13 @@ public class AssignAddAction extends AsyncTask{
         try {
             jsonObject.put("TaskId", id);
 
-            for (ProfileData item: profileDatas) {
-                if (!item.getPresence()) {
-                    continue;
-                }
+            for (MemberData item: profileDatas) {
+                //if (!item.getPresence()) {
+                //    continue;
+                //}
                 JSONObject jsonObjectAssignment = new JSONObject();
                 jsonObjectAssignment.put("TaskId", id);
-                jsonObjectAssignment.put("ProfileId", item.getProfileId());
+                jsonObjectAssignment.put("ProfileId", item.getProfile().getProfileId());
                 jsonObjectAssignment.put("Name", item.getName());
                 jsonObjectAssignment.put("TaskProfileId", null);
 
@@ -65,16 +66,17 @@ public class AssignAddAction extends AsyncTask{
             e.printStackTrace();
         }
 
-        String method = "POST";
+        //String method = "POST";
         //if (!data.getTaskId().equals("")) {
         //    method = "PUT";
         //}
+        String method = "PUT";
 
         ResponseData responseData = new ResponseData(NetRequests.getNetRequests().SendRequestCommon(urlstring,jsonObject.toString(),0,true,method, userInfo.getAuthToken()));
 
         String result = "";
 
-        if (responseData.getSuccess() && responseData.getDataCount() == 1) {
+        if (responseData.getSuccess()) {
             result = "OK";
         } else {
             ArrayList<ErrorMessageData> errorMessageDatas = responseData.getErrorMessages();

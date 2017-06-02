@@ -36,14 +36,17 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.dealerpilothr.Dealerpilothr;
+import com.dealerpilothr.activities.organizationStructure.ChooseOrganizationStructureActivity;
+import com.dealerpilothr.adapters.MeetingMembersAdapter;
 import com.dealerpilothr.api.UpdateAction;
 import com.dealerpilothr.logic.NetRequests;
 import com.dealerpilothr.models.ItemPriorityData;
+import com.dealerpilothr.models.MemberData;
 import com.dealerpilothr.models.ProfileData;
 import com.dealerpilothr.models.TaskData;
 import com.dealerpilothr.R;
 import com.dealerpilothr.activities.BaseActivity;
-import com.dealerpilothr.adapters.AssignmentsAdapter;
+//import com.dealerpilothr.adapters.AssignmentsAdapter;
 import com.dealerpilothr.adapters.SpinCategoriesAdapter;
 import com.dealerpilothr.adapters.SpinPrioritisAdapter;
 import com.dealerpilothr.api.LinkAddAction;
@@ -57,20 +60,26 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
-public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnRootAssignmentsClickListener,
+//public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnRootAssignmentsClickListener,
+public class TaskActivity extends BaseActivity implements MeetingMembersAdapter.OnRootMeetingMembersClickListener,
+                                                          MeetingMembersAdapter.OnDeleteMeetingMembersClickListener,
                                                           TaskAddAction.RequestTaskAdd,
                                                           LinkAddAction.RequestLinkAdd,
                                                           AssignAddAction.RequestAssignAdd,
-        UpdateAction.RequestUpdate {
+                                                          UpdateAction.RequestUpdate {
     private String id = "";
     private String parentId = "";
     private String taskTypeId = "";
     private ProgressDialog pd;
-    private ArrayList<ProfileData> datas = new ArrayList<ProfileData>();
+    //private ArrayList<ProfileData> datas = new ArrayList<ProfileData>();
+    private ArrayList<MemberData> datas = new ArrayList<MemberData>();
     private RecyclerView assignmentslist;
-    private AssignmentsAdapter adapter;
+    //private AssignmentsAdapter adapter;
+    private MeetingMembersAdapter adapter;
     private EditText name;
     private EditText date;
     private EditText dateend;
@@ -157,6 +166,8 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
     private ImageView image_time;
     private ImageView image_dateend;
     private ImageView image_timeend;
+    private int deleteItem = 0;
+    private int currentPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,13 +203,13 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
         dialog_confirm.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-
+                deleteItem = 0;
             }
         });
         dialog_confirm.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-
+                deleteItem = 0;
             }
         });
 
@@ -206,7 +217,10 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
             @Override
             public void onClick(View v) {
                 dialog_confirm.dismiss();
-                finish();
+                if (deleteItem == 0) {
+                    finish();
+                }
+                deleteItem = 0;
             }
         });
 
@@ -214,7 +228,14 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
             @Override
             public void onClick(View v) {
                 dialog_confirm.dismiss();
-                updateTask();
+                if (deleteItem == 2) {
+                    deleteItem = 0;
+                    datas.remove(currentPosition);
+                    adapter.deleteItem(currentPosition);
+                    updateVisibility();
+                } else {
+                    updateTask();
+                }
             }
         });
 
@@ -272,6 +293,7 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
         format = new SimpleDateFormat("dd.MM.yyyy hh:mm aa");
 
         userInfo = UserInfo.getUserInfo();
+        userInfo.setUpdateMembers(null);
 
         text_no = findViewById(R.id.text_no);
 
@@ -436,8 +458,17 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
             }, 10);
 
             datas.clear();
+            //for (ProfileData item: userInfo.getAssignedProfiles()) {
+            //    datas.add(new ProfileData(item.getProfileId(), item.getName(), item.getPresence()));
+            //}
             for (ProfileData item: userInfo.getAssignedProfiles()) {
-                datas.add(new ProfileData(item.getProfileId(), item.getName(), item.getPresence()));
+                //if (!item.getPresence()) {
+                //    continue;
+                //}
+                MemberData memberData = new MemberData();
+                memberData.setName(item.getName());
+                memberData.setProfile(item.getProfileId());
+                datas.add(memberData);
             }
 
             if (dateOld != 0l) {
@@ -484,11 +515,12 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
             }
         } else {
             taskTypeId = Environment.TaskTypeItemId;
-            datas.clear();
-            for (ProfileData item: userInfo.getAllAssignedProfiles()) {
-                datas.add(new ProfileData(item.getProfileId(), item.getName(), item.getPresence()));
-            }
+            //datas.clear();
+            //for (ProfileData item: userInfo.getAllAssignedProfiles()) {
+            //    datas.add(new ProfileData(item.getProfileId(), item.getName(), item.getPresence()));
+            //}
         }
+        sort();
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -592,6 +624,17 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
             }
         });
 
+        View add_assignments = findViewById(R.id.add_assignments);
+        add_assignments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSoftKeyboard();
+                userInfo.setUpdateMembers(datas);
+                Intent intent = new Intent(TaskActivity.this, ChooseOrganizationStructureActivity.class);
+                startActivity(intent);
+            }
+        });
+
         View root = findViewById(R.id.rootLayout);
         root.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -604,7 +647,8 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
         assignmentslist.setNestedScrollingEnabled(false);
         assignmentslist.setLayoutManager(new LinearLayoutManager(TaskActivity.this));
 
-        adapter = new AssignmentsAdapter(this, readonly);
+        //adapter = new AssignmentsAdapter(this, readonly);
+        adapter = new MeetingMembersAdapter(this, readonly, true);
         assignmentslist.setAdapter(adapter);
 
         name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -674,6 +718,8 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
 
         UpdateBottom();
 
+        updateVisibility();
+
         View scrollView = findViewById(R.id.scrollView);
         scrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -685,6 +731,7 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
 
         if (readonly) {
             button_ok.setVisibility(View.GONE);
+            add_assignments.setVisibility(View.GONE);
             name.setFocusable(false);
             description.setFocusable(false);
             date.setFocusable(false);
@@ -758,20 +805,25 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
                 || !priorityIdOld.equals(priorityId);
 
         if (!rezult) {
-            ArrayList<ProfileData> profileDatas = userInfo.getAssignedProfiles();
-            if (profileDatas.size() == 0) {
-                profileDatas = userInfo.getAllAssignedProfiles();
-            }
-            if (profileDatas.size() != datas.size()) {
+            //ArrayList<ProfileData> profileDatas = userInfo.getAssignedProfiles();
+            //if (profileDatas.size() == 0) {
+            //    profileDatas = userInfo.getAllAssignedProfiles();
+            //}
+            ArrayList<ProfileData> memberDatas = userInfo.getAssignedProfiles();
+            Collections.sort(memberDatas, new Comparator<ProfileData>() {
+                public int compare(ProfileData o1, ProfileData o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
+            if (memberDatas.size() != datas.size()) {
                 rezult = true;
             } else {
                 for (int i=0; i < datas.size(); i++) {
-                    if (profileDatas.size() <= i) {
+                    if (memberDatas.size() <= i) {
                         rezult = true;
                         break;
                     } else {
-                        if (!datas.get(i).getProfileId().equals(profileDatas.get(i).getProfileId())
-                            || datas.get(i).getPresence() != profileDatas.get(i).getPresence()) {
+                        if (!datas.get(i).getProfile().getProfileId().equals(memberDatas.get(i).getProfileId())) {
                             rezult = true;
                             break;
                         }
@@ -1275,11 +1327,31 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
         }
     }
 
+    //@Override
+    //public void onRootAssignmentsClick(int position) {
+    //    hideSoftKeyboard();
+    //    datas.get(position).setPresence(!datas.get(position).getPresence());
+    //    adapter.notifyDataSetChanged();
+    //}
+
     @Override
-    public void onRootAssignmentsClick(int position) {
+    public void onRootMeetingMembersClick(int position) {
         hideSoftKeyboard();
-        datas.get(position).setPresence(!datas.get(position).getPresence());
-        adapter.notifyDataSetChanged();
+        //datasTeam.get(position).setPresence(!datasTeam.get(position).getPresence());
+        //adapterTeam.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDeleteMeetingMembersClick(int position) {
+        hideSoftKeyboard();
+
+        currentPosition = position;
+        deleteItem = 2;
+
+        tittle_message.setText(getResources().getString(R.string.text_confirm_delete));
+        button_cancel_save.setText(getResources().getString(R.string.text_cancel));
+        button_send_save.setText(getResources().getString(R.string.text_delete));
+        dialog_confirm.show();
     }
 
     @Override
@@ -1410,9 +1482,34 @@ public class TaskActivity extends BaseActivity implements AssignmentsAdapter.OnR
         return (int) (pixels * scale + 0.5f);
     }
 
+    private void sort() {
+        Collections.sort(datas, new Comparator<MemberData>() {
+            public int compare(MemberData o1, MemberData o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (userInfo.getUpdateMembers() != null) {
+            datas.clear();
+            for (MemberData item: userInfo.getUpdateMembers()) {
+                MemberData memberData = new MemberData();
+                //memberData.setPresence(item.getPresence());
+                memberData.setProfile(item.getProfile());
+                memberData.setMeetingMemberId(item.getMeetingMemberId());
+                memberData.setName(item.getName());
+
+                datas.add(memberData);
+            }
+            sort();
+            adapter.setListArray(datas);
+            updateVisibility();
+            userInfo.setUpdateMembers(null);
+        }
     }
 
     @Override
