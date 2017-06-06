@@ -38,6 +38,7 @@ import com.dealerpilothr.adapters.AdressAdapter;
 import com.dealerpilothr.api.AddAvatarAction;
 import com.dealerpilothr.api.GetAdressesAction;
 import com.dealerpilothr.api.GetContactsAction;
+import com.dealerpilothr.api.GetCountriesAction;
 import com.dealerpilothr.api.GetHealthAndSafetyMemberAction;
 import com.dealerpilothr.api.GetProfilesAction;
 import com.dealerpilothr.api.GetProfilesAdditionalInformationAction;
@@ -49,6 +50,7 @@ import com.dealerpilothr.logic.Environment;
 import com.dealerpilothr.logic.NetRequests;
 import com.dealerpilothr.models.AdressData;
 import com.dealerpilothr.models.ContactData;
+import com.dealerpilothr.models.CountryData;
 import com.dealerpilothr.models.ProfileData;
 import com.dealerpilothr.utils.GeneralOperations;
 import com.dealerpilothr.R;
@@ -74,6 +76,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
                                                              GetProfilesContactInformationAction.RequestProfilesContactInformation,
                                                              GetProfilesAdditionalInformationAction.RequestProfilesAdditionalInformation,
                                                              GetProfilesCustomFieldsAction.RequestProfilesCustomFields,
+                                                             GetCountriesAction.RequestCountries,
                                                              UpdateAction.RequestUpdate,
                                                              PunchesAddAction.RequestPunchesAdd {
 
@@ -131,6 +134,12 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     private String custom7Old = "";
     private String custom8Old = "";
     private String custom9Old = "";
+    private String adressId = "";
+    private String adressOld = "";
+    private String countryOld = "";
+    private String provinceOld = "";
+    private String cityOld = "";
+    private String postalOld = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -351,7 +360,14 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         primary_residenceedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(ProfileActivity.this, EditAdressActivity.class);
+                intent.putExtra("adressId", adressId);
+                intent.putExtra("adress", adressOld);
+                intent.putExtra("country", countryOld);
+                intent.putExtra("province", provinceOld);
+                intent.putExtra("city", cityOld);
+                intent.putExtra("postal", postalOld);
+                startActivity(intent);
             }
         });
 
@@ -401,7 +417,12 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         memberedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(ProfileActivity.this, EditHealthSafetyActivity.class);
+                intent.putExtra("member", member.isChecked());
+                intent.putExtra("cpr", certified.isChecked());
+                intent.putExtra("aid", aidcertified.isChecked());
+                intent.putExtra("safety", safetycertified.isChecked());
+                startActivity(intent);
             }
         });
 
@@ -776,12 +797,18 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
                 finish();
             }
         } else {
+            adressId = adressData.getAddressId();
+            adressOld = adressData.getAddressLine1();
+            countryOld = adressData.getCountryId();
+            provinceOld = adressData.getRegionId();
+            cityOld = adressData.getCity();
+            postalOld = adressData.getPostalCode();
             String primaryInfo = "";
             //if (!profileData.getContact().getAddress().getAddressLine1().equals("")) {
             if (!primaryInfo.equals("")) {
                 primaryInfo = primaryInfo + "<br>";
             }
-            primaryInfo = primaryInfo + "<b>" + Dealerpilothr.getInstance().getResources().getString(R.string.text_address) + "</b>: " + adressData.getAddressLine1();
+            primaryInfo = primaryInfo + "<b>" + Dealerpilothr.getInstance().getResources().getString(R.string.text_address) + "</b>: " + adressOld;
             //}
             //if (!profileData.getContact().getAddress().getCountry().equals("")) {
             if (!primaryInfo.equals("")) {
@@ -799,13 +826,13 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             if (!primaryInfo.equals("")) {
                 primaryInfo = primaryInfo + "<br>";
             }
-            primaryInfo = primaryInfo + "<b>" + Dealerpilothr.getInstance().getResources().getString(R.string.text_city) + "</b>: " + adressData.getCity();
+            primaryInfo = primaryInfo + "<b>" + Dealerpilothr.getInstance().getResources().getString(R.string.text_city) + "</b>: " + cityOld;
             //}
             //if (!profileData.getContact().getAddress().getPostalCode().equals("")) {
             if (!primaryInfo.equals("")) {
                 primaryInfo = primaryInfo + "<br>";
             }
-            primaryInfo = primaryInfo + "<b>" + Dealerpilothr.getInstance().getResources().getString(R.string.text_postal_code) + "</b>: " + adressData.getPostalCode();
+            primaryInfo = primaryInfo + "<b>" + Dealerpilothr.getInstance().getResources().getString(R.string.text_postal_code) + "</b>: " + postalOld;
             //}
             primary.setText(Html.fromHtml(primaryInfo));
 
@@ -946,8 +973,8 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
 
     @Override
     public void onRequestProfilesCustomFields(String result, ProfileData profileData) {
-        pd.hide();
         if (!result.equals("OK")) {
+            pd.hide();
             Toast.makeText(getBaseContext(), result,
                     Toast.LENGTH_LONG).show();
             if (result.equals(getResources().getString(R.string.text_unauthorized))) {
@@ -983,6 +1010,31 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             customStr = customStr + "<br><b>" + getResources().getString(R.string.text_custom_field) + " 8</b>: " + custom8Old;
             customStr = customStr + "<br><b>" + getResources().getString(R.string.text_custom_field) + " 9</b>: " + custom9Old;
             custom.setText(Html.fromHtml(customStr));
+
+            new GetCountriesAction(ProfileActivity.this).execute();
+        }
+    }
+
+    @Override
+    public void onRequestCountries(String result, ArrayList<CountryData> countryDatas) {
+        pd.hide();
+        if (!result.equals("OK")) {
+            Toast.makeText(getBaseContext(), result,
+                    Toast.LENGTH_LONG).show();
+            if (result.equals(getResources().getString(R.string.text_unauthorized))) {
+                //Intent intent = new Intent(this, LoginActivity.class);
+                //startActivity(intent);
+                Intent intExit = new Intent(Environment.BROADCAST_ACTION);
+                try {
+                    intExit.putExtra(Environment.PARAM_TASK, "unauthorized");
+                    Dealerpilothr.getInstance().sendBroadcast(intExit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finish();
+            }
+        } else {
+            UserInfo.getUserInfo().setCountryDatas(countryDatas);
         }
     }
 

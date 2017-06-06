@@ -284,4 +284,6 @@
     <string name="text_secondary_contact">Secondary Contact</string>
     <string name="text_organization_structure_no">No organization structure to display</string>
     <string name="text_edit_custom">Edit Custom Fields</string>
+    <string name="text_edit_health_safety">Edit Health &#38; Safety Information</string>
+    <string name="text_edit_adress">Edit Address</string>
 </resources>

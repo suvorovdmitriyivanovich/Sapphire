@@ -209,7 +209,11 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
                 dialog_confirm.dismiss();
                 if (deleteItem == 1) {
                     deleteItem = 0;
-                    if (workplaceInspectionItemDatas.get(currentPosition).getWorkplaceInspectionItemId().equals("")) {
+                    if (workplaceInspectionId.equals("")) {
+                        workplaceInspectionItemDatas.remove(currentPosition);
+                        adapter.deleteItem(currentPosition);
+                        updateVisibility();
+                    } else if (workplaceInspectionItemDatas.get(currentPosition).getWorkplaceInspectionItemId().equals("")) {
                         DBHelper.getInstance(Dealerpilothr.getInstance()).deleteWorkplaceInspectionItem(workplaceInspectionItemDatas.get(currentPosition).getId());
                         pd.show();
                         new GetWorkplaceInspectionAction(WorkplaceInspectionActivity.this, workplaceInspectionId).execute();
@@ -964,6 +968,9 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         if (pressType == 2) {
             pressType = 0;
             openItem(false);
+        } else if (pressType == 3) {
+            pressType = 0;
+            openFiles();
         }
     }
 
@@ -1089,7 +1096,7 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
         if (pressType == 1) {
             pressType = 0;
             addItem();
-        } else if (pressType == 2) {
+        } else if (pressType == 2 || pressType == 3) {
             pd.show();
             new GetWorkplaceInspectionAction(WorkplaceInspectionActivity.this, workplaceInspectionId).execute();
         } else {
@@ -1159,8 +1166,17 @@ public class WorkplaceInspectionActivity extends BaseActivity implements GetTemp
 
     @Override
     public void onFilesClick(int position) {
+        currentPosition = position;
+        if (workplaceInspectionId.equals("")) {
+            updateWorkplaceInspection(3);
+        } else {
+            openFiles();
+        }
+    }
+
+    public void openFiles() {
         Intent intent = new Intent(WorkplaceInspectionActivity.this, FilesActivity.class);
-        WorkplaceInspectionItemData workplaceInspectionItemData = workplaceInspectionItemDatas.get(position);
+        WorkplaceInspectionItemData workplaceInspectionItemData = workplaceInspectionItemDatas.get(currentPosition);
         intent.putExtra("name", workplaceInspectionItemData.getName());
         intent.putExtra("id", workplaceInspectionItemData.getWorkplaceInspectionItemId());
         intent.putExtra("url", Environment.WorkplaceInspectionsItemsFilesURL);

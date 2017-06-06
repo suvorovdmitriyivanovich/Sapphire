@@ -79,6 +79,7 @@ public class Environment {
     public static final String MeetingsReportURL = "/v1/HealthAndSafety/Meetings/Report?id=";
     public static final String WorkplaceInspectionsReportURL = "/v1/HealthAndSafety/WorkplaceInspections/Report?id=";
     public static final String QuizzesReportURL = "/v1/Quizzes/Log/Report?id=";
+    public static final String CountriesURL = "/v1/Geo/Countries";
 
     public static final String PolicyStatusStarted = "1586dc39-979b-3991-c822-a4bcb14d1345";
     public static final String PolicyStatusAcknowledged = "1586dc39-979b-ab1c-838f-1917fce340de";

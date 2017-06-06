@@ -45,7 +45,7 @@ import com.dealerpilothr.models.WorkplaceInspectionItemData;
 import java.util.ArrayList;
 
 public class WorkplaceInspectionItemActivity extends BaseActivity implements WorkplaceInspectionItemAddAction.RequestWorkplaceInspectionItemAdd,
-        UpdateAction.RequestUpdate {
+                                                                             UpdateAction.RequestUpdate {
     private String idloc = "";
     private String workplaceInspectionItemId = "";
     private String workplaceInspectionId = "";

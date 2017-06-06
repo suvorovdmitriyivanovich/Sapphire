@@ -7,20 +7,19 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.dealerpilothr.models.CountryData;
-import com.dealerpilothr.models.RegionData;
 
 import java.util.ArrayList;
 
-public class SpinStringAdapter extends ArrayAdapter<String> {
+public class SpinCountriesAdapter extends ArrayAdapter<String> {
 
     private Context context;
-    private ArrayList<String> values;
+    private ArrayList<CountryData> values;
     private int textViewResourceId;
 
-    public SpinStringAdapter(Context context, int textViewResourceId) {
+    public SpinCountriesAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
         this.context = context;
-        this.values = new ArrayList<String>();
+        this.values = new ArrayList<CountryData>();
         this.textViewResourceId = textViewResourceId;
     }
 
@@ -29,7 +28,7 @@ public class SpinStringAdapter extends ArrayAdapter<String> {
     }
 
     public String getItem(int position){
-        return values.get(position);
+        return values.get(position).getName();
     }
 
     public long getItemId(int position){
@@ -41,7 +40,7 @@ public class SpinStringAdapter extends ArrayAdapter<String> {
         if (convertView == null)
             convertView = View.inflate(context, textViewResourceId, null);
         TextView label = (TextView) convertView;
-        label.setText(values.get(position));
+        label.setText(values.get(position).getName());
         return convertView;
     }
 
@@ -51,11 +50,11 @@ public class SpinStringAdapter extends ArrayAdapter<String> {
         if (convertView == null)
             convertView = View.inflate(context, textViewResourceId, null);
         TextView label = (TextView) convertView;
-        label.setText(values.get(position));
+        label.setText(values.get(position).getName());
         return convertView;
     }
 
-    public void setValues(ArrayList<String> values) {
+    public void setValues(ArrayList<CountryData> values) {
         this.values.clear();
         this.values.addAll(values);
         this.notifyDataSetChanged();

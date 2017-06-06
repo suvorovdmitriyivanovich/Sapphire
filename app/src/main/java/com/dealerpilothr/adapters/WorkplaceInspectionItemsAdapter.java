@@ -189,6 +189,11 @@ public class WorkplaceInspectionItemsAdapter extends RecyclerView.Adapter<Workpl
         }
     }
 
+    public void deleteItem(int position){
+        listData.remove(position);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         if(listData != null)

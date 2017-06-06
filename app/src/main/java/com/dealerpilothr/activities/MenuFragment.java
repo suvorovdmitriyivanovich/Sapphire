@@ -64,6 +64,17 @@ public class MenuFragment extends Fragment implements MenuAdapter.OnRootClickLis
         adapter = new MenuAdapter(this, navigationMenuDatas);
         menulist.setAdapter(adapter);
 
+        View header_root = rootView.findViewById(R.id.header_root);
+        header_root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.closeDrawers();
+                if (getActivity().getClass() != MainActivity.class) {
+                    getActivity().finish();
+                }
+            }
+        });
+
         return rootView;
     }
 

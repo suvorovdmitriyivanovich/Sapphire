@@ -3,6 +3,7 @@ package com.dealerpilothr.logic;
 import com.dealerpilothr.models.AppRoleAppSecurityData;
 import com.dealerpilothr.models.AttendanceCodeData;
 import com.dealerpilothr.models.CategoryData;
+import com.dealerpilothr.models.CountryData;
 import com.dealerpilothr.models.DayData;
 import com.dealerpilothr.models.FileData;
 import com.dealerpilothr.models.ItemPriorityData;
@@ -56,6 +57,7 @@ public class UserInfo {
     private ArrayList<ProfileData> currentOrganizationStructures = new ArrayList<ProfileData>();
     private ArrayList<MemberData> updateMembers = new ArrayList<MemberData>();
     private ArrayList<MemberData> chooseMembers = new ArrayList<MemberData>();
+    private ArrayList<CountryData> countryDatas = new ArrayList<CountryData>();
 
     //---------------------Singleton---------------------------
     private static UserInfo userInfo;
@@ -433,5 +435,13 @@ public class UserInfo {
             this.chooseMembers.clear();
             this.chooseMembers.addAll(chooseMembers);
         }
+    }
+
+    public ArrayList<CountryData> getCountryDatas() {
+        return countryDatas;
+    }
+
+    public void setCountryDatas(ArrayList<CountryData> countryDatas) {
+        this.countryDatas = countryDatas;
     }
 }
