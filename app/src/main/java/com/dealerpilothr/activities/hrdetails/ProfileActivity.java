@@ -429,17 +429,19 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         UpdateBottom();
 
         UserInfo userInfo = UserInfo.getUserInfo();
-        String securityModePersonal = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-emergency contacts", "");
+        //String securityModePersonal = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-emergency contacts", "", "");
+        String securityModePersonal = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("", "Personal Information", "c9c8db39-2b01-5bec-0975-537930843497");
         if (securityModePersonal.equals("fullAccess")) {
             editPersonal = true;
         } else if (securityModePersonal.equals("viewOnly")) {
             viewPersonal = true;
         }
 
-        String securityModeWork = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-family-members", "");
-        if (securityModeWork.equals("")) {
-            securityModeWork = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-hr-details", "");
-        }
+        //String securityModeWork = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-family-members", "");
+        //if (securityModeWork.equals("")) {
+        //    securityModeWork = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-hr-details", "");
+        //}
+        String securityModeWork = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("", "Work Information", "c9c8db39-2b01-5bec-0975-537930843497");
         if (securityModeWork.equals("fullAccess")) {
             editWork = true;
         } else if (securityModeWork.equals("viewOnly")) {

@@ -60,4 +60,24 @@ public class AppRoleAppSecurityData {
 
         return "";
     }
+
+    public String getSecurityMode(String urlRoute, String name, String parentId) {
+        for (AppSecurityData item: appSecurityDatas) {
+            if (!urlRoute.equals("")) {
+                if (item.getUrlRoute().equals(urlRoute)) {
+                    return item.getSecurityMode();
+                }
+            } else if (!name.equals("") && !parentId.equals("")) {
+                if (item.getName().equals(name) && item.getParentId().equals(parentId)) {
+                    return item.getSecurityMode();
+                }
+            } else {
+                if (item.getName().equals(name)) {
+                    return item.getSecurityMode();
+                }
+            }
+        }
+
+        return "";
+    }
 }
