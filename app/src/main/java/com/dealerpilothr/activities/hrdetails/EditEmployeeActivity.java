@@ -29,23 +29,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dealerpilothr.Dealerpilothr;
-import com.dealerpilothr.api.UpdateAction;
-import com.dealerpilothr.logic.NetRequests;
-import com.dealerpilothr.models.ProfileData;
-import com.dealerpilothr.utils.GeneralOperations;
 import com.dealerpilothr.R;
 import com.dealerpilothr.activities.BaseActivity;
 import com.dealerpilothr.api.ProfilesAdditionalInformationAddAction;
+import com.dealerpilothr.api.UpdateAction;
 import com.dealerpilothr.logic.Environment;
+import com.dealerpilothr.logic.NetRequests;
 import com.dealerpilothr.logic.UserInfo;
+import com.dealerpilothr.models.ProfileData;
+import com.dealerpilothr.utils.GeneralOperations;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class EditAdditionalActivity extends BaseActivity implements ProfilesAdditionalInformationAddAction.RequestProfilesAdditionalInformationAdd,
-                                                                    UpdateAction.RequestUpdate {
+public class EditEmployeeActivity extends BaseActivity implements ProfilesAdditionalInformationAddAction.RequestProfilesAdditionalInformationAdd,
+                                                                  UpdateAction.RequestUpdate {
     private ProgressDialog pd;
     private EditText birthday;
     private EditText sin_number;
@@ -97,7 +97,7 @@ public class EditAdditionalActivity extends BaseActivity implements ProfilesAddi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_edit_additional);
+        setContentView(R.layout.activity_edit_employee);
 
         View back = findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
@@ -361,7 +361,7 @@ public class EditAdditionalActivity extends BaseActivity implements ProfilesAddi
             public void onClick(View v) {
                 pd.show();
 
-                new UpdateAction(EditAdditionalActivity.this);
+                new UpdateAction(EditEmployeeActivity.this);
             }
         });
 
@@ -459,7 +459,7 @@ public class EditAdditionalActivity extends BaseActivity implements ProfilesAddi
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener,
             DatePickerDialog.OnCancelListener {
 
-        private EditAdditionalActivity act;
+        private EditEmployeeActivity act;
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -469,7 +469,7 @@ public class EditAdditionalActivity extends BaseActivity implements ProfilesAddi
             //int month = c.get(Calendar.MONTH);
             //int day = c.get(Calendar.DAY_OF_MONTH);
 
-            act = (EditAdditionalActivity) getActivity();
+            act = (EditEmployeeActivity) getActivity();
 
             // Create a new instance of DatePickerDialog and return it
             return new DatePickerDialog(getActivity(), this, act.myYear, act.myMonth, act.myDay);
@@ -560,7 +560,7 @@ public class EditAdditionalActivity extends BaseActivity implements ProfilesAddi
             data.setDriverLicenseNumberExpire(driver_expiryNew);
             data.setProfileId(UserInfo.getUserInfo().getProfile().getProfileId());
 
-            new ProfilesAdditionalInformationAddAction(EditAdditionalActivity.this, data).execute();
+            new ProfilesAdditionalInformationAddAction(EditEmployeeActivity.this, data).execute();
         }
     }
 

@@ -60,10 +60,10 @@ public class FilesActivity extends BaseActivity implements FilesAdapter.OnRootCl
                                                            FilesAdapter.OnDeleteClickListener,
                                                            FilesAction.RequestFiles,
                                                            FileDeleteAction.RequestFileDelete,
-        GetFileAction.RequestFile,
-        UploadFileAction.RequestUploadFile,
+                                                           GetFileAction.RequestFile,
+                                                           UploadFileAction.RequestUploadFile,
                                                            FileAddAction.RequestFileAdd,
-        UpdateAction.RequestUpdate {
+                                                           UpdateAction.RequestUpdate {
     private ArrayList<FileData> fileDatas;
     private FilesAdapter adapter;
     private ProgressDialog pd;

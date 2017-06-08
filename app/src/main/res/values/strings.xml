@@ -286,4 +286,5 @@
     <string name="text_edit_custom">Edit Custom Fields</string>
     <string name="text_edit_health_safety">Edit Health &#38; Safety Information</string>
     <string name="text_edit_adress">Edit Address</string>
+    <string name="text_edit_employee">Edit Employee Information</string>
 </resources>

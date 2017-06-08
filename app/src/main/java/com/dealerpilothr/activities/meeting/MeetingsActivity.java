@@ -298,7 +298,7 @@ public class MeetingsActivity extends BaseActivity implements MeetingsAdapter.On
         MeetingData meetingData = datas.get(position);
         intent.putExtra("name", meetingData.getName());
         intent.putExtra("id", meetingData.getMeetingId());
-        intent.putExtra("url", Environment.MeetingsFilesURL);
+        intent.putExtra("url", Environment.MeetingsURL);
         intent.putExtra("nameField", "MeetingId");
         //intent.putExtra("readonly", meetingData.getCompleted());
 

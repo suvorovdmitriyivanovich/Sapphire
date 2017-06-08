@@ -348,8 +348,16 @@ public class ProfileData {
         this.techLicenseNumberExpire = DateOperations.getDate(techLicenseNumberExpire);
     }
 
+    public void setTechLicenseNumberExpire(Long techLicenseNumberExpire) {
+        this.techLicenseNumberExpire = techLicenseNumberExpire;
+    }
+
     public Long getTechLicenseNumberExpire() {
         return techLicenseNumberExpire;
+    }
+
+    public String getTechLicenseNumberExpireServer() {
+        return DateOperations.getDateServer(techLicenseNumberExpire);
     }
 
     public String getTechLicenseNumberExpireString() {
@@ -383,8 +391,16 @@ public class ProfileData {
         this.vSRNumberExpire = DateOperations.getDate(vSRNumberExpire);
     }
 
+    public void setVSRNumberExpire(Long vSRNumberExpire) {
+        this.vSRNumberExpire = vSRNumberExpire;
+    }
+
     public Long getVSRNumberExpire() {
         return vSRNumberExpire;
+    }
+
+    public String getVSRNumberExpireServer() {
+        return DateOperations.getDateServer(vSRNumberExpire);
     }
 
     public String getVSRNumberExpireString() {
@@ -750,8 +766,16 @@ public class ProfileData {
         this.workPermitNumberExpire = DateOperations.getDate(workPermitNumberExpire);
     }
 
+    public void setWorkPermitNumberExpire(Long workPermitNumberExpire) {
+        this.workPermitNumberExpire = workPermitNumberExpire;
+    }
+
     public Long getWorkPermitNumberExpire() {
         return workPermitNumberExpire;
+    }
+
+    public String getWorkPermitNumberExpireServer() {
+        return DateOperations.getDateServer(workPermitNumberExpire);
     }
 
     public String getWorkPermitNumberExpireString() {
@@ -793,8 +817,16 @@ public class ProfileData {
         this.uniformRenewalDate = DateOperations.getDate(uniformRenewalDate);
     }
 
+    public void setUniformRenewalDate(Long uniformRenewalDate) {
+        this.uniformRenewalDate = uniformRenewalDate;
+    }
+
     public Long getUniformRenewalDate() {
         return uniformRenewalDate;
+    }
+
+    public String getUniformRenewalDateServer() {
+        return DateOperations.getDateServer(uniformRenewalDate);
     }
 
     public String getUniformRenewalDateString() {

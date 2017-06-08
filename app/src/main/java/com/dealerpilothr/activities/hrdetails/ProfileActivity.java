@@ -140,6 +140,19 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
     private String provinceOld = "";
     private String cityOld = "";
     private String postalOld = "";
+    private String vsrNumberOld = "";
+    private Long vsrExpiryOld = 0l;
+    private String techLicenseOld = "";
+    private Long techExpiryOld = 0l;
+    private String uniformDescriptionOld = "";
+    private boolean uniformAllowanceOld = false;
+    private Double uniformAmountOld = 0d;
+    private Long uniformRenewalOld = 0l;
+    private String workNumberOld = "";
+    private Long workExpiryOld = 0l;
+    private Long hireDateOld = 0l;
+    private Long probationEndOld = 0l;
+    private Long terminationOld = 0l;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -375,7 +388,11 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         employeeedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(ProfileActivity.this, EditEmployeeActivity.class);
+                intent.putExtra("hireDate", hireDateOld);
+                intent.putExtra("probationEnd", probationEndOld);
+                intent.putExtra("termination", terminationOld);
+                //startActivity(intent);
             }
         });
 
@@ -387,11 +404,22 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
             }
         });
 
-        View dditional_workedit = findViewById(R.id.dditional_workedit);
-        dditional_workedit.setOnClickListener(new View.OnClickListener() {
+        View aditional_workedit = findViewById(R.id.aditional_workedit);
+        aditional_workedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(ProfileActivity.this, EditWorkAdditionalActivity.class);
+                intent.putExtra("vsr_number", vsrNumberOld);
+                intent.putExtra("vsr_expiry", vsrExpiryOld);
+                intent.putExtra("tech_license", techLicenseOld);
+                intent.putExtra("tech_expiry", techExpiryOld);
+                intent.putExtra("uniform_description", uniformDescriptionOld);
+                intent.putExtra("uniform_allowance", uniformAllowanceOld);
+                intent.putExtra("uniform_amount", uniformAmountOld);
+                intent.putExtra("uniform_renewal", uniformRenewalOld);
+                intent.putExtra("work_number", workNumberOld);
+                intent.putExtra("work_expiry", workExpiryOld);
+                startActivity(intent);
             }
         });
 
@@ -431,6 +459,9 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         UserInfo userInfo = UserInfo.getUserInfo();
         //String securityModePersonal = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-emergency contacts", "", "");
         String securityModePersonal = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("", "Personal Information", "c9c8db39-2b01-5bec-0975-537930843497");
+        if (securityModePersonal.equals("")) {
+            securityModePersonal = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-emergency contacts", "");
+        }
         if (securityModePersonal.equals("fullAccess")) {
             editPersonal = true;
         } else if (securityModePersonal.equals("viewOnly")) {
@@ -442,6 +473,12 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         //    securityModeWork = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-hr-details", "");
         //}
         String securityModeWork = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("", "Work Information", "c9c8db39-2b01-5bec-0975-537930843497");
+        if (securityModeWork.equals("")) {
+            securityModeWork = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-family-members", "");
+            if (securityModeWork.equals("")) {
+                securityModeWork = userInfo.getGlobalAppRoleAppSecurities().getSecurityMode("/me/my-hr-details", "");
+            }
+        }
         if (securityModeWork.equals("fullAccess")) {
             editWork = true;
         } else if (securityModeWork.equals("viewOnly")) {
@@ -502,7 +539,7 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
         if (viewWork && !editWork) {
             employeeedit.setVisibility(View.GONE);
             payrolledit.setVisibility(View.GONE);
-            dditional_workedit.setVisibility(View.GONE);
+            aditional_workedit.setVisibility(View.GONE);
             customedit.setVisibility(View.GONE);
             memberedit.setVisibility(View.GONE);
         }
@@ -889,6 +926,9 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
                 finish();
             }
         } else {
+            hireDateOld = profileData.getHireDate();
+            probationEndOld = profileData.getProbationEndDate();
+            terminationOld = profileData.getTerminationDate();
             String employeeStr = "";
             employeeStr = employeeStr + "<b>" + getResources().getString(R.string.text_hire_date) + "</b>: " + profileData.getHireDateString();
             employeeStr = employeeStr + "<br><b>" + getResources().getString(R.string.text_probation) + "</b>: " + profileData.getProbationEndDateString();
@@ -956,16 +996,26 @@ public class ProfileActivity extends BaseActivity implements AdressAdapter.OnRoo
                 finish();
             }
         } else {
+            vsrNumberOld = profileData.getVSRNumber();
+            vsrExpiryOld = profileData.getVSRNumberExpire();
+            techLicenseOld = profileData.getTechLicenseNumber();
+            techExpiryOld = profileData.getTechLicenseNumberExpire();
+            uniformDescriptionOld = profileData.getUniformDescription();
+            uniformAllowanceOld = profileData.getUniformAllowance();
+            uniformAmountOld = profileData.getUniformAllowanceAmount();
+            uniformRenewalOld = profileData.getUniformRenewalDate();
+            workNumberOld = profileData.getWorkPermitNumber();
+            workExpiryOld = profileData.getWorkPermitNumberExpire();
             String additionalworkStr = "";
-            additionalworkStr = additionalworkStr + "<b>" + getResources().getString(R.string.text_vsr_number) + "</b>: " + profileData.getVSRNumber();
+            additionalworkStr = additionalworkStr + "<b>" + getResources().getString(R.string.text_vsr_number) + "</b>: " + vsrNumberOld;
             additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_vsr_expire) + "</b>: " + profileData.getVSRNumberExpireString();
-            additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_tech_license) + "</b>: " + profileData.getTechLicenseNumber();
+            additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_tech_license) + "</b>: " + techLicenseOld;
             additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_tech_license_expire) + "</b>: " + profileData.getTechLicenseNumberExpireString();
-            additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_uniform_description) + "</b>: " + profileData.getUniformDescription();
+            additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_uniform_description) + "</b>: " + uniformDescriptionOld;
             additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_uniform_allowance) + "</b>: " + profileData.getUniformAllowanceString();
-            additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_uniform_allowance_amount) + "</b>: " + profileData.getUniformAllowanceAmount();
+            additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_uniform_allowance_amount) + "</b>: " + uniformAmountOld;
             additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_uniform_renewal_date) + "</b>: " + profileData.getUniformRenewalDateString();
-            additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_work_permit) + "</b>: " + profileData.getWorkPermitNumber();
+            additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_work_permit) + "</b>: " + workNumberOld;
             additionalworkStr = additionalworkStr + "<br><b>" + getResources().getString(R.string.text_work_permit_expiry_date) + "</b>: " + profileData.getWorkPermitNumberExpireString();
             work_additional.setText(Html.fromHtml(additionalworkStr));
 

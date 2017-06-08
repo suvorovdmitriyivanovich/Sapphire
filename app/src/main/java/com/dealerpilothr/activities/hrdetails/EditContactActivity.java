@@ -38,7 +38,7 @@ import com.dealerpilothr.logic.Environment;
 import com.dealerpilothr.logic.UserInfo;
 
 public class EditContactActivity extends BaseActivity implements ProfilesContactInformationAddAction.RequestProfilesContactInformationAdd,
-        UpdateAction.RequestUpdate {
+                                                                 UpdateAction.RequestUpdate {
     private ProgressDialog pd;
     private EditText primary;
     private EditText secondary;
@@ -184,9 +184,21 @@ public class EditContactActivity extends BaseActivity implements ProfilesContact
 
         readonly = intent.getBooleanExtra("readonly", false);
         primaryOld = intent.getStringExtra("primary");
+        if (primaryOld == null) {
+            primaryOld = "";
+        }
         secondaryOld = intent.getStringExtra("secondary");
+        if (secondaryOld == null) {
+            secondaryOld = "";
+        }
         homeOld = intent.getStringExtra("home");
+        if (homeOld == null) {
+            homeOld = "";
+        }
         cellOld = intent.getStringExtra("cell");
+        if (cellOld == null) {
+            cellOld = "";
+        }
         notification_primaryOld = intent.getBooleanExtra("primaryEmailAllowNotification", false);
         notification_secondaryOld = intent.getBooleanExtra("secondaryEmailAllowNotification", false);
 

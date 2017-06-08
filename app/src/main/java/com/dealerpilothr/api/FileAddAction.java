@@ -46,7 +46,11 @@ public class FileAddAction extends AsyncTask{
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put(nameField, id);
-            jsonObject.put("FileId", fileId);
+            if (url.equals(Environment.MeetingsURL)) {
+                jsonObject.put("CustomReportId", fileId);
+            } else {
+                jsonObject.put("FileId", fileId);
+            }
             jsonArray.put(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -56,7 +60,8 @@ public class FileAddAction extends AsyncTask{
         if (url.equals(Environment.PerformanceEvaluationsFilesURL)
             || url.equals(Environment.DisciplinesFilesURL)
             || url.equals(Environment.DocumentsFilesURL)
-            || url.equals(Environment.SafetisFilesURL)) {
+            || url.equals(Environment.SafetisFilesURL)
+            || url.equals(Environment.MeetingsURL)) {
             method = "PUT";
         }
 

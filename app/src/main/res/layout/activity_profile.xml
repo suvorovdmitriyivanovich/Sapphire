@@ -508,7 +508,7 @@
                             android:id="@+id/text_work_additional"
                             android:layout_centerVertical="true"
                             android:singleLine="true"
-                            android:layout_toLeftOf="@+id/dditional_workedit"
+                            android:layout_toLeftOf="@+id/aditional_workedit"
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
                             android:layout_marginRight="5dp" />
@@ -516,7 +516,7 @@
                         <RelativeLayout
                             android:layout_width="30dp"
                             android:layout_height="30dp"
-                            android:id="@+id/dditional_workedit"
+                            android:id="@+id/aditional_workedit"
                             android:background="@drawable/dialog_button_transparent"
                             android:gravity="center"
                             android:layout_centerVertical="true"
@@ -526,7 +526,7 @@
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:id="@+id/dditional_work_icon"
+                                android:id="@+id/aditional_work_icon"
                                 android:src="@drawable/change_ico"
                                 android:layout_centerVertical="true"
                                 android:layout_centerHorizontal="true" />

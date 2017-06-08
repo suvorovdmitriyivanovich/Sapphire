@@ -100,6 +100,14 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
 
+        <activity android:name=".activities.hrdetails.EditWorkAdditionalActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+
+        <activity android:name=".activities.hrdetails.EditEmployeeActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
+
         <activity android:name=".activities.workplaceInspection.WorkplaceInspectionsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
